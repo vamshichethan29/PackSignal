@@ -883,8 +883,6 @@ textarea {
 .camera-live video { width: 100%; max-height: 320px; object-fit: contain; border-radius: 8px; background: #0b1713; grid-column: 1 / -1; }
 .camera-quality-list { margin: 7px 0; padding-left: 18px; color: var(--muted); font-size: 11px; }
 .camera-quality-list:empty { display: none; }
-.camera-cad-note { padding: 9px 11px; margin: 10px 0 0; border-left: 3px solid #bf9850; background: #f7f3e8; color: #635637; font-size: 11px; line-height: 1.5; }
-[data-theme="dark"] .camera-cad-note { background: #352f21; color: #e7d7ac; }
 [data-theme="dark"] .intake-mode-toggle { background: #14251e; }
 [data-theme="dark"] .intake-mode-toggle button.active,
 [data-theme="dark"] .intake-mode-toggle button[aria-pressed="true"] { background: #274536; color: #eff7e7; }

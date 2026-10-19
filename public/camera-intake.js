@@ -19,7 +19,6 @@ export function cameraIntakeMarkup() {
     <div class="camera-live" data-camera-live hidden><video data-camera-video-preview autoplay muted playsinline></video><button type="button" class="primary" data-camera-capture>Take photo</button><button type="button" class="textbutton" data-camera-stop>Close camera</button></div>
     <p class="subtle" data-camera-status aria-live="polite">Image checks look for possible blur and glare. They are guidance only and do not certify photo quality.</p>
     <ul class="camera-quality-list" data-camera-quality></ul>
-    <p class="camera-cad-note"><b>Geometry:</b> images and video cannot reveal hidden faces, physical scale, board thickness, or exact folds. A measured, supported DXF is required for dimensionally faithful carton geometry; camera-only previews remain illustrative.</p>
   </section>`;
 }
 
