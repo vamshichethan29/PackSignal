@@ -9,10 +9,7 @@ function latestByReviewer(approvals) {
 export function teamReviewView(review, finding, appStatus) {
   const teamStatus = appStatus?.team;
   if (!teamStatus?.enabled) {
-    const accessNotice = appStatus?.security?.hosted && !appStatus.security.authenticated
-      ? '<div class="notice error">No hosted login gate is currently configured. Do not upload confidential packaging files until named accounts or a workspace password are configured.</div>'
-      : '';
-    return `<section class="panel team-review"><div class="eyebrow">TEAM REVIEW</div><h3>Assignments and separate sign-offs</h3><p class="subtle">Team review is currently off. Enable it with named admin and reviewer accounts and the persistent workspace disk; shared demo credentials cannot identify individual reviewers.</p>${accessNotice}</section>`;
+    return `<section class="panel team-review"><div class="eyebrow">TEAM REVIEW</div><h3>Assignments and separate sign-offs</h3><p class="subtle">Named reviewer accounts enable individual assignments, evidence comments, and separate sign-offs.</p></section>`;
   }
   const user = teamStatus.currentUser;
   const reviewers = teamStatus.members.filter(member => member.role === 'reviewer');

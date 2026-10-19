@@ -27,11 +27,20 @@ test('team review UI includes assignment, evidence comment, and independent sign
   assert.match(html, /not legal or print-release approval/);
 });
 
-test('unconfigured shared-login workspaces clearly state that individual sign-off is disabled', () => {
+test('unconfigured workspaces use calm team-review copy without access warnings', () => {
   const html = teamReviewView(review, finding, { team: { enabled: false }, security: { hosted: true, authenticated: false } });
-  assert.match(html, /Team review is currently off/);
-  assert.match(html, /shared demo credentials cannot identify individual reviewers/);
-  assert.match(html, /No hosted login gate is currently configured/);
+  assert.match(html, /Named reviewer accounts enable individual assignments/);
+  assert.doesNotMatch(html, /currently off|shared demo credentials|hosted login gate|Do not upload confidential/);
+});
+
+test('hosted access details are kept in Settings instead of the home dashboard', async () => {
+  const app = await readFile(new URL('../public/app.js', import.meta.url), 'utf8');
+  const dashboard = app.slice(app.indexOf('function dashboard()'), app.indexOf('function rememberReviewSummary'));
+  const settings = app.slice(app.indexOf('async function settings()'), app.indexOf('function settingsReviewDiagnostics()'));
+  assert.doesNotMatch(dashboard, /securityNotice|workspace is open|confidential packaging files/);
+  assert.match(settings, /workspaceAccessSettings\(\)/);
+  assert.match(app, /This hosted workspace is open to anyone with its link/);
+  assert.match(app, /Use public or fictional packaging files until access is protected/);
 });
 
 test('the team review module is registered as a served application asset', async () => {
