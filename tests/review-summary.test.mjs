@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import { mergeReviewSummary, reviewCoverage } from '../public/review-summary.js';
 
 const sample = (id, createdAt) => ({
@@ -38,4 +39,11 @@ test('legacy or partial reviews without artwork coverage stay openable and uncon
     completeArtwork: true,
     limits: [],
   });
+});
+
+test('review footer renders limits from the normalized coverage object', async () => {
+  const app = await readFile(new URL('../public/app.js', import.meta.url), 'utf8');
+  const renderer = app.slice(app.indexOf('function renderReview()'), app.indexOf('function findingView()'));
+  assert.match(renderer, /\$\{coverage\.limits\.map\(esc\)\.join\(" "\)\}/);
+  assert.doesNotMatch(renderer, /\$\{coverageLimits\.map/);
 });
