@@ -10,7 +10,7 @@ test('configured AI status describes bounded retries without claiming a live req
   assert.match(copy.connection, /credentials are configured/i);
   assert.match(copy.connection, /retries are bounded/i);
   assert.match(copy.lastDispatch, /No live request yet/);
-  assert.match(copy.failover, /availability is not guaranteed/i);
+  assert.match(copy.failover, /extra keys do not multiply a shared project quota/i);
   assert.match(copy.credentials, /browser never receives/i);
   assert.doesNotMatch(copy.connection, /operational and verified|cluster active/i);
 });
@@ -42,6 +42,7 @@ test('health copy reports the configured pacing, cooldown, and exhausted request
     },
   });
   assert.match(copy.pacing, /12 seconds/);
+  assert.match(copy.pacing, /5 provider attempts per minute/);
   assert.equal(copy.cooldownUntil, '2026-10-18T00:00:00.000Z');
   assert.match(copy.allowance, /AI requests are paused for this session/i);
   assert.match(copy.allowance, /Exact checks and cached AI results remain available/i);

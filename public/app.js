@@ -544,12 +544,12 @@ async function settings() {
   const copy = engineStatusCopy(status);
   dialog(
     "PackSignal Prepress Engine",
-    `<section class="panel"><div class="eyebrow">PACKSIGNAL · CORE ARCHITECTURE</div><h3>${esc(aiStatusLabel())}</h3><p>${esc(copy.connection)}</p><p><b>Architecture:</b> Multimodal artwork review + deterministic comparisons<br><b>Review pipeline:</b> Document text, spreadsheet cells, and located artwork evidence<br><b>Availability:</b> Bounded retries; configured alternate credentials may be tried<br><b>Credential handling:</b> ${esc(copy.credentials)}</p></section>${usageSummary()}<p class="subtle">PackSignal compares supplied product information, company rules, and packaging artwork. Human review remains necessary for uncertain items and release decisions.</p>`,
+    `<section class="panel"><div class="eyebrow">PACKSIGNAL · CORE ARCHITECTURE</div><h3>${esc(aiStatusLabel())}</h3><p>${esc(copy.connection)}</p><p><b>Architecture:</b> Multimodal artwork review + deterministic comparisons<br><b>Review pipeline:</b> Document text, spreadsheet cells, and located artwork evidence<br><b>Availability:</b> Shared key-pool rate cap; bounded retries; 503 pauses the pool<br><b>Credential handling:</b> ${esc(copy.credentials)}</p></section>${usageSummary()}<p class="subtle">PackSignal compares supplied product information, company rules, and packaging artwork. Human review remains necessary for uncertain items and release decisions.</p>`,
   );
 }
 function usageSummary() {
   const copy = engineStatusCopy(status);
-  return `<div class="panel"><h3>Engine Health & Availability</h3><p><b>Service check:</b> ${esc(copy.service)}<br><b>Provider pacing:</b> ${esc(copy.pacing)}</p>${copy.cooldownUntil ? `<div class="notice">One or more provider keys are cooling down until ${esc(date(copy.cooldownUntil))}.</div>` : ""}${copy.allowance ? `<div class="notice">${esc(copy.allowance)}</div>` : ""}<small class="subtle">${esc(copy.lastDispatch)} ${esc(copy.failover)}</small></div>`;
+  return `<div class="panel"><h3>Engine Health & Availability</h3><p><b>Service check:</b> ${esc(copy.service)}<br><b>Provider pacing:</b> ${esc(copy.pacing)}</p>${copy.cooldownUntil ? `<div class="notice">${esc(copy.cooldownLabel)} ${esc(date(copy.cooldownUntil))}.</div>` : ""}${copy.allowance ? `<div class="notice">${esc(copy.allowance)}</div>` : ""}<small class="subtle">${esc(copy.lastDispatch)} ${esc(copy.failover)}</small></div>`;
 }
 function setIntakeMode(mode) {
   intakeMode = mode === "camera" ? "camera" : "files";

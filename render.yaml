@@ -30,6 +30,8 @@ services:
         sync: false
       - key: GEMINI_MODEL
         value: gemini-3.8-flash
+      - key: GEMINI_MAX_REQUESTS_PER_MINUTE
+        value: "5"
       - key: GEMINI_API_KEY
         sync: false
       - key: GEMINI_API_KEY_2

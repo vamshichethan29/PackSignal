@@ -10,7 +10,7 @@ Gemini is PackSignal's primary and only implemented LLM provider. Local determin
 2. Check the project's available model and free-tier quota in AI Studio. The initial configurable model is `gemini-3.8-flash`.
 3. Copy `.env.example` to `.env.local`, set one or more of the five key variables (and optionally `GEMINI_MODEL`), then restart PackSignal. Never send a key in a chat or commit it. Rotate and replace any key previously exposed in chat before deployment.
 4. AI-assisted mode is the default. Local extraction and exact checks finish first; Gemini then runs in the background. A review can be used while Gemini is still running. A real successful run is required before presenting AI behavior as validated.
-5. If a request receives a quota or temporary-provider error, PackSignal applies bounded retries and a cooldown to that credential, then may try another configured credential. Provider and project limits still apply; the pool is not unlimited throughput and does not guarantee recovery.
+5. If a request receives a quota or temporary-provider error, PackSignal applies bounded retries and cooldowns. A final 429 project-quota response or 503 pauses the shared credential pool instead of retrying through every key. Google applies Gemini rate limits per project, not per API key; extra keys for one project do not multiply its quota. Check the actual project/model limit in AI Studio.
 
 ### Request limits and recovery
 
@@ -18,7 +18,8 @@ PackSignal does not promise unlimited API access or keep retrying forever. Reque
 
 - Retry only HTTP 429 and 503, with at most three attempts per request by default.
 - Honor a provider `Retry-After` header or `google.rpc.RetryInfo` delay. If waiting would exceed the request's retry budget, defer AI work instead of sending another immediate request.
-- Keep provider cooldowns per credential across the server process. A new review cannot skip a credential's cooldown; the coordinator may use another configured credential within the global session limits.
+- Apply a shared rolling-window cap of five outbound attempts per minute across all configured credentials by default. This local cap treats the key list as one pool because project ownership cannot be inferred safely from secret API keys.
+- Keep credential cooldowns and shared project/provider cooldowns across the server process. A confirmed project quota limit or provider outage pauses the whole key pool; a credential-specific failure may use another configured key within the global session limits.
 - Preserve the deterministic findings and display the AI failure or deferral. Image interpretation and other unfinished AI work remain unverified.
 - Send artwork pages first in groups of three, up to 12 rendered pages total. The initial batch extracts supplied facts/rules and reviews its page images; subsequent batches transcribe only their labeled pages. A full 12-page vision pass can use four provider requests, still subject to the session cap, retry budget, and Google quota. If a later batch fails, earlier proposals remain available, incomplete pages are named in the review, and partial results are not cached as complete.
 
@@ -27,6 +28,7 @@ Optional `.env.local` controls:
 | Variable | Default | Meaning |
 | --- | --- | --- |
 | `GEMINI_MAX_REQUESTS_PER_SESSION` | `20` | Local ceiling on outbound attempts during one server process; retries count. |
+| `GEMINI_MAX_REQUESTS_PER_MINUTE` | `5` | Shared rolling-window cap across all configured credentials; retries count. |
 | `GEMINI_MIN_INTERVAL_MS` | `6000` | Minimum interval between outbound attempts. Provider delays may require a longer wait. |
 | `GEMINI_MAX_ATTEMPTS` | `3` | Maximum attempts for one request, within the implementation's bounded limits. |
 

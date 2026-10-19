@@ -9,6 +9,8 @@ process.env.GEMINI_MAX_REQUESTS_PER_SESSION='8';
 process.env.GEMINI_MIN_INTERVAL_MS='1000';
 
 const { geminiReview } = await import('../lib/ai.mjs');
+let transportInstance=0;
+const isolatedGeminiRequest=async()=> (await import(`../lib/gemini-transport.mjs?ai-test-${transportInstance++}`)).geminiRequest;
 const mockResponse=(status,payload)=>({ok:status>=200&&status<300,status,headers:{get:()=>null},json:async()=>payload});
 const success=data=>mockResponse(200,{candidates:[{content:{parts:[{text:JSON.stringify(data)}]}}],usageMetadata:{promptTokenCount:11,candidatesTokenCount:7,totalTokenCount:18}});
 const quota=()=>mockResponse(429,{error:{details:[{'@type':'type.googleapis.com/google.rpc.QuotaFailure',violations:[{quotaValue:'0',quotaId:'requests-per-day'}]}]}});
@@ -27,13 +29,13 @@ const pageLabels=request=>request.contents[0].parts.filter(part=>typeof part.tex
 const transcriptionPayload=(pages,observations=[],faceSuggestions=[])=>({facts:[],rules:[],observations,transcriptions:pages.map(item=>({...item,text:`Visible copy on page ${item.page}`})),faceSuggestions});
 
 test('sends all four artwork pages in bounded image batches and combines transcripts',async()=>{
-  const {directory,review}=await makeReview();const requests=[];
+  const {directory,review}=await makeReview();const requests=[],requestGemini=await isolatedGeminiRequest();
   try{
     const result=await geminiReview(review,directory,'mock-key','gemini-test',async(_url,options)=>{
       const request=JSON.parse(options.body);requests.push(request);
       const pages=pageLabels(request);
       return success(transcriptionPayload(pages,requests.length===2?[{title:'Check page 4 copy',quote:'Visible copy on page 4',explanation:'Compare this panel content with the supplied product source.'}]:[]));
-    });
+    },requestGemini);
     assert.equal(requests.length,2);
     assert.equal(pageLabels(requests[0]).length,3);
     assert.equal(pageLabels(requests[1]).length,1);
@@ -51,7 +53,7 @@ test('sends all four artwork pages in bounded image batches and combines transcr
 });
 
 test('keeps structural dielines out of product-artwork vision requests',async()=>{
-  const {directory,review}=await makeReview();
+  const {directory,review}=await makeReview();const requestGemini=await isolatedGeminiRequest();
   const dielinePage={number:1,method:'vision_needed',image:'dieline-p1.png',text:''};
   await writeFile(join(directory,'rendered',dielinePage.image),Buffer.from('mock-dieline'));
   review.documents.push({id:'die-1',name:'carton-dieline.pdf',role:'dieline',text:'FRONT PANEL',pages:[dielinePage]});
@@ -60,7 +62,7 @@ test('keeps structural dielines out of product-artwork vision requests',async()=
     const result=await geminiReview(review,directory,'mock-key','gemini-test',async(_url,options)=>{
       request=JSON.parse(options.body);
       return success(transcriptionPayload(pageLabels(request)));
-    });
+    },requestGemini);
     const serialized=JSON.stringify(request);
     assert.doesNotMatch(serialized,/die-1|carton-dieline|FRONT PANEL|dieline-p1/);
     assert.equal(result.imagePagesSent,4,'Only product artwork pages enter the visual transcription pass.');
@@ -68,7 +70,7 @@ test('keeps structural dielines out of product-artwork vision requests',async()=
 });
 
 test('returns only valid face suggestions tied to submitted artwork pages',async()=>{
-  const {directory,review}=await makeReview();review.documents[0].pages=review.documents[0].pages.slice(0,2);review.options={captureFaces:[{page:1,face:'unassigned',box:[0,0,1,1]},{page:2,face:'unassigned',box:[0,0,1,1]}]};let request;
+  const {directory,review}=await makeReview();const requestGemini=await isolatedGeminiRequest();review.documents[0].pages=review.documents[0].pages.slice(0,2);review.options={captureFaces:[{page:1,face:'unassigned',box:[0,0,1,1]},{page:2,face:'unassigned',box:[0,0,1,1]}]};let request;
   try{
     const result=await geminiReview(review,directory,'mock-key','gemini-test',async(_url,options)=>{
       request=JSON.parse(options.body);
@@ -79,7 +81,7 @@ test('returns only valid face suggestions tied to submitted artwork pages',async
         {documentId:'art-1',page:99,face:'left',reason:'Page was not sent.'},
         {documentId:'art-1',page:1,face:'sideways',reason:'Unsupported face.'},
       ]));
-    });
+    },requestGemini);
     assert.deepEqual(result.faceSuggestions.map(item=>[item.page,item.face]),[[1,'front'],[2,'back']]);
     assert.match(request.generationConfig.responseJsonSchema.properties.faceSuggestions.items.properties.face.enum.join(','),/front.*back/);
     assert.match(request.contents[0].parts[0].text,/unassigned/,'the model receives context that these are unlabelled capture frames');
@@ -87,13 +89,13 @@ test('returns only valid face suggestions tied to submitted artwork pages',async
 });
 
 test('retains completed batch results and names image-only pages when a later batch is quota-limited',async()=>{
-  const {directory,review}=await makeReview();let requests=0;
+  const {directory,review}=await makeReview();const requestGemini=await isolatedGeminiRequest();let requests=0;
   try{
     const result=await geminiReview(review,directory,'mock-key','gemini-test',async(_url,options)=>{
       requests++;
       if(requests===2)return quota();
       return success(transcriptionPayload(pageLabels(JSON.parse(options.body))));
-    });
+    },requestGemini);
     assert.equal(requests,2);
     assert.equal(result.transcriptions.length,3);
     assert.deepEqual(result.unverifiedPages,[{documentId:'art-1',page:4}]);
@@ -106,7 +108,7 @@ test('retains completed batch results and names image-only pages when a later ba
 });
 
 test('constrains AI fact fields in the response schema and drops unsupported proposals',async()=>{
-  const {directory,review}=await makeReview();
+  const {directory,review}=await makeReview();const requestGemini=await isolatedGeminiRequest();
   review.documents[0].pages=review.documents[0].pages.slice(0,1);
   review.documents[1].text='Net quantity 750 mL\nFDA approved';
   let request;
@@ -120,7 +122,7 @@ test('constrains AI fact fields in the response schema and drops unsupported pro
         ],
         rules:[],observations:[],transcriptions:transcriptionPayload(pageLabels(request)).transcriptions,
       });
-    });
+    },requestGemini);
     const factFields=request.generationConfig.responseJsonSchema.properties.facts.items.properties.field.enum;
     assert.ok(factFields.includes('net_quantity'));
     assert.ok(!factFields.includes('legal_approval'));

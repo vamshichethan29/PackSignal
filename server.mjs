@@ -7,7 +7,7 @@ import { randomUUID,randomBytes,createHash } from 'node:crypto';
 import { spawn } from 'node:child_process';
 import { analyze,compareRevisions,tokenSequencePresent } from './lib/engine.mjs';
 import { geminiReview } from './lib/ai.mjs';
-import { geminiStatus } from './lib/gemini-transport.mjs';
+import { geminiStatus, shouldFailoverCredential } from './lib/gemini-transport.mjs';
 import { marketPresets } from './lib/market-presets.mjs';
 import { createHtmlReport } from './lib/html-report.mjs';
 import { sealReview, verifyReviewSeal } from './lib/audit-signature.mjs';
@@ -219,7 +219,7 @@ async function processReview(id){
                 break;
               }catch(err){
                 lastError=err;
-                if(apiKeys.length>1&&(err.code==='GEMINI_HTTP_429'||err.code==='GEMINI_HTTP_503'||err.code==='PROVIDER_COOLDOWN'||/quota|429|503|unavailable|demand/i.test(err.message))){
+                if(apiKeys.length>1&&shouldFailoverCredential(err)){
                   audit(r,'key_failover',`Key ${(keyCursor+i)%apiKeys.length+1} quota/limit/overload reached; failing over to next configured key.`);
                   continue;
                 }
@@ -309,7 +309,7 @@ const server=createServer(async(req,res)=>{
     if(!['GET','HEAD'].includes(req.method)&&req.headers['x-packproof-token']!==csrf)throw fail('Refresh the page to renew your request token.',403);
     if(publicFiles.has(path)&&['GET','HEAD'].includes(method))return await sendPublicFile(req,res,path);
     if(path==='/api/market-presets'&&method==='GET')return json(res,200,marketPresets);
-    if(path==='/api/status'&&method==='GET'){const aiUsage=geminiStatus(),inProgress=aiUsage.lastOutcome==='Request in progress'||aiUsage.lastOutcome.startsWith('Waiting before retry');const aiConnection=!apiKeys.length?'not_configured':inProgress?'running':aiUsage.lastOutcome==='Live request completed'?'verified':aiUsage.lastOutcome==='No live request yet'?'configured':'attention';return json(res,200,{csrf,aiConfigured:Boolean(apiKeys.length),aiConnection,model,aiUsage,queued:jobs.size,limits:{files:8,fileMB:15,totalMB:30,pdfPages:12,mediaMB:MEDIA_MAX_BYTES/1_000_000,videoSeconds:MEDIA_MAX_SECONDS,mediaFrames:8},team:{enabled:teamEnabled,currentUser:{id:actor.id,username:actor.username,displayName:actor.displayName,role:actor.role},members:publicTeamUsers},storage:{persistent:persistentStorageReady,required:persistentStorageRequired},security:{authenticated:teamEnabled||Boolean(accessPassword),required:process.env.PACKPROOF_REQUIRE_AUTH==='true',hosted:process.env.NODE_ENV==='production'},scope:'Private workspace or access-controlled hosted demo; human release decision required.'});}
+    if(path==='/api/status'&&method==='GET'){const aiUsage=geminiStatus(apiKeys.length),inProgress=aiUsage.lastOutcome==='Request in progress'||aiUsage.lastOutcome.startsWith('Waiting before retry')||aiUsage.lastOutcome.startsWith('Waiting for the shared Gemini request limit')||aiUsage.lastOutcome.startsWith('Waiting for provider pacing');const aiConnection=!apiKeys.length?'not_configured':inProgress?'running':aiUsage.lastOutcome==='Live request completed'?'verified':aiUsage.lastOutcome==='No live request yet'?'configured':'attention';return json(res,200,{csrf,aiConfigured:Boolean(apiKeys.length),aiConnection,model,aiUsage,queued:jobs.size,limits:{files:8,fileMB:15,totalMB:30,pdfPages:12,mediaMB:MEDIA_MAX_BYTES/1_000_000,videoSeconds:MEDIA_MAX_SECONDS,mediaFrames:8},team:{enabled:teamEnabled,currentUser:{id:actor.id,username:actor.username,displayName:actor.displayName,role:actor.role},members:publicTeamUsers},storage:{persistent:persistentStorageReady,required:persistentStorageRequired},security:{authenticated:teamEnabled||Boolean(accessPassword),required:process.env.PACKPROOF_REQUIRE_AUTH==='true',hosted:process.env.NODE_ENV==='production'},scope:'Private workspace or access-controlled hosted demo; human release decision required.'});}
     if(path==='/api/media/convert'&&method==='POST'){
       const b=await body(req);
       if(!b||typeof b!=='object'||Array.isArray(b)||typeof b.base64!=='string'||!/^[A-Za-z0-9+/]*={0,2}$/.test(b.base64))throw fail('Choose a readable photo or video.',400);
@@ -389,7 +389,7 @@ const server=createServer(async(req,res)=>{
             break;
           }catch(err){
             lastError=err;
-            if(apiKeys.length>1&&(err.code==='GEMINI_HTTP_429'||err.code==='GEMINI_HTTP_503'||err.code==='PROVIDER_COOLDOWN'||/quota|429|503|unavailable|demand/i.test(err.message)))continue;
+            if(apiKeys.length>1&&shouldFailoverCredential(err))continue;
             throw err;
           }
         }
