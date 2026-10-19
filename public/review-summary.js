@@ -13,3 +13,11 @@ export function mergeReviewSummary(reviews, review) {
   return [summary, ...(Array.isArray(reviews) ? reviews : []).filter((item) => item.id !== review.id)]
     .sort((a, b) => (b.createdAt || "").localeCompare(a.createdAt || ""));
 }
+
+export function reviewCoverage(review) {
+  const coverage = review?.coverage && typeof review.coverage === 'object' ? review.coverage : {};
+  return {
+    completeArtwork: coverage.completeArtwork === true,
+    limits: Array.isArray(coverage.limits) ? coverage.limits : [],
+  };
+}

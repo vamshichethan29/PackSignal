@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mergeReviewSummary } from '../public/review-summary.js';
+import { mergeReviewSummary, reviewCoverage } from '../public/review-summary.js';
 
 const sample = (id, createdAt) => ({
   id,
@@ -29,4 +29,13 @@ test('review history replaces duplicate ids and remains newest-first', () => {
     ['same', 'Updated'],
     ['older', 'Review older'],
   ]);
+});
+
+test('legacy or partial reviews without artwork coverage stay openable and unconfirmed', () => {
+  assert.deepEqual(reviewCoverage({ id: 'legacy' }), { completeArtwork: false, limits: [] });
+  assert.deepEqual(reviewCoverage({ coverage: null }), { completeArtwork: false, limits: [] });
+  assert.deepEqual(reviewCoverage({ coverage: { completeArtwork: true, limits: 'invalid' } }), {
+    completeArtwork: true,
+    limits: [],
+  });
 });
