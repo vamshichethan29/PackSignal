@@ -149,6 +149,32 @@ try {
   }));
   assert.equal(cameraMapped.options.packageMappingConfirmed, true, 'Photo-based front-face mapping does not require a dieline.');
 
+  const cameraWithSpec = await json(await fetch(`${base}/api/reviews`, {
+    method: 'POST', headers: { 'content-type': 'application/json', 'x-packproof-token': status.csrf },
+    body: JSON.stringify({ parentId: cameraMapped.id, sourceRevision: true, mode: 'local',
+      files: [{ name: 'camera-product.json', role: 'spec', base64: Buffer.from(JSON.stringify({product:{brand:'Mori Meadow',net_quantity:'946 mL'}})).toString('base64') }],
+    }),
+  }));
+  let cameraCompared;
+  const cameraSpecDeadline=Date.now()+120_000;
+  while(Date.now()<cameraSpecDeadline){
+    cameraCompared=await json(await fetch(`${base}/api/reviews/${cameraWithSpec.id}`));
+    if(['ready','failed'].includes(cameraCompared.status))break;
+    await new Promise(resolve=>setTimeout(resolve,300));
+  }
+  assert.equal(cameraCompared.status,'ready',cameraCompared.error);
+  assert.equal(cameraCompared.documents.find(doc=>doc.role==='artwork').sha256,cameraMapped.documents.find(doc=>doc.role==='artwork').sha256);
+  assert.deepEqual(cameraCompared.options.panelZones,cameraMapped.options.panelZones);
+  assert.deepEqual(cameraCompared.options.captureFaces,cameraMapped.options.captureFaces);
+  assert.equal(cameraCompared.options.packageMappingConfirmed,true);
+  assert.equal(cameraCompared.files.find(file=>file.role==='artwork').id,cameraMapped.files.find(file=>file.role==='artwork').id);
+  assert.ok(cameraCompared.files.find(file=>file.role==='spec').id,'new sources get a distinct ID');
+  assert.ok(!cameraCompared.findings.some(item=>item.key==='missing-reference'));
+  assert.ok(cameraCompared.findings.some(item=>item.method==='artwork_readability'&&item.blockedChecks.length===2));
+  assert.ok(cameraCompared.revision.sourceDocuments.some(item=>item.change==='added'&&item.name==='camera-product.json'));
+  const originalCamera=await json(await fetch(`${base}/api/reviews/${cameraMapped.id}`));
+  assert.equal(originalCamera.documents.length,1,'adding references creates a new review and keeps the original intact');
+
   const created = await json(await fetch(`${base}/api/reviews`, {
     method: 'POST',
     headers: { 'content-type': 'application/json', 'x-packproof-token': status.csrf },

@@ -14,6 +14,7 @@ import { sealReview, verifyReviewSeal } from './lib/audit-signature.mjs';
 import { answerFindingQuestion } from './lib/finding-qa.mjs';
 import { publicFiles, createPublicFileSender } from './lib/public-files.mjs';
 import { buildSourceRevisionInputs } from './lib/source-revision-inputs.mjs';
+import { applyTranscriptions } from './lib/apply-transcriptions.mjs';
 import { authenticateLegacyUser, authenticateTeamUser, parseTeamUsers } from './lib/team-auth.mjs';
 import { addFindingApproval, addFindingComment, canReviewFinding, canViewReview, setFindingAssignment } from './lib/team-review.mjs';
 import { verifyPersistentMount } from './lib/persistent-storage.mjs';
@@ -188,6 +189,7 @@ async function processReview(id){
   try{
     r=await load(id);r.status='processing';r.progress='Reading documents and locating evidence';await save(r);r.documents=[];
     for(const file of r.files){r.documents.push(await worker({path:join(dir(id),'files',file.disk),role:file.role,outdir:join(dir(id),'rendered'),id:file.id,name:file.name}));}
+    if(r.revisionKind==='sources'&&r.ai?.transcriptions)applyTranscriptions(r.documents,r.ai.transcriptions);
     const artworkFile=r.files.find(file=>file.role==='artwork'),artworkDocument=r.documents.find(document=>document.role==='artwork');
     if(artworkFile?.captureFaces?.length){
       const validPages=new Set((artworkDocument?.pages||[]).map(page=>page.number));
@@ -204,7 +206,7 @@ async function processReview(id){
         clearSeal(r);r.aiStatus='unavailable';r.aiError='Packaging intelligence is not configured on this server. Local extraction and exact checks are available.';r.aiFailure={code:'AI_NOT_CONFIGURED',retryAt:null};r.warnings.push('Multimodal intelligence was not run because no server-side API key is configured. Local results are available.');audit(r,'ai_unavailable',r.aiError);await save(r);
       }else{
         r.aiStatus='running';r.progress='Local checks are ready; Packaging intelligence is analyzing sources in the background';await save(r);
-        const cacheId=createHash('sha256').update(JSON.stringify({version:7,model,docs:r.documents.map(d=>[d.sha256,d.role,d.name])})).digest('hex');const cache=join(storage,'cache',cacheId+'.json');
+        const cacheId=createHash('sha256').update(JSON.stringify({version:8,model,docs:r.documents.map(d=>[d.sha256,d.role,d.name])})).digest('hex');const cache=join(storage,'cache',cacheId+'.json');
         const cacheHit=existsSync(cache),canonical={documents:r.documents.map((d,index)=>({...d,id:'source-'+index})),options:structuredClone(r.options)};
         try{
           let ai=null,lastError=null;
@@ -232,13 +234,13 @@ async function processReview(id){
           // Another request can record a reviewer decision while Gemini is running.
           // Reload before applying AI output so those decisions and source choices survive.
           r=await load(id);r.ai=structuredClone(ai);
-          for(const field of ['facts','rules','transcriptions','faceSuggestions','sentPages','unverifiedPages','omittedPages'])r.ai[field]=r.ai[field].map(item=>{
+          for(const field of ['facts','rules','transcriptions','artworkReadings','faceSuggestions','sentPages','unverifiedPages','omittedPages'])r.ai[field]=(r.ai[field]||[]).map(item=>{
             const index=canonical.documents.findIndex(d=>d.id===item.documentId);return index<0?null:{...item,documentId:r.documents[index].id};
           }).filter(Boolean);
           r.ai.transport={...r.ai.transport,cacheHit,...(cacheHit?{attempts:0}:{})};
           r.warnings.push(...(r.ai.warnings||[]));
           audit(r,cacheHit?'ai_cache_reused':'ai_request_completed',cacheHit?'Saved complete intelligence result reused for identical files, roles, and model. No provider request.':`Packaging intelligence processed ${r.ai.imagePagesSent} image page(s) using ${r.ai.transport.requests} request(s) and ${r.ai.transport.attempts} outbound attempt(s).`);
-          for(const t of r.ai.transcriptions){const d=r.documents.find(d=>d.id===t.documentId),p=d?.pages.find(p=>p.number===t.page);if(p&&typeof t.text==='string'&&t.text.length<50000){p.visualText=t.text;if(p.method==='vision_needed'){p.text=t.text;p.method='ai_transcription';d.lines.push(...t.text.split('\n').filter(Boolean).map(text=>({text,page:p.number,box:null})));d.text=d.pages.map(p=>p.text).join('\n');}}}
+          applyTranscriptions(r.documents,r.ai.transcriptions);
           clearSeal(r);r.engine='Packaging Intelligence + exact comparisons';r.aiStatus='complete';r.progress='Intelligence and local review complete';refreshDependencies(r);Object.assign(r,analyze(r));if(r.parentId){const previous=await load(r.parentId);r.revision=compareRevisions(previous,r);carryForwardUnaffectedSourceDecisions(previous,r);}audit(r,'analysis_completed',`${r.findings.length} findings; ${r.engine}`);await save(r);
         }catch(error){
           r=await load(id);clearSeal(r);r.aiStatus='unavailable';r.aiError=error.name==='TimeoutError'?'Intelligence request timed out.':error.message;r.aiFailure={code:error.code||'AI_UNAVAILABLE',retryAt:error.retryAt||null};r.warnings.push('Packaging intelligence unavailable: '+r.aiError+' Local checks remain available.');r.progress='Local review complete; Intelligence engine unavailable';audit(r,'ai_unavailable',r.aiError);await save(r);
@@ -266,13 +268,13 @@ async function createReview(input,actor){
         if(previous.ai){
           r.ai=structuredClone(previous.ai);
           const replacedIds=new Set((input.files||[]).map(file=>file.replacesFileId));
-          for(const key of ['facts','rules','transcriptions','sentPages','unverifiedPages','omittedPages'])if(Array.isArray(r.ai[key]))r.ai[key]=r.ai[key].filter(item=>!replacedIds.has(item.documentId));
+          for(const key of ['facts','rules','transcriptions','artworkReadings','sentPages','unverifiedPages','omittedPages'])if(Array.isArray(r.ai[key]))r.ai[key]=r.ai[key].filter(item=>!replacedIds.has(item.documentId));
           const replacedNames=new Set(previous.files.filter(file=>replacedIds.has(file.id)).map(file=>file.name));
           if(Array.isArray(r.ai.warnings))r.ai.warnings=r.ai.warnings.filter(warning=>![...replacedNames].some(name=>warning.includes(name)));
           delete r.ai.transport;
         }
         files=await buildSourceRevisionInputs(previous.files,input.files,async file=>readFile(join(dir(previous.id),'files',file.disk)));
-        r.files=await writeInputs(r,files);r.files.forEach((file,index)=>{file.id=previous.files[index].id;});
+        r.files=await writeInputs(r,files);r.files.forEach((file,index)=>{if(previous.files[index])file.id=previous.files[index].id;});
       }else{
         r.revisionKind='artwork';r.name=previous.name+' · revision';r.options={...previous.options,marketPreset:input.options?.marketPreset??previous.options.marketPreset??'none',completeArtwork:input.options?.completeArtwork===true,panelPlacementConfirmed:false,packageMappingConfirmed:false,panelZones:sampleZones(previous.sample),...(['fieldday','clean','conflict','signals'].includes(previous.sample)?{panelZoneSource:'authored synthetic sample geometry'}:{}),nutritionBasisConfirmed:false,netQuantityConfirmed:false,...(input.mode==='ai'?{aiRulesConfirmed:false}:{})};
         const references=previous.files.filter(f=>f.role!=='artwork');

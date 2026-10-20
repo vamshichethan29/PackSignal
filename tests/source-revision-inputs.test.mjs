@@ -33,3 +33,22 @@ test('source revision refuses artwork replacement, duplicate targets, and role c
   ], readOriginal), /only once/);
   await assert.rejects(buildSourceRevisionInputs(previous, [{ replacesFileId: 'spec', name: 'rules.json', role: 'rules', base64: 'YQ==' }], readOriginal), /keep the source role/);
 });
+
+test('an artwork-only review can add references without changing original artwork or capture labels', async () => {
+  const faces=[{page:1,face:'front',box:[.1,.1,.9,.9]}];
+  const previous=[{id:'art',name:'camera.pdf',role:'artwork',captureFaces:faces}];
+  const result=await buildSourceRevisionInputs(previous,[{name:'product.json',role:'spec',base64:'e30='},{name:'rules.json',role:'rules',base64:'e30='}],async()=>Buffer.from('unchanged artwork'));
+  assert.deepEqual(result.map(item=>item.role),['artwork','spec','rules']);
+  assert.equal(Buffer.from(result[0].base64,'base64').toString(),'unchanged artwork');
+  assert.deepEqual(result[0].captureFaces,faces);
+  assert.notEqual(result[0].captureFaces,faces);
+});
+
+test('source additions reject artwork, unknown roles and exceeding the review file limit', async () => {
+  const read=async()=>Buffer.from('original');
+  for(const role of ['artwork','dieline','unknown']){
+    await assert.rejects(buildSourceRevisionInputs([{id:'art',role:'artwork'}],[{name:'new.json',role,base64:'e30='}],read),/New references/);
+  }
+  const previous=Array.from({length:8},(_,index)=>({id:String(index),role:index?'spec':'artwork'}));
+  await assert.rejects(buildSourceRevisionInputs(previous,[{name:'product.json',role:'spec',base64:'e30='}],read),/eight files/);
+});

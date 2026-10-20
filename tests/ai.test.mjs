@@ -47,6 +47,7 @@ test('sends all four artwork pages in bounded image batches and combines transcr
     assert.equal(result.visionComplete,true);
     assert.deepEqual(result.transcriptions.map(item=>item.page),[1,2,3,4]);
     assert.equal(result.observations.length,1);
+    assert.deepEqual(result.artworkReadings,[],'older provider payloads without structured readings remain supported');
     assert.deepEqual(result.warnings,[]);
     assert.equal(result.usage.totalTokenCount,36);
   }finally{await rm(directory,{recursive:true,force:true});}
@@ -132,5 +133,108 @@ test('constrains AI fact fields in the response schema and drops unsupported pro
     assert.ok(factFields.includes('net_quantity'));
     assert.ok(!factFields.includes('legal_approval'));
     assert.deepEqual(result.facts.map(item=>item.field),['net_quantity']);
+  }finally{await rm(directory,{recursive:true,force:true});}
+});
+
+test('accepts structured artwork readings only when grounded in the same submitted artwork page',async()=>{
+  const {directory,review}=await makeReview();const requestGemini=await isolatedGeminiRequest();
+  review.documents[0].pages=review.documents[0].pages.slice(0,2);
+  review.documents[1].pages=[{number:1,method:'vision_needed',image:'page-3.png',text:''}];
+  let request;
+  const reading=(overrides={})=>({documentId:'art-1',page:1,field:'brand',value:'Mori Meadow',quote:'Mori Meadow Whole Milk',...overrides});
+  try{
+    const result=await geminiReview(review,directory,'mock-key','gemini-test',async(_url,options)=>{
+      request=JSON.parse(options.body);
+      return success({
+        facts:[],rules:[],observations:[],
+        transcriptions:[
+          {documentId:'art-1',page:1,text:'Mori Meadow Whole Milk\nNET 1 L\nKeep refrigerated [unreadable]'},
+          {documentId:'art-1',page:2,text:'Made by Green Dairy'},
+          {documentId:'spec-1',page:1,text:'Mori Meadow Whole Milk\nNET 750 mL'},
+        ],
+        artworkReadings:[
+          reading(),
+          reading({field:'net_quantity',value:'1 L',quote:'NET 1 L'}),
+          reading({page:2,field:'manufacturer',value:'Green Dairy',quote:'Made by Green Dairy'}),
+          reading({documentId:'spec-1'}),
+          reading({documentId:'unknown'}),
+          reading({page:99}),
+          reading({page:2}),
+          reading({field:'legal_approval'}),
+          reading({value:undefined}),
+          reading({value:''}),
+          reading({quote:' '}),
+          reading({value:'Meadow Mori'}),
+          reading({value:'750 mL',quote:'NET 750 mL'}),
+          reading({field:'storage_statement',value:'refrigerated',quote:'Keep refrigerated [unreadable]'}),
+          reading({value:'[unreadable]',quote:'[unreadable]'}),
+          reading({value:'Mori',quote:'Mori Meadow won first prize'}),
+        ],
+      });
+    },requestGemini);
+    assert.deepEqual(result.artworkReadings,[
+      reading(),
+      reading({field:'net_quantity',value:'1 L',quote:'NET 1 L'}),
+      reading({page:2,field:'manufacturer',value:'Green Dairy',quote:'Made by Green Dairy'}),
+    ]);
+    assert.deepEqual(result.facts,[],'artwork readings never become source facts');
+    const fields=request.generationConfig.responseJsonSchema.properties.artworkReadings.items.properties.field.enum;
+    assert.ok(fields.includes('brand')&&fields.includes('net_quantity'));
+    assert.ok(!fields.includes('legal_approval'));
+    assert.match(request.systemInstruction.parts[0].text,/unverified artwork observations, not source facts/);
+    assert.equal(result.visionComplete,false,'a useful partial transcription is not a complete image read');
+    assert.deepEqual(result.unverifiedPages,[{documentId:'art-1',page:1}]);
+  }finally{await rm(directory,{recursive:true,force:true});}
+});
+
+test('collects artwork readings on later image batches without a spec and preserves each page of repeated copy',async()=>{
+  const {directory,review}=await makeReview();const requestGemini=await isolatedGeminiRequest(),requests=[];
+  review.documents=review.documents.filter(doc=>doc.role==='artwork');
+  try{
+    const result=await geminiReview(review,directory,'mock-key','gemini-test',async(_url,options)=>{
+      const request=JSON.parse(options.body);requests.push(request);
+      const pages=pageLabels(request);
+      const readings=pages.map(page=>({...page,field:'brand',value:'Mori Meadow',quote:'Mori Meadow'}));
+      return success({
+        facts:[],rules:[],observations:[],
+        transcriptions:pages.map(page=>({...page,text:'Mori Meadow'})),
+        artworkReadings:[...readings,readings[0]],
+      });
+    },requestGemini);
+    assert.equal(requests.length,2,'structured readings use the existing image requests');
+    assert.deepEqual(result.artworkReadings.map(reading=>reading.page),[1,2,3,4]);
+    assert.equal(result.artworkReadings.length,4,'same-page duplicates are removed, repeated text on other pages remains located');
+    assert.deepEqual(JSON.parse(requests[1].contents[0].parts[0].text).sources,[]);
+    for(const request of requests)assert.match(request.systemInstruction.parts[0].text,/artworkReadings: at most 24.*even when no product spec or rules were supplied/);
+    assert.match(JSON.parse(requests[1].contents[0].parts[0].text).task,/structured artworkReadings even when no sources are supplied/);
+    assert.deepEqual(result.facts,[]);
+    assert.equal(result.visionComplete,true);
+  }finally{await rm(directory,{recursive:true,force:true});}
+});
+
+test('caps structured readings per image batch',async()=>{
+  const {directory,review}=await makeReview();const requestGemini=await isolatedGeminiRequest();
+  review.documents[0].pages=review.documents[0].pages.slice(0,1);
+  const readings=Array.from({length:26},(_,index)=>({documentId:'art-1',page:1,field:'product_name',value:`Product ${index}`,quote:`Product ${index}`}));
+  try{
+    const result=await geminiReview(review,directory,'mock-key','gemini-test',async()=>success({
+      facts:[],rules:[],observations:[],transcriptions:[{documentId:'art-1',page:1,text:readings.map(reading=>reading.quote).join('\n')}],artworkReadings:readings,
+    }),requestGemini);
+    assert.equal(result.artworkReadings.length,24);
+  }finally{await rm(directory,{recursive:true,force:true});}
+});
+
+test('empty, marker-only and partial transcriptions cannot make image coverage complete',async()=>{
+  const {directory,review}=await makeReview();const requestGemini=await isolatedGeminiRequest();
+  const text=[' \n\t ','[unreadable] [ UNREADABLE ]','... —','Mori Meadow\n[unreadable]\nNET 1 L'];
+  try{
+    const result=await geminiReview(review,directory,'mock-key','gemini-test',async(_url,options)=>{
+      const pages=pageLabels(JSON.parse(options.body));
+      return success({facts:[],rules:[],observations:[],transcriptions:pages.map(page=>({...page,text:text[page.page-1]}))});
+    },requestGemini);
+    assert.deepEqual(result.transcriptions,[{documentId:'art-1',page:4,text:text[3]}],'useful partial text is retained, empty reads are discarded');
+    assert.deepEqual(result.unverifiedPages,[1,2,3,4].map(page=>({documentId:'art-1',page})));
+    assert.equal(result.visionComplete,false);
+    assert.ok(result.warnings.some(warning=>warning.includes('inspect these pages manually')));
   }finally{await rm(directory,{recursive:true,force:true});}
 });
