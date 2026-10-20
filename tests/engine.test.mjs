@@ -75,6 +75,43 @@ test('transcribed artwork alone yields observed signals but never product-refere
   assert.match(result.coverage.limits[0],/Product-copy correctness remains unverified/);
 });
 
+test('image-only review queue records visible copy as observations and never treats it as verified truth',()=>{
+  const text='Brand: Mori Meadow\nProduct: Whole Milk\nNET QUANTITY: 1 L';
+  const art={id:'camera',name:'milk-photo.jpg',role:'artwork',text,lines:text.split('\n').map((text,index)=>({text,line:index+1,page:1,box:[.1,.1+index*.2,.8,.2+index*.2]})),cells:[],pages:[{number:1,width:960,height:1280,unit:'px',image:'milk-photo.jpg',text,method:'ai_transcription',codes:[]}]};
+  const result=analyze({documents:[art],options:{},ai:{transcriptions:[{documentId:'camera',page:1,text}]},decisions:{},audit:[]});
+  const observations=result.findings.filter(item=>item.method==='image_observation');
+  assert.equal(observations.length,3);
+  assert.ok(observations.every(item=>item.status==='review'));
+  assert.equal(observations.find(item=>item.title==='Confirm visible Brand').observed,'Mori Meadow');
+  assert.equal(observations.find(item=>item.title==='Confirm visible Product identity').observed,'Whole Milk');
+  assert.equal(observations.find(item=>item.title==='Confirm visible net quantity').observed,'1 L');
+  assert.ok(observations.every(item=>/not itself a verified product fact/.test(item.explanation)));
+  assert.equal(result.counts.match,0);
+  assert.equal(result.counts.issue,0);
+});
+
+test('partial image transcription groups unreadable source checks instead of showing false mismatches',()=>{
+  const data={product:{brand:'Mori Meadow',name:'Whole Milk',net_quantity:{value:946,unit:'mL'},ingredients:'Whole milk, Vitamin D3.',storage_statement:'Keep refrigerated.'}};
+  const text='Mori Meadow\nNET QUANTITY: 1 L';
+  const art={id:'art',name:'milk-video.mp4',role:'artwork',text,lines:text.split('\n').map((text,index)=>({text,line:index+1,page:1,box:[.1,.1+index*.25,.8,.2+index*.25]})),cells:[],pages:[
+    {number:1,width:960,height:1280,unit:'px',image:'frame-1.jpg',text,method:'ai_transcription'},
+    {number:2,width:960,height:1280,unit:'px',image:'frame-2.jpg',text:'',method:'vision_needed'},
+    {number:3,width:960,height:1280,unit:'px',image:'frame-3.jpg',text:'',method:'vision_needed'},
+    {number:4,width:960,height:1280,unit:'px',image:'frame-4.jpg',text:'',method:'vision_needed'},
+  ]};
+  const spec={id:'spec',name:'product-specification.json',role:'spec',text:JSON.stringify(data),data,lines:[],cells:[],pages:[]};
+  const result=analyze({documents:[art,spec],options:{},ai:{transcriptions:[{documentId:'art',page:1,text}]},decisions:{},audit:[]});
+  const quantityFinding=result.findings.find(item=>item.title==='Net quantity');
+  assert.equal(quantityFinding.status,'review','an image reading may flag a discrepancy, but never settles it');
+  assert.equal(quantityFinding.observed,'1 L');
+  const blocked=result.findings.filter(item=>item.method==='artwork_readability');
+  assert.equal(blocked.length,1);
+  assert.ok(blocked[0].blockedChecks.length>=3);
+  assert.match(blocked[0].title,/Confirm unreadable package copy/);
+  assert.match(blocked[0].explanation,/not an automatic mismatch/);
+  assert.equal(result.findings.some(item=>item.status==='issue'&&item.method==='exact_comparison'),false);
+});
+
 test('validates GTIN-8, GTIN-12, GTIN-13 and GTIN-14 check digits and normalizes equivalent zero padding',()=>{
   for(const value of ['96385074','036000291452','4006381333931','10012345000017'])assert.equal(hasValidGtinCheckDigit(value),true,value);
   assert.equal(hasValidGtinCheckDigit('4006381333932'),false);

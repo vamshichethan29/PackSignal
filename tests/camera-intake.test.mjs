@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { assessPhotoQuality, buildArtworkPdf } from '../public/camera-intake.js';
+import { assessPhotoQuality, buildArtworkPdf, videoFrameTimes } from '../public/camera-intake.js';
 
 function pixels(width, height, colorAt) {
   const data = new Uint8ClampedArray(width * height * 4);
@@ -36,4 +36,12 @@ test('camera pages are assembled without treating generated photo labels as artw
     const offset = Number(entry.match(/\d{10}/)[0]);
     assert.ok(source.startsWith(`${index + 1} 0 obj`, offset), `object ${index + 1} offset points to its object`);
   });
+});
+
+test('browser video fallback samples four sides of a short turn when space allows', () => {
+  assert.deepEqual(videoFrameTimes(5), [.625, 1.875, 3.125, 4.375]);
+  assert.equal(videoFrameTimes(20).length, 5);
+  assert.equal(videoFrameTimes(120).length, 8);
+  assert.equal(videoFrameTimes(5, 2).length, 2, 'remaining intake capacity still bounds the frame count');
+  assert.deepEqual(videoFrameTimes(0), []);
 });

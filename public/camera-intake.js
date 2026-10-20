@@ -9,7 +9,7 @@ export function cameraIntakeMarkup() {
   return `<section class="camera-intake panel" data-camera-intake>
     <div class="eyebrow">CAMERA & PHOTO INTAKE</div>
     <h3>Capture package faces</h3>
-    <p class="subtle">Take face-by-face photos, choose images, or extract stills from a video. Common photo and video formats up to 30 MB are supported; videos can be up to two minutes and provide up to eight review pages. Photos continue through the normal 2D review; confirm face crops in Sources before the 3D preview.</p>
+    <p class="subtle">Take face-by-face photos, choose images, or extract at least four evenly spaced stills from a video when space allows. PackSignal suggests visible faces and crops; review them before using the four-side 3D preview.</p>
     <div class="camera-intake-actions">
       <label>Face to capture<select data-capture-face>${faces.map(([id,label]) => `<option value="${id}">${label}</option>`).join('')}</select></label>
       <button type="button" class="secondary" data-camera-start>Open camera</button>
@@ -41,6 +41,13 @@ export function assessPhotoQuality(imageData) {
   const variance = count ? squareSum / count - (sum / count) ** 2 : 0;
   const glare = samples ? bright / samples : 0;
   return { blur: variance < 75, glare: glare > 0.13, variance: Math.round(variance), glarePercent: Math.round(glare * 100) };
+}
+
+export function videoFrameTimes(duration, maxFrames = 8) {
+  if (!Number.isFinite(duration) || duration <= 0 || !Number.isInteger(maxFrames) || maxFrames < 1) return [];
+  const count = Math.min(maxFrames, Math.max(4, Math.ceil(duration / 4)));
+  return Array.from({ length: count }, (_, index) =>
+    Math.min(duration * (index + .5) / count, Math.max(0, duration - .08)));
 }
 
 function canvasQuality(canvas) {
@@ -214,9 +221,9 @@ export function mountCameraIntake(container, onFiles, getCurrentCount = () => 0,
           video.preload = 'metadata'; video.muted = true; video.playsInline = true;
           const metadata = videoMetadata(video); video.src = url; video.load(); await metadata;
           if (!Number.isFinite(video.duration) || video.duration <= 0) throw serverError;
-          const count = Math.min(8 - getCurrentCount(), Math.max(3, Math.ceil(video.duration / 4)));
-          for (let index = 0; index < count; index++) {
-            await seek(video, video.duration * ((index + .5) / count));
+          const frameTimes = videoFrameTimes(video.duration, 8 - getCurrentCount());
+          for (const time of frameTimes) {
+            await seek(video, time);
             const frame = await frameFile(video, 'unassigned', 'video');
             frame.captureTime = video.currentTime;
             output.push(frame);
@@ -230,9 +237,9 @@ export function mountCameraIntake(container, onFiles, getCurrentCount = () => 0,
         video.preload = 'metadata'; video.muted = true; video.playsInline = true;
         const metadata = videoMetadata(video); video.src = url; video.load(); await metadata;
         if (!Number.isFinite(video.duration) || video.duration <= 0) throw new Error('Video duration could not be read.');
-        const count = Math.min(8 - getCurrentCount(), Math.max(3, Math.ceil(video.duration / 4)));
-        for (let index = 0; index < count; index++) {
-          await seek(video, video.duration * ((index + .5) / count));
+        const frameTimes = videoFrameTimes(video.duration, 8 - getCurrentCount());
+        for (const time of frameTimes) {
+          await seek(video, time);
           const frame = await frameFile(video, 'unassigned', 'video');
           frame.captureTime = video.currentTime;
           output.push(frame);

@@ -76,13 +76,18 @@ test('returns only valid face suggestions tied to submitted artwork pages',async
       request=JSON.parse(options.body);
       const pages=pageLabels(request);
       return success(transcriptionPayload(pages,[],[
-        {documentId:'art-1',page:1,face:'front',reason:'Brand and product name face the camera.'},
-        {documentId:'art-1',page:2,face:'back',reason:'Nutrition panel is visible.'},
+        {documentId:'art-1',page:1,face:'front',reason:'Brand and product name face the camera.',box:[.1,.1,.85,.9]},
+        {documentId:'art-1',page:1,face:'right',reason:'A narrow side panel is visible.',box:[.84,.12,.98,.88]},
+        {documentId:'art-1',page:2,face:'back',reason:'Nutrition panel is visible.',box:[.08,.08,.92,.92]},
         {documentId:'art-1',page:99,face:'left',reason:'Page was not sent.'},
         {documentId:'art-1',page:1,face:'sideways',reason:'Unsupported face.'},
+        {documentId:'art-1',page:2,face:'left',reason:'Malformed crop.',box:[.9,.9,.1,.1]},
       ]));
     },requestGemini);
-    assert.deepEqual(result.faceSuggestions.map(item=>[item.page,item.face]),[[1,'front'],[2,'back']]);
+    assert.deepEqual(result.faceSuggestions.map(item=>[item.page,item.face]),[[1,'front'],[1,'right'],[2,'back']]);
+    assert.deepEqual(result.faceSuggestions[1].box,[.84,.12,.98,.88]);
+    assert.match(request.generationConfig.responseJsonSchema.properties.faceSuggestions.items.properties.box.type,/array/);
+    assert.ok(request.generationConfig.responseJsonSchema.properties.faceSuggestions.items.required.includes('box'),'a face suggestion without a crop is not usable');
     assert.match(request.generationConfig.responseJsonSchema.properties.faceSuggestions.items.properties.face.enum.join(','),/front.*back/);
     assert.match(request.contents[0].parts[0].text,/unassigned/,'the model receives context that these are unlabelled capture frames');
   }finally{await rm(directory,{recursive:true,force:true});}

@@ -58,6 +58,13 @@ test('fallback extracts bounded frames from uploaded bytes and removes source an
   await assertClean();
 });
 
+test('five-second video samples four distinct evenly spaced times when the intake has room', async t => {
+  const { convert, assertClean } = await harness(t);
+  const result = await convert({ bytes: Buffer.from('ok'), name: 'four-view.mp4', kind: 'video', maxFrames: 8 });
+  assert.deepEqual(result.frames.map(frame => frame.timeSeconds), [.625, 1.875, 3.125, 4.375]);
+  await assertClean();
+});
+
 test('image fallback produces one JPEG and does not seek', async t => {
   const { convert, calls, assertClean } = await harness(t);
   const result = await convert({ bytes: Buffer.from('ok'), name: 'phone-photo.tiff', kind: 'image', maxFrames: 8 });
