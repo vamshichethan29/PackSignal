@@ -268,17 +268,23 @@ export function workbenchArtwork(review,finding,{mode='2d',pageNumber=1,activeEv
   const waitingForPackageConfirmation=Boolean(dieline&&!packageConfirmed);
   const zones=waitingForPackageConfirmation?{}:(review.options?.panelZones||{});
   const previewZones=dieline?{}:sourcePreviewZones(review);
+  const captureZones=captureFaceSuggestions(review);
   const visualZones={...previewZones,...zones};
   const mappedCount=Object.values(zones).filter(zone=>zone?.box).length;
   const samplePreview=Object.keys(previewZones).some(name=>!zones[name]?.box);
   const genericFullPagePreview=!review.sample&&samplePreview&&Object.keys(previewZones).length===1&&previewZones.front?.box?.every((value,index)=>value===[0,0,1,1][index]);
   const genericPanelPreview=!review.sample&&samplePreview&&!genericFullPagePreview;
   const genericPreviewOnly=!review.sample&&samplePreview;
-  const capturePreview=!review.sample&&samplePreview&&Object.keys(captureFaceSuggestions(review)).length>0;
+  const capturePreview=!review.sample&&samplePreview&&Object.keys(captureZones).length>0;
   const suggestedCapturePages=new Set((review.ai?.faceSuggestions||[]).filter(item=>item?.face&&item.face!=='unassigned').map(item=>item.page));
   const unassignedCaptureCount=new Set((review.options?.captureFaces||[]).filter(item=>item?.face==='unassigned'&&!suggestedCapturePages.has(item.page)).map(item=>item.page)).size;
-  const aiFacePreview=capturePreview&&Object.entries(captureFaceSuggestions(review)).some(([face,zone])=>(review.ai?.faceSuggestions||[]).some(item=>item.face===face&&item.page===zone.page));
-  const aiSuggestedFaceCount=aiFacePreview?Object.entries(captureFaceSuggestions(review)).filter(([face,zone])=>(review.ai?.faceSuggestions||[]).some(item=>item.face===face&&item.page===zone.page)).length:0;
+  const capturePageCount=new Set((review.options?.captureFaces||[]).filter(item=>Number.isInteger(item?.page)&&artwork(review)?.pages?.some(page=>page.number===item.page)).map(item=>item.page)).size;
+  const cartonSideCount=['front','right','back','left'].filter(face=>captureZones[face]?.box||zones[face]?.box).length;
+  const cartonCoverage=capturePageCount&&packageType==='carton'
+    ?`${cartonSideCount}/4 carton sides pictured${unassignedCaptureCount?` · ${unassignedCaptureCount} captured view${unassignedCaptureCount===1?' needs':'s need'} a face label`:''}`
+    :'';
+  const aiFacePreview=capturePreview&&Object.entries(captureZones).some(([face,zone])=>(review.ai?.faceSuggestions||[]).some(item=>item.face===face&&item.page===zone.page));
+  const aiSuggestedFaceCount=aiFacePreview?Object.entries(captureZones).filter(([face,zone])=>(review.ai?.faceSuggestions||[]).some(item=>item.face===face&&item.page===zone.page)).length:0;
   let contextZone=null,selectedPanelFound=false;
   if(selected?.item.box){
     const [x0,y0,x1,y1]=selected.item.box,center=[(x0+x1)/2,(y0+y1)/2];
@@ -313,7 +319,7 @@ export function workbenchArtwork(review,finding,{mode='2d',pageNumber=1,activeEv
     const contextName=contextZone?(faceLabels[contextZone[0]]||contextZone[0]):'';
     const location=cadModel.ok?`DXF-dimensioned outer shell · ${Math.round(cadModel.dimensions.width)} × ${Math.round(cadModel.dimensions.height)} × ${Math.round(cadModel.dimensions.depth)} mm`:aiFacePreview?`${aiSuggestedFaceCount} AI-suggested face crop${aiSuggestedFaceCount===1?'':'s'} · confirm in Sources`:unassignedCaptureCount?'Captured pages · assign faces in Sources':capturePreview?'Captured artwork · preview only':genericFullPagePreview?'Full artwork page · illustrative front only':genericPanelPreview?'Detected panel crops · preview only':samplePreview?(review.sample==='organizer'?'Organizer artwork · illustrative fold':'3D package preview · illustrative fold'):contextZone?`${selectedPanelFound?'Evidence on':'Mapped face'} ${contextName}`:'Artwork faces not mapped';
     const prompt=(genericPreviewOnly||!mappedCount&&!samplePreview)
-      ?`<div class="carton-map-prompt"><div><b>Bring your artwork onto the package</b><span>${aiFacePreview?'Review the AI face suggestions in Sources, crop each still to the visible package panel, then confirm the mapping. Suggestions do not establish folds or dimensions.':unassignedCaptureCount?`Inspect the ${unassignedCaptureCount} captured pages in Sources, assign each visible face, then crop and confirm the mapping.`:capturePreview?'Inspect each captured face, crop away the background, and confirm the mapping in Sources.':genericFullPagePreview?'Map the real package faces before treating this illustrative 3D fold as package-specific.':genericPanelPreview?'Confirm the detected face crops in Sources & decisions before treating this illustrative fold as package-specific.':'Map the supplied front, back, and side panels to preview this carton.'}</span></div><button type="button" class="secondary" data-action="tab" data-tab="sources">Map faces →</button></div>`
+      ?`<div class="carton-map-prompt"><div><b>Bring your artwork onto the package</b><span>${aiFacePreview?`${cartonCoverage?`${cartonCoverage}. `:''}Review the AI face suggestions in Sources, crop each still to the visible package panel, then confirm the mapping. Unseen faces stay blank; suggestions do not establish folds or dimensions.`:unassignedCaptureCount?`${cartonCoverage?`${cartonCoverage}. `:''}Inspect the captured pages in Sources, assign each visible face, then crop and confirm the mapping.`:capturePreview?`${cartonCoverage?`${cartonCoverage}. `:''}Inspect each captured face, crop away the background, and confirm the mapping in Sources.`:genericFullPagePreview?'Map the real package faces before treating this illustrative 3D fold as package-specific.':genericPanelPreview?'Confirm the detected face crops in Sources & decisions before treating this illustrative fold as package-specific.':'Map the supplied front, back, and side panels to preview this carton.'}</span></div><button type="button" class="secondary" data-action="tab" data-tab="sources">Map faces →</button></div>`
       :'';
     const depthNote=cadModel.ok?cadModel.accuracyNote:mappedCount&&dims.measured?(modelType==='carton'?'Proportions follow your mapped faces.':`${packageName} proportions follow your mapped faces.`):(modelType==='carton'?'Carton proportions are illustrative.':`${packageName} proportions are illustrative.`);
     const studioLabel=cadModel.ok?`DXF-dimensioned shell · ${cadModel.creaseCount} crease segments`:aiFacePreview?`${aiSuggestedFaceCount} AI face crops · unconfirmed`:unassignedCaptureCount?`${unassignedCaptureCount} captured pages · faces unassigned`:capturePreview?'Captured artwork · preview only':genericFullPagePreview?'Full artwork page · preview only':genericPanelPreview?'Detected panels · preview only':samplePreview?'Source artwork preview':`${mappedCount} mapped face${mappedCount===1?'':'s'}`;

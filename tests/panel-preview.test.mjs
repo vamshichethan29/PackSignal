@@ -112,7 +112,7 @@ test('AI face suggestions improve camera previews but remain unconfirmed crops',
   assert.match(preview,/3 AI face crops · unconfirmed/);
   assert.match(preview,/Package preview · 0 faces mapped/);
   assert.match(preview,/AI-suggested face preview only/);
-  assert.match(preview,/Suggestions do not establish folds or dimensions/);
+  assert.match(preview,/Unseen faces stay blank; suggestions do not establish folds or dimensions/);
   assert.match(preview,/data-geometry-source="illustrative"/);
   assert.doesNotMatch(preview,/data-cad-export/);
   const mapper=panelZoneMapper(r);
@@ -153,6 +153,7 @@ test('four video stills can texture all four carton faces after two independent 
     for(const face of ['front','right','back','left'])assert.match(html,new RegExp(`data-carton-face="${face}"[^>]*>[\\s\\S]*?milk-frame-${expected.findIndex(([name])=>name===face)+1}\\.jpg`),`pass ${pass}: ${face} uses its own video still`);
     assert.match(html,/4 AI face crops · unconfirmed/);
     assert.match(html,/Package preview · 0 faces mapped/,'AI suggestions should clear the unassigned-frame label');
+    assert.match(html,/4\/4 carton sides pictured/,'the preview should state that all four sides have source crops');
     assert.match(html,/unseen faces and package shape remain illustrative/i);
     assert.equal((html.match(/AI-suggested face preview only/g)||[]).length,4);
     assert.match(html,/data-geometry-source="illustrative"/);
@@ -174,6 +175,7 @@ test('the included milk photo shows distinct front and narrow side crops on the 
   assert.match(html,/data-carton-face="right"[^>]*>[\s\S]*?fictional-milk-carton-photo-page\.png/);
   assert.equal((html.match(/AI-suggested face preview only/g)||[]).length,2);
   assert.match(html,/Package preview · 0 faces mapped/);
+  assert.match(html,/2\/4 carton sides pictured/,'one photograph only supplies crops for the two visible faces');
   assert.match(html,/rotateY\(0deg\)/,'a new photo review starts on the front face');
   assert.match(html,/data-geometry-source="illustrative"/);
   assert.doesNotMatch(html,/data-cad-export/);
@@ -194,6 +196,8 @@ test('the included milk video yields a four-sided carton and leaves its unseen s
     assert.match(html,/<div class="carton-face carton-left unmapped[^\"]*" data-carton-face="left"[^>]*>[\s\S]*?Artwork not mapped/,'the hidden fourth face is not fabricated');
     assert.match(html,/data-angle="0"/);
     assert.match(html,/rotateY\(0deg\)/);
+    assert.match(html,/3\/4 carton sides pictured · 1 captured view needs a face label/,'the three-view video should identify its one unassigned frame');
+    assert.match(html,/Unseen faces stay blank/);
     assert.match(html,/data-geometry-source="illustrative"/);
     assert.match(html,/4-side|four-sided|unseen faces and package shape remain illustrative/i);
     assert.doesNotMatch(html,/data-cad-export/);
