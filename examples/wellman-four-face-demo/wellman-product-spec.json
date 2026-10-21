@@ -1,10 +1,10 @@
 {
-  "document_id": "DEMO-WELLMAN-60-001",
-  "version": "1.0",
+  "document_id": "DEMO-WELLMAN-60-002",
+  "version": "1.1",
   "status": "APPROVED_FOR_DEMO_ONLY",
   "effective_date": "2026-10-21",
   "synthetic": true,
-  "notice": "Demonstration reference compiled only from the supplied Wellman package photographs. It is not an official manufacturer specification, regulatory approval, or commercial claim substantiation.",
+  "notice": "Demonstration reference compiled only from visible copy in the supplied Wellman package photographs. It is not an official manufacturer specification, regulatory approval, or commercial claim substantiation.",
   "product": {
     "sku": "DEMO-WELLMAN-60",
     "package_type": "bottle_label",
@@ -12,10 +12,62 @@
     "name": "Health & Vitality",
     "variant": "60 Tablets"
   },
+  "facts": [
+    {
+      "field": "variant",
+      "label": "Pack count",
+      "value": "60 Tablets"
+    },
+    {
+      "field": "dietary_information",
+      "label": "Dietary information",
+      "value": "Gluten Free"
+    },
+    {
+      "field": "marketing_copy",
+      "label": "Key product message",
+      "value": "24 Nutrients including Ginseng & Amino Acids"
+    },
+    {
+      "field": "manufacturer",
+      "label": "Manufacturer",
+      "value": "Meyer Organics Pvt. Ltd."
+    },
+    {
+      "field": "customer_care",
+      "label": "Customer care",
+      "value": "Toll Free No. 1800 210 8899"
+    },
+    {
+      "field": "usage_direction",
+      "label": "Recommended usage",
+      "value": "One tablet per day with main meal."
+    },
+    {
+      "field": "safety_statement",
+      "label": "Safety statement",
+      "value": "NOT FOR MEDICINAL USE."
+    },
+    {
+      "field": "qr_invitation",
+      "label": "QR invitation",
+      "value": "SCAN QR CODE TO KNOW MORE"
+    },
+    {
+      "field": "nutrition_heading",
+      "label": "Nutrition heading",
+      "value": "Nutritional Information"
+    },
+    {
+      "field": "storage_guidance",
+      "label": "Storage guidance",
+      "value": "Store below 25 C in a dry place away from direct sunlight."
+    }
+  ],
   "scope": {
     "language": "English",
     "market_context": "Demonstration only",
     "package": "Four captured bottle-label views arranged as a flat artwork sheet"
   },
-  "authority_note": "Use the supplied original photos to inspect small text and legal copy. This JSON exists only to demonstrate evidence-backed comparisons."
+  "authority_note": "Use the original supplied photos to inspect small text and legal copy. This JSON exists only to demonstrate evidence-backed comparisons."
 }

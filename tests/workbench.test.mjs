@@ -90,13 +90,14 @@ test('new uploads use positioned panel labels to place each crop on the matching
   }]};
   const before=structuredClone(labeled),zones=sourcePreviewZones(labeled);
   assert.deepEqual(Object.keys(zones),['back','left','front','right']);
-  assert.deepEqual(zones.front,{page:1,box:[.51,0,.76,1]},'left-aligned panel labels locate the actual front column');
-  assert.deepEqual(zones.left,{page:1,box:[.26,0,.51,1]});
+  assert.deepEqual(zones.front,{page:1,box:[.51,.18,.76,.82]},'left-aligned panel labels locate the actual front photo column without flat-sheet margins');
+  assert.deepEqual(zones.left,{page:1,box:[.26,.18,.51,.82]});
   const html=workbenchArtwork(labeled,finding,{mode:'3d'});
   for(const face of ['back','left','front','right'])assert.match(html,new RegExp(`data-carton-face="${face}"[^>]*detected panel preview only`));
   assert.match(html,/Detected panels · preview only/);
   assert.match(html,/Confirm the detected face crops in Sources & decisions/);
   assert.match(html,/Detected panel crops · preview only/);
+  assert.match(html,/4 detected package views · preview/);
   assert.match(html,/the preview does not change review findings/);
   assert.match(html,/reviewer mapping not confirmed/);
   assert.doesNotMatch(html,/carton-pin |carton-evidence-box|Evidence on Front|Mapped face Front/);

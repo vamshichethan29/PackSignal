@@ -7,4 +7,6 @@ Upload exactly these two files through **New review → PDF / artwork file**:
 
 The PDF contains the supplied front, back, left and right package photos on one explicitly labelled flat sheet. The product specification declares `bottle_label`, so PackSignal renders the normal generated four-face bottle-label preview from these uploaded files. It is not one of the frozen built-in samples.
 
+The prepared pair produces 12 evidence-backed matches: brand, product identity, pack count, dietary information, product message, manufacturer, customer care, recommended usage, safety statement, QR invitation, nutrition heading, and storage guidance.
+
 The JSON is a demonstration reference transcribed only from visible packaging facts; it is not manufacturer-authoritative or a compliance certification.

@@ -197,6 +197,13 @@ test('normalizes case, compatibility characters, and whitespace', () => {
   assert.equal(normal('FIELD DAY　Original'), normal('field day original'));
 });
 
+test('keeps supplied labels for additional structured specification checks', () => {
+  const spec={id:'spec',name:'demo.json',role:'spec',text:'One tablet per day with main meal.',lines:[],pages:[],cells:[],data:{facts:[{field:'usage_direction',label:'Recommended usage',value:'One tablet per day with main meal.'}]}};
+  const fact=extractFacts(spec)[0];
+  assert.equal(fact.field,'usage_direction');
+  assert.equal(fact.label,'Recommended usage');
+});
+
 test('ignores AI facts that use fields outside the supported packaging checks', () => {
   const art={id:'art',name:'carton.pdf',role:'artwork',text:'NET QUANTITY: 750 mL\nFDA approved',lines:[
     {text:'NET QUANTITY: 750 mL',line:1,page:1,box:[.1,.1,.5,.2]},
