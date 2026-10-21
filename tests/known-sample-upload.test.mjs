@@ -22,6 +22,15 @@ test('recognizes renamed prepared files by their exact contents', () => {
   ], { organizer: { artwork: hash(artwork), spec: hash(spec) } }), 'organizer');
 });
 
+test('recognizes the exact Dancing Fish pair before the uploader roles are corrected', () => {
+  const artwork = Buffer.from('prepared dancing fish artwork');
+  const spec = Buffer.from('prepared dancing fish specification');
+  assert.equal(recognizedSampleUpload([
+    { name: 'fish.pdf', role: 'artwork', base64: base64(artwork) },
+    { name: 'reference.xlsx', role: 'artwork', base64: base64(spec) },
+  ], { organizer: { artwork: hash(artwork), spec: hash(spec) } }), 'organizer');
+});
+
 test('requires the complete known sample pair and never guesses from unrelated uploads', () => {
   assert.equal(recognizedSampleUpload([{ name: 'DancingFish_Granola_Berry_US_Carton.pdf', role: 'artwork' }]), null);
   assert.equal(recognizedSampleUpload([{ name: 'mango-carton.pdf', role: 'artwork' }, { name: 'product-spec.json', role: 'spec' }]), null);
