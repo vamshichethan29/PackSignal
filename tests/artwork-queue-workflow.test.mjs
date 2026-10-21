@@ -100,6 +100,20 @@ test('local OCR drafts a queue without a provider and cannot certify correctness
   assert.ok(!placed.findings.some(item=>item.method==='physical_legibility_screen'));
 });
 
+test('mapped photo faces add a practical intake queue without inventing a product reference',()=>{
+  const art=artwork(['FRONT LABEL','BACK LABEL','RIGHT WRAP','LEFT WRAP']);
+  art.pages.forEach(page=>{page.method='ocr_transcription';page.unit='px';});
+  const result=analyze({documents:[art],options:{panelZones:{
+    front:{page:1,box:[.1,.1,.9,.9]},back:{page:2,box:[.1,.1,.9,.9]},
+    right:{page:3,box:[.1,.1,.9,.9]},left:{page:4,box:[.1,.1,.9,.9]},
+  }},decisions:{},audit:[]});
+  const intake=result.findings.filter(item=>item.method==='capture_face_review');
+  assert.deepEqual(intake.map(item=>item.title),['Review captured front label','Review captured back label','Review captured right wrap label','Review captured left wrap label']);
+  assert.ok(intake.every(item=>item.status==='review'));
+  assert.ok(result.findings.some(item=>item.key==='missing-reference'));
+  assert.equal(result.facts.length,0);
+});
+
 test('an image reading cannot independently corroborate itself',()=>{
   for(const method of ['ai_transcription','ocr_transcription']){
     const art=artwork(['NET QUANTITY 1 L']);

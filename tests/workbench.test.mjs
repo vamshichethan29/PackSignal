@@ -108,6 +108,19 @@ test('new uploads use positioned panel labels to place each crop on the matching
   assert.match(partialHtml,/Confirm the detected face crops in Sources & decisions/,'remaining detected faces stay visible for reviewer confirmation');
 });
 
+test('reviewer-mapped bottle photos override unassigned capture labels in the 3D status',()=>{
+  const bottle={...review,id:'wellman-photo-demo',sample:undefined,documents:[{...review.documents[0],pages:[1,2,3,4,5].map(number=>({number,width:1200,height:1900,unit:'px',image:`wellman-${number}.jpg`}))}],options:{
+    packageType:'bottle_label',packageMappingConfirmed:true,
+    captureFaces:[1,2,3,4,5].map(page=>({page,face:'unassigned',box:[0,0,1,1]})),
+    panelZones:{front:{page:1,box:[.17,.2,.74,.91]},back:{page:3,box:[.18,.23,.76,.94]},right:{page:4,box:[.16,.25,.76,.94]},left:{page:5,box:[.18,.27,.76,.94]}},
+  }};
+  const html=workbenchArtwork(bottle,finding,{mode:'3d'});
+  assert.match(html,/Interactive bottle label preview/);
+  assert.match(html,/4 mapped faces · 1 extra capture/);
+  assert.doesNotMatch(html,/5 captured pages · faces unassigned/);
+  for(const face of ['front','back','left','right'])assert.match(html,new RegExp(`carton-face carton-${face} mapped`));
+});
+
 test('panel labels without page coordinates do not create guessed face mappings',()=>{
   const uploaded={...review,id:'review-no-coordinates',sample:undefined,options:{panelZones:{}},documents:[{
     ...review.documents[0],lines:[{text:'BACK PANEL'},{text:'FRONT PANEL'}],
