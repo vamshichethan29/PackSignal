@@ -19,6 +19,7 @@ import { authenticateLegacyUser, authenticateTeamUser, parseTeamUsers } from './
 import { addFindingApproval, addFindingComment, canReviewFinding, canViewReview, setFindingAssignment } from './lib/team-review.mjs';
 import { verifyPersistentMount } from './lib/persistent-storage.mjs';
 import { convertMedia, MEDIA_MAX_BYTES, MEDIA_MAX_SECONDS } from './lib/media-intake.mjs';
+import { recognizedSampleUpload } from './lib/known-sample-upload.mjs';
 
 const root=fileURLToPath(new URL('.',import.meta.url));
 const sendPublicFile=createPublicFileSender(join(root,'public'));
@@ -288,7 +289,8 @@ async function createReview(input,actor){
         r.files=await writeInputs(r,files);references.forEach((f,i)=>{r.files[i+1].id=f.id;});
       }
     }else{
-      if(input.sample){if(!samples[input.sample])throw fail('Unknown sample.');r.sample=input.sample;r.name=input.sample==='organizer'?'Dancing Fish · Berry Crunch':input.sample==='clean'?'Fieldday · clean baseline':input.sample==='conflict'?'Fieldday · conflicting sources':input.sample==='signals'?'Fieldday · language and code signals':'Fieldday · artwork V1';r.market=input.sample==='organizer'?'United States':'Fictional company checklist';r.options.panelZones=sampleZones(input.sample);if(Object.keys(r.options.panelZones).length)r.options.panelZoneSource='authored synthetic sample geometry';files=await Promise.all(samples[input.sample].map(async([path,role])=>({name:basename(path),role,base64:(await readFile(join(root,path))).toString('base64')})));}
+      const recognized=input.sample||recognizedSampleUpload(files);
+      if(recognized){if(!samples[recognized])throw fail('Unknown sample.');r.sample=recognized;r.name=recognized==='organizer'?'Dancing Fish · Berry Crunch':recognized==='clean'?'Fieldday · clean baseline':recognized==='conflict'?'Fieldday · conflicting sources':recognized==='signals'?'Fieldday · language and code signals':'Fieldday · artwork V1';r.market=recognized==='organizer'?'United States':'Fictional company checklist';r.options.panelZones=sampleZones(recognized);if(Object.keys(r.options.panelZones).length)r.options.panelZoneSource='authored synthetic sample geometry';files=await Promise.all(samples[recognized].map(async([path,role])=>({name:basename(path),role,base64:(await readFile(join(root,path))).toString('base64')})));if(!input.sample)audit(r,'known_sample_opened','Recognized the uploaded prepared sample files and opened its preserved sample artwork and geometry.',actor);}
       r.files=await writeInputs(r,files);
     }
     audit(r,'review_created',r.revisionKind==='sources'?'Updated source documents; artwork and confirmed geometry retained.':r.parentId?'Revised artwork; source documents retained.':'Files supplied for review.',actor);await save(r);jobs.add(r.id);queue=queue.then(()=>processReview(r.id)).catch(()=>{});return r;
