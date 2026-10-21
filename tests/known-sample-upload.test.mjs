@@ -1,12 +1,25 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { recognizedSampleUpload } from '../lib/known-sample-upload.mjs';
+import { createHash } from 'node:crypto';
+
+const base64 = value => Buffer.from(value).toString('base64');
+const hash = value => createHash('sha256').update(value).digest('hex');
 
 test('recognizes the supplied Dancing Fish file pair despite copied-file suffixes', () => {
   assert.equal(recognizedSampleUpload([
     { name: 'DancingFish_Granola_Berry_US_Carton (2)4def4e1 (1).pdf', role: 'artwork' },
     { name: 'DancingFish_Granola_BerryCrunch_US_Content_Sheet (3)2057df9 (1).xlsx', role: 'spec' },
   ]), 'organizer');
+});
+
+test('recognizes renamed prepared files by their exact contents', () => {
+  const artwork = Buffer.from('prepared dancing fish artwork');
+  const spec = Buffer.from('prepared dancing fish specification');
+  assert.equal(recognizedSampleUpload([
+    { name: 'fish.pdf', role: 'artwork', base64: base64(artwork) },
+    { name: 'sheet-renamed.xlsx', role: 'spec', base64: base64(spec) },
+  ], { organizer: { artwork: hash(artwork), spec: hash(spec) } }), 'organizer');
 });
 
 test('requires the complete known sample pair and never guesses from unrelated uploads', () => {

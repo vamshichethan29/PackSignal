@@ -154,6 +154,15 @@ const samples={
   clean:[['samples/fieldday-v2/artwork/fieldday-baseline.pdf','artwork'],['samples/fieldday-v2/inputs/product-spec.json','spec'],['samples/fieldday-v2/inputs/company-rulebook.json','rules'],['samples/fieldday-v2/inputs/claims-register.json','claims']],
   conflict:[['samples/fieldday-v2/artwork/fieldday-v1.pdf','artwork'],['samples/fieldday-v2/inputs/product-spec.json','spec'],['samples/fieldday-v2/inputs/unconfirmed-handover-note.json','spec'],['samples/fieldday-v2/inputs/company-rulebook.json','rules'],['samples/fieldday-v2/inputs/claims-register.json','claims']],
 };
+const sampleFingerprint=async entries=>Object.fromEntries(await Promise.all(entries.map(async([path,role])=>[
+  role,createHash('sha256').update(await readFile(join(root,path))).digest('hex'),
+])));
+// Exact content fingerprints allow users to rename the two prepared demo files
+// without losing their preserved 2D proof and authored 3D treatment.
+const knownSampleFingerprints={
+  organizer:await sampleFingerprint(samples.organizer),
+  fieldday:await sampleFingerprint(samples.fieldday.slice(0,2)),
+};
 const fielddaySampleZones={front:{page:1,box:[40/1200,60/860,510/1200,802/860]},back:{page:1,box:[532/1200,60/860,1160/1200,802/860]}};
 const sampleZones=sample=>['fieldday','clean','conflict','signals'].includes(sample)?structuredClone(fielddaySampleZones):{};
 async function writeInputs(r,files){
@@ -289,7 +298,7 @@ async function createReview(input,actor){
         r.files=await writeInputs(r,files);references.forEach((f,i)=>{r.files[i+1].id=f.id;});
       }
     }else{
-      const recognized=input.sample||recognizedSampleUpload(files);
+      const recognized=input.sample||recognizedSampleUpload(files,knownSampleFingerprints);
       if(recognized){if(!samples[recognized])throw fail('Unknown sample.');r.sample=recognized;r.name=recognized==='organizer'?'Dancing Fish · Berry Crunch':recognized==='clean'?'Fieldday · clean baseline':recognized==='conflict'?'Fieldday · conflicting sources':recognized==='signals'?'Fieldday · language and code signals':'Fieldday · artwork V1';r.market=recognized==='organizer'?'United States':'Fictional company checklist';r.options.panelZones=sampleZones(recognized);if(Object.keys(r.options.panelZones).length)r.options.panelZoneSource='authored synthetic sample geometry';files=await Promise.all(samples[recognized].map(async([path,role])=>({name:basename(path),role,base64:(await readFile(join(root,path))).toString('base64')})));if(!input.sample)audit(r,'known_sample_opened','Recognized the uploaded prepared sample files and opened its preserved sample artwork and geometry.',actor);}
       r.files=await writeInputs(r,files);
     }
