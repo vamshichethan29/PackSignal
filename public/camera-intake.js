@@ -5,6 +5,21 @@ const faces = [
 let captureSequence = 0;
 const captureName = prefix => `${prefix}-${String(++captureSequence).padStart(3, '0')}.jpg`;
 
+// A photographer often names a set of package photos before uploading it.
+// Preserve an unambiguous face name from that filename so a four-photo batch
+// does not silently become four copies of the currently selected face. This
+// is only an intake label; the reviewer still confirms the crop in Sources.
+export function captureFaceFromFilename(name) {
+  const value = String(name || '').normalize('NFKC').toLowerCase();
+  if (/\bfront\b/.test(value)) return 'front';
+  if (/\b(?:back|rear)\b/.test(value)) return 'back';
+  if (/\bright\b/.test(value)) return 'right';
+  if (/\bleft\b/.test(value)) return 'left';
+  if (/\btop\b/.test(value)) return 'top';
+  if (/\bbottom\b/.test(value)) return 'bottom';
+  return null;
+}
+
 export function cameraIntakeMarkup() {
   return `<section class="camera-intake panel" data-camera-intake>
     <div class="eyebrow">CAMERA & PHOTO INTAKE</div>
@@ -188,9 +203,12 @@ export function mountCameraIntake(container, onFiles, getCurrentCount = () => 0,
     if (selected.length > 8 - getCurrentCount()) { status.textContent = 'Choose at most eight more photos. The review allows up to eight artwork pages.'; return; }
     try {
       const files = [];
-      const labelledFace = selected.length === 1 ? face() : 'unassigned';
       for (const file of selected) {
         if (file.size > 30 * 1024 * 1024) { status.textContent = `${file.name} is over the 30 MB photo limit.`; continue; }
+        // Explicit filename labels win. With unlabelled batches, keep the
+        // safe unassigned state; a single selected photo uses the current
+        // face picker as before.
+        const labelledFace = captureFaceFromFilename(file.name) || (selected.length === 1 ? face() : 'unassigned');
         files.push(await normalizeImage(file, captureName('photo'), labelledFace, convertMedia));
       }
       addFiles(files);

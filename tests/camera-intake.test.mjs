@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { assessPhotoQuality, buildArtworkPdf, videoFrameTimes } from '../public/camera-intake.js';
+import { assessPhotoQuality, buildArtworkPdf, captureFaceFromFilename, videoFrameTimes } from '../public/camera-intake.js';
 
 function pixels(width, height, colorAt) {
   const data = new Uint8ClampedArray(width * height * 4);
@@ -44,4 +44,12 @@ test('browser video fallback samples four sides of a short turn when space allow
   assert.equal(videoFrameTimes(120).length, 8);
   assert.equal(videoFrameTimes(5, 2).length, 2, 'remaining intake capacity still bounds the frame count');
   assert.deepEqual(videoFrameTimes(0), []);
+});
+
+test('clearly named capture photos retain their face labels in a batch', () => {
+  assert.equal(captureFaceFromFilename('wellman-label-01-front.jpg'), 'front');
+  assert.equal(captureFaceFromFilename('wellman-label-02-back.jpg'), 'back');
+  assert.equal(captureFaceFromFilename('wellman-label-03-right.jpg'), 'right');
+  assert.equal(captureFaceFromFilename('wellman-label-04-left.jpg'), 'left');
+  assert.equal(captureFaceFromFilename('IMG_0420.jpg'), null);
 });
