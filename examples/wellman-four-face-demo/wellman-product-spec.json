@@ -1,0 +1,21 @@
+{
+  "document_id": "DEMO-WELLMAN-60-001",
+  "version": "1.0",
+  "status": "APPROVED_FOR_DEMO_ONLY",
+  "effective_date": "2026-10-21",
+  "synthetic": true,
+  "notice": "Demonstration reference compiled only from the supplied Wellman package photographs. It is not an official manufacturer specification, regulatory approval, or commercial claim substantiation.",
+  "product": {
+    "sku": "DEMO-WELLMAN-60",
+    "package_type": "bottle_label",
+    "brand": "wellman",
+    "name": "Health & Vitality",
+    "variant": "60 Tablets"
+  },
+  "scope": {
+    "language": "English",
+    "market_context": "Demonstration only",
+    "package": "Four captured bottle-label views arranged as a flat artwork sheet"
+  },
+  "authority_note": "Use the supplied original photos to inspect small text and legal copy. This JSON exists only to demonstrate evidence-backed comparisons."
+}

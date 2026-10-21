@@ -20,6 +20,7 @@ import { addFindingApproval, addFindingComment, canReviewFinding, canViewReview,
 import { verifyPersistentMount } from './lib/persistent-storage.mjs';
 import { convertMedia, MEDIA_MAX_BYTES, MEDIA_MAX_SECONDS } from './lib/media-intake.mjs';
 import { recognizedSampleUpload } from './lib/known-sample-upload.mjs';
+import { packageTypeFromSources } from './lib/package-type-from-source.mjs';
 
 const root=fileURLToPath(new URL('.',import.meta.url));
 const sendPublicFile=createPublicFileSender(join(root,'public'));
@@ -200,6 +201,10 @@ async function processReview(id){
     r=await load(id);r.status='processing';r.progress='Reading documents and locating evidence';await save(r);r.documents=[];
     for(const file of r.files){r.documents.push(await worker({path:join(dir(id),'files',file.disk),role:file.role,outdir:join(dir(id),'rendered'),id:file.id,name:file.name}));}
     if(r.revisionKind==='sources'&&r.ai?.transcriptions)applyTranscriptions(r.documents,r.ai.transcriptions);
+    if(!r.options.packageType){
+      const suppliedPackageType=packageTypeFromSources(r.documents);
+      if(suppliedPackageType){r.options.packageType=suppliedPackageType;r.options.packageTypeSource='product specification';}
+    }
     const artworkFile=r.files.find(file=>file.role==='artwork'),artworkDocument=r.documents.find(document=>document.role==='artwork');
     if(artworkFile?.captureFaces?.length){
       const validPages=new Set((artworkDocument?.pages||[]).map(page=>page.number));
