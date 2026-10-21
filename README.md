@@ -91,6 +91,12 @@ flowchart LR
 - **Signed exports:** export a portable HTML, PDF, or JSON review record. HTML/JSON include an Ed25519 integrity proof that can be checked offline.
 - **Useful prepress context:** reviewer-drawn panel zones, text-height screening, nutrition plausibility prompts, and barcode/QR signals support inspection. When the local scanner decodes a GTIN, PackSignal checks its GS1 Mod-10 check digit and compares it with explicit GTIN/EAN/UPC identifiers in the supplied product specification. Print quality, legal acceptability, and retail assignment remain human checks; a match is not a certification.
 
+### Photo and video review
+
+PackSignal drafts a review queue from readable artwork text; reviewers do not write the queue. An optional product spec or checklist supplies the expected values. Without it, visible copy is recorded as observations for human confirmation. Use **Add product spec / checklist** to attach references later while retaining the original artwork and confirmed face mapping.
+
+The Docker deployment includes Tesseract with English language data for bounded local OCR of photos and image-only artwork PDFs, including extracted video frames. This gives the review queue a local reading path when Gemini is unavailable. OCR readings retain page locations, uncertain words remain unverified, and neither OCR nor Gemini output certifies artwork correctness or completeness. Local installations can install Tesseract with English language data to enable the same fallback; it is optional when using Gemini or native PDF text.
+
 ## Run it locally
 
 **Requirements:** Node.js 24+ and Python 3.10+.

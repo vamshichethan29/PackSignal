@@ -6,7 +6,7 @@ ENV NODE_ENV=production \
     PACKPROOF_PYTHON=/opt/packproof-venv/bin/python
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends python3 python3-venv build-essential libgomp1 ffmpeg \
+    && apt-get install -y --no-install-recommends python3 python3-venv build-essential libgomp1 ffmpeg tesseract-ocr tesseract-ocr-eng \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

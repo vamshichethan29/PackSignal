@@ -30,3 +30,24 @@ test('native PDF text is preserved independently of image transcription',()=>{
   assert.equal(art.pages[0].visualText,'visual');
   assert.equal(art.lines[0].text,'native');
 });
+
+test('AI can correct local OCR without reusing the wrong evidence location',()=>{
+  const art={id:'art',text:'MORI MEAOOW\n1 L',pages:[{number:1,text:'MORI MEAOOW\n1 L',method:'ocr_transcription'}],lines:[
+    {text:'MORI MEAOOW',page:1,box:[.1,.1,.8,.2]},
+    {text:'1 L',page:1,box:[.4,.7,.6,.8]},
+  ]};
+  applyTranscriptions([art],[{documentId:'art',page:1,text:'MORI MEADOW\n1 L'}]);
+  assert.equal(art.pages[0].method,'ai_transcription');
+  assert.equal(art.pages[0].ocrText,'MORI MEAOOW\n1 L');
+  assert.equal(art.lines[0].box,null);
+  assert.deepEqual(art.lines[1].box,[.4,.7,.6,.8]);
+  assert.deepEqual(art.pages[0].ocrLines.map(line=>line.text),['MORI MEAOOW','1 L']);
+});
+
+test('ambiguous OCR locations are never borrowed for an AI transcription',()=>{
+  const art={id:'art',text:'1 L\n1 L',pages:[{number:1,text:'1 L\n1 L',method:'ocr_transcription'}],lines:[
+    {text:'1 L',page:1,box:[.1,.1,.2,.2]}, {text:'1 L',page:1,box:[.6,.6,.7,.7]},
+  ]};
+  applyTranscriptions([art],[{documentId:'art',page:1,text:'1 L'}]);
+  assert.equal(art.lines[0].box,null);
+});

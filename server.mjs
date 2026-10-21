@@ -206,7 +206,7 @@ async function processReview(id){
         clearSeal(r);r.aiStatus='unavailable';r.aiError='Packaging intelligence is not configured on this server. Local extraction and exact checks are available.';r.aiFailure={code:'AI_NOT_CONFIGURED',retryAt:null};r.warnings.push('Multimodal intelligence was not run because no server-side API key is configured. Local results are available.');audit(r,'ai_unavailable',r.aiError);await save(r);
       }else{
         r.aiStatus='running';r.progress='Local checks are ready; Packaging intelligence is analyzing sources in the background';await save(r);
-        const cacheId=createHash('sha256').update(JSON.stringify({version:8,model,docs:r.documents.map(d=>[d.sha256,d.role,d.name])})).digest('hex');const cache=join(storage,'cache',cacheId+'.json');
+        const cacheId=createHash('sha256').update(JSON.stringify({version:9,model,docs:r.documents.map(d=>[d.sha256,d.role,d.name])})).digest('hex');const cache=join(storage,'cache',cacheId+'.json');
         const cacheHit=existsSync(cache),canonical={documents:r.documents.map((d,index)=>({...d,id:'source-'+index})),options:structuredClone(r.options)};
         try{
           let ai=null,lastError=null;

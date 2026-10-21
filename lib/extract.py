@@ -2,6 +2,7 @@
 import sys, json, re, csv, io, hashlib, zipfile, logging
 from pathlib import Path
 from xml.sax.saxutils import escape
+from local_ocr import read_artwork
 logging.disable(logging.CRITICAL)
 MAX_PAGES = 12
 
@@ -292,11 +293,17 @@ def extract(path, role, outdir, artifact_id, name):
                 for label_match in panel_label.finditer(value):
                     label_box=text_rect(text_start+label_match.start(),text_start+label_match.end())
                     if label_box:doc['panelLabels'].append(dict(text=label_match.group(),page=n+1,box=label_box))
+            method='pdf_text' if len(text.strip())>40 else 'vision_needed'
+            if role=='artwork' and method=='vision_needed':
+                ocr_lines,ocr_warning=read_artwork(out/image_name,*rendered.size,n+1)
+                if ocr_lines:
+                    lines=ocr_lines;text='\n'.join(line['text'] for line in lines);method='ocr_transcription'
+                elif ocr_warning:doc['warnings'].append(ocr_warning)
             doc['lines'] += lines
             doc['pages'].append(dict(number=n+1,width=width,height=height,unit='pt',image=image_name,text=text,codes=codes,
-                                      method='pdf_text' if len(text.strip())>40 else 'vision_needed'))
+                                      method=method))
             if scan_warning and scan_warning not in doc['warnings']: doc['warnings'].append(scan_warning)
-            if len(text.strip())<40:
+            if method=='vision_needed':
                 doc['warnings'].append(f'Dieline page {n+1} has little extractable face-label text; inspect the line candidates and map faces manually.' if role=='dieline' else f'Page {n+1} has little extractable text. Vision or manual review is needed.')
             tp.close(); page.close()
         pdf.close()
@@ -313,7 +320,12 @@ def extract(path, role, outdir, artifact_id, name):
         if role=='dieline':
             doc['structuralEdges']=[dict(page=1,**edge) for edge in detect_structural_edges(im)]
             doc['warnings'].append('Dieline image has no locally extracted face labels. Inspect the rendered line candidates and assign artwork faces manually; no OCR text was inferred.')
-        else:doc['warnings'].append('Image input requires connected vision analysis or manual review; no local OCR text was inferred.')
+        elif role=='artwork':
+            ocr_lines,ocr_warning=read_artwork(out/image_name,*im.size,1)
+            if ocr_lines:
+                doc['lines']=ocr_lines;doc['text']='\n'.join(line['text'] for line in ocr_lines)
+                doc['pages'][0].update(text=doc['text'],method='ocr_transcription')
+            if ocr_warning:doc['warnings'].append(ocr_warning)
     elif ext=='.xlsx':
         from openpyxl import load_workbook
         wb=load_workbook(p,read_only=True,data_only=True,keep_links=False)
