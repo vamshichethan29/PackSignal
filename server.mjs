@@ -222,7 +222,10 @@ async function processReview(id){
               }catch(err){
                 lastError=err;
                 if(apiKeys.length>1&&shouldFailoverCredential(err)){
-                  audit(r,'key_failover',`Key ${(keyCursor+i)%apiKeys.length+1} quota/limit/overload reached; failing over to next configured key.`);
+                  const failedIndex=(keyCursor+i)%apiKeys.length+1;
+                  audit(r,'key_failover',`Key ${failedIndex}/${apiKeys.length} quota/limit reached; rotating to key ${(failedIndex%apiKeys.length)+1}.`);
+                  // Advance the global cursor so the next review starts from the next key.
+                  keyCursor=(keyCursor+i+1)%apiKeys.length;
                   continue;
                 }
                 throw err;
@@ -391,7 +394,10 @@ const server=createServer(async(req,res)=>{
             break;
           }catch(err){
             lastError=err;
-            if(apiKeys.length>1&&shouldFailoverCredential(err))continue;
+            if(apiKeys.length>1&&shouldFailoverCredential(err)){
+              keyCursor=(keyCursor+i+1)%apiKeys.length;
+              continue;
+            }
             throw err;
           }
         }

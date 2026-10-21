@@ -16,7 +16,7 @@ const response = (status, payload, headers = {}) => ({
   json: async () => payload,
 });
 
-test('retries temporary provider errors with the same credential and pauses all keys after a project quota limit', async () => {
+test('retries a temporary provider error with the same credential and cools down failing key while alternate key succeeds', async () => {
   const credentials = [];
   let calls = 0;
   const fetcher = async (_url, options) => {
@@ -30,6 +30,7 @@ test('retries temporary provider errors with the same credential and pauses all 
   assert.equal(completed.transport.attempts, 2);
   assert.deepEqual(credentials, ['test-key-A', 'test-key-A']);
 
+  // Daily quota 429 on key-A cools down only key-A; key-B is unaffected and can succeed.
   const quotaFetcher = async () => response(429, {
     error: {
       details: [{
@@ -41,21 +42,26 @@ test('retries temporary provider errors with the same credential and pauses all 
 
   await assert.rejects(
     geminiRequest('test-key-A', 'gemini-test', '{}', quotaFetcher),
-    error => error.code === 'GEMINI_PROJECT_LIMIT',
+    error => error.code === 'GEMINI_KEY_QUOTA',
   );
 
-  // A confirmed project quota applies across configured keys, not just the key that received 429.
+  // key-A is on per-key cooldown, so it immediately rejects with PROVIDER_COOLDOWN.
   await assert.rejects(
     geminiRequest('test-key-A', 'gemini-test', '{}', async () => {}),
-    error => error.code === 'PROJECT_QUOTA_COOLDOWN',
+    error => error.code === 'PROVIDER_COOLDOWN',
   );
-  await assert.rejects(
-    geminiRequest('test-key-B', 'gemini-test', '{}', async () => {}),
-    error => error.code === 'PROJECT_QUOTA_COOLDOWN',
-  );
-  assert.equal(geminiStatus().cooldownScope, 'project');
-  assert.equal(shouldFailoverCredential({ code: 'GEMINI_PROJECT_LIMIT', message: 'quota reached' }), false);
+
+  // key-B is a different account key and is NOT blocked by key-A's quota.
+  const successFetcher = async () =>
+    response(200, { candidates: [{ content: { parts: [{ text: '{"ok":true}' }] } }] });
+  const altResult = await geminiRequest('test-key-B', 'gemini-test', '{}', successFetcher);
+  assert.equal(altResult.transport.attempts, 1);
+
+  // Failover classification: per-key quota triggers failover; pool-wide outages do not.
+  assert.equal(shouldFailoverCredential({ code: 'GEMINI_KEY_QUOTA', message: 'key quota exhausted' }), true);
   assert.equal(shouldFailoverCredential({ code: 'PROVIDER_COOLDOWN', message: 'credential cooling down' }), true);
+  assert.equal(shouldFailoverCredential({ code: 'GEMINI_PROVIDER_OVERLOADED', message: 'overloaded' }), false);
+  assert.equal(shouldFailoverCredential({ code: 'PROVIDER_OVERLOAD_COOLDOWN', message: 'paused' }), false);
 });
 
 test('rate-limits all configured API keys through one shared rolling project window', () => {
