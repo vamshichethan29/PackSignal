@@ -82,8 +82,13 @@ const date = (s) =>
   });
 async function api(path, options = {}) {
   const { timeoutMs = 60_000, _retried, ...fetchOptions } = options;
+  const readRequest = !options.method || options.method === "GET";
+  // Render can take a little longer to wake a free web service after it has
+  // been idle. Reads are safe to retry; uploads and decisions are never
+  // repeated automatically.
+  const effectiveTimeout = readRequest ? Math.max(timeoutMs, 45_000) : timeoutMs;
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  const timeout = setTimeout(() => controller.abort(), effectiveTimeout);
   let response;
   try {
     response = await fetch("/api" + path, {
@@ -99,12 +104,16 @@ async function api(path, options = {}) {
       body: options.body ? JSON.stringify(options.body) : undefined,
     });
   } catch (error) {
+    if (!_retried && readRequest) {
+      await new Promise((resolve) => setTimeout(resolve, 900));
+      return api(path, { ...options, _retried: true, timeoutMs: effectiveTimeout });
+    }
     if (error.name === "AbortError") {
       throw new Error(
-        "PackSignal did not respond in time. Check that the local server is running, then retry.",
+        "PackSignal is taking longer than expected to wake up. Refresh once and try again.",
       );
     }
-    throw new Error("Could not connect to PackSignal. Check the local server and retry.");
+    throw new Error("Could not connect to PackSignal. Check your connection and try again.");
   } finally {
     clearTimeout(timeout);
   }
@@ -1165,7 +1174,7 @@ try {
   if (id) renderReviewLoadError(id, e);
   else {
     $("#app").innerHTML =
-      `<main class="boot" role="alert"><div class="eyebrow">LOCAL WORKSPACE</div><h1>PackSignal could not finish loading.</h1><p>${esc(e.message)}</p><p>If you see <code>EADDRINUSE</code> after starting the app, an existing PackSignal server is already using port 4173; keep it running and refresh this page.</p><button class="primary" id="retry-boot" type="button">Retry connection</button></main>`;
+      `<main class="boot" role="alert"><div class="eyebrow">PACKSIGNAL</div><h1>PackSignal could not finish loading.</h1><p>${esc(e.message)}</p><p>Use retry to reconnect to the workspace.</p><button class="primary" id="retry-boot" type="button">Retry connection</button></main>`;
     $("#retry-boot")?.addEventListener("click", () => location.reload());
   }
 }
