@@ -357,8 +357,8 @@ export function mountEvidenceCanvas(root, options = {}) {
     }
     if(d.chooseMarker) { const m=markers.find(m=>m.key===d.chooseMarker); select(m.finding.id,m.index,{focus:false,scroll:true}); }
     else if('closeChooser' in d) { chooser.hidden=true; frame.focus(); }
-    else if(d.canvasFinding || d.action==='select-finding') select(d.canvasFinding||d.id,Number(d.evidenceIndex));
-    else if('canvasOccurrence' in d || d.action==='select-evidence') select(selected.id,Number(d.canvasOccurrence??d.index));
+    else if(d.canvasFinding) select(d.canvasFinding,Number(d.evidenceIndex));
+    else if('canvasOccurrence' in d) select(selected.id,Number(d.canvasOccurrence));
     else if('occurrenceStep' in d) {const all=markers.filter(m=>m.finding.id===selected.id), i=all.findIndex(m=>m.index===activeIndex); if(all[i+Number(d.occurrenceStep)])select(selected.id,all[i+Number(d.occurrenceStep)].index);}
     else if('canvasPage' in d) showPage(pages[Number(d.canvasPage)]);
     else if('canvasPrev' in d) showPage(pages[pages.indexOf(currentPage)-1]);

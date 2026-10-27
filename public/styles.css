@@ -6,17 +6,17 @@
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-  color: #203c32;
-  background: #f4f5ef;
+  color: #e3eddd;
+  background: #0f1f19;
   font-synthesis: none;
-  --ink: #183b2f;
-  --muted: #69776e;
-  --line: #dce2d7;
-  --green: #264d35;
-  --lime: #d4efa4;
-  --white: #fff;
-  --red: #a8442c;
-  --amber: #91651d;
+  --ink: #e0efc7;
+  --muted: #a6b8a6;
+  --line: #284738;
+  --green: #c8e997;
+  --lime: #b8dc7d;
+  --white: #19372d;
+  --red: #f3a38a;
+  --amber: #eac47a;
 }
 * {
   box-sizing: border-box;
@@ -231,7 +231,8 @@ button.ghost:hover {
   align-items: center;
   justify-content: space-between;
   padding: 0 40px;
-  background: #f9faf5;
+  background: #10231c;
+  color: #e3eddd;
 }
 .breadcrumb {
   font-size: 13px;
@@ -254,6 +255,7 @@ button.ghost:hover {
   padding: 34px 40px 50px;
   max-width: 1500px;
   margin: auto;
+  background: #0f1f19;
 }
 .eyebrow {
   font-size: 10px;

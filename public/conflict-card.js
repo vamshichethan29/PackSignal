@@ -51,19 +51,19 @@ export function renderConflictCard(conflict, options = {}) {
   const currentResolution = conflict.resolution || options.currentResolution || null;
 
   return `
-    <article class="conflict-card" data-conflict-id="${esc(id)}" style="background:#ffffff;border:1px solid #cbd5e1;border-radius:8px;padding:18px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,0.05);border-left:4px solid #f97316;">
+    <article class="conflict-card" data-conflict-id="${esc(id)}" style="background:#13261f;border:1px solid #2e493b;border-radius:8px;padding:18px;margin-bottom:14px;box-shadow:0 4px 16px rgba(0,0,0,0.3);border-left:4px solid #f97316;color:#e2ece0;">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:12px;">
         <div>
-          <div style="font-size:11px;font-weight:700;color:#c2410c;text-transform:uppercase;letter-spacing:0.5px;">
+          <div style="font-size:11px;font-weight:700;color:#fb923c;text-transform:uppercase;letter-spacing:0.5px;">
             ⚠️ CONFLICT DETECTION · ${esc(conflictType)}
           </div>
-          <h3 style="margin:4px 0 2px;font-size:16px;color:#0f172a;font-weight:700;">${esc(title)}</h3>
-          <p style="margin:0;font-size:12px;color:#64748b;">
+          <h3 style="margin:4px 0 2px;font-size:16px;color:#f1f8f3;font-weight:700;">${esc(title)}</h3>
+          <p style="margin:0;font-size:12px;color:#94a3b8;">
             Conflicting data detected between source specification and printed artwork. Reviewer judgment required.
           </p>
         </div>
         <div style="text-align:right;">
-          <span style="display:inline-block;background:#ffedd5;color:#9a3412;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:700;">
+          <span style="display:inline-block;background:#451a03;color:#fdba74;border:1px solid #9a3412;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:700;">
             ${affectedCount} dependent check${affectedCount === 1 ? '' : 's'} affected
           </span>
         </div>
@@ -72,12 +72,12 @@ export function renderConflictCard(conflict, options = {}) {
       <!-- Side by Side Candidates Grid -->
       <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));gap:12px;margin:14px 0;">
         <!-- Candidate A: Source -->
-        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:12px;">
+        <div style="background:#183328;border:1px solid #2a523e;border-radius:6px;padding:12px;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-            <span style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;">${esc(candA.label)}</span>
-            <span style="font-size:10px;background:#fef9c3;color:#854d0e;padding:2px 6px;border-radius:3px;font-weight:600;">${esc(candA.authority)}</span>
+            <span style="font-size:11px;font-weight:700;color:#a7f3d0;text-transform:uppercase;">${esc(candA.label)}</span>
+            <span style="font-size:10px;background:#362b0d;color:#fde047;border:1px solid #854d0e;padding:2px 6px;border-radius:3px;font-weight:600;">${esc(candA.authority)}</span>
           </div>
-          <div style="font-size:15px;font-weight:700;color:#0f172a;margin-bottom:6px;font-family:monospace;">
+          <div style="font-size:15px;font-weight:700;color:#f1f8f3;margin-bottom:6px;font-family:monospace;">
             ${esc(candA.value)}
           </div>
           <div style="margin-top:6px;">
@@ -93,12 +93,12 @@ export function renderConflictCard(conflict, options = {}) {
         </div>
 
         <!-- Candidate B: Artwork -->
-        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:12px;">
+        <div style="background:#183328;border:1px solid #2a523e;border-radius:6px;padding:12px;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-            <span style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;">${esc(candB.label)}</span>
-            <span style="font-size:10px;background:#dbeafe;color:#1e40af;padding:2px 6px;border-radius:3px;font-weight:600;">${esc(candB.authority)}</span>
+            <span style="font-size:11px;font-weight:700;color:#93c5fd;text-transform:uppercase;">${esc(candB.label)}</span>
+            <span style="font-size:10px;background:#172554;color:#93c5fd;border:1px solid #1e40af;padding:2px 6px;border-radius:3px;font-weight:600;">${esc(candB.authority)}</span>
           </div>
-          <div style="font-size:15px;font-weight:700;color:#0f172a;margin-bottom:6px;font-family:monospace;">
+          <div style="font-size:15px;font-weight:700;color:#f1f8f3;margin-bottom:6px;font-family:monospace;">
             ${esc(candB.value)}
           </div>
           <div style="margin-top:6px;">
@@ -115,18 +115,18 @@ export function renderConflictCard(conflict, options = {}) {
       </div>
 
       <!-- Action Buttons Bar -->
-      <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-top:8px;border-top:1px dashed #cbd5e1;">
-        <span style="font-size:12px;font-weight:700;color:#475569;margin-right:4px;">Resolve Conflict:</span>
-        <button type="button" class="conflict-act-btn" data-conflict-action="USE_SOURCE" data-conflict-id="${esc(id)}" style="background:#0f766e;color:#fff;border:none;padding:5px 10px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding-top:8px;border-top:1px dashed #2e493b;">
+        <span style="font-size:12px;font-weight:700;color:#94a3b8;margin-right:4px;">Resolve Conflict:</span>
+        <button type="button" class="conflict-act-btn" data-conflict-action="USE_SOURCE" data-conflict-id="${esc(id)}" style="background:#059669;color:#fff;border:none;padding:5px 10px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;">
           ✓ Use Verified Source
         </button>
-        <button type="button" class="conflict-act-btn" data-conflict-action="CONFIRM_ARTWORK" data-conflict-id="${esc(id)}" style="background:#2563eb;color:#fff;border:none;padding:5px 10px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;">
+        <button type="button" class="conflict-act-btn" data-conflict-action="CONFIRM_ARTWORK" data-conflict-id="${esc(id)}" style="background:#0284c7;color:#fff;border:none;padding:5px 10px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;">
           ✓ Confirm Intended Change
         </button>
-        <button type="button" class="conflict-act-btn" data-conflict-action="REQUEST_CLARIFICATION" data-conflict-id="${esc(id)}" style="background:#e2e8f0;color:#1e293b;border:1px solid #cbd5e1;padding:5px 10px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;">
+        <button type="button" class="conflict-act-btn" data-conflict-action="REQUEST_CLARIFICATION" data-conflict-id="${esc(id)}" style="background:#1b382c;color:#a7f3d0;border:1px solid #2e493b;padding:5px 10px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;">
           💬 Request Clarification
         </button>
-        <button type="button" class="conflict-act-btn" data-conflict-action="LEAVE_UNRESOLVED" data-conflict-id="${esc(id)}" style="background:#f1f5f9;color:#64748b;border:1px solid #cbd5e1;padding:5px 10px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;">
+        <button type="button" class="conflict-act-btn" data-conflict-action="LEAVE_UNRESOLVED" data-conflict-id="${esc(id)}" style="background:#13261f;color:#94a3b8;border:1px solid #2e493b;padding:5px 10px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;">
           ⏱ Leave Unresolved
         </button>
         ${currentResolution ? `

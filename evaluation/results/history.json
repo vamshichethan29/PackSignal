@@ -1,5 +1,24 @@
 [
   {
+    "runId": "run-test-hist-mvrcdo0z",
+    "timestamp": "2026-10-27T23:54:02.339Z",
+    "suiteVersion": "1.0.0-freeze",
+    "modelId": "deterministic-local-engine",
+    "mode": "deterministic",
+    "totalCases": 10,
+    "caughtHeadline": "Caught 8 of 8 Planted Defects",
+    "caughtX": 8,
+    "attemptedY": 8,
+    "precision": "100.0%",
+    "recall": "100.0%",
+    "f1Score": "100.0%",
+    "avgLatencyMs": 0,
+    "missesCount": 0,
+    "artifactHash": "3c649bdc6434a9e34778dc9617570cebfafed8f7a1a4bf1f1c3098d621658590",
+    "gitCommit": "head",
+    "seed": 1234
+  },
+  {
     "runId": "run-test-hist-mvr8b66n",
     "timestamp": "2026-10-27T22:00:07.439Z",
     "suiteVersion": "1.0.0-freeze",

@@ -55,13 +55,13 @@ export function renderConflictCard(conflict, options = {}) {
   };
 
   return `
-    <article class="conflict-card ${isResolved ? 'is-resolved' : ''}" data-conflict-id="${esc(id)}" id="conflict-${esc(id)}" style="background:#ffffff;border:1px solid ${isResolved ? '#86efac' : '#fed7aa'};border-left:5px solid ${isResolved ? '#16a34a' : '#f97316'};border-radius:8px;padding:16px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+    <article class="conflict-card ${isResolved ? 'is-resolved' : ''}" data-conflict-id="${esc(id)}" id="conflict-${esc(id)}" style="background:#13261f;border:1px solid ${isResolved ? '#166534' : '#2e493b'};border-left:5px solid ${isResolved ? '#16a34a' : '#f97316'};border-radius:8px;padding:16px;margin-bottom:14px;box-shadow:0 4px 16px rgba(0,0,0,0.3);color:#e2ece0;">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px;">
         <div>
-          <span style="font-size:10px;font-weight:800;color:${isResolved ? '#166534' : '#c2410c'};text-transform:uppercase;letter-spacing:0.5px;">
+          <span style="font-size:10px;font-weight:800;color:${isResolved ? '#86efac' : '#fb923c'};text-transform:uppercase;letter-spacing:0.5px;">
             ${isResolved ? '✓ CONFLICT RESOLVED' : '⚠️ SOURCE CONFLICT'} · ${esc(conflictCategory)}
           </span>
-          <h3 style="margin:4px 0 2px;font-size:15px;color:#0f172a;font-weight:700;">FIELD: ${esc(fieldName)}</h3>
+          <h3 style="margin:4px 0 2px;font-size:15px;color:#f1f8f3;font-weight:700;">FIELD: ${esc(fieldName)}</h3>
         </div>
         <span class="count-badge ${isResolved ? 'badge-green' : 'badge-red'}" style="font-size:10px;padding:2px 8px;border-radius:4px;font-weight:700;">
           ${isResolved ? 'RESOLVED' : 'REQUIRES DECISION'}
@@ -69,22 +69,22 @@ export function renderConflictCard(conflict, options = {}) {
       </div>
 
       <!-- Why this matters -->
-      <div style="background:#fff7ed;border-left:3px solid #f97316;padding:8px 10px;border-radius:0 4px 4px 0;margin-bottom:12px;font-size:12px;color:#7c2d12;line-height:1.4;">
+      <div style="background:#2d1808;border-left:3px solid #f97316;padding:8px 10px;border-radius:0 4px 4px 0;margin-bottom:12px;font-size:12px;color:#fed7aa;line-height:1.4;">
         <strong>WHY THIS MATTERS:</strong> ${esc(whyItMatters)}
       </div>
 
       <!-- Candidates Grid -->
       <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:10px;margin-bottom:12px;">
         <!-- Source A -->
-        <div class="conflict-source-box" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px;">
+        <div class="conflict-source-box" style="background:#183328;border:1px solid #2a523e;border-radius:6px;padding:10px;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-            <strong style="font-size:11px;color:#475569;text-transform:uppercase;">SOURCE A</strong>
-            <span style="font-size:9px;background:#e0f2fe;color:#0369a1;padding:1px 5px;border-radius:3px;font-weight:600;">${esc(candA.label)}</span>
+            <strong style="font-size:11px;color:#a7f3d0;text-transform:uppercase;">SOURCE A</strong>
+            <span style="font-size:9px;background:#0c2a38;color:#7dd3fc;border:1px solid #0369a1;padding:1px 5px;border-radius:3px;font-weight:600;">${esc(candA.label)}</span>
           </div>
-          <div style="font-size:14px;font-weight:800;color:#0f172a;margin-bottom:6px;font-family:monospace;">
+          <div style="font-size:14px;font-weight:800;color:#f1f8f3;margin-bottom:6px;font-family:monospace;">
             ${esc(candA.value)}
           </div>
-          <div style="font-size:11px;color:#64748b;margin-bottom:6px;">"${esc(candA.quote)}"</div>
+          <div style="font-size:11px;color:#94a3b8;margin-bottom:6px;">"${esc(candA.quote)}"</div>
           <div>
             ${renderSourceChip({
               name: candA.documentName,
@@ -98,15 +98,15 @@ export function renderConflictCard(conflict, options = {}) {
         </div>
 
         <!-- Source B -->
-        <div class="conflict-source-box" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:10px;">
+        <div class="conflict-source-box" style="background:#183328;border:1px solid #2a523e;border-radius:6px;padding:10px;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-            <strong style="font-size:11px;color:#475569;text-transform:uppercase;">SOURCE B</strong>
-            <span style="font-size:9px;background:#fae8ff;color:#86198f;padding:1px 5px;border-radius:3px;font-weight:600;">${esc(candB.label)}</span>
+            <strong style="font-size:11px;color:#93c5fd;text-transform:uppercase;">SOURCE B</strong>
+            <span style="font-size:9px;background:#2e1065;color:#d8b4fe;border:1px solid #6b21a8;padding:1px 5px;border-radius:3px;font-weight:600;">${esc(candB.label)}</span>
           </div>
-          <div style="font-size:14px;font-weight:800;color:#0f172a;margin-bottom:6px;font-family:monospace;">
+          <div style="font-size:14px;font-weight:800;color:#f1f8f3;margin-bottom:6px;font-family:monospace;">
             ${esc(candB.value)}
           </div>
-          <div style="font-size:11px;color:#64748b;margin-bottom:6px;">"${esc(candB.quote)}"</div>
+          <div style="font-size:11px;color:#94a3b8;margin-bottom:6px;">"${esc(candB.quote)}"</div>
           <div>
             ${renderSourceChip({
               name: candB.documentName,
@@ -121,10 +121,10 @@ export function renderConflictCard(conflict, options = {}) {
       </div>
 
       ${isResolved ? `
-        <div style="background:#f0fdf4;border:1px solid #bbf7d0;padding:8px 12px;border-radius:6px;font-size:12px;color:#166534;margin-top:8px;">
+        <div style="background:#13261f;border:1px solid #166534;padding:8px 12px;border-radius:6px;font-size:12px;color:#86efac;margin-top:8px;">
           <strong>Decision:</strong> Selected <em>${esc(conflict.resolvedValue)}</em> from <code>${esc(conflict.resolvedSource)}</code>
-          ${conflict.resolutionNote ? `<div style="font-size:11px;color:#15803d;margin-top:2px;">Reason: ${esc(conflict.resolutionNote)}</div>` : ''}
-          <div style="font-size:10px;color:#86efac;margin-top:2px;font-family:monospace;">Audited at: ${esc(conflict.resolvedAt || 'Recorded')}</div>
+          ${conflict.resolutionNote ? `<div style="font-size:11px;color:#a7f3d0;margin-top:2px;">Reason: ${esc(conflict.resolutionNote)}</div>` : ''}
+          <div style="font-size:10px;color:#6ee7b7;margin-top:2px;font-family:monospace;">Audited at: ${esc(conflict.resolvedAt || 'Recorded')}</div>
         </div>
       ` : `
         <!-- Reviewer Decision Form / Action Buttons -->
