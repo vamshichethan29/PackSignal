@@ -71,7 +71,8 @@
       inset: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
+      background: #111827;
       z-index: 2;
     }
     .scan-overlay-svg {
@@ -200,6 +201,9 @@
       text-align: center;
       font-size: 11px;
     }
+    @media (min-width: 760px) {
+      .scan-viewfinder-container { height: 300px; }
+    }
   </style>
 </head>
 <body class="scan-body">
@@ -221,7 +225,7 @@
     <canvas id="scan-canvas" style="display:none;"></canvas>
 
     <!-- Realistic packaging panel simulation feed -->
-    <img id="simulated-pack-feed" src="/samples/organizer/panels/front.png" style="width:100%;height:100%;object-fit:cover;display:block;" alt="Dancing Fish carton panel">
+    <img id="simulated-pack-feed" src="/samples/organizer/panels/front-ar.png" style="width:100%;height:100%;object-fit:contain;display:block;background:#111827;" alt="Dancing Fish carton panel">
 
     <!-- Reticle SVG Overlay -->
     <svg class="scan-overlay-svg" viewBox="0 0 400 380">
@@ -303,6 +307,11 @@
       <button type="button" class="textbutton subtle" id="load-sample-carton-btn" style="color:#22c55e;font-size:12px;font-weight:700;background:none;border:none;cursor:pointer;text-decoration:underline;">
         ✨ Load Sample Carton (Dancing Fish)
       </button>
+    </div>
+
+    <div id="package-detection-notice" role="status" style="display:none;border:1px solid rgba(34,197,94,.45);background:rgba(20,83,45,.35);border-radius:10px;padding:10px 12px;font-size:12px;line-height:1.45;">
+      <b id="package-detection-title" style="color:#86efac;display:block;">Dancing Fish carton detected</b>
+      <span id="package-detection-detail" style="color:#d1fae5;"></span>
     </div>
 
     <!-- Captured Photo Preview Card (Dynamic) -->

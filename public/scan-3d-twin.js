@@ -1,7 +1,6 @@
 /**
  * PackSignal — Progressive 3D Package Twin (public/scan-3d-twin.js)
- * Phase 10A: Maps phone-scanned physical package faces onto a folding 3D carton twin.
- * Uncaptured faces remain neutral gray placeholders (never repeating front artwork onto unseen faces).
+ * Phase 10A: Maps the four reviewer-captured package faces onto a folding carton twin.
  */
 
 export const GEOMETRY_AUTHORITIES = {
@@ -21,8 +20,6 @@ export class Scan3DTwin {
       right: null,
       back: null,
       left: null,
-      top: null,
-      bottom: null,
     };
     this.geometryAuthority = options.scale?.valid
       ? GEOMETRY_AUTHORITIES.REFERENCE_SCALED
@@ -65,12 +62,7 @@ export class Scan3DTwin {
 
         <!-- 3D Perspective Box Preview -->
         <div class="twin-faces-grid" style="display:grid;grid-template-columns:repeat(3, 1fr);gap:6px;max-width:280px;margin:10px auto;">
-          <!-- Top Row: Top Flap -->
-          <div style="grid-column: 2;">
-            ${this.renderFaceChip('top', 'Top Flap')}
-          </div>
-
-          <!-- Middle Row: Left, Front, Right -->
+          <!-- Captured review faces -->
           <div style="grid-column: 1;">
             ${this.renderFaceChip('left', 'Left Side')}
           </div>
@@ -81,17 +73,14 @@ export class Scan3DTwin {
             ${this.renderFaceChip('right', 'Right Side')}
           </div>
 
-          <!-- Bottom Row: Back & Bottom -->
+          <!-- Back -->
           <div style="grid-column: 2;">
             ${this.renderFaceChip('back', 'Back Panel')}
-          </div>
-          <div style="grid-column: 3;">
-            ${this.renderFaceChip('bottom', 'Bottom Barcode')}
           </div>
         </div>
 
         <div style="font-size:11px;color:#94a3b8;margin-top:6px;">
-          ${registeredCount} of 6 faces textured from camera intake · Unscanned faces remain neutral placeholders.
+          ${registeredCount} of 6 faces textured (${registeredCount} of 4 required panels captured · Each captured panel is shown once.)
         </div>
       </div>
     `;
