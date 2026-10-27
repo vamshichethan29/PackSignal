@@ -320,7 +320,7 @@ def extract(path, role, outdir, artifact_id, name):
             for line in lines:
                 l_box = line.get('box')
                 l_text = line.get('text', '').strip()
-                if not l_box:
+                if not l_box or len(l_box) != 4 or None in l_box:
                     line['kind'] = 'visible'
                     continue
 
@@ -328,7 +328,7 @@ def extract(path, role, outdir, artifact_id, name):
                 for hs in hidden_spans:
                     hs_box = hs.get('box')
                     hs_text = hs.get('text', '').strip()
-                    if not hs_box:
+                    if not hs_box or len(hs_box) != 4 or None in hs_box:
                         continue
                     if not (l_box[2] < hs_box[0] or l_box[0] > hs_box[2] or l_box[3] < hs_box[1] or l_box[1] > hs_box[3]):
                         if hs_text in l_text or l_text in hs_text:
@@ -443,12 +443,14 @@ def extract(path, role, outdir, artifact_id, name):
         from openpyxl import load_workbook
         wb=load_workbook(p,read_only=True,data_only=True,keep_links=False)
         for sheet in wb:
-            if sheet.max_row>2000 or sheet.max_column>80: raise ValueError('Spreadsheet limit: 2,000 rows and 80 columns per sheet.')
+            max_r = sheet.max_row or 0
+            max_c = sheet.max_column or 0
+            if max_r > 2000 or max_c > 80: raise ValueError('Spreadsheet limit: 2,000 rows and 80 columns per sheet.')
             for row in sheet.iter_rows():
                 for cell in row:
                     if cell.value is not None:
                         value=str(cell.value)
-                        doc['cells'].append(dict(sheet=sheet.title,cell=cell.coordinate,row=cell.row,col=cell.column,value=value,numberFormat=cell.number_format))
+                        doc['cells'].append(dict(sheet=sheet.title,cell=cell.coordinate,row=cell.row or 1,col=cell.column or 1,value=value,numberFormat=cell.number_format))
         wb.close()
         doc['text']='\n'.join(f"{c['sheet']}!{c['cell']}: {c['value']}" for c in doc['cells'])
         doc['warnings'].append('Spreadsheet formulas use their saved values; formulas, macros, and external links are not executed.')

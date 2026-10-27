@@ -54,11 +54,15 @@ STATE_UNSUPPORTED = "unsupported"
 
 def _rect_intersects(r1, r2):
     """Check if two bounding boxes [x0, y0, x1, y1] intersect."""
+    if not r1 or not r2 or len(r1) != 4 or len(r2) != 4 or None in r1 or None in r2:
+        return False
     return not (r1[2] < r2[0] or r1[0] > r2[2] or r1[3] < r2[1] or r1[1] > r2[3])
 
 
 def _intersection_area(r1, r2):
     """Compute 2D intersection area of two bounding boxes [x0, y0, x1, y1]."""
+    if not r1 or not r2 or len(r1) != 4 or len(r2) != 4 or None in r1 or None in r2:
+        return 0.0
     ix0 = max(r1[0], r2[0])
     iy0 = max(r1[1], r2[1])
     ix1 = min(r1[2], r2[2])

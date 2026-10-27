@@ -25,11 +25,15 @@ from .models import (
 
 def _rect_intersects(b1, b2):
     """Returns True if bounding boxes b1 and b2 intersect."""
+    if not b1 or not b2 or len(b1) != 4 or len(b2) != 4 or None in b1 or None in b2:
+        return False
     return not (b1[2] < b2[0] or b1[0] > b2[2] or b1[3] < b2[1] or b1[1] > b2[3])
 
 
 def _rect_contains(outer, inner, tolerance=1.5):
     """Returns True if outer rectangle completely encloses inner rectangle (within tolerance pt)."""
+    if not outer or not inner or len(outer) != 4 or len(inner) != 4 or None in outer or None in inner:
+        return False
     return (
         outer[0] <= inner[0] + tolerance
         and outer[1] <= inner[1] + tolerance

@@ -446,7 +446,7 @@ def parse_excel_file(xlsx_path):
     col_letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
     for sheet in wb:
-        if sheet.max_row and sheet.max_row > 5000:
+        if (sheet.max_row and sheet.max_row > 5000) or (sheet.max_column and sheet.max_column > 100):
             raise ValueError(f"Spreadsheet limit exceeded on sheet {sheet.title}")
 
         for row_idx, row in enumerate(sheet.iter_rows(), start=1):

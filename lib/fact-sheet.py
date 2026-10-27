@@ -181,7 +181,8 @@ def extract_facts_from_excel(xlsx_path):
 
     facts = []
 
-    for r in range(1, ws.max_row + 1):
+    max_r = ws.max_row or 100
+    for r in range(1, max_r + 1):
         field_name = ws.cell(r, 1).value
         field_val = ws.cell(r, 2).value
         notes_val = ws.cell(r, 3).value
