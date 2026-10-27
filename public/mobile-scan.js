@@ -22,9 +22,10 @@ export class MobileScanner {
     this.currentVariance = 154.2;
     this.currentFacingMode = 'user';
     this._frameAnalysisRunning = false;
-    this._manualCartonFeed = true;
+    this._manualCartonFeed = false;
 
     this.initElements();
+    if (this.simFeedEl) this.simFeedEl.style.display = 'none';
     this.initCamera();
     this.init3DTwin();
     this.bindEvents();
@@ -182,11 +183,7 @@ export class MobileScanner {
             this.currentVariance = 154.2;
           } else if (this.sharpnessVal) {
             if (meanBrightness < 15) {
-              if (this.simFeedEl) {
-                this.simFeedEl.src = this.demoPanelUrl(this.faces[this.faceIndex] || 'front');
-                this.simFeedEl.style.display = 'block';
-              }
-              this.sharpnessVal.textContent = 'Carton Artwork Feed (Camera dim)';
+              this.sharpnessVal.textContent = 'Camera is too dark';
               this.sharpnessVal.style.color = '#f59e0b';
             } else if (variance < 40) {
               this.sharpnessVal.textContent = `${variance.toFixed(1)} (Blurry - Hold steady)`;
@@ -257,13 +254,9 @@ export class MobileScanner {
         }
         const meanBrightness = totalBrightness / (80 * 60);
         if (meanBrightness < 12) {
-          if (this.simFeedEl) {
-            this.simFeedEl.src = this.demoPanelUrl(this.faces[this.faceIndex] || 'front');
-            this.simFeedEl.style.display = 'block';
-          }
           if (this.sharpnessVal) {
-            this.sharpnessVal.textContent = '142.5 (Carton Feed)';
-            this.sharpnessVal.style.color = '#22c55e';
+            this.sharpnessVal.textContent = 'Camera is too dark';
+            this.sharpnessVal.style.color = '#f59e0b';
           }
         }
       } catch (e) {}
@@ -286,11 +279,9 @@ export class MobileScanner {
   }
 
   handleCameraFallback(reason) {
-    if (this.simFeedEl) {
-      this.simFeedEl.style.display = 'block';
-    }
+    if (this.simFeedEl) this.simFeedEl.style.display = 'none';
     if (this.sharpnessVal) {
-      this.sharpnessVal.textContent = 'Upload or Sample Mode';
+      this.sharpnessVal.textContent = 'Camera unavailable · upload a photo';
       this.sharpnessVal.style.color = '#f59e0b';
     }
   }
@@ -459,16 +450,22 @@ export class MobileScanner {
         ctx.drawImage(this.videoEl, 0, 0, capCanvas.width, capCanvas.height);
         photoDataUrl = capCanvas.toDataURL('image/jpeg', 0.85);
       } else {
-        photoDataUrl = this.demoPanelUrl(face);
+        throw new Error('Camera is not ready. Allow camera access or upload a package photo.');
       }
 
       const detection = await this.detectDancingFish(photoDataUrl, options);
       this.showDetection(detection);
       if (!detection.detected) {
-        if (this.captureBtnText) this.captureBtnText.textContent = `Retake ${face.toUpperCase()} — Dancing Fish not detected`;
+        if (this.captureBtnText) this.captureBtnText.textContent = 'Try another package photo';
         if (this.fileFallback) this.fileFallback.value = '';
         return;
       }
+
+      // This is a one-photo demo intake: a verified Dancing Fish carton opens the
+      // existing prepared review immediately. No unrelated capture is persisted.
+      if (this.captureBtnText) this.captureBtnText.textContent = 'Opening Dancing Fish review…';
+      await this.openInteractiveReview();
+      return;
 
       this.displayCapturedThumbnail(face, photoDataUrl);
 
@@ -550,7 +547,8 @@ export class MobileScanner {
       }
     } catch (err) {
       console.error('Capture error:', err);
-      if (this.captureBtnText) this.captureBtnText.textContent = 'Retry Capture';
+      this.showDetection({ detected: false, message: err.message || 'Camera is not ready. Allow camera access or upload a package photo.' });
+      if (this.captureBtnText) this.captureBtnText.textContent = 'Allow camera or upload photo';
     } finally {
       if (this.captureBtn) this.captureBtn.disabled = false;
     }

@@ -204,6 +204,15 @@
     @media (min-width: 760px) {
       .scan-viewfinder-container { height: 300px; }
     }
+    .scan-controls-panel #twin-3d-mount,
+    .scan-controls-panel .twin-preview-box,
+    .scan-controls-panel .dual-reader-card,
+    .scan-controls-panel #run-two-routes-btn,
+    .scan-controls-panel #two-routes-box,
+    .scan-controls-panel #compare-shelf-btn,
+    .scan-controls-panel #shelf-compare-box,
+    .scan-controls-panel #generate-brief-btn,
+    .scan-controls-panel #scan-brief-box { display: none !important; }
   </style>
 </head>
 <body class="scan-body">
@@ -251,7 +260,7 @@
           <span>🔄 Switch Cam</span>
         </button>
         <button type="button" id="toggle-carton-feed-btn" style="background:rgba(0,0,0,0.65);border:1px solid rgba(56,189,248,0.4);color:#38bdf8;border-radius:14px;padding:3px 8px;font-size:11px;font-weight:700;cursor:pointer;pointer-events:auto;display:inline-flex;align-items:center;gap:4px;">
-          <span>✨ Carton Art</span>
+        <span>Camera view</span>
         </button>
         <div class="scan-badge" id="sharpness-badge">
           <span>Variance:</span>
@@ -282,7 +291,7 @@
         <div class="checklist-progress-pip" id="pip-left"></div>
       </div>
       <div style="font-size:13px;font-weight:700;color:#ffffff;margin-top:4px;" id="current-task-label">
-        ▶ Snap Front PDP (Brand, Net Wt statement, primary claims)
+        Point the camera at the Dancing Fish Berry Crunch carton
       </div>
     </div>
 
@@ -290,7 +299,7 @@
     <div style="display:flex;gap:8px;">
       <button type="button" class="scan-action-btn" id="capture-panel-btn" style="flex:2;">
         <span style="font-size:18px;">📸</span>
-        <span id="capture-btn-text">Auto-Capture Front PDP</span>
+        <span id="capture-btn-text">Scan package</span>
       </button>
       <button type="button" class="scan-action-btn secondary" id="retake-face-btn" style="flex:1;background:#334155;">
         <span>↻ Retake</span>
@@ -304,8 +313,8 @@
         📁 Upload Photo from File
       </button>
       <span style="color:#475569;">·</span>
-      <button type="button" class="textbutton subtle" id="load-sample-carton-btn" style="color:#22c55e;font-size:12px;font-weight:700;background:none;border:none;cursor:pointer;text-decoration:underline;">
-        ✨ Load Sample Carton (Dancing Fish)
+      <button type="button" class="textbutton subtle" id="load-sample-carton-btn" style="display:none;">
+        Load verified sample
       </button>
     </div>
 
