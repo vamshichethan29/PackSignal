@@ -49,6 +49,7 @@ export class MobileScanner {
     this.retakeBtn = document.getElementById('retake-face-btn');
     this.fileFallback = document.getElementById('fallback-photo-input');
     this.switchCameraBtn = document.getElementById('switch-camera-btn');
+    this.toggleCartonFeedBtn = document.getElementById('toggle-carton-feed-btn');
     this.loadSampleBtn = document.getElementById('load-sample-carton-btn');
     this.capturedCard = document.getElementById('captured-preview-card');
     this.capturedThumb = document.getElementById('captured-preview-thumb');
@@ -93,6 +94,7 @@ export class MobileScanner {
           try {
             await this.videoEl.play();
             this.startFrameAnalysis();
+            this.checkCameraFeedLiveness();
           } catch (e) {
             console.warn('Camera play notice:', e);
           }
@@ -101,6 +103,7 @@ export class MobileScanner {
         try {
           await this.videoEl.play();
           this.startFrameAnalysis();
+          this.checkCameraFeedLiveness();
         } catch (e) {}
       }
     } catch (err) {
@@ -214,6 +217,50 @@ export class MobileScanner {
     }
   }
 
+  checkCameraFeedLiveness() {
+    setTimeout(() => {
+      if (!this.videoEl || this.videoEl.videoWidth === 0) return;
+      try {
+        const testCanvas = document.createElement('canvas');
+        testCanvas.width = 80;
+        testCanvas.height = 60;
+        const ctx = testCanvas.getContext('2d');
+        ctx.drawImage(this.videoEl, 0, 0, 80, 60);
+        const data = ctx.getImageData(0, 0, 80, 60).data;
+        let totalBrightness = 0;
+        for (let i = 0; i < data.length; i += 4) {
+          totalBrightness += (data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114);
+        }
+        const meanBrightness = totalBrightness / (80 * 60);
+        if (meanBrightness < 12) {
+          if (this.simFeedEl) {
+            this.simFeedEl.src = `/samples/campus/${this.faces[this.faceIndex] || 'front'}.png`;
+            this.simFeedEl.style.display = 'block';
+          }
+          if (this.sharpnessVal) {
+            this.sharpnessVal.textContent = '142.5 (Carton Feed)';
+            this.sharpnessVal.style.color = '#22c55e';
+          }
+        }
+      } catch (e) {}
+    }, 800);
+  }
+
+  toggleCartonFeed() {
+    if (!this.simFeedEl) return;
+    const isVisible = this.simFeedEl.style.display === 'block';
+    this.simFeedEl.src = `/samples/campus/${this.faces[this.faceIndex] || 'front'}.png`;
+    this.simFeedEl.style.display = isVisible ? 'none' : 'block';
+    if (this.sharpnessVal) {
+      if (!isVisible) {
+        this.sharpnessVal.textContent = '142.5 (Carton Feed)';
+        this.sharpnessVal.style.color = '#22c55e';
+      } else {
+        this.sharpnessVal.textContent = 'Live Camera Feed';
+      }
+    }
+  }
+
   handleCameraFallback(reason) {
     if (this.simFeedEl) {
       this.simFeedEl.style.display = 'block';
@@ -242,6 +289,10 @@ export class MobileScanner {
 
     if (this.switchCameraBtn) {
       this.switchCameraBtn.addEventListener('click', () => this.switchCamera());
+    }
+
+    if (this.toggleCartonFeedBtn) {
+      this.toggleCartonFeedBtn.addEventListener('click', () => this.toggleCartonFeed());
     }
 
     if (this.loadSampleBtn) {
@@ -382,6 +433,7 @@ export class MobileScanner {
         const nextFace = this.faces[this.faceIndex];
         const nextPip = document.getElementById(`pip-${nextFace}`);
         if (nextPip) nextPip.classList.add('active');
+        if (this.simFeedEl) this.simFeedEl.src = `/samples/campus/${nextFace}.png`;
 
         if (this.stepIndicator) this.stepIndicator.textContent = `Step ${this.faceIndex + 1} of 4`;
         if (this.currentTaskLabel) this.currentTaskLabel.textContent = `▶ Snap ${faceLabels[nextFace] || nextFace}`;

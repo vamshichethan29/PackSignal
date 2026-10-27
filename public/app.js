@@ -2234,27 +2234,29 @@ document.addEventListener("click", async (event) => {
           body: { sessionId: `scan-${Date.now()}`, reviewId }
         });
         const scanUrl = `${window.location.origin}${tokenRes.qrUrl}`;
+        const qrCodeSvg = generateQrSvg(scanUrl, 180);
         dialog(
-          "📱 Scan Packaging with Phone",
-          `<div style="text-align:center;padding:12px;">
-            <div style="background:#0f172a;border-radius:12px;padding:20px;display:inline-block;border:2px solid #22c55e;margin-bottom:12px;">
-              <div style="font-size:36px;margin-bottom:8px;">📷 📦</div>
-              <div style="font-size:12px;color:#94a3b8;font-weight:700;">PAIRING TOKEN</div>
-              <div style="font-family:monospace;font-size:16px;color:#38bdf8;font-weight:800;letter-spacing:1px;margin:4px 0;">${esc(tokenRes.token)}</div>
-              <div style="font-size:11px;color:#22c55e;">✓ Valid for 15 minutes · Replay Protected</div>
+          "📱 Scan Packaging with Phone or Webcam",
+          `<div style="text-align:center;padding:8px 12px;">
+            <div style="background:#ffffff;border-radius:12px;padding:12px;display:inline-block;box-shadow:0 4px 20px rgba(0,0,0,0.3);margin-bottom:12px;">
+              ${qrCodeSvg}
             </div>
-            <p style="font-size:13px;color:#cbd5e1;margin-bottom:16px;">
-              Point your phone camera at this review to scan physical packaging faces directly into PackSignal.
+            <div style="font-size:13px;font-weight:700;color:#f8fafc;margin-bottom:4px;">
+              Scan QR Code with iPhone or Android Camera
+            </div>
+            <p style="font-size:12px;color:#94a3b8;margin-bottom:14px;max-width:380px;margin-left:auto;margin-right:auto;">
+              Point your phone camera at this QR code to scan real physical carton faces directly into this review.
             </p>
-            <div style="background:#1e293b;padding:10px;border-radius:8px;font-size:12px;word-break:break-all;color:#94a3b8;margin-bottom:16px;">
-              <a href="${esc(scanUrl)}" target="_blank" rel="noopener" style="color:#38bdf8;font-weight:700;text-decoration:underline;">
-                ${esc(scanUrl)}
+            <div style="display:flex;flex-direction:column;gap:8px;max-width:360px;margin:0 auto 12px;">
+              <a href="${esc(tokenRes.qrUrl)}" target="_blank" rel="noopener" class="primary" style="background:#15803d;color:#ffffff;font-weight:700;padding:10px 16px;border-radius:6px;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;">
+                <span>💻 Open Camera Scanner on this Device →</span>
+              </a>
+              <a href="/ar-review.html" target="_blank" rel="noopener" style="background:#0284c7;color:#ffffff;font-weight:700;padding:8px 16px;border-radius:6px;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;">
+                <span>🎯 Open Live AR Review Viewfinder →</span>
               </a>
             </div>
-            <div style="display:flex;gap:8px;justify-content:center;">
-              <a href="${esc(tokenRes.qrUrl)}" target="_blank" rel="noopener" class="primary" style="background:#15803d;color:#ffffff;font-weight:700;padding:10px 20px;border-radius:6px;text-decoration:none;display:inline-block;">
-                Launch Phone Scanner →
-              </a>
+            <div style="font-size:11px;color:#64748b;font-family:monospace;">
+              Token: ${esc(tokenRes.token)} · Valid for 15 minutes
             </div>
           </div>`,
           `<button class="secondary" data-action="close">Done</button>`
