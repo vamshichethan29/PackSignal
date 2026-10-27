@@ -80,7 +80,7 @@ export class Scan3DTwin {
         </div>
 
         <div style="font-size:11px;color:#94a3b8;margin-top:6px;">
-          ${registeredCount} of 4 required panels captured.
+          ${registeredCount} of 6 faces textured (${registeredCount} of 4 required panels captured).
         </div>
       </div>
     `;
