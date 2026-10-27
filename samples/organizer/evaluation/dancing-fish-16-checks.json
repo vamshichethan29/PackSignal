@@ -1,0 +1,528 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "title": "PackSignal Dancing Fish 16-Check Organizer Quality & Compliance Registry",
+  "description": "Authoritative registry of 16 candidate quality, metrology, and statutory checks plus positive controls for the official Esko AIForge Dancing Fish sample.",
+  "targetFiles": {
+    "artworkPdf": {
+      "name": "DancingFish_Granola_Berry_US_Carton.pdf",
+      "sha256": "c633ab2f9d227c14aee4f9065cee980cf2efe1a602db963b1cf5e474fec929be",
+      "market": "US"
+    },
+    "contentSheet": {
+      "name": "DancingFish_Granola_BerryCrunch_US_Content_Sheet.xlsx",
+      "sha256": "289b39eb38e39128974a0f9e9042e764c73d7f83da0730a32338b6d3e79c972d",
+      "approvalStatus": "Draft / In Review"
+    }
+  },
+  "checks": [
+    {
+      "checkId": "DF-01",
+      "checkName": "Honey Percentage Discrepancy",
+      "category": "SOURCE_INGREDIENTS",
+      "expectedObservation": "Content sheet declares Honey (9%) in cell B26, whereas artwork carton Back Panel declares Honey (1%).",
+      "artworkEvidence": {
+        "page": 1,
+        "panel": "Back Panel",
+        "quote": "Honey (1%)",
+        "boundingBox": [0.46, 0.44, 0.65, 0.68]
+      },
+      "contentSheetEvidence": {
+        "sheet": "Content Sheet - US",
+        "cell": "B26",
+        "quote": "Honey (9%)",
+        "approvalStatus": "Draft / In Review"
+      },
+      "legalSource": "FDA 21 CFR §101.4 & Company Formulation Specification",
+      "sourceAuthority": "DRAFT",
+      "applicability": "MANDATORY_LABEL_SPEC",
+      "requiredChecks": ["percentage_value_comparison", "source_status_check"],
+      "evidenceCoverage": "FULL_SOURCE_AND_ARTWORK",
+      "expectedFindingSemantics": "SOURCE_ARTWORK_MISMATCH",
+      "adjudicationStatus": "PROVISIONAL_EXPECTATION",
+      "department": "R&D",
+      "collaborators": ["BRAND"],
+      "evaluationNotes": "Discrepancy is 8 percentage points. Content sheet is marked Draft / In Review; requires R&D confirmation before concluding which figure is the authorized formulation."
+    },
+    {
+      "checkId": "DF-02",
+      "checkName": "Ingredient List Discrepancies & Duplication",
+      "category": "SOURCE_INGREDIENTS",
+      "expectedObservation": "Artwork ingredient list includes 4 items not in spreadsheet (Walnuts, Flax Seeds, Dried Strawberries, Pumpkin Seeds) and spreadsheet contains duplicate Sunflower Seeds in B26.",
+      "subassertions": [
+        {
+          "subId": "DF-02-A",
+          "name": "Artwork-only ingredients",
+          "observed": "Walnuts, Flax Seeds, Dried Strawberries, Pumpkin Seeds",
+          "expected": "Ingredients matching specification sheet B26",
+          "status": "SOURCE_ARTWORK_MISMATCH"
+        },
+        {
+          "subId": "DF-02-B",
+          "name": "Source duplicate ingredient",
+          "observed": "Sunflower Seeds declared twice in cell B26 (pos 4 and pos 8)",
+          "expected": "Unique ingredient declaration without redundancy",
+          "status": "SOURCE_DOCUMENT_DEFECT"
+        }
+      ],
+      "artworkEvidence": {
+        "page": 1,
+        "panel": "Back Panel",
+        "quote": "INGREDIENTS: ... Walnuts, Flax Seeds, Dried Strawberries, Pumpkin Seeds ...",
+        "boundingBox": [0.46, 0.44, 0.65, 0.68]
+      },
+      "contentSheetEvidence": {
+        "sheet": "Content Sheet - US",
+        "cell": "B26",
+        "quote": "Sunflower Seeds, Vegetable Oils (in varying proportions), Dried Blueberries, Cranberries, Sunflower Seeds",
+        "approvalStatus": "Draft / In Review"
+      },
+      "legalSource": "FDA 21 CFR §101.4(a)",
+      "sourceAuthority": "DRAFT",
+      "applicability": "MANDATORY_LABEL_SPEC",
+      "requiredChecks": ["tokenizer_diff", "duplicate_detector"],
+      "evidenceCoverage": "FULL_SOURCE_AND_ARTWORK",
+      "expectedFindingSemantics": "SOURCE_ARTWORK_MISMATCH",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "department": "R&D",
+      "collaborators": ["BRAND", "LEGAL"],
+      "evaluationNotes": "Parent check with 2 distinct subassertions: 4 ingredients present only on carton, plus duplicate item in draft formulation."
+    },
+    {
+      "checkId": "DF-03",
+      "checkName": "Allergen Disclosure & Precautionary Review",
+      "category": "ALLERGENS",
+      "expectedObservation": "Intentional tree nut ingredients (Almonds, Pecans, Walnuts) are named in the ingredients list; advisory statement 'ALLERGEN INFORMATION: May Contain Nuts' uses generic term instead of specific nuts.",
+      "artworkEvidence": {
+        "page": 1,
+        "panel": "Back Panel",
+        "quote": "ALLERGEN INFORMATION: May Contain Nuts",
+        "boundingBox": [0.46, 0.68, 0.65, 0.74]
+      },
+      "contentSheetEvidence": {
+        "sheet": "Content Sheet - US",
+        "cell": "B24",
+        "quote": "May Contain Almonds, May Contain Brazil Nuts, May Contain Pecan Nuts...",
+        "approvalStatus": "Draft / In Review"
+      },
+      "legalSource": "FALCPA 21 U.S.C. 343(w) & FDA Advisory Labeling Guidance",
+      "sourceAuthority": "STATUTORY_PLUS_DRAFT",
+      "applicability": "STATUTORY_US",
+      "requiredChecks": ["allergen_token_disclosure", "falcpa_rule_evaluator"],
+      "evidenceCoverage": "FULL_SOURCE_AND_ARTWORK",
+      "expectedFindingSemantics": "ALLERGEN_DECLARATION_REVIEW",
+      "adjudicationStatus": "PROVISIONAL_EXPECTATION",
+      "department": "LEGAL",
+      "collaborators": ["R&D"],
+      "evaluationNotes": "Tree nuts named in ingredient list satisfies statutory FALCPA disclosure. Separate Contains statement is not universally mandatory under federal law; generic May Contain Nuts triggers policy review."
+    },
+    {
+      "checkId": "DF-04",
+      "checkName": "No Added Sugar Claim & 0g Added Sugars Review",
+      "category": "CLAIMS",
+      "expectedObservation": "Artwork displays 'NO ADDED SUGAR' and 'Incl. 0g Added Sugars', while formulation sheet contains Honey, Coconut Sugar, and Cane Sugar.",
+      "subassertions": [
+        {
+          "subId": "DF-04-A",
+          "name": "No Added Sugar Marketing Claim",
+          "observed": "NO ADDED SUGAR on top flap",
+          "expected": "No added caloric sweeteners per 21 CFR 101.60(c)(2)",
+          "status": "CLAIM_FORMULATION_CONFLICT"
+        },
+        {
+          "subId": "DF-04-B",
+          "name": "Quantitative Added Sugars Declaration",
+          "observed": "Incl. 0g Added Sugars in Nutrition Facts",
+          "expected": "Quantitatively verified added sugars contribution",
+          "status": "ADDED_SUGAR_VALUE_QUESTION"
+        }
+      ],
+      "artworkEvidence": {
+        "page": 1,
+        "panel": "Top Flap & Left Panel",
+        "quote": "NO ADDED SUGAR / Incl. 0g Added Sugars",
+        "boundingBox": [0.15, 0.05, 0.35, 0.15]
+      },
+      "contentSheetEvidence": {
+        "sheet": "Content Sheet - US",
+        "cell": "B26, B29, B56",
+        "quote": "Honey (9%), Coconut Sugar, Cane Sugar in crystallized ginger",
+        "approvalStatus": "Draft / In Review"
+      },
+      "legalSource": "FDA 21 CFR §101.60(c)(2) & 21 CFR §101.9(c)(6)(iii)",
+      "sourceAuthority": "STATUTORY_PLUS_DRAFT",
+      "applicability": "STATUTORY_US",
+      "requiredChecks": ["sugar_claim_screener", "sweetener_crosscheck"],
+      "evidenceCoverage": "FULL_SOURCE_AND_ARTWORK",
+      "expectedFindingSemantics": "CLAIM_FORMULATION_CONFLICT",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "department": "LEGAL",
+      "collaborators": ["R&D"],
+      "evaluationNotes": "Under 21 CFR 101.60(c)(2), No Added Sugar claim is prohibited if product contains added sugars unless explicitly qualified; recipe contains 3 caloric sweeteners."
+    },
+    {
+      "checkId": "DF-05",
+      "checkName": "Vegan Claim Formulation Consistency",
+      "category": "CLAIMS",
+      "expectedObservation": "Artwork states 'Suitable for Vegans' on Back Panel, but recipe formulation includes Honey (bee product) and Nutrition Facts declares 45mg Cholesterol.",
+      "artworkEvidence": {
+        "page": 1,
+        "panel": "Back Panel & Left Panel",
+        "quote": "DIETARY INFORMATION: Suitable for Vegans. / Cholesterol 45mg",
+        "boundingBox": [0.46, 0.35, 0.65, 0.42]
+      },
+      "contentSheetEvidence": {
+        "sheet": "Content Sheet - US",
+        "cell": "B26, B29",
+        "quote": "Honey (1%), Certified Vegan (vegan.org)",
+        "approvalStatus": "Draft / In Review"
+      },
+      "legalSource": "FTC Truth in Advertising & Vegan Society Standard",
+      "sourceAuthority": "VOLUNTARY_CERTIFICATION_STANDARDS",
+      "applicability": "VOLUNTARY_CLAIM",
+      "requiredChecks": ["vegan_criteria_screener"],
+      "evidenceCoverage": "FULL_SOURCE_AND_ARTWORK",
+      "expectedFindingSemantics": "VEGAN_CLAIM_SUBSTANTIATION_REVIEW",
+      "adjudicationStatus": "PROVISIONAL_EXPECTATION",
+      "department": "BRAND",
+      "collaborators": ["LEGAL", "R&D"],
+      "evaluationNotes": "FDA does not establish a statutory standard of identity for vegan, but certification bodies prohibit honey; declared cholesterol indicates animal source or nutrition typo."
+    },
+    {
+      "checkId": "DF-06",
+      "checkName": "Carbohydrate Source Mismatch",
+      "category": "NUTRITION_DV",
+      "expectedObservation": "Content sheet declares Total Carbohydrate 15g in cell B53 (or 32g in C18), while artwork Nutrition Facts declares 66g.",
+      "artworkEvidence": {
+        "page": 1,
+        "panel": "Left Panel (Nutrition Facts)",
+        "quote": "Total Carbohydrate 66g",
+        "boundingBox": [0.85, 0.45, 0.96, 0.75]
+      },
+      "contentSheetEvidence": {
+        "sheet": "Content Sheet - US",
+        "cell": "B53",
+        "quote": "15g",
+        "approvalStatus": "Draft / In Review"
+      },
+      "legalSource": "FDA 21 CFR §101.9(c)(6)",
+      "sourceAuthority": "DRAFT",
+      "applicability": "MANDATORY_LABEL_SPEC",
+      "requiredChecks": ["numeric_comparator", "serving_basis_normalizer"],
+      "evidenceCoverage": "FULL_SOURCE_AND_ARTWORK",
+      "expectedFindingSemantics": "SOURCE_ARTWORK_MISMATCH",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "department": "R&D",
+      "collaborators": ["LEGAL"],
+      "evaluationNotes": "Discrepancy of +51g carbohydrates. Content sheet has multiple quantity columns; comparison requires serving basis validation."
+    },
+    {
+      "checkId": "DF-07",
+      "checkName": "Sodium Source Mismatch",
+      "category": "NUTRITION_DV",
+      "expectedObservation": "Content sheet declares Sodium 25mg in cell B52, while artwork declares 23mg on Nutrition Facts panel.",
+      "artworkEvidence": {
+        "page": 1,
+        "panel": "Left Panel (Nutrition Facts)",
+        "quote": "Sodium 23mg",
+        "boundingBox": [0.85, 0.45, 0.96, 0.75]
+      },
+      "contentSheetEvidence": {
+        "sheet": "Content Sheet - US",
+        "cell": "B52",
+        "quote": "25mg",
+        "approvalStatus": "Draft / In Review"
+      },
+      "legalSource": "FDA 21 CFR §101.9(c)(4)",
+      "sourceAuthority": "DRAFT",
+      "applicability": "MANDATORY_LABEL_SPEC",
+      "requiredChecks": ["numeric_comparator", "rounding_rule_checker"],
+      "evidenceCoverage": "FULL_SOURCE_AND_ARTWORK",
+      "expectedFindingSemantics": "SOURCE_ARTWORK_MISMATCH",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "department": "R&D",
+      "collaborators": ["LEGAL"],
+      "evaluationNotes": "Numerical discrepancy of -2mg. Under FDA rules, sodium <= 140mg rounds to nearest 5mg; 23mg is unrounded label or source typo."
+    },
+    {
+      "checkId": "DF-08",
+      "checkName": "Total Fat Daily Value (%DV) Calculation",
+      "category": "NUTRITION_DV",
+      "expectedObservation": "Artwork displays Total Fat 15g as '2.2% DV'; mathematical FDA Daily Value calculation yields 19.23% DV.",
+      "artworkEvidence": {
+        "page": 1,
+        "panel": "Left Panel (Nutrition Facts)",
+        "quote": "Total Fat 15g 2.2%",
+        "boundingBox": [0.85, 0.45, 0.96, 0.75]
+      },
+      "contentSheetEvidence": {
+        "sheet": "Content Sheet - US",
+        "cell": "C48",
+        "quote": "2.2%*",
+        "approvalStatus": "Draft / In Review"
+      },
+      "legalSource": "FDA 21 CFR §101.9(c)(9) (78g Adult Reference Daily Value)",
+      "sourceAuthority": "STATUTORY_MATHEMATICAL_PROOF",
+      "applicability": "STATUTORY_US",
+      "requiredChecks": ["fda_2016_dv_calculator"],
+      "evidenceCoverage": "FULL_SOURCE_AND_ARTWORK",
+      "expectedFindingSemantics": "DV_CALCULATION_DISCREPANCY",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "department": "R&D",
+      "collaborators": ["LEGAL"],
+      "evaluationNotes": "15g / 78g = 19.23%. Printed 2.2% DV is off by 17 percentage points; severe mathematical discrepancy."
+    },
+    {
+      "checkId": "DF-09",
+      "checkName": "Vitamin D Daily Value (%DV) Calculation",
+      "category": "NUTRITION_DV",
+      "expectedObservation": "Artwork displays Vitamin D 89mcg as '12% DV'; mathematical FDA Daily Value calculation yields 445% DV.",
+      "artworkEvidence": {
+        "page": 1,
+        "panel": "Left Panel (Nutrition Facts)",
+        "quote": "Vitamin D 89mcg 12%",
+        "boundingBox": [0.85, 0.45, 0.96, 0.75]
+      },
+      "contentSheetEvidence": {
+        "sheet": "Content Sheet - US",
+        "cell": "C58",
+        "quote": "12%",
+        "approvalStatus": "Draft / In Review"
+      },
+      "legalSource": "FDA 21 CFR §101.9(c)(9) (20mcg Adult Reference Daily Value)",
+      "sourceAuthority": "STATUTORY_MATHEMATICAL_PROOF",
+      "applicability": "STATUTORY_US",
+      "requiredChecks": ["fda_2016_dv_calculator"],
+      "evidenceCoverage": "FULL_SOURCE_AND_ARTWORK",
+      "expectedFindingSemantics": "DV_CALCULATION_DISCREPANCY",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "department": "R&D",
+      "collaborators": ["LEGAL"],
+      "evaluationNotes": "89mcg / 20mcg = 445%. Printed 12% DV is off by 433 percentage points; severe mathematical discrepancy."
+    },
+    {
+      "checkId": "DF-10",
+      "checkName": "Atwater 9/4/4 Calorie Plausibility Consistency",
+      "category": "NUTRITION_DV",
+      "expectedObservation": "Artwork declares 15g Fat, 66g Carbohydrates, 34g Protein, and 166 Calories. Atwater screening estimates 535 kcal (difference of 369 kcal).",
+      "artworkEvidence": {
+        "page": 1,
+        "panel": "Left Panel (Nutrition Facts)",
+        "quote": "Calories 166 / Total Fat 15g / Total Carb 66g / Protein 34g",
+        "boundingBox": [0.85, 0.45, 0.96, 0.75]
+      },
+      "contentSheetEvidence": {
+        "sheet": "Content Sheet - US",
+        "cell": "B47",
+        "quote": "166",
+        "approvalStatus": "Draft / In Review"
+      },
+      "legalSource": "FDA 21 CFR §101.9(c)(1)(i) & General Atwater 9/4/4 Formula",
+      "sourceAuthority": "SCREENING_MATHEMATICAL_PROOF",
+      "applicability": "TECHNICAL_PREFLIGHT",
+      "requiredChecks": ["atwater_macronutrient_screen", "serving_basis_normalizer"],
+      "evidenceCoverage": "FULL_SOURCE_AND_ARTWORK",
+      "expectedFindingSemantics": "CALORIE_PLAUSIBILITY_REVIEW",
+      "adjudicationStatus": "PROVISIONAL_EXPECTATION",
+      "department": "R&D",
+      "collaborators": ["LEGAL"],
+      "evaluationNotes": "15*9 + 66*4 + 34*4 = 535 kcal. Calorie plausibility divergence; general Atwater is screening method, serving basis and fiber adjustments must be confirmed."
+    },
+    {
+      "checkId": "DF-11",
+      "checkName": "Servings × Serving Size vs Net Weight Consistency",
+      "category": "NUTRITION_DV",
+      "expectedObservation": "Artwork declares 8 servings per container, serving size 85 (no unit), and net weight 480g. 8 * 85g = 680g, which exceeds declared pack mass by 200g (41.7%).",
+      "artworkEvidence": {
+        "page": 1,
+        "panel": "Left Panel (Nutrition Facts)",
+        "quote": "8 servings per container / Serving size 85 / 480g",
+        "boundingBox": [0.85, 0.45, 0.96, 0.75]
+      },
+      "contentSheetEvidence": {
+        "sheet": "Content Sheet - US",
+        "cell": "B34, B35",
+        "quote": "8 servings, 480g net",
+        "approvalStatus": "Draft / In Review"
+      },
+      "legalSource": "FDA 21 CFR §101.9(b) & NIST Handbook 133",
+      "sourceAuthority": "MATHEMATICAL_PACK_MASS_PROOF",
+      "applicability": "TECHNICAL_PREFLIGHT",
+      "requiredChecks": ["pack_geometry_math"],
+      "evidenceCoverage": "FULL_SOURCE_AND_ARTWORK",
+      "expectedFindingSemantics": "SERVING_SIZE_QUESTION",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "department": "R&D",
+      "collaborators": ["PREPRESS"],
+      "evaluationNotes": "Implied equal serving mass for 480g pack is 60g (480g / 8). Declared 85 lacks gram unit and is mathematically inconsistent."
+    },
+    {
+      "checkId": "DF-12",
+      "checkName": "Foreign / EU-style Visible Content on US Pack",
+      "category": "MARKET_COPY",
+      "expectedObservation": "Back Panel contains EU Reference Intake icons ('197kJ 4% Saturates Salt Cereals Containing Gluten') on a package labeled for the United States.",
+      "artworkEvidence": {
+        "page": 1,
+        "panel": "Back Panel",
+        "quote": "197kJ 4% Saturates Salt Cereals Containing Gluten",
+        "boundingBox": [0.46, 0.78, 0.65, 0.88]
+      },
+      "contentSheetEvidence": {
+        "sheet": null,
+        "cell": null,
+        "quote": null,
+        "approvalStatus": "NOT_IN_US_SPECIFICATION"
+      },
+      "legalSource": "FDA Food Labeling Guide & Company US Market Standard",
+      "sourceAuthority": "MARKET_POLICY_REVIEW",
+      "applicability": "US_MARKET_POLICY",
+      "requiredChecks": ["market_terminology_filter"],
+      "evidenceCoverage": "ARTWORK_ONLY",
+      "expectedFindingSemantics": "MIXED_MARKET_TERMINOLOGY",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "department": "BRAND",
+      "collaborators": ["LEGAL"],
+      "evaluationNotes": "EU format copy is visible on US carton; company packaging standards prohibit extraneous non-US regulatory icons on US retail SKUs."
+    },
+    {
+      "checkId": "DF-13",
+      "checkName": "Hidden Obsolete EU Nutrition Table Detection",
+      "category": "PDF_STRUCTURE",
+      "expectedObservation": "Native PDF stream contains legacy text 'Typical Values per 100g' covered by an opaque white vector rectangle at seqno 241.",
+      "artworkEvidence": {
+        "page": 1,
+        "panel": "Left Panel (Dieline Background)",
+        "quote": "Typical Values per 100g",
+        "boundingBox": [0.86, 0.45, 0.96, 0.72]
+      },
+      "contentSheetEvidence": {
+        "sheet": null,
+        "cell": null,
+        "quote": null,
+        "approvalStatus": "NOT_APPLICABLE"
+      },
+      "legalSource": "PDF/X ISO 15930 & Prepress Printability Guidelines",
+      "sourceAuthority": "PDF_DRAWING_SEQUENCE_ANALYSIS",
+      "applicability": "TECHNICAL_PREFLIGHT",
+      "requiredChecks": ["pdf_drawing_sequence_occlusion_detector"],
+      "evidenceCoverage": "PDF_OBJECT_STREAM",
+      "expectedFindingSemantics": "OCCLUDED_OBJECT_DETECTED",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "department": "PREPRESS",
+      "collaborators": [],
+      "evaluationNotes": "Proves visibility-aware PDF parsing; text is excluded from visible US consumer compliance checks and flagged in prepress diagnostics."
+    },
+    {
+      "checkId": "DF-14",
+      "checkName": "Net Quantity Format and Placement",
+      "category": "QUANTITY_BUSINESS",
+      "expectedObservation": "Net contents declared as '480g' on Back Panel only; missing dual US customary units (e.g. 16.9 OZ) and missing bottom 30% PDP placement.",
+      "artworkEvidence": {
+        "page": 1,
+        "panel": "Back Panel",
+        "quote": "480g",
+        "boundingBox": [0.46, 0.88, 0.65, 0.94]
+      },
+      "contentSheetEvidence": {
+        "sheet": "Content Sheet - US",
+        "cell": "B35",
+        "quote": "480g",
+        "approvalStatus": "Draft / In Review"
+      },
+      "legalSource": "FPLA 15 U.S.C. 1453 & FDA 21 CFR §101.7",
+      "sourceAuthority": "STATUTORY_US",
+      "applicability": "STATUTORY_US",
+      "requiredChecks": ["fpla_net_quantity_evaluator"],
+      "evidenceCoverage": "FULL_SOURCE_AND_ARTWORK",
+      "expectedFindingSemantics": "NET_QUANTITY_FORMAT_DEFECT",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "department": "LEGAL",
+      "collaborators": ["PREPRESS"],
+      "evaluationNotes": "Metric-only statement on Back panel violates mandatory US FPLA requirement for dual customary and metric units in bottom 30% of PDP."
+    },
+    {
+      "checkId": "DF-15",
+      "checkName": "Manufacturer / Distributor Business Address",
+      "category": "QUANTITY_BUSINESS",
+      "expectedObservation": "Artwork states 'PRODUCED BY DANCING FISH GRANOLA CO.' without city, state, or ZIP code.",
+      "artworkEvidence": {
+        "page": 1,
+        "panel": "Back Panel",
+        "quote": "PRODUCED BY DANCING FISH GRANOLA CO.",
+        "boundingBox": [0.46, 0.94, 0.65, 0.98]
+      },
+      "contentSheetEvidence": {
+        "sheet": null,
+        "cell": null,
+        "quote": null,
+        "approvalStatus": "NOT_IN_SHEET"
+      },
+      "legalSource": "FDA 21 CFR §101.5",
+      "sourceAuthority": "STATUTORY_US",
+      "applicability": "STATUTORY_US",
+      "requiredChecks": ["business_address_evaluator"],
+      "evidenceCoverage": "ARTWORK_ONLY",
+      "expectedFindingSemantics": "MANUFACTURER_ADDRESS_INCOMPLETE",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "department": "LEGAL",
+      "collaborators": [],
+      "evaluationNotes": "21 CFR 101.5 allows street address omission if listed in local directory, but city, state, and ZIP are mandatory."
+    },
+    {
+      "checkId": "DF-16",
+      "checkName": "Draft / Unapproved Source Authority Blocker",
+      "category": "SOURCE_AUTHORITY",
+      "expectedObservation": "Content sheet explicitly identifies status as 'Draft / In Review' in cell E3 with advisory notes to confirm values.",
+      "artworkEvidence": {
+        "page": null,
+        "panel": null,
+        "quote": null,
+        "boundingBox": null
+      },
+      "contentSheetEvidence": {
+        "sheet": "Content Sheet - US",
+        "cell": "E3",
+        "quote": "Draft / In Review",
+        "approvalStatus": "Draft / In Review"
+      },
+      "legalSource": "PackSignal Packaging Quality Management Standard",
+      "sourceAuthority": "SOURCE_MANAGEMENT_PROCESS",
+      "applicability": "QUALITY_GATE",
+      "requiredChecks": ["source_status_check"],
+      "evidenceCoverage": "SOURCE_SHEET_METADATA",
+      "expectedFindingSemantics": "SOURCE_CONFIRMATION_REQUIRED",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "department": "LEGAL",
+      "collaborators": ["R&D"],
+      "evaluationNotes": "Draft-source indicators are governance blockers, not physical artwork defects. Engine routes to reviewers for sign-off."
+    },
+    {
+      "checkId": "P01",
+      "checkName": "UPC-A Barcode Modulo-10 Check Digit (Positive Control)",
+      "category": "POSITIVE_CONTROL",
+      "expectedObservation": "Artwork Base Panel barcode digits '1 20000 00003 6' contain a mathematically valid GS1 Modulo-10 check digit 6.",
+      "artworkEvidence": {
+        "page": 1,
+        "panel": "Base Panel",
+        "quote": "1 20000 00003 6",
+        "boundingBox": [0.45, 0.90, 0.55, 0.98]
+      },
+      "contentSheetEvidence": {
+        "sheet": "Content Sheet - US",
+        "cell": "E12",
+        "quote": "1 20000 00003 6",
+        "approvalStatus": "Draft / In Review"
+      },
+      "legalSource": "GS1 General Specifications Section 7.9",
+      "sourceAuthority": "GS1_STANDARDS",
+      "applicability": "ALL_MARKETS",
+      "requiredChecks": ["gs1_modulo10_calculator"],
+      "evidenceCoverage": "FULL_SOURCE_AND_ARTWORK",
+      "expectedFindingSemantics": "BARCODE_CHECK_DIGIT_VALID",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "department": "PREPRESS",
+      "collaborators": [],
+      "evaluationNotes": "Positive control proving valid barcode checksum passes without false alarms. Does not imply print quality verification."
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "document_id": "FD-CLAIM-020",
+  "version": "2.0",
+  "synthetic": true,
+  "scope": "Fictional claim-approval register for FD-OAT-1042 only; no real substantiation implied.",
+  "entries": [
+    {
+      "claim_id": "C001",
+      "text": "Smooth & creamy",
+      "sku": "FD-OAT-1042",
+      "status": "APPROVED_WITHIN_FICTIONAL_SCENARIO",
+      "condition": "Exact phrase only; scenario approval covers this fictional SKU.",
+      "evidence_reference": "Fictional sensory-copy decision FD-DEMO-01. No real study is asserted."
+    }
+  ],
+  "unlisted_claim_policy": "No approval evidence in this supplied register means needs_human_review, not a definitive prohibited/false/legal finding.",
+  "scope_limit": "The register contains only the entries above; silence is not proof of rejection."
+}

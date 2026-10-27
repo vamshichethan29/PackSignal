@@ -1,0 +1,24 @@
+{
+  "id": "US-002",
+  "version": "1.0.0",
+  "market": "us",
+  "regulator": "FDA",
+  "productScope": "conventional_packaged_food",
+  "sourceCitation": "21 CFR 101.5",
+  "sourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.5",
+  "sourceQuote": "The label of a food in packaged form shall specify conspicuously the name and place of business of the manufacturer, packer, or distributor.",
+  "quoteVerificationStatus": "VERIFIED_QUOTATION",
+  "legalStatus": "IN_FORCE",
+  "effectiveDate": "2016-07-26",
+  "checkType": "EXACT_COPY",
+  "parameters": {
+    "field": "business_address",
+    "qualifyingPhraseRequiredIfDistributed": true
+  },
+  "requiredFacts": ["business_name", "business_address"],
+  "applicability": {
+    "market": "us"
+  },
+  "exceptions": [],
+  "reviewStatus": "APPROVED"
+}

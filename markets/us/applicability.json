@@ -1,0 +1,35 @@
+{
+  "market": "US",
+  "productCategories": {
+    "granola": {
+      "raccGrams": 55,
+      "raccCategory": "Bakery products / Ready-to-eat cereals, weighing 43 g or more per 1/2 cup (e.g. dense granola)",
+      "cfrCitation": "21 CFR 101.12(b) Table 2",
+      "pdpPlacementRequirement": "Statement of identity and net quantity must appear on Principal Display Panel"
+    },
+    "cereal_ready_to_eat": {
+      "raccGrams": 30,
+      "raccCategory": "Ready-to-eat cereals, weighing less than 43 g per 1/2 cup",
+      "cfrCitation": "21 CFR 101.12(b)"
+    },
+    "conventional_food": {
+      "requiresNutritionFacts": true,
+      "requiresFalcpaAllergens": true
+    }
+  },
+  "populations": {
+    "ADULTS_AND_CHILDREN_4_PLUS": {
+      "description": "General population: adults and children 4 or more years of age",
+      "calorieReference": 2000
+    },
+    "INFANTS_THROUGH_12_MONTHS": {
+      "description": "Infants through 12 months of age"
+    },
+    "CHILDREN_1_THROUGH_3_YEARS": {
+      "description": "Children 1 through 3 years of age"
+    },
+    "PREGNANT_AND_LACTATING_WOMEN": {
+      "description": "Pregnant and lactating women"
+    }
+  }
+}

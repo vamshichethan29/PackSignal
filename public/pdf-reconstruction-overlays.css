@@ -1,0 +1,325 @@
+/* PackSignal — Advanced PDF Text Reconstruction 2D Overlays & Inspector */
+
+.workbench-reconstructed-text-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 19;
+}
+
+/* 1. Letter-Spaced Text Runs (Cyan Box with glyph anchor markers) */
+.workbench-reconstructed-box {
+  position: absolute;
+  border: 2px solid #0284c7;
+  background: rgba(2, 132, 199, 0.08);
+  border-radius: 4px;
+  cursor: pointer;
+  pointer-events: auto;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  display: block;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.workbench-reconstructed-box:hover {
+  background: rgba(2, 132, 199, 0.20);
+  border-color: #38bdf8;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+  transform: scale(1.01);
+  z-index: 26;
+}
+
+.recon-box-badge {
+  position: absolute;
+  top: -20px;
+  left: 0;
+  background: #0284c7;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* 2. Glyph boxes inside reconstructed run */
+.recon-glyph-box {
+  position: absolute;
+  border: 1px dotted rgba(56, 189, 248, 0.6);
+  background: rgba(56, 189, 248, 0.05);
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+/* 3. Curved Arc Text Overlay (SVG Canvas) */
+.workbench-curved-arc-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.curved-arc-path {
+  fill: none;
+  stroke: #06b6d4;
+  stroke-width: 3px;
+  stroke-dasharray: 6, 3;
+  cursor: pointer;
+  pointer-events: stroke;
+  transition: all 0.2s ease;
+}
+
+.curved-arc-path:hover {
+  stroke: #22d3ee;
+  stroke-width: 5px;
+  filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.8));
+}
+
+.curved-arc-glyph-dot {
+  fill: #38bdf8;
+  stroke: #0369a1;
+  stroke-width: 1px;
+  r: 3px;
+}
+
+.curved-arc-tangent-arrow {
+  stroke: #38bdf8;
+  stroke-width: 1.5px;
+}
+
+/* Inspector Modal Dialog */
+.pdf-reconstruction-dialog {
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: 12px;
+  background: #09131d;
+  color: #f0f9ff;
+  padding: 0;
+  max-width: 720px;
+  width: 92vw;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 30px rgba(6, 182, 212, 0.15);
+}
+
+.pdf-reconstruction-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(5px);
+}
+
+.recon-modal-content {
+  padding: 24px;
+}
+
+.recon-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.recon-modal-title-group h3 {
+  margin: 0 0 6px 0;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #e0f2fe;
+}
+
+.recon-modal-sub {
+  font-size: 12px;
+  color: #7dd3fc;
+  margin: 0;
+}
+
+.recon-close-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  line-height: 1;
+}
+
+.recon-close-btn:hover {
+  color: #f8fafc;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Comparison Display Box (Raw vs Reconstructed) */
+.recon-comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.recon-card {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.recon-card-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+}
+
+.recon-card-raw {
+  font-family: monospace;
+  font-size: 15px;
+  color: #cbd5e1;
+  background: #020617;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #1e293b;
+  word-break: break-word;
+  white-space: pre-wrap;
+  letter-spacing: 2px;
+}
+
+.recon-card-reconstructed {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #38bdf8;
+  background: #020617;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #0284c7;
+  word-break: break-word;
+}
+
+/* Metadata & Provenance Grid */
+.recon-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  background: #0b1523;
+  border: 1px solid #1e293b;
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 20px;
+  font-size: 12px;
+}
+
+.recon-meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.recon-meta-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.recon-meta-value {
+  color: #e2e8f0;
+  font-weight: 600;
+}
+
+.recon-meta-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  width: fit-content;
+}
+
+.recon-meta-badge.verified {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border: 1px solid #059669;
+}
+
+.recon-meta-badge.review-required {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border: 1px solid #d97706;
+}
+
+.recon-meta-badge.outlined {
+  background: rgba(168, 85, 247, 0.2);
+  color: #c084fc;
+  border: 1px solid #9333ea;
+}
+
+/* Warnings and Numeric Safeguards */
+.recon-warning-box {
+  background: rgba(245, 158, 11, 0.1);
+  border: 1px solid #f59e0b;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+  font-size: 12px;
+  color: #fde68a;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+/* Modal Actions */
+.recon-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 16px;
+}
+
+.recon-btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.recon-btn-secondary {
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #f1f5f9;
+}
+
+.recon-btn-secondary:hover {
+  background: #334155;
+}
+
+.recon-btn-primary {
+  background: #0284c7;
+  border: 1px solid #38bdf8;
+  color: #ffffff;
+}
+
+.recon-btn-primary:hover {
+  background: #0369a1;
+}

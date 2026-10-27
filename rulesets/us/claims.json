@@ -1,0 +1,24 @@
+{
+  "id": "US-007",
+  "version": "1.0.0",
+  "market": "us",
+  "regulator": "FDA",
+  "productScope": "conventional_packaged_food",
+  "sourceCitation": "21 CFR 101.13, 21 CFR 101.54",
+  "sourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.13",
+  "sourceQuote": "A claim that characterizes the level of a nutrient which is of the type required to be in nutrition labeling may not be made on the label unless it is made in accordance with this section.",
+  "quoteVerificationStatus": "VERIFIED_QUOTATION",
+  "legalStatus": "IN_FORCE",
+  "effectiveDate": "2016-07-26",
+  "checkType": "CLAIM_REGISTER_LOOKUP",
+  "parameters": {
+    "register": "claims",
+    "requireSubstantiation": true
+  },
+  "requiredFacts": ["artwork_claims", "claims_register"],
+  "applicability": {
+    "market": "us"
+  },
+  "exceptions": [],
+  "reviewStatus": "APPROVED"
+}

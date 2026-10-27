@@ -1,0 +1,24 @@
+{
+  "id": "DF-QA-LBL-003",
+  "version": "2.1.0",
+  "market": "company",
+  "regulator": "Internal QA",
+  "productScope": "cereal_and_snacks",
+  "sourceCitation": "DF-QA-LBL-003 Section 4.2",
+  "sourceUrl": "internal://qa/specs/DF-QA-LBL-003.pdf",
+  "sourceQuote": "Consumer warning: Keep refrigerated after opening.",
+  "quoteVerificationStatus": "VERIFIED_QUOTATION",
+  "legalStatus": "IN_FORCE",
+  "effectiveDate": "2024-01-01",
+  "checkType": "REQUIRED_TEXT",
+  "parameters": {
+    "phrase": "Keep refrigerated after opening.",
+    "caseSensitive": false
+  },
+  "requiredFacts": ["artwork_copy"],
+  "applicability": {
+    "foodCategory": "perishable_or_stabilized"
+  },
+  "exceptions": [],
+  "reviewStatus": "APPROVED"
+}

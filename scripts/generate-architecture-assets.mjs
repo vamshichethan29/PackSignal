@@ -1,0 +1,302 @@
+import { writeFileSync, existsSync } from 'node:fs';
+import { resolve, join } from 'node:path';
+import { chromium } from 'playwright';
+
+const root = process.cwd();
+const svgPath = join(root, 'docs', 'architecture.svg');
+const pngPath = join(root, 'docs', 'architecture.png');
+
+const svgContent = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1100" width="1600" height="1100" style="background:#090d16; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0a0f1d"/>
+      <stop offset="50%" stop-color="#0e172a"/>
+      <stop offset="100%" stop-color="#070a12"/>
+    </linearGradient>
+    
+    <linearGradient id="cardGrad1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    
+    <linearGradient id="blueGlow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#6366f1"/>
+    </linearGradient>
+
+    <linearGradient id="greenGlow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+
+    <linearGradient id="purpleGlow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#a855f7"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+
+    <linearGradient id="amberGlow" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f59e0b"/>
+      <stop offset="100%" stop-color="#ea580c"/>
+    </linearGradient>
+
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#000000" flood-opacity="0.6"/>
+    </filter>
+
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8" />
+    </marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#10b981" />
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#f59e0b" />
+    </marker>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="1600" height="1100" fill="url(#bgGrad)" />
+  <circle cx="200" cy="150" r="300" fill="#1e3a8a" opacity="0.12"/>
+  <circle cx="1400" cy="850" r="350" fill="#3b0764" opacity="0.12"/>
+  <circle cx="800" cy="550" r="280" fill="#064e3b" opacity="0.10"/>
+
+  <!-- Main Title Header -->
+  <g transform="translate(60, 45)">
+    <rect x="0" y="0" width="1480" height="70" rx="12" fill="#0f172a" stroke="#1e293b" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="24" y="38" font-size="22" font-weight="800" fill="#f8fafc" letter-spacing="0.5">PackSignal — System Architecture &amp; Dataflow</text>
+    <text x="24" y="56" font-size="12" font-weight="500" fill="#94a3b8">Evidence-Backed Packaging Artwork Review | Deterministic Core + Audited Multimodal AI + Cryptographic Sealing</text>
+    <rect x="1310" y="18" width="145" height="34" rx="17" fill="#1e293b" stroke="#38bdf8" stroke-width="1"/>
+    <circle cx="1328" cy="35" r="5" fill="#10b981"/>
+    <text x="1342" y="39" font-size="11" font-weight="700" fill="#38bdf8">PHASE 9 SHIPPED</text>
+  </g>
+
+  <!-- STAGE 1: INTAKE -->
+  <g transform="translate(60, 145)">
+    <rect width="320" height="190" rx="12" fill="url(#cardGrad1)" stroke="#38bdf8" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="320" height="38" rx="12" fill="#0284c7" fill-opacity="0.2"/>
+    <text x="16" y="25" font-size="13" font-weight="700" fill="#38bdf8" letter-spacing="0.5">1. DOCUMENT INTAKE &amp; DIGEST</text>
+    <text x="16" y="62" font-size="13" font-weight="600" fill="#f1f5f9">User Upload &amp; Session Ingestion</text>
+    <text x="16" y="84" font-size="11" fill="#94a3b8">• Multi-format Intake (PDF, XLSX, DOCX)</text>
+    <text x="16" y="104" font-size="11" fill="#94a3b8">• SHA-256 Digest &amp; Origin Fingerprint</text>
+    <text x="16" y="124" font-size="11" fill="#94a3b8">• In-Memory &amp; Local Storage Isolation</text>
+    <text x="16" y="144" font-size="11" fill="#94a3b8">• Role Tagging (Artwork, Spec, Copy, Rule)</text>
+    <rect x="16" y="158" width="288" height="20" rx="4" fill="#0c4a6e" fill-opacity="0.4"/>
+    <text x="24" y="172" font-size="10" font-weight="600" fill="#7dd3fc">Component: server.mjs / multipart intake</text>
+  </g>
+
+  <!-- Connector 1 -> 2 -->
+  <path d="M 380 240 L 440 240" fill="none" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- STAGE 2: EXTRACTION -->
+  <g transform="translate(440, 145)">
+    <rect width="330" height="190" rx="12" fill="url(#cardGrad1)" stroke="#818cf8" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="330" height="38" rx="12" fill="#4338ca" fill-opacity="0.2"/>
+    <text x="16" y="25" font-size="13" font-weight="700" fill="#a5b4fc" letter-spacing="0.5">2. MULTI-MODAL EXTRACTION</text>
+    <text x="16" y="62" font-size="13" font-weight="600" fill="#f1f5f9">Positioned Source Pieces</text>
+    <text x="16" y="84" font-size="11" fill="#94a3b8">• pypdfium2: Vector glyphs &amp; coordinates</text>
+    <text x="16" y="104" font-size="11" fill="#94a3b8">• openpyxl: Cell grid, formulas &amp; sheets</text>
+    <text x="16" y="124" font-size="11" fill="#94a3b8">• python-docx: Specification tables &amp; body</text>
+    <text x="16" y="144" font-size="11" fill="#94a3b8">• Prepress: Overprint, TAC, separations</text>
+    <rect x="16" y="158" width="298" height="20" rx="4" fill="#312e81" fill-opacity="0.4"/>
+    <text x="24" y="172" font-size="10" font-weight="600" fill="#c7d2fe">Engine: lib/extract.py &amp; lib/preflight</text>
+  </g>
+
+  <!-- Connector 2 -> 3 -->
+  <path d="M 770 240 L 830 240" fill="none" stroke="#818cf8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- STAGE 3: FACT SHEET -->
+  <g transform="translate(830, 145)">
+    <rect width="330" height="190" rx="12" fill="url(#cardGrad1)" stroke="#34d399" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="330" height="38" rx="12" fill="#047857" fill-opacity="0.2"/>
+    <text x="16" y="25" font-size="13" font-weight="700" fill="#6ee7b7" letter-spacing="0.5">3. CANONICAL FACT SHEET</text>
+    <text x="16" y="62" font-size="13" font-weight="600" fill="#f1f5f9">Source Truth &amp; Quote Verifier</text>
+    <text x="16" y="84" font-size="11" fill="#94a3b8">• Character-level Quote Verification</text>
+    <text x="16" y="104" font-size="11" fill="#94a3b8">• Authority Hierarchy (Spec &gt; Art &gt; Copy)</text>
+    <text x="16" y="124" font-size="11" fill="#94a3b8">• Conflict Detection &amp; Ambiguity Flagging</text>
+    <text x="16" y="144" font-size="11" fill="#94a3b8">• Normalized Nutritional &amp; Claim Entities</text>
+    <rect x="16" y="158" width="298" height="20" rx="4" fill="#064e3b" fill-opacity="0.4"/>
+    <text x="24" y="172" font-size="10" font-weight="600" fill="#a7f3d0">Module: lib/fact-sheet.mjs / quote-verifier</text>
+  </g>
+
+  <!-- Connector 3 -> 4 -->
+  <path d="M 1160 240 L 1220 240 L 1220 370 L 1180 370" fill="none" stroke="#34d399" stroke-width="2" marker-end="url(#arrowGreen)"/>
+
+  <!-- STAGE 4: DUAL ENGINE (DETERMINISTIC + AI) -->
+  <g transform="translate(60, 360)">
+    <rect width="1100" height="200" rx="12" fill="#0b1329" stroke="#6366f1" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="1100" height="36" rx="12" fill="#312e81" fill-opacity="0.3"/>
+    <text x="20" y="24" font-size="13" font-weight="700" fill="#a5b4fc" letter-spacing="0.5">4. DUAL-TRACK COMPLIANCE &amp; VERIFICATION ENGINE</text>
+
+    <!-- Sub-track A: Deterministic Rule Packs -->
+    <g transform="translate(20, 50)">
+      <rect width="520" height="130" rx="8" fill="#111c38" stroke="#3b82f6" stroke-width="1"/>
+      <text x="16" y="24" font-size="12" font-weight="700" fill="#60a5fa">Track A: Deterministic Market Rule Packs (Authoritative)</text>
+      <text x="16" y="46" font-size="11" fill="#94a3b8">• US FDA 21 CFR 101: PDP Area, Type Height, Daily Value Math</text>
+      <text x="16" y="66" font-size="11" fill="#94a3b8">• India FSSAI / Legal Metrology Act: Veg/Non-Veg Logo, MRP, Dual Lang</text>
+      <text x="16" y="86" font-size="11" fill="#94a3b8">• Prepress Rules: Total Area Coverage (TAC), Minimum Line Width, Dieline Fit</text>
+      <text x="16" y="108" font-size="10" font-weight="600" fill="#93c5fd">Zero Hallucination • 100% Offline Capable • Strict Mathematical Proofs</text>
+    </g>
+
+    <!-- Sub-track B: Multimodal Vision AI -->
+    <g transform="translate(560, 50)">
+      <rect width="520" height="130" rx="8" fill="#1b1238" stroke="#a855f7" stroke-width="1"/>
+      <text x="16" y="24" font-size="12" font-weight="700" fill="#c084fc">Track B: Multimodal Vision AI (Audited Assist)</text>
+      <text x="16" y="46" font-size="11" fill="#94a3b8">• Production Model: Gemini 3.8 Flash (Freeze Selected)</text>
+      <text x="16" y="66" font-size="11" fill="#94a3b8">• Complex Layout Transcription, Curved Text &amp; Aesthetic Reading</text>
+      <text x="16" y="86" font-size="11" fill="#94a3b8">• Strict Output Schema + Exact Character Quote Verification Validation</text>
+      <text x="16" y="108" font-size="10" font-weight="600" fill="#e9d5ff">Graceful Fallback: Seamlessly switches to Deterministic Local Engine if offline</text>
+    </g>
+  </g>
+
+  <!-- STAGE 5: CANONICAL FINDINGS & EPISTEMIC STATES -->
+  <g transform="translate(1200, 145)">
+    <rect width="340" height="415" rx="12" fill="url(#cardGrad1)" stroke="#f59e0b" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="340" height="38" rx="12" fill="#b45309" fill-opacity="0.2"/>
+    <text x="16" y="25" font-size="13" font-weight="700" fill="#fbbf24" letter-spacing="0.5">5. CANONICAL FINDINGS</text>
+    
+    <text x="16" y="62" font-size="12" font-weight="600" fill="#f1f5f9">4 Epistemic Trust Verdicts:</text>
+
+    <!-- State 1: Match -->
+    <rect x="16" y="78" width="308" height="65" rx="6" fill="#064e3b" fill-opacity="0.3" stroke="#10b981" stroke-width="1"/>
+    <text x="28" y="98" font-size="12" font-weight="700" fill="#34d399">MATCH (Verified)</text>
+    <text x="28" y="116" font-size="10" fill="#cbd5e1">Artwork directly matches source reference;</text>
+    <text x="28" y="130" font-size="10" fill="#94a3b8">cryptographically backed quote and coordinates.</text>
+
+    <!-- State 2: Issue -->
+    <rect x="16" y="152" width="308" height="65" rx="6" fill="#7f1d1d" fill-opacity="0.3" stroke="#ef4444" stroke-width="1"/>
+    <text x="28" y="172" font-size="12" font-weight="700" fill="#f87171">ISSUE FOUND (Violation)</text>
+    <text x="28" y="190" font-size="10" fill="#cbd5e1">Conflicting value, missing mandatory statement,</text>
+    <text x="28" y="204" font-size="10" fill="#94a3b8">or prepress threshold failure (e.g. TAC &gt; 300%).</text>
+
+    <!-- State 3: Human Review -->
+    <rect x="16" y="226" width="308" height="65" rx="6" fill="#78350f" fill-opacity="0.3" stroke="#f59e0b" stroke-width="1"/>
+    <text x="28" y="246" font-size="12" font-weight="700" fill="#fbbf24">NEEDS HUMAN REVIEW</text>
+    <text x="28" y="264" font-size="10" fill="#cbd5e1">Ambiguity in claim basis, marketing phrasing,</text>
+    <text x="28" y="278" font-size="10" fill="#94a3b8">or specification discrepancies between docs.</text>
+
+    <!-- State 4: Unable to verify -->
+    <rect x="16" y="300" width="308" height="65" rx="6" fill="#334155" fill-opacity="0.4" stroke="#94a3b8" stroke-width="1"/>
+    <text x="28" y="320" font-size="12" font-weight="700" fill="#cbd5e1">UNABLE TO VERIFY</text>
+    <text x="28" y="338" font-size="10" fill="#e2e8f0">Source data unprovided or out-of-scope;</text>
+    <text x="28" y="352" font-size="10" fill="#94a3b8">never silently converts into a false approval.</text>
+
+    <text x="16" y="395" font-size="11" font-weight="600" fill="#fde68a">• Every finding has exact source bounding box</text>
+  </g>
+
+  <!-- Connectors from Engine to Findings & Review Cockpit -->
+  <path d="M 1160 460 L 1200 460" fill="none" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowAmber)"/>
+  <path d="M 610 560 L 610 610" fill="none" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- STAGE 6: REVIEWER COCKPIT & COLLABORATION -->
+  <g transform="translate(60, 610)">
+    <rect width="1480" height="210" rx="12" fill="url(#cardGrad1)" stroke="#38bdf8" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="1480" height="36" rx="12" fill="#0369a1" fill-opacity="0.2"/>
+    <text x="20" y="24" font-size="13" font-weight="700" fill="#38bdf8" letter-spacing="0.5">6. REVIEWER COCKPIT, WORKFLOW &amp; INTERACTIVE VISUALIZATION</text>
+
+    <!-- Sub-col 1: 2D Proof Viewer -->
+    <g transform="translate(20, 50)">
+      <rect width="340" height="140" rx="8" fill="#0f172a" stroke="#1e293b" stroke-width="1"/>
+      <text x="16" y="24" font-size="12" font-weight="700" fill="#f8fafc">2D Proof View &amp; Prepress HUD</text>
+      <text x="16" y="48" font-size="11" fill="#94a3b8">• Millimeter-accurate PDF Coordinates</text>
+      <text x="16" y="68" font-size="11" fill="#94a3b8">• Separation Toggles (CMYK, Spot Inks)</text>
+      <text x="16" y="88" font-size="11" fill="#94a3b8">• Dynamic Total Ink Coverage (TAC) Heatmap</text>
+      <text x="16" y="108" font-size="11" fill="#94a3b8">• Dieline Overlay (Cut, Crease, Glue Flaps)</text>
+      <text x="16" y="128" font-size="10" font-weight="600" fill="#38bdf8">Interactive Deep-Zoom &amp; Canvas HUD</text>
+    </g>
+
+    <!-- Sub-col 2: 3D Tuck Carton -->
+    <g transform="translate(380, 50)">
+      <rect width="340" height="140" rx="8" fill="#0f172a" stroke="#1e293b" stroke-width="1"/>
+      <text x="16" y="24" font-size="12" font-weight="700" fill="#f8fafc">3D Tuck-End Carton Viewer</text>
+      <text x="16" y="48" font-size="11" fill="#94a3b8">• Parametric WebGL Fold Graph (Three.js)</text>
+      <text x="16" y="68" font-size="11" fill="#94a3b8">• UV Artwork Projection onto 6 Physical Faces</text>
+      <text x="16" y="88" font-size="11" fill="#94a3b8">• 3D Finding Pins with Camera Fly-To</text>
+      <text x="16" y="108" font-size="11" fill="#94a3b8">• Shelf Readability &amp; Saliency Analysis</text>
+      <text x="16" y="128" font-size="10" font-weight="600" fill="#818cf8">Real Carton Folding Physics &amp; Orbit</text>
+    </g>
+
+    <!-- Sub-col 3: Ambiguity Hub -->
+    <g transform="translate(740, 50)">
+      <rect width="340" height="140" rx="8" fill="#0f172a" stroke="#1e293b" stroke-width="1"/>
+      <text x="16" y="24" font-size="12" font-weight="700" fill="#f8fafc">Ambiguity Hub &amp; Questions</text>
+      <text x="16" y="48" font-size="11" fill="#94a3b8">• Dependency Graph &amp; Downstream Impact</text>
+      <text x="16" y="68" font-size="11" fill="#94a3b8">• Decision Ripple Preview (What-If Simulation)</text>
+      <text x="16" y="88" font-size="11" fill="#94a3b8">• Triage Queue (Auto-Reevaluate affected checks)</text>
+      <text x="16" y="108" font-size="11" fill="#94a3b8">• Correction Plans with exact copy replacement</text>
+      <text x="16" y="128" font-size="10" font-weight="600" fill="#34d399">Dynamic Rule Recomputation</text>
+    </g>
+
+    <!-- Sub-col 4: Department Review -->
+    <g transform="translate(1100, 50)">
+      <rect width="360" height="140" rx="8" fill="#0f172a" stroke="#1e293b" stroke-width="1"/>
+      <text x="16" y="24" font-size="12" font-weight="700" fill="#f8fafc">Multi-Department Workflow</text>
+      <text x="16" y="48" font-size="11" fill="#94a3b8">• Legal, Regulatory, Prepress, Brand Lenses</text>
+      <text x="16" y="68" font-size="11" fill="#94a3b8">• Role-Based Permissions &amp; Sticky Notes</text>
+      <text x="16" y="88" font-size="11" fill="#94a3b8">• Fast Triage Keyboard Shortcuts (A/R/H)</text>
+      <text x="16" y="108" font-size="11" fill="#94a3b8">• Non-Destructive Revision Tracking</text>
+      <text x="16" y="128" font-size="10" font-weight="600" fill="#fbbf24">Collaborative Sign-Off Workflows</text>
+    </g>
+  </g>
+
+  <!-- Connector 6 -> 7 -->
+  <path d="M 800 820 L 800 860" fill="none" stroke="#10b981" stroke-width="2" marker-end="url(#arrowGreen)"/>
+
+  <!-- STAGE 7 & 8: EXPORT, TRUST & CRYPTOGRAPHIC SEAL -->
+  <g transform="translate(60, 860)">
+    <rect width="1480" height="195" rx="12" fill="url(#cardGrad1)" stroke="#10b981" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="0" y="0" width="1480" height="36" rx="12" fill="#047857" fill-opacity="0.2"/>
+    <text x="20" y="24" font-size="13" font-weight="700" fill="#34d399" letter-spacing="0.5">7 &amp; 8. AUDITED DELIVERABLES, CRYPTOGRAPHIC SEAL &amp; TRUST VALIDATION</text>
+
+    <!-- Deliverable 1: Brief & Posters -->
+    <g transform="translate(20, 50)">
+      <rect width="460" height="125" rx="8" fill="#0f172a" stroke="#1e293b" stroke-width="1"/>
+      <text x="16" y="24" font-size="12" font-weight="700" fill="#f8fafc">Exportable Deliverables &amp; Artifacts</text>
+      <text x="16" y="46" font-size="11" fill="#94a3b8">• Evidence-Backed Creative Brief (HTML / PDF / Checklist)</text>
+      <text x="16" y="66" font-size="11" fill="#94a3b8">• High-Resolution A3 Review Wall Poster (Side-by-Side Proofs)</text>
+      <text x="16" y="86" font-size="11" fill="#94a3b8">• Remediation Export (CSV / JSON / Plain Text for Designers)</text>
+      <text x="16" y="108" font-size="10" font-weight="600" fill="#38bdf8">Completely self-contained, offline-viewable packages</text>
+    </g>
+
+    <!-- Deliverable 2: Ed25519 Seal -->
+    <g transform="translate(500, 50)">
+      <rect width="470" height="125" rx="8" fill="#0f172a" stroke="#10b981" stroke-width="1"/>
+      <text x="16" y="24" font-size="12" font-weight="700" fill="#34d399">Ed25519 Cryptographic Review Seal (v2)</text>
+      <text x="16" y="46" font-size="11" fill="#94a3b8">• SHA-256 Merkle Evidence Digests of Source Files &amp; Findings</text>
+      <text x="16" y="66" font-size="11" fill="#94a3b8">• Tamper-Evident Digital Signature attached to exports</text>
+      <text x="16" y="86" font-size="11" fill="#94a3b8">• Offline Verification CLI: npm run verify-report</text>
+      <text x="16" y="108" font-size="10" font-weight="600" fill="#a7f3d0">Mathematically verifiable audit trail for compliance</text>
+    </g>
+
+    <!-- Deliverable 3: Trust Console -->
+    <g transform="translate(990, 50)">
+      <rect width="470" height="125" rx="8" fill="#0f172a" stroke="#a855f7" stroke-width="1"/>
+      <text x="16" y="24" font-size="12" font-weight="700" fill="#c084fc">Trust Console &amp; Model Bake-Off</text>
+      <text x="16" y="46" font-size="11" fill="#94a3b8">• 5 Synthetic Defect Mutation Operators (Text, Date, Net, Allergen, TAC)</text>
+      <text x="16" y="66" font-size="11" fill="#94a3b8">• Automated Release Gates (Accuracy, Evidence Rigor &gt;=95%, FPR &lt;=5%)</text>
+      <text x="16" y="86" font-size="11" fill="#94a3b8">• Reproducible Benchmarking Suite: npm run trust:run</text>
+      <text x="16" y="108" font-size="10" font-weight="600" fill="#f0abfc">Proven defect catch rate with transparent synthetic evaluation scope</text>
+    </g>
+  </g>
+</svg>`;
+
+writeFileSync(svgPath, svgContent, 'utf8');
+console.log('Saved SVG:', svgPath);
+
+// Render SVG to PNG using Playwright Chromium
+try {
+  const browser = await chromium.launch();
+  const page = await browser.newPage({
+    viewport: { width: 1600, height: 1100 },
+    deviceScaleFactor: 2
+  });
+  
+  const html = '<!DOCTYPE html><html><head><meta charset="utf-8"><style>body{margin:0;padding:0;background:#090d16;}</style></head><body>' + svgContent + '</body></html>';
+  await page.setContent(html);
+  
+  await page.screenshot({ path: pngPath, fullPage: true });
+  await browser.close();
+  console.log('Saved PNG (high-DPI 2x):', pngPath);
+} catch (err) {
+  console.error('Error generating PNG via Playwright:', err);
+  process.exitCode = 1;
+}

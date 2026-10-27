@@ -1,0 +1,338 @@
+{
+  "schema": "packsignal-independent-predictions/v1",
+  "executionDate": "2026-10-26T01:39:26.581Z",
+  "gitCommit": "cd3db9dc2b19422667e8be7f2c87c70d145d6191",
+  "runtimeMode": "deterministic_local",
+  "aiEnabled": false,
+  "casesManifestHash": "e8625b9723f583860d35f52e58e729924834d74432f921ecaa2ba44064101722",
+  "caseRuns": [
+    {
+      "caseId": "CASE-01",
+      "reviewId": "eval-case-01",
+      "productName": "SunRidge Mountain Trail Mix",
+      "findingsCount": 28,
+      "factsCount": 5
+    },
+    {
+      "caseId": "CASE-02",
+      "reviewId": "eval-case-02",
+      "productName": "Verdant Grove Cold-Pressed Orange Juice",
+      "findingsCount": 25,
+      "factsCount": 6
+    },
+    {
+      "caseId": "CASE-03",
+      "reviewId": "eval-case-03",
+      "productName": "Harvest Hearth Rolled Oats",
+      "findingsCount": 40,
+      "factsCount": 15
+    }
+  ],
+  "predictionsCount": 12,
+  "predictions": [
+    {
+      "unitId": "U-01-01",
+      "caseId": "CASE-01",
+      "checkId": "US-001",
+      "field": "net_quantity",
+      "predictedStatus": "issue",
+      "observedValue": "10 OZ / 283 g",
+      "expectedValue": "12 OZ (340 g)",
+      "ruleReference": "derived:net_quantity",
+      "matchedFindingId": "e299acd942dc45",
+      "artworkEvidence": {
+        "page": 1,
+        "quote": "NET WT 10 OZ (283 g)",
+        "box": [
+          0.12746999740600587,
+          0.23420501708984376,
+          0.4597499847412109,
+          0.25452835083007813
+        ],
+        "location": "Page 1 · line 4"
+      },
+      "sourceEvidence": {
+        "sheet": "Approved Product Spec",
+        "cell": "B3",
+        "quote": "12 OZ (340 g)"
+      },
+      "executionTimestamp": "2026-10-26T01:39:15.853Z"
+    },
+    {
+      "unitId": "U-01-02",
+      "caseId": "CASE-01",
+      "checkId": "US-005",
+      "field": "nutrition.sodium",
+      "predictedStatus": "match",
+      "observedValue": "Artwork declares 8% DV (Reference 2300 mg)",
+      "expectedValue": null,
+      "ruleReference": "US-005-LOCAL",
+      "matchedFindingId": "nutrition:dv:dv:sodium:panel-1:col-1",
+      "artworkEvidence": {
+        "page": 1,
+        "quote": "Sodium 180mg 8%",
+        "box": [
+          0.1259000015258789,
+          0.5636266581217448,
+          0.4706599426269531,
+          0.5761199951171875
+        ],
+        "location": null
+      },
+      "sourceEvidence": null,
+      "executionTimestamp": "2026-10-26T01:39:15.853Z"
+    },
+    {
+      "unitId": "U-01-03",
+      "caseId": "CASE-01",
+      "checkId": "US-006",
+      "field": "nutrition.calories",
+      "predictedStatus": "match",
+      "observedValue": "Declared 160 kcal; 4-4-9 estimate 165 kcal (3% difference)",
+      "expectedValue": null,
+      "ruleReference": "US-006-LOCAL",
+      "matchedFindingId": "nutrition:calories:calories:panel-1:col-1",
+      "artworkEvidence": null,
+      "sourceEvidence": null,
+      "executionTimestamp": "2026-10-26T01:39:15.853Z"
+    },
+    {
+      "unitId": "U-01-04",
+      "caseId": "CASE-01",
+      "checkId": "US-003",
+      "field": "ingredients",
+      "predictedStatus": "match",
+      "observedValue": "Raisins, Peanuts, Almonds, Dark Chocolate Drops (sugar, chocolate liquor, cocoa butter, soy lecithin, vanilla), Sunflower Oil, Sea Salt.",
+      "expectedValue": "Raisins, Peanuts, Almonds, Dark Chocolate Drops (sugar, chocolate liquor, cocoa butter, soy lecithin, vanilla), Sunflower Oil, Sea Salt.",
+      "ruleReference": "derived:ingredients",
+      "matchedFindingId": "ac5c36654377fe",
+      "artworkEvidence": {
+        "page": 1,
+        "quote": "Raisins, Peanuts, Almonds, Dark Chocolate Drops (sugar, chocolate liquor, cocoa butter, soy lecithin, vanilla), Sunflower Oil, Sea Salt.",
+        "box": [
+          0.12578000068664552,
+          0.7569599914550781,
+          0.7913199615478516,
+          0.7894533284505209
+        ],
+        "location": "Page 1"
+      },
+      "sourceEvidence": {
+        "sheet": "Approved Product Spec",
+        "cell": "B10",
+        "quote": "INGREDIENTS: Raisins, Peanuts, Almonds, Dark Chocolate Drops (sugar, chocolate liquor, cocoa butter, soy lecithin, vanilla), Sunflower Oil, Sea Salt."
+      },
+      "executionTimestamp": "2026-10-26T01:39:15.853Z"
+    },
+    {
+      "unitId": "U-01-05",
+      "caseId": "CASE-01",
+      "checkId": "US-002",
+      "field": "manufacturer",
+      "predictedStatus": "match",
+      "observedValue": "Distributed by: SunRidge Foods Inc. 1055 Spine Road, Boulder, CO 80301 USA",
+      "expectedValue": "Distributed by: SunRidge Foods Inc. 1055 Spine Road, Boulder, CO 80301 USA",
+      "ruleReference": "derived:manufacturer",
+      "matchedFindingId": "5b86e176e81004",
+      "artworkEvidence": {
+        "page": 1,
+        "quote": "Distributed by: SunRidge Foods Inc. 1055 Spine Road, Boulder, CO 80301 USA",
+        "box": [
+          0.12654000282287597,
+          0.8736266708374023,
+          0.5085599136352539,
+          0.9059733327229818
+        ],
+        "location": "Page 1"
+      },
+      "sourceEvidence": {
+        "sheet": "Approved Product Spec",
+        "cell": "B12",
+        "quote": "Distributed by: SunRidge Foods Inc. 1055 Spine Road, Boulder, CO 80301 USA"
+      },
+      "executionTimestamp": "2026-10-26T01:39:15.853Z"
+    },
+    {
+      "unitId": "U-02-01",
+      "caseId": "CASE-02",
+      "checkId": "US-001",
+      "field": "net_quantity",
+      "predictedStatus": "match",
+      "observedValue": "473 mL",
+      "expectedValue": "16 FL OZ (1 PT) 473 mL",
+      "ruleReference": "derived:net_quantity",
+      "matchedFindingId": "e299acd942dc45",
+      "artworkEvidence": {
+        "page": 1,
+        "quote": "NET WT 16 FL OZ (1 PT) 473 mL",
+        "box": [
+          0.1080631557263826,
+          0.2450800115411932,
+          0.6567525763260691,
+          0.26895635431463066
+        ],
+        "location": "Page 1 · line 4"
+      },
+      "sourceEvidence": {
+        "sheet": "Approved Product Spec",
+        "cell": "B3",
+        "quote": "16 FL OZ (1 PT) 473 mL"
+      },
+      "executionTimestamp": "2026-10-26T01:39:20.397Z"
+    },
+    {
+      "unitId": "U-02-02",
+      "caseId": "CASE-02",
+      "checkId": "US-003",
+      "field": "ingredients",
+      "predictedStatus": "match",
+      "observedValue": "100% PURE PASTEURIZED ORANGE JUICE.",
+      "expectedValue": "100% PURE PASTEURIZED ORANGE JUICE.",
+      "ruleReference": "derived:ingredients",
+      "matchedFindingId": "ac5c36654377fe",
+      "artworkEvidence": {
+        "page": 1,
+        "quote": "100% PURE PASTEURIZED ORANGE JUICE.",
+        "box": [
+          0.10722105126631887,
+          0.7621236350319602,
+          0.7000420821340461,
+          0.7730909035422585
+        ],
+        "location": "Page 1"
+      },
+      "sourceEvidence": {
+        "sheet": "Approved Product Spec",
+        "cell": "B11",
+        "quote": "100% PURE PASTEURIZED ORANGE JUICE."
+      },
+      "executionTimestamp": "2026-10-26T01:39:20.397Z"
+    },
+    {
+      "unitId": "U-02-03",
+      "caseId": "CASE-02",
+      "checkId": "US-002",
+      "field": "manufacturer",
+      "predictedStatus": "match",
+      "observedValue": "Bottled by: Verdant Grove Citrus Co. 2400 Citrus Grove Blvd, Winter Haven, FL 33880 USA",
+      "expectedValue": "Bottled by: Verdant Grove Citrus Co. 2400 Citrus Grove Blvd, Winter Haven, FL 33880 USA",
+      "ruleReference": "derived:manufacturer",
+      "matchedFindingId": "5b86e176e81004",
+      "artworkEvidence": {
+        "page": 1,
+        "quote": "Bottled by: Verdant Grove Citrus Co. 2400 Citrus Grove Blvd, Winter Haven, FL 33880 USA",
+        "box": [
+          0.1058736801147461,
+          0.8439563681862571,
+          0.6119157088430305,
+          0.8784145424582741
+        ],
+        "location": "Page 1"
+      },
+      "sourceEvidence": {
+        "sheet": "Approved Product Spec",
+        "cell": "B13",
+        "quote": "Bottled by: Verdant Grove Citrus Co. 2400 Citrus Grove Blvd, Winter Haven, FL 33880 USA"
+      },
+      "executionTimestamp": "2026-10-26T01:39:20.397Z"
+    },
+    {
+      "unitId": "U-02-04",
+      "caseId": "CASE-02",
+      "checkId": "US-004",
+      "field": "nutrition_presence",
+      "predictedStatus": "match",
+      "observedValue": "Artwork declares 0% DV (Reference 78 g)",
+      "expectedValue": null,
+      "ruleReference": "US-004-LOCAL",
+      "matchedFindingId": "nutrition:dv:dv:total_fat:panel-1:col-1",
+      "artworkEvidence": {
+        "page": 1,
+        "quote": "Total Fat 0g 0%",
+        "box": [
+          0.10574736344186883,
+          0.5275927179509943,
+          0.45743147197522616,
+          0.5412218128551136
+        ],
+        "location": null
+      },
+      "sourceEvidence": null,
+      "executionTimestamp": "2026-10-26T01:39:20.397Z"
+    },
+    {
+      "unitId": "U-03-01",
+      "caseId": "CASE-03",
+      "checkId": "US-004",
+      "field": "nutrition_basis",
+      "predictedStatus": "review",
+      "observedValue": "Multiple conflicting nutrition basis columns in draft specification",
+      "expectedValue": "Requires human review / basis selection",
+      "ruleReference": "derived:nutrition.servingsize",
+      "matchedFindingId": "5a6d35ebb6ffb1",
+      "artworkEvidence": null,
+      "sourceEvidence": {
+        "sheet": "Draft Specification",
+        "cell": null,
+        "quote": "Serving Size"
+      },
+      "executionTimestamp": "2026-10-26T01:39:26.581Z"
+    },
+    {
+      "unitId": "U-03-02",
+      "caseId": "CASE-03",
+      "checkId": "US-001",
+      "field": "net_quantity",
+      "predictedStatus": "issue",
+      "observedValue": "18 OZ / 2 OZ / 510 g",
+      "expectedValue": "18 OZ (1 LB 2 OZ) 510 g",
+      "ruleReference": "derived:net_quantity",
+      "matchedFindingId": "e299acd942dc45",
+      "artworkEvidence": {
+        "page": 1,
+        "quote": "NET WT 18 OZ (1 LB 2 OZ) 510 g",
+        "box": [
+          0.10967618851434617,
+          0.23240345922009698,
+          0.6106427873883928,
+          0.25504481874663254
+        ],
+        "location": "Page 1 · line 4"
+      },
+      "sourceEvidence": {
+        "sheet": "Draft Specification",
+        "cell": "B3",
+        "quote": "18 OZ (1 LB 2 OZ) 510 g"
+      },
+      "executionTimestamp": "2026-10-26T01:39:26.581Z"
+    },
+    {
+      "unitId": "U-03-03",
+      "caseId": "CASE-03",
+      "checkId": "US-003",
+      "field": "ingredients",
+      "predictedStatus": "issue",
+      "observedValue": "100% WHOLE GRAIN ROLLED OATS. Store in a cool, dry place. Manufactured by: Harvest Hearth Millers LLC 500 Prairie Mill Way, Cedar Rapids, IA 52404 USA",
+      "expectedValue": "100% WHOLE GRAIN ROLLED OATS.",
+      "ruleReference": "derived:ingredients",
+      "matchedFindingId": "ac5c36654377fe",
+      "artworkEvidence": {
+        "page": 1,
+        "quote": "100% WHOLE GRAIN ROLLED OATS. Store in a cool, dry place. Manufactured by: Harvest Hearth Millers LLC 500 Prairie Mill Way, Cedar Rapids, IA 52404 USA",
+        "box": [
+          0.10794285365513392,
+          0.7399448263234105,
+          0.5796761285691034,
+          0.8511586156384698
+        ],
+        "location": "Page 1"
+      },
+      "sourceEvidence": {
+        "sheet": "Draft Specification",
+        "cell": "B14",
+        "quote": "INGREDIENTS: 100% WHOLE GRAIN ROLLED OATS."
+      },
+      "executionTimestamp": "2026-10-26T01:39:26.581Z"
+    }
+  ]
+}

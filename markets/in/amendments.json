@@ -1,0 +1,45 @@
+{
+  "market": "IN",
+  "amendments": [
+    {
+      "amendmentId": "FSSAI-LDR-AMEND-2026-01",
+      "title": "Food Safety and Standards (Labelling and Display) First Amendment Regulations, 2026",
+      "regulator": "Food Safety and Standards Authority of India (FSSAI)",
+      "gazetteNotification": "Notification dt 24.03.2026",
+      "notificationDate": "2026-03-24",
+      "effectiveDate": "2027-07-01",
+      "officialSourceUrl": "https://www.fssai.gov.in/upload/notifications/2026/04/69cca2b3f3ce9Notification%20dt%2024.03.2026_NRC.pdf",
+      "changes": [
+        {
+          "provision": "Regulation 5(3)",
+          "topic": "Mandatory Bold Typography for % RDA of Total Sugars, Saturated Fat & Sodium",
+          "summary": "In sub-regulation (3) of regulation 5, the nutritional information for per serve percentage (%) contribution to RDA of Total Sugars, Saturated Fat, and Sodium shall be bolded and font size increased to ensure conspicuous prominence.",
+          "appliesToProduct": true,
+          "appliesIf": { "category": ["granola", "cereal", "food"], "hasNutrition": true }
+        },
+        {
+          "provision": "Regulation 5(3)(e)",
+          "topic": "Infant Nutrition Per-Serving RDA Exemption",
+          "summary": "Exemption from per-serving RDA and servings-per-pack for specified foods for special dietary uses and infant nutrition products.",
+          "appliesToProduct": false,
+          "productScope": ["infant_formula", "baby_food"],
+          "note": "Conventional granola is not eligible for infant-product exemptions."
+        },
+        {
+          "provision": "Regulation 7(2)",
+          "topic": "Small-Package Area Exemption Threshold",
+          "summary": "Exemption from certain notified logo declarations for packages with total surface area less than 100 cm².",
+          "appliesToProduct": false,
+          "condition": "Total surface area < 100 cm². Dancing Fish 480g carton surface area exceeds 600 cm²; exemption does NOT apply."
+        },
+        {
+          "provision": "Regulation 5(3) Front-of-Pack",
+          "topic": "Front-of-Pack Nutrition Labelling (INR Star Rating)",
+          "summary": "Mandatory Front-of-Pack Indian Nutrition Rating (INR) star emblem (0.5 to 5 stars) for packaged foods with high sugar/fat/sodium thresholds.",
+          "appliesToProduct": true,
+          "appliesIf": { "category": ["granola", "cereal", "food"], "hasNutrition": true }
+        }
+      ]
+    }
+  ]
+}

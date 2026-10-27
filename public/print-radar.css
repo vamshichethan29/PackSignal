@@ -1,0 +1,389 @@
+/**
+ * PackSignal — Physical Prepress Print Readiness Radar CSS
+ * (public/print-radar.css)
+ */
+
+.print-readiness-radar-panel {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #1e293b;
+}
+
+.radar-header-block {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f1f5f9;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.radar-title-group h2 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: -0.02em;
+}
+
+.radar-title-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  text-transform: uppercase;
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.radar-title-badge.approved {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+.radar-title-badge.provisional {
+  background: #fffbeb;
+  color: #d97706;
+  border: 1px solid #fde68a;
+}
+
+.radar-meta-row {
+  display: flex;
+  gap: 18px;
+  font-size: 12px;
+  color: #64748b;
+  flex-wrap: wrap;
+}
+
+.radar-meta-item strong {
+  color: #334155;
+  margin-right: 4px;
+}
+
+.radar-profile-selector-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.radar-profile-selector-box label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.radar-profile-dropdown {
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  outline: none;
+  cursor: pointer;
+  min-width: 280px;
+}
+
+.radar-profile-dropdown:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+/* Toolbar */
+.radar-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.radar-toolbar-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.radar-btn {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.radar-btn:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.radar-btn.active {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+}
+
+.radar-btn.primary {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+}
+
+.radar-btn.primary:hover {
+  background: #0369a1;
+}
+
+/* Sections Grid */
+.radar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.radar-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.radar-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.radar-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.radar-card-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.radar-status-badge {
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+}
+
+.radar-status-badge.match {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.radar-status-badge.issue {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.radar-status-badge.review {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+.radar-status-badge.unable {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.radar-status-badge.not_applicable {
+  background: #f8fafc;
+  color: #94a3b8;
+  border: 1px dashed #cbd5e1;
+}
+
+.radar-metric-hero {
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f172a;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.radar-metric-hero.exceeded {
+  color: #dc2626;
+}
+
+.radar-metric-hero.warning {
+  color: #d97706;
+}
+
+.radar-metric-hero.compliant {
+  color: #059669;
+}
+
+.radar-card-metrics {
+  font-size: 12px;
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+.radar-card-metrics strong {
+  color: #1e293b;
+}
+
+/* Densitometer / Ink Inspector Tool Overlay */
+.print-densitometer-popup {
+  position: absolute;
+  z-index: 1000;
+  background: #0f172a;
+  color: #f8fafc;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 14px 16px;
+  font-size: 12px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+  min-width: 240px;
+  pointer-events: auto;
+}
+
+.densitometer-title {
+  font-size: 11px;
+  font-weight: 800;
+  color: #38bdf8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.densitometer-channels {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.densitometer-channel-box {
+  background: #1e293b;
+  border-radius: 4px;
+  padding: 6px 4px;
+}
+
+.densitometer-channel-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.densitometer-channel-val {
+  font-size: 13px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.densitometer-channel-box.c .densitometer-channel-label { color: #38bdf8; }
+.densitometer-channel-box.m .densitometer-channel-label { color: #f43f5e; }
+.densitometer-channel-box.y .densitometer-channel-label { color: #facc15; }
+.densitometer-channel-box.k .densitometer-channel-label { color: #e2e8f0; }
+
+.densitometer-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 8px;
+  border-top: 1px solid #334155;
+  margin-bottom: 6px;
+}
+
+.densitometer-total-val {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.densitometer-meta {
+  font-size: 11px;
+  color: #94a3b8;
+  line-height: 1.4;
+}
+
+/* Interactive Dieline Legend */
+.dieline-legend-bar {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  font-size: 11px;
+  color: #475569;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.dieline-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dieline-legend-swatch {
+  width: 16px;
+  height: 4px;
+  border-radius: 2px;
+}
+
+.dieline-legend-swatch.cut { background: #ef4444; }
+.dieline-legend-swatch.crease {
+  background: #3b82f6;
+  border-top: 2px dashed #3b82f6;
+  height: 0;
+}
+.dieline-legend-swatch.safety { background: #f59e0b; opacity: 0.8; height: 8px; }
+.dieline-legend-swatch.bleed { background: #06b6d4; opacity: 0.8; height: 8px; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .radar-header-block {
+    flex-direction: column;
+  }
+  .radar-profile-dropdown {
+    width: 100%;
+  }
+}

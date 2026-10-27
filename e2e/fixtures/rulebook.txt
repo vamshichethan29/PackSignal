@@ -1,0 +1,9 @@
+# FIELDDAY PACKAGING MANDATE 2026
+SECTION 1: NET QUANTITY
+The retail container must clearly declare the net quantity of contents in metric and customary units (21 CFR 101.7).
+
+SECTION 2: STORAGE STATEMENTS
+Products shelf-stable prior to opening must state: "Store in a cool, dry place."
+
+SECTION 3: TRACEABILITY BARCODE
+All consumer units must carry a verified GS1 GTIN barcode with valid check digit.

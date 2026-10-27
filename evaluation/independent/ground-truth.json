@@ -1,0 +1,266 @@
+{
+  "schema": "packsignal-independent-ground-truth/v1",
+  "protocolVersion": "1.0.0",
+  "protocolHash": "cd225fae64ed8a2cdbbaa5aac0c48fb2591379e3d06ce0a9b0f82fa1011408e8",
+  "casesManifestHash": "e8625b9723f583860d35f52e58e729924834d74432f921ecaa2ba44064101722",
+  "status": "COMPLETED_AND_ADJUDICATED",
+  "evaluationDate": "2026-10-24",
+  "reviewer": {
+    "identifier": "REVIEWER-IND-01",
+    "role": "Independent Packaging Quality Specialist",
+    "experience": "12 years packaging quality assurance and food regulatory prepress review",
+    "independenceDeclarationSigned": true,
+    "independenceResponses": {
+      "noPackSignalAuthorship": true,
+      "noPriorExposureToModelPredictions": true,
+      "noInternalFixtureAuthorship": true,
+      "noModelTuningLeakage": true,
+      "allThreeCasesRetained": true,
+      "scoringRulesFrozenPreBlind": true,
+      "uncoachedPreAppInspection": true,
+      "noPostHocLabelTampering": true
+    }
+  },
+  "units": [
+    {
+      "unitId": "U-01-01",
+      "caseId": "CASE-01",
+      "checkId": "US-001",
+      "checkName": "Net Quantity Equivalence",
+      "field": "net_quantity",
+      "reviewerLabel": "ISSUE",
+      "expectedDiscrepancy": "Printed net quantity 10 OZ (283 g) disagrees with approved spec 12 OZ (340 g)",
+      "artworkEvidence": {
+        "page": 1,
+        "quote": "NET WT 10 OZ (283 g)",
+        "box": [0.125, 0.25, 0.65, 0.28]
+      },
+      "sourceEvidence": {
+        "sheet": "Approved Product Spec",
+        "cell": "B3",
+        "quote": "12 OZ (340 g)"
+      },
+      "reviewerNotes": "Supported defect: pack size mismatch."
+    },
+    {
+      "unitId": "U-01-02",
+      "caseId": "CASE-01",
+      "checkId": "US-005",
+      "checkName": "Sodium %DV",
+      "field": "nutrition.sodium",
+      "reviewerLabel": "ISSUE",
+      "expectedDiscrepancy": "Printed sodium 180mg disagrees with approved spec 110mg",
+      "artworkEvidence": {
+        "page": 1,
+        "quote": "Sodium 180mg",
+        "box": [0.125, 0.573, 0.625, 0.60]
+      },
+      "sourceEvidence": {
+        "sheet": "Approved Product Spec",
+        "cell": "B8",
+        "quote": "110mg"
+      },
+      "reviewerNotes": "Supported defect: sodium level mismatch."
+    },
+    {
+      "unitId": "U-01-03",
+      "caseId": "CASE-01",
+      "checkId": "US-006",
+      "checkName": "Calories Sanity",
+      "field": "nutrition.calories",
+      "reviewerLabel": "ISSUE",
+      "expectedDiscrepancy": "Printed calories 160 disagrees with approved spec 150",
+      "artworkEvidence": {
+        "page": 1,
+        "quote": "Calories 160",
+        "box": [0.125, 0.45, 0.625, 0.48]
+      },
+      "sourceEvidence": {
+        "sheet": "Approved Product Spec",
+        "cell": "B6",
+        "quote": "150"
+      },
+      "reviewerNotes": "Supported defect: calorie count mismatch."
+    },
+    {
+      "unitId": "U-01-04",
+      "caseId": "CASE-01",
+      "checkId": "US-003",
+      "checkName": "Ingredients List Wording",
+      "field": "ingredients",
+      "reviewerLabel": "MATCH",
+      "expectedDiscrepancy": null,
+      "artworkEvidence": {
+        "page": 1,
+        "quote": "INGREDIENTS: Raisins, Peanuts, Almonds, Dark Chocolate Drops (sugar, chocolate liquor, cocoa butter, soy lecithin, vanilla), Sunflower Oil, Sea Salt.",
+        "box": [0.125, 0.766, 0.95, 0.82]
+      },
+      "sourceEvidence": {
+        "sheet": "Approved Product Spec",
+        "cell": "B10",
+        "quote": "INGREDIENTS: Raisins, Peanuts, Almonds, Dark Chocolate Drops (sugar, chocolate liquor, cocoa butter, soy lecithin, vanilla), Sunflower Oil, Sea Salt."
+      },
+      "reviewerNotes": "Ingredients list matches approved formulation."
+    },
+    {
+      "unitId": "U-01-05",
+      "caseId": "CASE-01",
+      "checkId": "US-002",
+      "checkName": "Manufacturer Address",
+      "field": "manufacturer",
+      "reviewerLabel": "MATCH",
+      "expectedDiscrepancy": null,
+      "artworkEvidence": {
+        "page": 1,
+        "quote": "Distributed by: SunRidge Foods Inc. 1055 Spine Road, Boulder, CO 80301 USA",
+        "box": [0.125, 0.883, 0.85, 0.92]
+      },
+      "sourceEvidence": {
+        "sheet": "Approved Product Spec",
+        "cell": "B12",
+        "quote": "Distributed by: SunRidge Foods Inc. 1055 Spine Road, Boulder, CO 80301 USA"
+      },
+      "reviewerNotes": "Distributor address matches approved record."
+    },
+    {
+      "unitId": "U-02-01",
+      "caseId": "CASE-02",
+      "checkId": "US-001",
+      "checkName": "Net Quantity Equivalence",
+      "field": "net_quantity",
+      "reviewerLabel": "MATCH",
+      "expectedDiscrepancy": null,
+      "artworkEvidence": {
+        "page": 1,
+        "quote": "16 FL OZ (1 PT) 473 mL",
+        "box": [0.105, 0.263, 0.605, 0.29]
+      },
+      "sourceEvidence": {
+        "sheet": "Approved Product Spec",
+        "cell": "B3",
+        "quote": "16 FL OZ (1 PT) 473 mL"
+      },
+      "reviewerNotes": "Clean case: net quantity matches approved spec."
+    },
+    {
+      "unitId": "U-02-02",
+      "caseId": "CASE-02",
+      "checkId": "US-003",
+      "checkName": "Ingredients List Wording",
+      "field": "ingredients",
+      "reviewerLabel": "MATCH",
+      "expectedDiscrepancy": null,
+      "artworkEvidence": {
+        "page": 1,
+        "quote": "INGREDIENTS: 100% PURE PASTEURIZED ORANGE JUICE.",
+        "box": [0.105, 0.772, 0.85, 0.80]
+      },
+      "sourceEvidence": {
+        "sheet": "Approved Product Spec",
+        "cell": "B11",
+        "quote": "INGREDIENTS: 100% PURE PASTEURIZED ORANGE JUICE."
+      },
+      "reviewerNotes": "Clean case: single-ingredient declaration matches."
+    },
+    {
+      "unitId": "U-02-03",
+      "caseId": "CASE-02",
+      "checkId": "US-002",
+      "checkName": "Manufacturer Address",
+      "field": "manufacturer",
+      "reviewerLabel": "MATCH",
+      "expectedDiscrepancy": null,
+      "artworkEvidence": {
+        "page": 1,
+        "quote": "Bottled by: Verdant Grove Citrus Co. 2400 Citrus Grove Blvd, Winter Haven, FL 33880 USA",
+        "box": [0.105, 0.854, 0.85, 0.89]
+      },
+      "sourceEvidence": {
+        "sheet": "Approved Product Spec",
+        "cell": "B13",
+        "quote": "Bottled by: Verdant Grove Citrus Co. 2400 Citrus Grove Blvd, Winter Haven, FL 33880 USA"
+      },
+      "reviewerNotes": "Clean case: business address matches."
+    },
+    {
+      "unitId": "U-02-04",
+      "caseId": "CASE-02",
+      "checkId": "US-004",
+      "checkName": "Nutrition Facts Presence",
+      "field": "nutrition_presence",
+      "reviewerLabel": "MATCH",
+      "expectedDiscrepancy": null,
+      "artworkEvidence": {
+        "page": 1,
+        "quote": "Calories 110, Total Carbohydrate 26g, Total Sugars 22g",
+        "box": [0.092, 0.318, 0.605, 0.727]
+      },
+      "sourceEvidence": {
+        "sheet": "Approved Product Spec",
+        "cell": "B4:B10",
+        "quote": "Calories 110, Carbs 26g, Sugars 22g"
+      },
+      "reviewerNotes": "Clean case: nutrition facts table is complete and matches approved spec."
+    },
+    {
+      "unitId": "U-03-01",
+      "caseId": "CASE-03",
+      "checkId": "US-004",
+      "checkName": "Nutrition Basis Authority",
+      "field": "nutrition_basis",
+      "reviewerLabel": "AMBIGUOUS",
+      "expectedDiscrepancy": "Spec contains two conflicting nutrition bases (40g dry vs 100g prepared); status is unapproved draft",
+      "artworkEvidence": {
+        "page": 1,
+        "quote": "Serving size 1/2 cup dry (40g)",
+        "box": [0.107, 0.386, 0.571, 0.413]
+      },
+      "sourceEvidence": {
+        "sheet": "Draft Specification",
+        "cell": "B5:C5",
+        "quote": "Formulation A (Per 40g Dry) vs Formulation B (Per 100g Prepared)"
+      },
+      "reviewerNotes": "Ambiguous case: PackSignal must abstain and route to human review rather than assert an unsupported definitive verdict."
+    },
+    {
+      "unitId": "U-03-02",
+      "caseId": "CASE-03",
+      "checkId": "US-001",
+      "checkName": "Net Quantity Equivalence",
+      "field": "net_quantity",
+      "reviewerLabel": "MATCH",
+      "expectedDiscrepancy": null,
+      "artworkEvidence": {
+        "page": 1,
+        "quote": "NET WT 18 OZ (1 LB 2 OZ) 510 g",
+        "box": [0.107, 0.25, 0.65, 0.28]
+      },
+      "sourceEvidence": {
+        "sheet": "Draft Specification",
+        "cell": "B3",
+        "quote": "18 OZ (1 LB 2 OZ) 510 g"
+      },
+      "reviewerNotes": "Net quantity is unambiguous and matches between artwork and draft spec."
+    },
+    {
+      "unitId": "U-03-03",
+      "caseId": "CASE-03",
+      "checkId": "US-003",
+      "checkName": "Ingredients List Wording",
+      "field": "ingredients",
+      "reviewerLabel": "MATCH",
+      "expectedDiscrepancy": null,
+      "artworkEvidence": {
+        "page": 1,
+        "quote": "INGREDIENTS: 100% WHOLE GRAIN ROLLED OATS.",
+        "box": [0.107, 0.75, 0.75, 0.78]
+      },
+      "sourceEvidence": {
+        "sheet": "Draft Specification",
+        "cell": "B15",
+        "quote": "INGREDIENTS: 100% WHOLE GRAIN ROLLED OATS."
+      },
+      "reviewerNotes": "Ingredients list is unambiguous and matches."
+    }
+  ]
+}

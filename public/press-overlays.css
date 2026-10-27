@@ -1,0 +1,122 @@
+/**
+ * PackSignal Physical Prepress — 2D Artwork Overlays Styling
+ * (public/press-overlays.css)
+ */
+
+/* TAC Heatmap Overlay Layer */
+.tac-heatmap-overlay-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 25;
+}
+
+.tac-hotspot-marker {
+  position: absolute;
+  pointer-events: auto;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  padding: 0;
+  border: 2px solid transparent;
+}
+
+.tac-hotspot-marker:hover {
+  transform: scale(1.04);
+  z-index: 30;
+}
+
+.tac-hotspot-marker.hotspot-red {
+  background: rgba(239, 68, 68, 0.35);
+  border-color: #ef4444;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
+}
+
+.tac-hotspot-marker.hotspot-amber {
+  background: rgba(245, 158, 11, 0.3);
+  border-color: #f59e0b;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+}
+
+.tac-hotspot-marker.hotspot-green {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: #10b981;
+}
+
+.tac-hotspot-marker.hotspot-gray {
+  background: rgba(148, 163, 184, 0.25);
+  border-color: #94a3b8;
+}
+
+.tac-hotspot-badge {
+  background: rgba(15, 23, 42, 0.85);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Bleed & Safety Zones Overlay Layer */
+.bleed-safety-overlay-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 22;
+}
+
+.bleed-safety-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+}
+
+/* Legend Swatches */
+.prepress-legend-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  color: #334155;
+  flex-wrap: wrap;
+}
+
+.prepress-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.prepress-swatch.red-cut {
+  border: 2px solid #ef4444;
+  background: transparent;
+}
+
+.prepress-swatch.blue-crease {
+  border: 2px dashed #3b82f6;
+  background: transparent;
+}
+
+.prepress-swatch.green-safe {
+  background: rgba(16, 185, 129, 0.3);
+  border: 1px solid #10b981;
+}
+
+.prepress-swatch.amber-margin {
+  background: rgba(245, 158, 11, 0.35);
+  border: 1px solid #f59e0b;
+}
+
+.prepress-swatch.cyan-bleed {
+  background: rgba(6, 182, 212, 0.4);
+  border: 1px solid #06b6d4;
+}

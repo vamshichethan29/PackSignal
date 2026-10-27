@@ -1,0 +1,51 @@
+{
+  "version": "1.0.0",
+  "rulebook": "United States FDA Food Labeling Requirements (21 CFR Part 101)",
+  "scope": "Rulebook Citation & Quotation Verification Test Key",
+  "rules": [
+    {
+      "testId": "RULE-21CFR-101.4-INGREDIENTS",
+      "ruleId": "21 CFR §101.4",
+      "citation": "21 CFR §101.4(a)(1)",
+      "exactQuotation": "Ingredients required to be declared on the label or labeling of a food shall be listed by common or usual name in descending order of predominance by weight.",
+      "quoteVerificationExpected": "verified",
+      "authorizationRequired": true,
+      "expectedApplicability": "US_FOOD_LABELING",
+      "expectedStatus": "applied",
+      "notes": "Verified against 21 CFR Part 101 text."
+    },
+    {
+      "testId": "RULE-21CFR-101.7-NET-QUANTITY",
+      "ruleId": "21 CFR §101.7",
+      "citation": "21 CFR §101.7(a)",
+      "exactQuotation": "The principal display panel of a food in package form shall bear a declaration of the net quantity of contents.",
+      "quoteVerificationExpected": "verified",
+      "authorizationRequired": true,
+      "expectedApplicability": "US_FOOD_LABELING",
+      "expectedStatus": "applied",
+      "notes": "Requires net quantity on PDP in dual units (avoirdupois ounce and metric)."
+    },
+    {
+      "testId": "RULE-21CFR-101.9-NUTRITION",
+      "ruleId": "21 CFR §101.9",
+      "citation": "21 CFR §101.9(c)(6)",
+      "exactQuotation": "A statement of the number of grams of total carbohydrate in a serving shall be expressed to the nearest gram.",
+      "quoteVerificationExpected": "verified",
+      "authorizationRequired": true,
+      "expectedApplicability": "US_FOOD_LABELING",
+      "expectedStatus": "applied",
+      "notes": "Total carbohydrate rounding rules and Daily Value calculation basis."
+    },
+    {
+      "testId": "RULE-INVENTED-REJECTED",
+      "ruleId": "FDA-FAKE-SECTION-999",
+      "citation": "21 CFR §999.99 (Invented AI Rule)",
+      "exactQuotation": "All cereal packages must be printed in purple ink.",
+      "quoteVerificationExpected": "unverified",
+      "authorizationRequired": true,
+      "expectedApplicability": "INVALID",
+      "expectedStatus": "unsupported",
+      "notes": "Invented rule quotation must be rejected and flagged as unverified."
+    }
+  ]
+}

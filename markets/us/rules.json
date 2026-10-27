@@ -1,0 +1,203 @@
+{
+  "market": "US",
+  "version": "2026.1",
+  "effectiveDate": "2020-01-01",
+  "rules": [
+    {
+      "id": "FDA-GRANOLA-001",
+      "name": "Statement of Identity on PDP",
+      "citation": "21 CFR 101.3",
+      "effectiveDate": "2020-01-01",
+      "appliesIf": { "category": ["granola", "cereal", "food"] },
+      "requiredPanel": "Front panel (Principal Display Panel)",
+      "severity": "CRITICAL",
+      "description": "Product identity (e.g. 'Granola') must appear on Principal Display Panel bold and parallel to base."
+    },
+    {
+      "id": "FDA-GRANOLA-002",
+      "name": "Net Quantity Dual Unit Declaration",
+      "citation": "21 CFR 101.7 / 15 U.S.C. 1453",
+      "effectiveDate": "2020-01-01",
+      "appliesIf": { "category": ["granola", "cereal", "food"] },
+      "requiredPanel": "Front panel (Principal Display Panel)",
+      "severity": "CRITICAL",
+      "description": "Net weight must declare both US Customary ounces and metric grams in bottom 30% of PDP."
+    },
+    {
+      "id": "FDA-GRANOLA-003",
+      "name": "Nutrition Facts Serving Size Math",
+      "citation": "21 CFR 101.9(b)",
+      "effectiveDate": "2020-01-01",
+      "appliesIf": { "hasNutrition": true },
+      "severity": "CRITICAL",
+      "description": "Total package servings multiplied by declared serving size must equal declared net weight."
+    },
+    {
+      "id": "FDA-GRANOLA-004",
+      "name": "Nutrition Facts Calorie Atwater Math",
+      "citation": "21 CFR 101.9(c)(1)",
+      "effectiveDate": "2020-01-01",
+      "appliesIf": { "hasNutrition": true },
+      "severity": "HIGH",
+      "description": "Declared calories must align with macronutrient Atwater calculation (Fat*9 + Carb*4 + Protein*4)."
+    },
+    {
+      "id": "FDA-GRANOLA-005",
+      "name": "Nutrition Facts Total Fat % Daily Value",
+      "citation": "21 CFR 101.9(c)(2)",
+      "effectiveDate": "2020-01-01",
+      "appliesIf": { "hasNutrition": true },
+      "nutrient": "total_fat",
+      "referenceDv": 78,
+      "severity": "HIGH",
+      "description": "% Daily Value for Total Fat must be calculated based on 78g reference Daily Value."
+    },
+    {
+      "id": "FDA-GRANOLA-006",
+      "name": "Nutrition Facts Saturated Fat % Daily Value",
+      "citation": "21 CFR 101.9(c)(2)(i)",
+      "effectiveDate": "2020-01-01",
+      "appliesIf": { "hasNutrition": true },
+      "nutrient": "saturated_fat",
+      "referenceDv": 20,
+      "severity": "HIGH",
+      "description": "% Daily Value for Saturated Fat must be calculated based on 20g reference Daily Value."
+    },
+    {
+      "id": "FDA-GRANOLA-007",
+      "name": "Nutrition Facts Trans Fat Declaration",
+      "citation": "21 CFR 101.9(c)(2)(ii)",
+      "effectiveDate": "2020-01-01",
+      "appliesIf": { "hasNutrition": true },
+      "severity": "HIGH",
+      "description": "Trans Fat content must be explicitly declared in grams."
+    },
+    {
+      "id": "FDA-GRANOLA-008",
+      "name": "Nutrition Facts Cholesterol % Daily Value",
+      "citation": "21 CFR 101.9(c)(3)",
+      "effectiveDate": "2020-01-01",
+      "appliesIf": { "hasNutrition": true },
+      "nutrient": "cholesterol",
+      "referenceDv": 300,
+      "severity": "HIGH",
+      "description": "% Daily Value for Cholesterol must be calculated based on 300mg reference Daily Value."
+    },
+    {
+      "id": "FDA-GRANOLA-009",
+      "name": "Nutrition Facts Sodium % Daily Value",
+      "citation": "21 CFR 101.9(c)(4)",
+      "effectiveDate": "2020-01-01",
+      "appliesIf": { "hasNutrition": true },
+      "nutrient": "sodium",
+      "referenceDv": 2300,
+      "severity": "HIGH",
+      "description": "% Daily Value for Sodium must be calculated based on 2,300mg reference Daily Value."
+    },
+    {
+      "id": "FDA-GRANOLA-010",
+      "name": "Nutrition Facts Total Carbohydrate % Daily Value",
+      "citation": "21 CFR 101.9(c)(6)",
+      "effectiveDate": "2020-01-01",
+      "appliesIf": { "hasNutrition": true },
+      "nutrient": "total_carbohydrate",
+      "referenceDv": 275,
+      "severity": "HIGH",
+      "description": "% Daily Value for Total Carbohydrate must be calculated based on 275g reference Daily Value."
+    },
+    {
+      "id": "FDA-GRANOLA-011",
+      "name": "Nutrition Facts Dietary Fiber % Daily Value",
+      "citation": "21 CFR 101.9(c)(6)(i)",
+      "effectiveDate": "2020-01-01",
+      "appliesIf": { "hasNutrition": true },
+      "nutrient": "dietary_fiber",
+      "referenceDv": 28,
+      "severity": "HIGH",
+      "description": "% Daily Value for Dietary Fiber must be calculated based on 28g reference Daily Value."
+    },
+    {
+      "id": "FDA-GRANOLA-012",
+      "name": "Nutrition Facts Added Sugars Declaration",
+      "citation": "21 CFR 101.9(c)(6)(iii)",
+      "effectiveDate": "2020-01-01",
+      "appliesIf": { "hasNutrition": true },
+      "nutrient": "added_sugars",
+      "referenceDv": 50,
+      "severity": "CRITICAL",
+      "description": "Added sugars must be stated as 'Includes Xg Added Sugars' with % Daily Value (based on 50g DV)."
+    },
+    {
+      "id": "FDA-GRANOLA-013",
+      "name": "Nutrition Facts Mandatory Micronutrients",
+      "citation": "21 CFR 101.9(c)(8)",
+      "effectiveDate": "2020-01-01",
+      "appliesIf": { "hasNutrition": true },
+      "severity": "HIGH",
+      "description": "Vitamin D (20mcg DV), Calcium (1300mg DV), Iron (18mg DV), and Potassium (4700mg DV) must be declared."
+    },
+    {
+      "id": "FDA-GRANOLA-014",
+      "name": "Nutrition Facts 2,000 Calorie Footnote",
+      "citation": "21 CFR 101.9(d)(9)",
+      "effectiveDate": "2020-01-01",
+      "appliesIf": { "hasNutrition": true },
+      "severity": "MEDIUM",
+      "description": "Mandatory footnote: 'The % Daily Value tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice.'"
+    },
+    {
+      "id": "FDA-GRANOLA-015",
+      "name": "Ingredient List Descending Predominance",
+      "citation": "21 CFR 101.4",
+      "effectiveDate": "2020-01-01",
+      "appliesIf": { "category": ["granola", "cereal", "food"] },
+      "severity": "CRITICAL",
+      "description": "Ingredients must be listed by common or usual name in descending order of predominance by weight."
+    },
+    {
+      "id": "FDA-GRANOLA-016",
+      "name": "FALCPA Major Allergen Disclosure",
+      "citation": "21 U.S.C. 343(w)",
+      "effectiveDate": "2020-01-01",
+      "appliesIf": { "category": ["granola", "cereal", "food"] },
+      "severity": "CRITICAL",
+      "description": "Major allergens present as intentional ingredients must be explicitly declared and cannot be listed only in 'May Contain'."
+    },
+    {
+      "id": "FDA-GRANOLA-017",
+      "name": "Tree Nut Specific Species Declaration",
+      "citation": "21 U.S.C. 343(w)(2)",
+      "effectiveDate": "2020-01-01",
+      "appliesIf": { "hasIngredients": ["almonds", "pecans", "walnuts", "tree nuts"] },
+      "severity": "CRITICAL",
+      "description": "Tree nuts must be declared by specific botanical/common species name (e.g. Almonds, Pecans, Walnuts)."
+    },
+    {
+      "id": "FDA-GRANOLA-018",
+      "name": "No Added Sugar Claim Substantiation",
+      "citation": "21 CFR 101.60(c)(2)",
+      "effectiveDate": "2020-01-01",
+      "appliesIf": { "hasClaim": ["no_added_sugar", "no_added_sugars"] },
+      "severity": "CRITICAL",
+      "description": "'No Added Sugar' claims are invalid if product contains added sugars/honey or if added sugars are declared > 0g."
+    },
+    {
+      "id": "FDA-GRANOLA-019",
+      "name": "Responsible Party Address",
+      "citation": "21 CFR 101.5",
+      "effectiveDate": "2020-01-01",
+      "appliesIf": { "category": ["granola", "cereal", "food"] },
+      "severity": "HIGH",
+      "description": "Label must state name and complete address including city, state, and zip code of manufacturer, packer, or distributor."
+    },
+    {
+      "id": "FDA-GRANOLA-020",
+      "name": "Barcode Check Digit Verification",
+      "citation": "GS1 / ISO 15420",
+      "effectiveDate": "2020-01-01",
+      "appliesIf": { "hasBarcode": true },
+      "severity": "HIGH",
+      "description": "UPC-A / GTIN-12 barcode must have a mathematically valid modulo 10 check digit."
+    }
+  ]
+}

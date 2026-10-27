@@ -1,0 +1,275 @@
+/**
+ * PackSignal — Pack Quantity Card Styling (public/pack-quantity-card.css)
+ */
+
+.pack-quantity-card {
+  margin: 1rem 0;
+  padding: 1.25rem;
+  background: var(--surface-2, #181d24);
+  border: 1px solid var(--border-color, #2a3441);
+  border-radius: 8px;
+  color: var(--text-main, #e2e8f0);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.pack-qty-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color, #2a3441);
+  padding-bottom: 0.75rem;
+}
+
+.pack-qty-eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary-accent, #60a5fa);
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.pack-qty-title {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+.pack-qty-status-badge {
+  padding: 0.25rem 0.625rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pack-qty-status-badge.match {
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.pack-qty-status-badge.review {
+  background: rgba(234, 179, 8, 0.15);
+  color: #facc15;
+  border: 1px solid rgba(234, 179, 8, 0.3);
+}
+
+.pack-qty-status-badge.issue {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.pack-qty-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.pack-qty-metric-box {
+  background: var(--surface-3, #1e2632);
+  border: 1px solid var(--border-color, #2a3441);
+  border-radius: 6px;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.pack-qty-metric-box .metric-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: #94a3b8;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+}
+
+.pack-qty-metric-box .metric-val {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #f8fafc;
+  line-height: 1.2;
+}
+
+.pack-qty-metric-box .metric-unit {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #94a3b8;
+}
+
+.pack-qty-metric-box .metric-sub {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 0.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.pack-qty-metric-box .qualifier-tag {
+  font-size: 0.6875rem;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  background: rgba(234, 179, 8, 0.2);
+  color: #facc15;
+  margin-left: 0.25rem;
+  vertical-align: middle;
+}
+
+.pack-qty-proof-box {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  border-radius: 6px;
+  padding: 0.875rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.pack-qty-proof-box .proof-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  margin-bottom: 0.35rem;
+}
+
+.pack-qty-proof-box .proof-row:last-child {
+  margin-bottom: 0;
+}
+
+.pack-qty-proof-box .proof-label {
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.pack-qty-proof-box .proof-equation {
+  color: #f8fafc;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.pack-qty-alert {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+.pack-qty-alert.discrepancy-alert {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+}
+
+.pack-qty-alert.approx-warning {
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: #93c5fd;
+}
+
+.pack-qty-alert.basis-mismatch {
+  background: rgba(234, 179, 8, 0.12);
+  border: 1px solid rgba(234, 179, 8, 0.3);
+  color: #fde047;
+}
+
+.pack-qty-alert .alert-title {
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+}
+
+.pack-qty-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  background: var(--surface-3, #1e2632);
+  padding: 0.625rem 0.875rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.pack-qty-meta-grid .meta-label {
+  display: block;
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.pack-qty-meta-grid .meta-val {
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+.pack-qty-actions-bar {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn-pack-qty-action {
+  padding: 0.4rem 0.75rem;
+  border-radius: 5px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+}
+
+.btn-pack-qty-action.secondary {
+  background: #252e3c;
+  border-color: #3b4657;
+  color: #e2e8f0;
+}
+
+.btn-pack-qty-action.secondary:hover {
+  background: #323d4e;
+}
+
+.btn-pack-qty-action.primary {
+  background: #2563eb;
+  border-color: #3b82f6;
+  color: #ffffff;
+}
+
+.btn-pack-qty-action.primary:hover {
+  background: #1d4ed8;
+}
+
+.pack-qty-proof-expandable {
+  margin-top: 1rem;
+  padding: 0.875rem;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid #334155;
+  border-radius: 6px;
+  font-size: 0.75rem;
+}
+
+.pack-qty-proof-expandable .proof-expandable-head {
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.pack-qty-proof-expandable .proof-steps-list {
+  margin: 0 0 0.75rem 1.25rem;
+  padding: 0;
+  color: #cbd5e1;
+  line-height: 1.6;
+}
+
+.pack-qty-proof-expandable .proof-disclaimer {
+  font-size: 0.6875rem;
+  color: #64748b;
+  border-top: 1px solid #1e293b;
+  padding-top: 0.5rem;
+  line-height: 1.4;
+}

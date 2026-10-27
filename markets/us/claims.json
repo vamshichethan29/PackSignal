@@ -1,0 +1,64 @@
+{
+  "market": "US",
+  "statute": "21 CFR 101.13 and 21 CFR 101.60",
+  "claims": {
+    "no_added_sugar": {
+      "claimId": "US_CLAIM_NO_ADDED_SUGAR",
+      "citations": ["21 CFR 101.60(c)(2)"],
+      "terms": [
+        "no added sugar",
+        "without added sugar",
+        "no added sugars"
+      ],
+      "requirements": {
+        "disqualifyingAddedSugarIngredients": [
+          "honey",
+          "coconut sugar",
+          "cane sugar",
+          "brown sugar",
+          "invert sugar",
+          "molasses",
+          "corn syrup",
+          "high fructose corn syrup",
+          "malt syrup",
+          "maple syrup",
+          "agave nectar",
+          "fruit juice concentrate"
+        ],
+        "maxAddedSugarsGrams": 0,
+        "disclaimerRequiredIfNotLowCalorie": "not a low calorie food",
+        "rationale": "Under 21 CFR 101.60(c)(2), no added sugar claims are prohibited if the food contains added sugars such as honey or coconut sugar, or ingredients containing added sugars."
+      }
+    },
+    "sugar_free": {
+      "claimId": "US_CLAIM_SUGAR_FREE",
+      "citations": ["21 CFR 101.60(c)(1)"],
+      "terms": ["sugar free", "free of sugar", "zero sugar"],
+      "requirements": {
+        "maxTotalSugarsGrams": 0.5
+      }
+    },
+    "vegan_dietary_claim": {
+      "claimId": "US_CLAIM_VEGAN_COMPATIBILITY",
+      "citations": ["21 U.S.C. 343(a)(1) (False or Misleading Labeling)"],
+      "terms": ["suitable for vegans", "vegan"],
+      "requirements": {
+        "prohibitedIngredients": [
+          "honey",
+          "milk",
+          "eggs",
+          "gelatin",
+          "carmine",
+          "shellac",
+          "whey"
+        ],
+        "rationale": "Honey is an animal-derived product. Displaying a vegan claim on a package containing honey is misleading to consumers unless explicitly qualified and approved by Brand/Legal."
+      }
+    }
+  },
+  "nutrientContentClaims": {
+    "no_added_sugar": {
+      "disqualifyingIngredients": ["honey", "coconut sugar", "cane sugar", "brown sugar", "corn syrup"]
+    }
+  }
+}

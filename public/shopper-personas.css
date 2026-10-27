@@ -1,0 +1,279 @@
+/* PackSignal Shopper Personas CSS (public/shopper-personas.css) */
+/* Upgrade #42 — Consumer Impact Lens */
+
+/* Toolbar Select & Label */
+.hud-shopper-view {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #38bdf8;
+  background: rgba(15, 23, 42, 0.6);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+}
+
+.shopper-view-select {
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid #38bdf8;
+  background: #0f172a;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 11px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.shopper-view-select:hover,
+.shopper-view-select:focus {
+  border-color: #7dd3fc;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+}
+
+/* Shopper Lens Banner on Workbench */
+.shopper-perspective-banner {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  border: 1px solid #334155;
+  border-left: 4px solid #38bdf8;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  color: #ffffff;
+  animation: shopperFadeIn 0.2s ease-out;
+}
+
+@keyframes shopperFadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.shopper-perspective-banner .persona-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid #38bdf8;
+  color: #7dd3fc;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.shopper-perspective-banner .metrics-grid {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.shopper-perspective-banner .metric-item {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.shopper-perspective-banner .metric-item b {
+  color: #f8fafc;
+  font-size: 13px;
+  margin-left: 4px;
+}
+
+/* 2D Overlay Highlighting Layers */
+.shopper-highlights-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 15;
+}
+
+.shopper-highlight-box {
+  position: absolute;
+  border-radius: 4px;
+  pointer-events: auto;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.shopper-highlight-box:hover {
+  transform: scale(1.02);
+  z-index: 20;
+}
+
+/* Color semantics for evidence types */
+.shopper-hl-INGREDIENT_EVIDENCE {
+  background: rgba(245, 158, 11, 0.22);
+  border: 2px solid #f59e0b;
+}
+
+.shopper-hl-MARKETING_CLAIM {
+  background: rgba(16, 185, 129, 0.22);
+  border: 2px solid #10b981;
+}
+
+.shopper-hl-NUTRITION_DECLARATION {
+  background: rgba(2, 132, 199, 0.22);
+  border: 2px solid #0284c7;
+}
+
+.shopper-hl-REVIEW_NEEDED {
+  background: rgba(139, 92, 246, 0.22);
+  border: 2px dashed #8b5cf6;
+}
+
+.shopper-hl-tag {
+  position: absolute;
+  top: -18px;
+  left: 0;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: #ffffff;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.tag-INGREDIENT_EVIDENCE { background: #d97706; }
+.tag-MARKETING_CLAIM { background: #059669; }
+.tag-NUTRITION_DECLARATION { background: #0284c7; }
+.tag-REVIEW_NEEDED { background: #7c3aed; }
+
+/* Legend in Prepress HUD */
+.shopper-hud-legend {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.shopper-hud-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Consumer Consequence Card in Finding View */
+.consumer-consequence-card {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-left: 4px solid #38bdf8;
+  border-radius: 8px;
+  padding: 16px;
+  margin: 14px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.consumer-consequence-card .card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.consumer-consequence-card .eyebrow {
+  font-size: 10px;
+  font-weight: 800;
+  color: #0284c7;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.consumer-consequence-card .priority-badge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.priority-HIGH {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fca5a5;
+}
+
+.priority-MEDIUM {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fcd34d;
+}
+
+.priority-LOW {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.consumer-consequence-card .why-it-matters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  font-size: 12px;
+  color: #334155;
+}
+
+.consumer-consequence-card .matter-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.consumer-consequence-card .matter-box small {
+  display: block;
+  font-size: 10px;
+  font-weight: 800;
+  color: #64748b;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.consumer-consequence-card .action-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 8px;
+  border-top: 1px dashed #cbd5e1;
+}
+
+.consumer-consequence-card .action-bar button {
+  padding: 5px 12px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s ease;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .shopper-perspective-banner,
+  .shopper-highlight-box {
+    animation: none;
+    transition: none;
+  }
+}

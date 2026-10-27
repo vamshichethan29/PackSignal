@@ -1,0 +1,6 @@
+<testsuites id="" name="" tests="1" failures="0" skipped="0" errors="0" time="10.779639999999999">
+<testsuite name="phase10b-live-ar.spec.mjs" timestamp="2026-10-27T08:06:34.156Z" hostname="chromium" tests="1" failures="0" skipped="0" time="7.224" errors="0">
+<testcase name="Phase 10B — Live AR on Real Box E2E Sequence › Complete Live AR Flow: Desktop QR -&gt; Mobile AR -&gt; Hotspot Drawer -&gt; Panel Switching -&gt; Zero AI" classname="phase10b-live-ar.spec.mjs" time="7.224">
+</testcase>
+</testsuite>
+</testsuites>

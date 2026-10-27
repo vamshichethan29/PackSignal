@@ -1,0 +1,93 @@
+{
+  "market": "US",
+  "templates": [
+    {
+      "triggerId": "CONFLICT_HONEY_PERCENTAGE",
+      "department": "R&D / Formulations",
+      "priorityBase": 90,
+      "title": "Which ingredient formulation is approved for the next artwork revision?",
+      "question": "The artwork declares Honey (1%) while the specification sheet states Honey (9%). Which recipe percentage is authoritative for production?",
+      "reason": "Honey percentage conflict between specification and artwork directly blocks QUID compliance and recipe substantiation.",
+      "blockedRules": ["US-INGR-001", "US-CLAIM-001"],
+      "answerType": "CHOICE",
+      "answerOptions": ["1% (Artwork formulation)", "9% (Specification formula)", "Other approved revision"]
+    },
+    {
+      "triggerId": "AMBIGUOUS_NUTRITION_BASIS",
+      "department": "R&D / Formulations",
+      "priorityBase": 88,
+      "title": "Can R&D confirm the calculation basis for the Nutrition Facts values?",
+      "question": "Nutrient declarations appear to mix per-serving (85g) and per-100g amounts. Can R&D confirm the authoritative analytical basis?",
+      "reason": "Mismatched nutritional measurement basis blocks valid % Daily Value calculations and Atwater energy plausibility screening.",
+      "blockedRules": ["US-NUTR-004", "US-NUTR-005", "US-NUTR-010"],
+      "answerType": "CHOICE",
+      "answerOptions": ["Per 85g Serving", "Per 100g Analytical Basis", "Dual Column Declaration"]
+    },
+    {
+      "triggerId": "NO_ADDED_SUGAR_WITH_SWEETENERS",
+      "department": "Regulatory & Legal",
+      "priorityBase": 86,
+      "title": "Does the approved formula support the 'No Added Sugar' marketing claim?",
+      "question": "The packaging displays a 'No Added Sugar' claim, but the ingredient list includes Honey, Coconut Sugar, and Crystallized Ginger (cane sugar). Does Legal approve this claim?",
+      "reason": "Under 21 CFR 101.60(c)(2), foods containing added sugars or sugar-containing ingredients cannot claim 'No Added Sugar'.",
+      "blockedRules": ["US-CLAIM-001"],
+      "answerType": "CHOICE",
+      "answerOptions": ["Remove 'No Added Sugar' claim", "Reformulate to remove added sweeteners", "Retain with statutory disclaimer"]
+    },
+    {
+      "triggerId": "ALLERGEN_ADVISORY_OVERLAP",
+      "department": "Regulatory & Legal",
+      "priorityBase": 85,
+      "title": "Can Legal confirm the tree-nut ingredient and precautionary allergen wording?",
+      "question": "Almonds and pecans are intentional recipe ingredients, but also appear in the 'May Contain' advisory statement. Can Legal verify if this advisory wording should be corrected?",
+      "reason": "Listing intentional recipe ingredients in a 'May Contain' statement creates consumer confusion and contradicts FDA allergen labeling guidance.",
+      "blockedRules": ["US-ALLERG-002", "US-ALLERG-003"],
+      "answerType": "CHOICE",
+      "answerOptions": ["Remove intentional nuts from advisory statement", "Retain current wording per QA risk assessment"]
+    },
+    {
+      "triggerId": "VEGAN_CLAIM_WITH_HONEY",
+      "department": "Brand & Marketing",
+      "priorityBase": 82,
+      "title": "Can Brand confirm whether the vegan claim is authorized and adequately substantiated?",
+      "question": "The artwork declares 'Suitable for Vegans' but also declares Honey as an ingredient. Does Brand authorize this dietary claim for the US market?",
+      "reason": "Honey is an animal-derived ingredient; unqualified vegan claims on honey-containing products face regulatory challenge and consumer objection.",
+      "blockedRules": ["US-CLAIM-002"],
+      "answerType": "CHOICE",
+      "answerOptions": ["Authorize claim with honey disclosure", "Remove 'Suitable for Vegans' wording", "Replace honey with plant syrup"]
+    },
+    {
+      "triggerId": "SERVING_ARITHMETIC_INCONSISTENCY",
+      "department": "Prepress & Packaging",
+      "priorityBase": 80,
+      "title": "Can the product owner confirm the approved serving size and servings per container?",
+      "question": "The panel declares 8 servings at 85g per serving (totalling 680g), but the package net weight is 480g. Which value represents the verified product packaging?",
+      "reason": "Arithmetic inconsistency between serving size, serving count, and package net weight violates 21 CFR 101.9(b).",
+      "blockedRules": ["US-NUTR-003"],
+      "answerType": "CHOICE",
+      "answerOptions": ["Adjust serving size to match net weight", "Adjust servings per container to 5.6", "Retain 480g / 8 servings with R&D justification"]
+    },
+    {
+      "triggerId": "TARGET_LAUNCH_DATE_UNCONFIRMED",
+      "department": "Regulatory & Legal",
+      "priorityBase": 70,
+      "title": "Can Legal confirm the applicable target market and launch date?",
+      "question": "The launch date determines regulatory transition windows and enforcement dates. Please confirm the scheduled commercial release date.",
+      "reason": "Regulatory rule pack applicability relies on the effective date interval.",
+      "blockedRules": [],
+      "answerType": "TEXT",
+      "answerOptions": []
+    },
+    {
+      "triggerId": "DESIGN_ASSET_DECISION",
+      "department": "Brand & Marketing",
+      "priorityBase": 65,
+      "title": "Which existing brand design elements must remain unchanged in the next revision?",
+      "question": "Review the detected design assets (logo, colors, tagline) and indicate whether each should be KEPT, CHANGED, ADDED, or REMOVED in the creative brief.",
+      "reason": "Directly feeds the future packaging design brief.",
+      "blockedRules": [],
+      "answerType": "CHOICE",
+      "answerOptions": ["KEEP", "CHANGE", "ADD", "REMOVE"]
+    }
+  ]
+}

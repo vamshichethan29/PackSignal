@@ -1,0 +1,29 @@
+{
+  "document_id": "DEMO-MANGO-OAT-001",
+  "version": "1.0",
+  "status": "APPROVED_FOR_DEMO_ONLY",
+  "effective_date": "2026-10-18",
+  "synthetic": true,
+  "notice": "Fictional upload example for testing PackSignal. No real product, regulatory approval, certification, or commercial claim substantiation is represented.",
+  "product": {
+    "sku": "DEMO-MOB-150",
+    "brand": "Orchard Lab",
+    "name": "Mango & Oat Bites",
+    "variant": "Pumpkin Seed",
+    "net_quantity": {
+      "value": 150,
+      "unit": "g",
+      "preferred_display": "Net wt. 150 g"
+    },
+    "ingredients": "Wholegrain oats, dried mango (12%), pumpkin seeds, sunflower oil, sea salt.",
+    "allergen_statement": "Contains oats.",
+    "manufacturer": "Example Foods (Fictional)",
+    "claims": ["No added sugar"]
+  },
+  "scope": {
+    "language": "English",
+    "market_context": "Jurisdiction-neutral fictional example",
+    "package": "Four-panel carton artwork; dimensions are illustrative"
+  },
+  "authority_note": "This document is only a fictional comparison source for exercising the upload flow. Review all extracted results manually."
+}

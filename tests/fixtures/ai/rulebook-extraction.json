@@ -1,0 +1,22 @@
+{
+  "taskName": "rulebook_extraction",
+  "promptVersion": "1.0",
+  "schemaVersion": "1.0",
+  "modelIdentifier": "gemini-2.5-flash",
+  "inputHash": "0dd27abef3d7d7b05c6ed60544d75be6d404aa8e0dec605223b93311579307ff",
+  "output": {
+    "rules": [
+      {
+        "ruleId": "RULE-FDA-21CFR101.9",
+        "citation": "21 CFR §101.9(c)(6)",
+        "exactQuotation": "Total carbohydrate declaration shall include all dietary carbohydrate.",
+        "section": "Nutrition Labeling of Food",
+        "effectiveDate": "2020-01-01",
+        "status": "PROPOSED_NEEDS_HUMAN_APPROVAL"
+      }
+    ]
+  },
+  "recordedAt": "2026-10-24T18:02:31.831Z",
+  "validationStatus": "RECORDED_AND_VALIDATED",
+  "status": "success"
+}

@@ -1,0 +1,141 @@
+{
+  "market": "US",
+  "standard": "21 CFR 101.9(c)(9) (2016 Revision)",
+  "population": "ADULTS_AND_CHILDREN_4_PLUS",
+  "effectiveFrom": "2020-01-01",
+  "dailyValues": {
+    "total_fat": {
+      "nutrient": "total_fat",
+      "name": "Total Fat",
+      "referenceValue": 78,
+      "unit": "g",
+      "cfrCitation": "21 CFR 101.9(c)(9)",
+      "mandatory": true,
+      "rounding": "NEAREST_WHOLE_PERCENT",
+      "zeroThreshold": 0.5
+    },
+    "saturated_fat": {
+      "nutrient": "saturated_fat",
+      "name": "Saturated Fat",
+      "referenceValue": 20,
+      "unit": "g",
+      "cfrCitation": "21 CFR 101.9(c)(9)",
+      "mandatory": true,
+      "rounding": "NEAREST_WHOLE_PERCENT",
+      "zeroThreshold": 0.5
+    },
+    "cholesterol": {
+      "nutrient": "cholesterol",
+      "name": "Cholesterol",
+      "referenceValue": 300,
+      "unit": "mg",
+      "cfrCitation": "21 CFR 101.9(c)(9)",
+      "mandatory": true,
+      "rounding": "NEAREST_WHOLE_PERCENT",
+      "zeroThreshold": 2
+    },
+    "sodium": {
+      "nutrient": "sodium",
+      "name": "Sodium",
+      "referenceValue": 2300,
+      "unit": "mg",
+      "cfrCitation": "21 CFR 101.9(c)(9)",
+      "mandatory": true,
+      "rounding": "NEAREST_WHOLE_PERCENT",
+      "zeroThreshold": 5
+    },
+    "total_carbohydrate": {
+      "nutrient": "total_carbohydrate",
+      "name": "Total Carbohydrate",
+      "referenceValue": 275,
+      "unit": "g",
+      "cfrCitation": "21 CFR 101.9(c)(9)",
+      "mandatory": true,
+      "rounding": "NEAREST_WHOLE_PERCENT",
+      "zeroThreshold": 0.5
+    },
+    "dietary_fiber": {
+      "nutrient": "dietary_fiber",
+      "name": "Dietary Fiber",
+      "referenceValue": 28,
+      "unit": "g",
+      "cfrCitation": "21 CFR 101.9(c)(9)",
+      "mandatory": true,
+      "rounding": "NEAREST_WHOLE_PERCENT",
+      "zeroThreshold": 0.5
+    },
+    "added_sugars": {
+      "nutrient": "added_sugars",
+      "name": "Added Sugars",
+      "referenceValue": 50,
+      "unit": "g",
+      "cfrCitation": "21 CFR 101.9(c)(9)",
+      "mandatory": true,
+      "rounding": "NEAREST_WHOLE_PERCENT",
+      "zeroThreshold": 0.5
+    },
+    "protein": {
+      "nutrient": "protein",
+      "name": "Protein",
+      "referenceValue": 50,
+      "unit": "g",
+      "cfrCitation": "21 CFR 101.9(c)(7)",
+      "mandatory": false,
+      "conditional": "Required only if a claim is made about protein or for foods intended for infants/children",
+      "rounding": "NEAREST_WHOLE_PERCENT"
+    },
+    "vitamin_d": {
+      "nutrient": "vitamin_d",
+      "name": "Vitamin D",
+      "referenceValue": 20,
+      "unit": "mcg",
+      "cfrCitation": "21 CFR 101.9(c)(8)(iv)",
+      "mandatory": true,
+      "rounding": "VITAMIN_MINERAL_TIERED",
+      "zeroThreshold": 0.5
+    },
+    "calcium": {
+      "nutrient": "calcium",
+      "name": "Calcium",
+      "referenceValue": 1300,
+      "unit": "mg",
+      "cfrCitation": "21 CFR 101.9(c)(8)(iv)",
+      "mandatory": true,
+      "rounding": "VITAMIN_MINERAL_TIERED",
+      "zeroThreshold": 10
+    },
+    "iron": {
+      "nutrient": "iron",
+      "name": "Iron",
+      "referenceValue": 18,
+      "unit": "mg",
+      "cfrCitation": "21 CFR 101.9(c)(8)(iv)",
+      "mandatory": true,
+      "rounding": "VITAMIN_MINERAL_TIERED",
+      "zeroThreshold": 0.5
+    },
+    "potassium": {
+      "nutrient": "potassium",
+      "name": "Potassium",
+      "referenceValue": 4700,
+      "unit": "mg",
+      "cfrCitation": "21 CFR 101.9(c)(8)(iv)",
+      "mandatory": true,
+      "rounding": "VITAMIN_MINERAL_TIERED",
+      "zeroThreshold": 50
+    }
+  },
+  "noDailyValueNutrients": [
+    "total_sugars",
+    "trans_fat",
+    "polyunsaturated_fat",
+    "monounsaturated_fat",
+    "soluble_fiber",
+    "insoluble_fiber",
+    "sugar_alcohol"
+  ],
+  "roundingRules": {
+    "NEAREST_WHOLE_PERCENT": "Round to nearest 1% integer (e.g. 15.4% -> 15%, 15.5% -> 16%).",
+    "VITAMIN_MINERAL_TIERED": "Under 10% DV: round to nearest 2% (2%, 4%, 6%, 8%). 10% to 50% DV: round to nearest 5% (10%, 15%, 20%, etc.). Over 50% DV: round to nearest 10%."
+  }
+}

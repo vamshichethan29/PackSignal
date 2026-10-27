@@ -1,0 +1,162 @@
+{
+  "version": "1.0.0",
+  "dataset": "Dancing Fish Granola Berry Crunch (Official Esko Organizer Case)",
+  "scope": "Known-Sample Regression Test Harness (NOT Independent Evaluation)",
+  "inputFiles": [
+    "samples/organizer/DancingFish_Granola_Berry_US_Carton.pdf",
+    "samples/organizer/DancingFish_Granola_BerryCrunch_US_Content_Sheet.xlsx"
+  ],
+  "inputHashes": {
+    "DancingFish_Granola_Berry_US_Carton.pdf": "c633ab2f9d227c14aee4f9065cee980cf2efe1a602db963b1cf5e474fec929be",
+    "DancingFish_Granola_BerryCrunch_US_Content_Sheet.xlsx": "289b39eb38e39128974a0f9e9042e764c73d7f83da0730a32338b6d3e79c972d"
+  },
+  "discrepancies": [
+    {
+      "testId": "HONEY-PCT-DISCREPANCY",
+      "checkId": "ingredients-declaration",
+      "classification": "OBSERVED DISCREPANCY",
+      "expectedStatus": "issue",
+      "expectedSourceEvidence": {
+        "sheet": "Content Sheet - US",
+        "cell": "B26",
+        "value": "Honey (1%)",
+        "authority": "draft"
+      },
+      "expectedArtworkEvidence": {
+        "page": 1,
+        "panel": "Back Panel",
+        "observedText": "Honey (9%)"
+      },
+      "expectedRule": "21 CFR §101.4",
+      "expectedApplicability": "IN_FORCE_US_FDA",
+      "expectedUncertainty": "Source content sheet is marked Draft/In-Review; discrepancy is observed against supplied spreadsheet but cannot be confirmed as an intentional formula change until reviewer confirms authority.",
+      "notes": "Artwork declares 9% honey while specification sheet states 1% honey."
+    },
+    {
+      "testId": "TOTAL-CARBS-MISMATCH",
+      "checkId": "nutrition-total-carbohydrate",
+      "classification": "OBSERVED DISCREPANCY",
+      "expectedStatus": "issue",
+      "expectedSourceEvidence": {
+        "sheet": "Content Sheet - US",
+        "cell": "C18",
+        "value": "32g",
+        "authority": "draft"
+      },
+      "expectedArtworkEvidence": {
+        "page": 1,
+        "panel": "Side Panel (Nutrition Facts)",
+        "observedText": "34g"
+      },
+      "expectedRule": "21 CFR §101.9(c)(6)",
+      "expectedApplicability": "IN_FORCE_US_FDA",
+      "expectedUncertainty": "Nutrition declared amounts differ between draft specification and printed table.",
+      "notes": "Artwork declares 34g Total Carbohydrate vs 32g in US content sheet."
+    },
+    {
+      "testId": "SODIUM-DECLARATION-MISMATCH",
+      "checkId": "nutrition-sodium",
+      "classification": "OBSERVED DISCREPANCY",
+      "expectedStatus": "issue",
+      "expectedSourceEvidence": {
+        "sheet": "Content Sheet - US",
+        "cell": "C17",
+        "value": "15mg",
+        "authority": "draft"
+      },
+      "expectedArtworkEvidence": {
+        "page": 1,
+        "panel": "Side Panel (Nutrition Facts)",
+        "observedText": "0mg"
+      },
+      "expectedRule": "21 CFR §101.9(c)(4)",
+      "expectedApplicability": "IN_FORCE_US_FDA",
+      "expectedUncertainty": "Declared sodium difference between source sheet and artwork.",
+      "notes": "Artwork states 0mg sodium; content sheet specifies 15mg."
+    },
+    {
+      "testId": "NET-QUANTITY-DUAL-UNIT",
+      "checkId": "net-quantity-declaration",
+      "classification": "SOURCE AMBIGUITY",
+      "expectedStatus": "review",
+      "expectedSourceEvidence": {
+        "sheet": "Content Sheet - US",
+        "cell": "B20",
+        "value": "450g (15.8 oz)",
+        "authority": "draft"
+      },
+      "expectedArtworkEvidence": {
+        "page": 1,
+        "panel": "Principal Display Panel",
+        "observedText": "NET WT 480g (16.9 oz)"
+      },
+      "expectedRule": "21 CFR §101.7",
+      "expectedApplicability": "IN_FORCE_US_FDA",
+      "expectedUncertainty": "Draft specification states 450g while artwork declares 480g; requires reviewer decision whether this is an intended revision before flagging as definite issue.",
+      "notes": "Declared net weight is 480g on artwork vs 450g on draft sheet. Evaluated as REVIEW pending source authority confirmation."
+    },
+    {
+      "testId": "STORAGE-STATEMENT-MATCH",
+      "checkId": "storage-instructions",
+      "classification": "APPROVED-SOURCE MISMATCH",
+      "expectedStatus": "match",
+      "expectedSourceEvidence": {
+        "sheet": "Content Sheet - US",
+        "cell": "B25",
+        "value": "Store in a cool, dry place. Once opened, keep packaging closed and eat within a month or by date shown, for best before, see base of pack.",
+        "authority": "draft"
+      },
+      "expectedArtworkEvidence": {
+        "page": 1,
+        "panel": "Back Panel",
+        "observedText": "Store in a cool, dry place. Once opened, keep packaging closed and eat within a month or by date shown, for best before, see base of pack."
+      },
+      "expectedRule": "derived:storage_statement",
+      "expectedApplicability": "IN_FORCE_US_FDA",
+      "expectedUncertainty": "None. Exact string match.",
+      "notes": "Storage copy on artwork matches content sheet verbatim."
+    },
+    {
+      "testId": "DRAFT-FORMULATION-AMBIGUITY",
+      "checkId": "source-status",
+      "classification": "SOURCE AMBIGUITY",
+      "expectedStatus": "review",
+      "expectedSourceEvidence": {
+        "sheet": "Content Sheet - US",
+        "cell": "A1",
+        "value": "DRAFT - FOR PACKAGING DEVELOPMENT ONLY",
+        "authority": "unconfirmed"
+      },
+      "expectedArtworkEvidence": {
+        "page": 1,
+        "panel": "Complete Packaging",
+        "observedText": "Commercial release artwork files"
+      },
+      "expectedRule": "governance:source-authority-gate",
+      "expectedApplicability": "PREPRESS_GOVERNANCE",
+      "expectedUncertainty": "Specification sheet header explicitly states draft status. Reviewer must approve authoritative status before final release.",
+      "notes": "Source ambiguity requires human reviewer sign-off."
+    },
+    {
+      "testId": "DIELINE-GUIDE-TEXT-EXCLUSION",
+      "checkId": "dieline-geometry-guides",
+      "classification": "TECHNICAL SCREENING WARNING",
+      "expectedStatus": "match",
+      "expectedSourceEvidence": {
+        "sheet": "Dieline layer",
+        "cell": "N/A",
+        "value": "Technical printer guides and fold directions",
+        "authority": "production_geometry"
+      },
+      "expectedArtworkEvidence": {
+        "page": 1,
+        "panel": "Flap margins / Glue area",
+        "observedText": "FOLD HERE - GLUE FLAP"
+      },
+      "expectedRule": "preflight:nonprinting-dieline-separation",
+      "expectedApplicability": "PREPRESS_PRODUCTION",
+      "expectedUncertainty": "Verified as non-printing guide text; correctly excluded from consumer labeling checks.",
+      "notes": "Technical dieline guide text must not be flagged as missing consumer copy."
+    }
+  ]
+}

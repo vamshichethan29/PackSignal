@@ -1,0 +1,8 @@
+{
+  "requestType": "malformed_response",
+  "model": "gemini-2.5-flash-mock",
+  "schemaVersion": "1.0",
+  "status": "error",
+  "rawOutput": "```json\n{ unclosed_brace: 'broken json here\n",
+  "parseError": "Unexpected token in JSON at position 24"
+}

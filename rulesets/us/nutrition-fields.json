@@ -1,0 +1,23 @@
+{
+  "id": "US-004",
+  "version": "1.0.0",
+  "market": "us",
+  "regulator": "FDA",
+  "productScope": "conventional_packaged_food",
+  "sourceCitation": "21 CFR 101.9",
+  "sourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+  "sourceQuote": "Nutrition information relating to food shall be provided for all products intended for human consumption and offered for sale.",
+  "quoteVerificationStatus": "VERIFIED_QUOTATION",
+  "legalStatus": "IN_FORCE",
+  "effectiveDate": "2016-07-26",
+  "checkType": "REQUIRED_FIELD",
+  "parameters": {
+    "mandatoryFields": ["serving_size", "servings_per_container", "calories", "total_fat", "sodium", "total_carbohydrate", "protein"]
+  },
+  "requiredFacts": ["nutrition_facts"],
+  "applicability": {
+    "market": "us"
+  },
+  "exceptions": ["Small packages < 12 sq inches exempt from full panel"],
+  "reviewStatus": "APPROVED"
+}

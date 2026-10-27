@@ -1,0 +1,18 @@
+{
+  "datasetType": "KNOWN-SAMPLE REGRESSION KEY",
+  "sample": "dancing-fish-granola-berry-crunch-us",
+  "scope": "Developer-authored expected outcomes for the official organizer challenge files. Verified against original files. Used for deterministic regression benchmarks, not independent blind evaluation.",
+  "files": {
+    "artwork": {
+      "path": "samples/organizer/DancingFish_Granola_Berry_US_Carton.pdf",
+      "sha256": "4b54e7d9b9a4731b5d19db45f3c1a3295982e5b721e05d0e2e5c8e3aa71b2d35",
+      "format": "pdf"
+    },
+    "specification": {
+      "path": "samples/organizer/DancingFish_Granola_BerryCrunch_US_Content_Sheet.xlsx",
+      "sha256": "270c1fc4ea6621f2bb8b672722b460980ef8a5ea974cb33bf270cfa3df68c343",
+      "format": "xlsx",
+      "sourceStatus": "DRAFT_IN_REVIEW"
+    }
+  }
+}

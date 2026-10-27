@@ -1,0 +1,63 @@
+{
+  "jurisdiction": "IN",
+  "category": "food_granola",
+  "authority": "FSSAI & Legal Metrology Department",
+  "mandatoryPackagingElements": [
+    {
+      "element": "green_veg_mark",
+      "name": "FSSAI Green Vegetarian Dot Emblem",
+      "panel": "Principal Display Panel (PDP)",
+      "citation": "FSSAI Reg. 2.2.2.4",
+      "description": "Green square border with filled green circle inside, minimum 6 mm size on PDP near product name."
+    },
+    {
+      "element": "mrp_declaration",
+      "name": "Maximum Retail Price (MRP incl. of all taxes)",
+      "panel": "Information Panel / Back panel",
+      "citation": "Legal Metrology Rule 6(1)(e)",
+      "description": "Mandatory declaration 'MRP ₹... (inclusive of all taxes)' in bold clear print."
+    },
+    {
+      "element": "unit_sale_price",
+      "name": "Unit Sale Price (USP)",
+      "panel": "Information Panel / Contiguous to MRP",
+      "citation": "Legal Metrology 2022 Amendment",
+      "description": "Mandatory unit sale price expressed per gram or per 100g contiguous to MRP."
+    },
+    {
+      "element": "fssai_license_number_and_logo",
+      "name": "14-Digit FSSAI License Number & Logo",
+      "panel": "Information Panel / Back panel",
+      "citation": "FSSAI Reg. 2.2.2.7",
+      "description": "Standard FSSAI wordmark logo alongside 14-digit state/central license number."
+    },
+    {
+      "element": "consumer_care_details",
+      "name": "Consumer Care / Grievance Redressal Contact",
+      "panel": "Information Panel / Back panel",
+      "citation": "Legal Metrology Rule 6(1)(f)",
+      "description": "Contact person name, complete address, toll-free phone number, and email for consumer grievances."
+    },
+    {
+      "element": "metric_only_net_quantity",
+      "name": "Metric Net Quantity Declaration (Grams / Kilograms)",
+      "panel": "Principal Display Panel (PDP)",
+      "citation": "Legal Metrology Rule 12",
+      "description": "Net weight declared in metric grams/kg only. US customary ounces are removed from primary declaration."
+    },
+    {
+      "element": "date_of_mfg_and_expiry",
+      "name": "Date of Packaging & Best Before Duration",
+      "panel": "Information Panel / Flaps",
+      "citation": "FSSAI Reg. 2.2.2.8",
+      "description": "Date of manufacture/packaging and 'Best Before' statement."
+    },
+    {
+      "element": "country_of_origin",
+      "name": "Country of Origin Declaration",
+      "panel": "Information Panel / Back panel",
+      "citation": "Legal Metrology Rule 6(1)(d)",
+      "description": "Country of origin declaration for imported goods (e.g. 'Country of Origin: USA')."
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "packId": "US-FDA-CONVENTIONAL-FOOD-2026.1",
+  "market": "US",
+  "regulator": "US Food and Drug Administration (FDA)",
+  "version": "2026.1",
+  "publishedAt": "2020-01-01",
+  "effectiveFrom": "2020-01-01",
+  "effectiveUntil": null,
+  "productScope": [
+    "granola",
+    "cereal",
+    "dry_bakery_and_grain",
+    "conventional_food"
+  ],
+  "sources": [
+    {
+      "title": "21 CFR Part 101 — Food Labeling",
+      "citation": "Title 21, Code of Federal Regulations, Part 101",
+      "url": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101"
+    },
+    {
+      "title": "FDA Daily Values for Nutrition Facts",
+      "citation": "21 CFR 101.9(c)(9)",
+      "url": "https://www.fda.gov/food/nutrition-facts-label/daily-value-nutrition-and-supplement-facts-labels"
+    },
+    {
+      "title": "Food Allergen Labeling and Consumer Protection Act (FALCPA / FASTER Act)",
+      "citation": "21 U.S.C. 343(w)",
+      "url": "https://www.fda.gov/food/food-allergensgluten-free-guidance-documents-regulatory-information"
+    }
+  ],
+  "components": {
+    "rules": "food-labelling.json",
+    "dailyValues": "nutrition-daily-values.json",
+    "allergens": "allergens.json",
+    "claims": "claims.json",
+    "calorieMethods": "calorie-methods.json",
+    "applicability": "applicability.json",
+    "questionTemplates": "question-templates.json"
+  }
+}

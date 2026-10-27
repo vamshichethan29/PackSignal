@@ -1,0 +1,59 @@
+{
+  "market": "IN",
+  "authority": "Food Safety and Standards Authority of India (FSSAI)",
+  "symbols": [
+    {
+      "id": "symbol-veg-dot",
+      "symbol": "GREEN_VEG_DOT",
+      "name": "FSSAI Vegetarian Logo",
+      "legalCitation": "FSSAI (Labelling and Display) Regulations, 2020, Regulation 5(5)",
+      "applicableProductScope": "vegetarian_food",
+      "notes": "Under FSSAI definitions, honey, beeswax, and dairy products are permitted under the vegetarian classification.",
+      "geometry": {
+        "outerShape": "square",
+        "innerShape": "filled_circle",
+        "colorHex": "#15803d",
+        "borderColorHex": "#15803d",
+        "minSizeMm": 6.0,
+        "minCircleDiameterMm": 3.0,
+        "preferredPanel": "Principal Display Panel (PDP)"
+      },
+      "placement": "Principal Display Panel near brand name",
+      "svgSnippet": "<svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\"><rect x=\"2\" y=\"2\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"#15803d\" stroke-width=\"2\" rx=\"2\"/><circle cx=\"12\" cy=\"12\" r=\"6\" fill=\"#15803d\"/></svg>"
+    },
+    {
+      "id": "symbol-non-veg-triangle",
+      "symbol": "BROWN_NON_VEG_TRIANGLE",
+      "name": "FSSAI Non-Vegetarian Logo",
+      "legalCitation": "FSSAI (Labelling and Display) Regulations, 2020, Regulation 5(5)",
+      "applicableProductScope": "non_vegetarian_food",
+      "notes": "Mandatory for food containing whole or part of any animal including birds, marine animals, or eggs.",
+      "geometry": {
+        "outerShape": "square",
+        "innerShape": "filled_triangle",
+        "colorHex": "#78350f",
+        "borderColorHex": "#78350f",
+        "minSizeMm": 6.0,
+        "preferredPanel": "Principal Display Panel (PDP)"
+      },
+      "placement": "Principal Display Panel near brand name",
+      "svgSnippet": "<svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\"><rect x=\"2\" y=\"2\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"#78350f\" stroke-width=\"2\" rx=\"2\"/><polygon points=\"12,6 18,18 6,18\" fill=\"#78350f\"/></svg>"
+    },
+    {
+      "id": "symbol-fssai-vegan",
+      "symbol": "FSSAI_VEGAN_LOGO",
+      "name": "FSSAI Statutory Vegan Food Logo",
+      "legalCitation": "FSSAI (Vegan Foods) Regulations, 2022, Regulation 5 & Schedule",
+      "applicableProductScope": "vegan_food",
+      "notes": "Statutory FSSAI Vegan Logo requires prior FSSAI registration/endorsement. Disallows animal-derived ingredients including honey.",
+      "geometry": {
+        "outerShape": "square",
+        "colorHex": "#16a34a",
+        "minSizeMm": 8.0,
+        "preferredPanel": "Principal Display Panel (PDP)"
+      },
+      "placement": "Principal Display Panel contiguous to name of food",
+      "svgSnippet": "<svg viewBox=\"0 0 32 32\" width=\"32\" height=\"32\"><rect x=\"2\" y=\"2\" width=\"28\" height=\"28\" fill=\"none\" stroke=\"#16a34a\" stroke-width=\"2\" rx=\"3\"/><path d=\"M10,8 L16,22 L22,8\" stroke=\"#16a34a\" stroke-width=\"2.5\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/><text x=\"16\" y=\"28\" font-size=\"5\" font-weight=\"bold\" fill=\"#16a34a\" text-anchor=\"middle\">VEGAN</text></svg>"
+    }
+  ]
+}

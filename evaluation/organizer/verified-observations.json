@@ -1,0 +1,367 @@
+[
+  {
+    "checkId": "DF-CHK-HONEY-PCT",
+    "checkType": "INGREDIENT_PERCENTAGE_MISMATCH",
+    "findingStatus": "SOURCE_ARTWORK_MISMATCH",
+    "sourceApprovalStatus": "Draft / In Review",
+    "sourceLocation": "Content Sheet - US!B26",
+    "sourceQuote": "Honey (9%)",
+    "artworkPanel": "Back",
+    "artworkQuote": "Honey (1%)",
+    "artworkBoundingBox": [
+      0.10414,
+      0.5516,
+      0.13545,
+      0.55715
+    ],
+    "calculationProof": "Source states 9% honey; carton prints 1% honey.",
+    "visibilityStatus": "CONSUMER_VISIBLE",
+    "limitations": "Content sheet has Draft / In Review status; requires R&D sign-off to determine intended formulation percentage."
+  },
+  {
+    "checkId": "DF-CHK-INGR-ARTWORK-ONLY",
+    "checkType": "INGREDIENT_LIST_DIFFERENCE",
+    "findingStatus": "SOURCE_ARTWORK_MISMATCH",
+    "sourceApprovalStatus": "Draft / In Review",
+    "sourceLocation": "Content Sheet - US!B26",
+    "sourceQuote": "INGREDIENTS: Organic Wholegrain Oat Flakes (79%), Almonds, Pecans, Sunflower Seeds, Vegetable Oils (in varying proportions), Dried Blueberries, Cranberries, Sunflower Seeds, Honey (9%), Coconut Sugar, Crystallized Ginger (cane sugar), Himalayan Pink Salt. Natural Flavoring.",
+    "artworkPanel": "Back",
+    "artworkQuote": "INGREDIENTS:",
+    "artworkBoundingBox": [
+      0.10414,
+      0.5516,
+      0.13545,
+      0.55715
+    ],
+    "calculationProof": "4 artwork-only ingredients detected: ",
+    "visibilityStatus": "CONSUMER_VISIBLE",
+    "limitations": "Draft source sheet does not include 4 ingredients that appear on physical carton print."
+  },
+  {
+    "checkId": "DF-CHK-INGR-DUP-SOURCE",
+    "checkType": "SOURCE_DOCUMENT_QUALITY",
+    "findingStatus": "SOURCE_DOCUMENT_DEFECT",
+    "sourceApprovalStatus": "Draft / In Review",
+    "sourceLocation": "Content Sheet - US!B26",
+    "sourceQuote": "Sunflower Seeds, Vegetable Oils (in varying proportions), Dried Blueberries, Cranberries, Sunflower Seeds",
+    "artworkPanel": "Back",
+    "artworkQuote": null,
+    "artworkBoundingBox": null,
+    "calculationProof": "Item \"Sunflower Seeds\" appears at sequence position 4 and position 8 within cell B26.",
+    "visibilityStatus": "NOT_APPLICABLE",
+    "limitations": "Source formulation contains duplicate item; not an artwork printing defect."
+  },
+  {
+    "checkId": "DF-CHK-NUT-CARB-MISMATCH",
+    "checkType": "NUTRITION_VALUE_CONFLICT",
+    "findingStatus": "SOURCE_ARTWORK_MISMATCH",
+    "sourceApprovalStatus": "Draft / In Review",
+    "sourceLocation": "Content Sheet - US!B53",
+    "sourceQuote": "15g",
+    "artworkPanel": "Left",
+    "artworkQuote": "Total Carbohydrate 66g",
+    "artworkBoundingBox": [
+      0.85,
+      0.45,
+      0.96,
+      0.75
+    ],
+    "calculationProof": "Difference of +51g carbohydrates (+340% increase over source cell B53).",
+    "visibilityStatus": "CONSUMER_VISIBLE",
+    "limitations": "Draft source has 15g; artwork declares 66g."
+  },
+  {
+    "checkId": "DF-CHK-NUT-SODIUM-MISMATCH",
+    "checkType": "NUTRITION_VALUE_CONFLICT",
+    "findingStatus": "SOURCE_ARTWORK_MISMATCH",
+    "sourceApprovalStatus": "Draft / In Review",
+    "sourceLocation": "Content Sheet - US!B52",
+    "sourceQuote": "25mg",
+    "artworkPanel": "Left",
+    "artworkQuote": "Sodium 23mg",
+    "artworkBoundingBox": [
+      0.85,
+      0.45,
+      0.96,
+      0.75
+    ],
+    "calculationProof": "Difference of -2mg sodium between source cell B52 (25mg) and carton (23mg).",
+    "visibilityStatus": "CONSUMER_VISIBLE",
+    "limitations": "Draft source difference."
+  },
+  {
+    "checkId": "DF-CHK-DV-ALL-10",
+    "checkType": "DAILY_VALUE_ARITHMETIC",
+    "findingStatus": "DV_CALCULATION_DISCREPANCY",
+    "sourceApprovalStatus": "Draft / In Review",
+    "sourceLocation": "Content Sheet - US!C48:C61",
+    "sourceQuote": "2.2%*, 8%, 26%*, 12%*, 18%, 5%, 12%, 48%, 20%, 11%",
+    "artworkPanel": "Left",
+    "artworkQuote": "Total Fat 15g 2.2%, Sodium 23mg 12%...",
+    "artworkBoundingBox": [
+      0.85,
+      0.45,
+      0.96,
+      0.75
+    ],
+    "calculationProof": "Total Fat: printed 2.2% DV vs computed 19% DV (15 g / 78 g = 19.2%)\nSaturated Fat: printed 8% DV vs computed 25% DV (5 g / 20 g = 25.0%)\nCholesterol: printed 26% DV vs computed 15% DV (45 mg / 300 mg = 15.0%)\nSodium: printed 12% DV vs computed 1% DV (23 mg / 2300 mg = 1.0%)\nTotal Carbohydrate: printed 18% DV vs computed 24% DV (66 g / 275 g = 24.0%)\nDietary Fiber: printed 5% DV vs computed 11% DV (3 g / 28 g = 10.7%)\nVitamin D: printed 12% DV vs computed 445% DV (89 mcg / 20 mcg = 445.0%)\nCalcium: printed 48% DV vs computed 16% DV (206 mg / 1300 mg = 15.8%)\nIron: printed 20% DV vs computed 28% DV (5 mg / 18 mg = 27.8%)\nPotassium: printed 11% DV vs computed 0.5% DV (23 mg / 4700 mg = 0.5%)",
+    "visibilityStatus": "CONSUMER_VISIBLE",
+    "limitations": "Based on FDA 21 CFR 101.9 standard reference daily values."
+  },
+  {
+    "checkId": "DF-CHK-ATWATER-CALORIES",
+    "checkType": "CALORIE_PLAUSIBILITY_SCREEN",
+    "findingStatus": "CALORIE_PLAUSIBILITY_REVIEW",
+    "sourceApprovalStatus": "Draft / In Review",
+    "sourceLocation": "Content Sheet - US!B47",
+    "sourceQuote": "166",
+    "artworkPanel": "Left",
+    "artworkQuote": "Calories 166",
+    "artworkBoundingBox": [
+      0.85,
+      0.45,
+      0.96,
+      0.75
+    ],
+    "calculationProof": "(15g × 9) + (66g × 4) + (34g × 4) = 535 kcal",
+    "visibilityStatus": "CONSUMER_VISIBLE",
+    "limitations": "General 4-4-9 factors are a screening heuristic. Food-specific factors (e.g. USDA Handbook 74) or dietary fiber deductions may lawfully alter final label calories."
+  },
+  {
+    "checkId": "DF-CHK-SERVING-SIZE",
+    "checkType": "SERVING_SIZE_ARITHMETIC",
+    "findingStatus": "SERVING_SIZE_QUESTION",
+    "sourceApprovalStatus": "Draft / In Review",
+    "sourceLocation": "Content Sheet - US!B34, B35, B36",
+    "sourceQuote": "8 servings, 480g net, B36 not legible",
+    "artworkPanel": "Left",
+    "artworkQuote": "Serving size 85",
+    "artworkBoundingBox": [
+      0.85,
+      0.45,
+      0.96,
+      0.75
+    ],
+    "calculationProof": "480g / 8 servings = 60g/serving",
+    "visibilityStatus": "CONSUMER_VISIBLE",
+    "limitations": "Declared serving size 85 has no unit; pack math yields 60g per serving."
+  },
+  {
+    "checkId": "DF-CHK-CLAIM-NO-SUGAR",
+    "checkType": "CLAIM_SUBSTANTIATION",
+    "findingStatus": "CLAIM_FORMULATION_CONFLICT",
+    "sourceApprovalStatus": "Draft / In Review",
+    "sourceLocation": "Content Sheet - US!B29",
+    "sourceQuote": "No Added Sugar",
+    "artworkPanel": "Top flap",
+    "artworkQuote": "NO ADDED SUGAR",
+    "artworkBoundingBox": [
+      0.15,
+      0.05,
+      0.35,
+      0.15
+    ],
+    "calculationProof": "21 CFR 101.60(c)(2) criteria check",
+    "visibilityStatus": "CONSUMER_VISIBLE",
+    "limitations": "Formulation status is draft; if honey and sugars are present in final production, claim violates 21 CFR 101.60(c)(2)."
+  },
+  {
+    "checkId": "DF-CHK-ZERO-ADDED-SUGARS",
+    "checkType": "ADDED_SUGAR_DECLARATION",
+    "findingStatus": "ADDED_SUGAR_VALUE_QUESTION",
+    "sourceApprovalStatus": "Draft / In Review",
+    "sourceLocation": "Content Sheet - US!B56",
+    "sourceQuote": "0g",
+    "artworkPanel": "Left",
+    "artworkQuote": "Incl. 0g Added Sugars",
+    "artworkBoundingBox": [
+      0.85,
+      0.45,
+      0.96,
+      0.75
+    ],
+    "calculationProof": "Recipe contains honey, coconut sugar, cane sugar; declared 0g added sugars.",
+    "visibilityStatus": "CONSUMER_VISIBLE",
+    "limitations": "Requires analytical formulation confirmation to verify whether added sugars contribute < 0.5g/serving."
+  },
+  {
+    "checkId": "DF-CHK-CLAIM-VEGAN",
+    "checkType": "CLAIM_SUBSTANTIATION",
+    "findingStatus": "VEGAN_CLAIM_SUBSTANTIATION_REVIEW",
+    "sourceApprovalStatus": "Draft / In Review",
+    "sourceLocation": "Content Sheet - US!B29",
+    "sourceQuote": "Certified Vegan (vegan.org)",
+    "artworkPanel": "Back",
+    "artworkQuote": "DIETARY INFORMATION: Suitable for Vegans.",
+    "artworkBoundingBox": [
+      0.46,
+      0.35,
+      0.65,
+      0.42
+    ],
+    "calculationProof": "Honey (bee product) excluded by Vegan Society standards; cholesterol indicates animal source or nutrition typo.",
+    "visibilityStatus": "CONSUMER_VISIBLE",
+    "limitations": "FDA does not formally define \"vegan\"; certification bodies (e.g. vegan.org) prohibit honey."
+  },
+  {
+    "checkId": "DF-CHK-ALLERGEN-TREE-NUTS",
+    "checkType": "ALLERGEN_DISCLOSURE",
+    "findingStatus": "ALLERGEN_DECLARATION_REVIEW",
+    "sourceApprovalStatus": "Draft / In Review",
+    "sourceLocation": "Content Sheet - US!B24",
+    "sourceQuote": "May Contain Almonds, May Contain Brazil Nuts, May Contain Pecan Nuts...",
+    "artworkPanel": "Back",
+    "artworkQuote": "ALLERGEN INFORMATION: May Contain Nuts",
+    "artworkBoundingBox": [
+      0.46,
+      0.68,
+      0.65,
+      0.74
+    ],
+    "calculationProof": "Tree nuts named in ingredient list satisfies FALCPA; absence of \"Contains:\" statement is legally permissible but triggers company policy review.",
+    "visibilityStatus": "CONSUMER_VISIBLE",
+    "limitations": "Under 21 U.S.C. 343(w), ingredient list disclosure satisfies FALCPA; separate \"Contains:\" is not universally mandatory under federal law."
+  },
+  {
+    "checkId": "DF-CHK-EU-ICONS-US-PACK",
+    "checkType": "MARKET_SPECIFIC_COPY",
+    "findingStatus": "MIXED_MARKET_TERMINOLOGY",
+    "sourceApprovalStatus": "Draft / In Review",
+    "sourceLocation": null,
+    "sourceQuote": null,
+    "artworkPanel": "Back",
+    "artworkQuote": "197kJ 4% Saturates Salt Cereals Containing Gluten",
+    "artworkBoundingBox": [
+      0.46,
+      0.78,
+      0.65,
+      0.88
+    ],
+    "calculationProof": "Detected EU-specific icons (\"197kJ 4%\"), \"Saturates\", \"Salt\", and \"Cereals Containing Gluten\".",
+    "visibilityStatus": "CONSUMER_VISIBLE",
+    "limitations": "EU format copy present on US carton; company packaging standard DF-11 prohibits EU elements on US SKUs."
+  },
+  {
+    "checkId": "DF-CHK-NET-QUANTITY",
+    "checkType": "LEGAL_METROLOGY",
+    "findingStatus": "NET_QUANTITY_FORMAT_DEFECT",
+    "sourceApprovalStatus": "Draft / In Review",
+    "sourceLocation": "Content Sheet - US!B35",
+    "sourceQuote": "480g",
+    "artworkPanel": "Back",
+    "artworkQuote": "480g",
+    "artworkBoundingBox": [
+      0.46,
+      0.88,
+      0.65,
+      0.94
+    ],
+    "calculationProof": "15 U.S.C. 1453 and 21 CFR 101.7 require dual declaration on the Principal Display Panel.",
+    "visibilityStatus": "CONSUMER_VISIBLE",
+    "limitations": "Metric-only statement on Back panel fails US FPLA statutory requirements."
+  },
+  {
+    "checkId": "DF-CHK-MAKER-ADDRESS",
+    "checkType": "LEGAL_DISCLOSURE",
+    "findingStatus": "MANUFACTURER_ADDRESS_INCOMPLETE",
+    "sourceApprovalStatus": "Draft / In Review",
+    "sourceLocation": null,
+    "sourceQuote": null,
+    "artworkPanel": "Back",
+    "artworkQuote": "PRODUCED BY DANCING FISH GRANOLA CO.",
+    "artworkBoundingBox": [
+      0.46,
+      0.94,
+      0.65,
+      0.98
+    ],
+    "calculationProof": "21 CFR 101.5 requirement: place of business must include city, state, and ZIP.",
+    "visibilityStatus": "CONSUMER_VISIBLE",
+    "limitations": "Street address can be omitted if listed in public directory, but city, state, and ZIP are mandatory."
+  },
+  {
+    "checkId": "DF-CHK-STORAGE-FONT-SIZE",
+    "checkType": "NATIVE_TYPOGRAPHY",
+    "findingStatus": "FONT_SIZE_DEFECT",
+    "sourceApprovalStatus": "Approved Company Rulebook",
+    "sourceLocation": null,
+    "sourceQuote": null,
+    "artworkPanel": "Back",
+    "artworkQuote": "Store in a cool, dry place. Once opened, keep packaging closed and eat within a month or by date shown, for best before, see base of pack.",
+    "artworkBoundingBox": [
+      0.13956,
+      0.74206,
+      0.22982,
+      0.76823
+    ],
+    "calculationProof": "Native PDF font size is 5.80 pt, which is below the mandatory 6.00 pt company standard.",
+    "visibilityStatus": "CONSUMER_VISIBLE",
+    "limitations": "Distinguishes native font point size (5.8 pt) from rendered bounding box height (28.3 pt) across 4 wrapped lines."
+  },
+  {
+    "checkId": "DF-CHK-HIDDEN-EU-TABLE",
+    "checkType": "PDF_STRUCTURAL_OCCLUSION",
+    "findingStatus": "OCCLUDED_OBJECT_DETECTED",
+    "sourceApprovalStatus": "Not Applicable",
+    "sourceLocation": null,
+    "sourceQuote": null,
+    "artworkPanel": "Left",
+    "artworkQuote": "Typical Values per 100g",
+    "artworkBoundingBox": [
+      0.86,
+      0.45,
+      0.96,
+      0.72
+    ],
+    "calculationProof": "Text span \"Typical Values per 100g\" exists at seqno 227; opaque fill rectangle at seqno 241 covers bbox.",
+    "visibilityStatus": "POTENTIALLY_OCCLUDED",
+    "limitations": "This text is NOT consumer-visible copy; it is an obsolete PDF artifact under an opaque white layer."
+  },
+  {
+    "checkId": "DF-CHK-DIELINE-GUIDES",
+    "checkType": "PRODUCTION_GUIDE_FILTERING",
+    "findingStatus": "CLASSIFIED_PRODUCTION_GUIDE",
+    "sourceApprovalStatus": "Structural Dieline Layer",
+    "sourceLocation": null,
+    "sourceQuote": null,
+    "artworkPanel": "Dieline Layer",
+    "artworkQuote": "Art orientation, Copy free, gl1",
+    "artworkBoundingBox": [
+      0.1,
+      0.1,
+      0.9,
+      0.9
+    ],
+    "calculationProof": "Layer \"Dimensions and text\" and pattern match \"Art orientation\" / \"Copy free\" classified as PRODUCTION_GUIDE.",
+    "visibilityStatus": "PRODUCTION_GUIDE",
+    "limitations": "Guide text is preserved for technical inspection but excluded from legal consumer-copy evaluation."
+  },
+  {
+    "checkId": "DF-CHK-UPC-BARCODE",
+    "checkType": "BARCODE_CHECK_DIGIT",
+    "findingStatus": "BARCODE_CHECK_DIGIT_VALID",
+    "sourceApprovalStatus": "Draft / In Review",
+    "sourceLocation": "Content Sheet - US!E12",
+    "sourceQuote": "1 20000 00003 6",
+    "artworkPanel": "Base",
+    "artworkQuote": "1 20000 00003 6",
+    "artworkBoundingBox": null,
+    "calculationProof": "Payload \"120000000036\": 3×(1+0+0+0+0+6) + 1×(2+0+0+0+3) = 3×7 + 5 = 26; next multiple 30; 30 - 24 = check digit 6.",
+    "visibilityStatus": "CONSUMER_VISIBLE",
+    "limitations": "Valid UPC-A check digit."
+  },
+  {
+    "checkId": "DF-CHK-SHEET-CARB-SUGAR-LOGIC",
+    "checkType": "SOURCE_DOCUMENT_QUALITY",
+    "findingStatus": "SOURCE_DOCUMENT_DEFECT",
+    "sourceApprovalStatus": "Draft / In Review",
+    "sourceLocation": "Content Sheet - US!B53, B55",
+    "sourceQuote": "B53 Total Carbohydrate: 15g; B55 Total Sugars: 18g",
+    "artworkPanel": null,
+    "artworkQuote": null,
+    "artworkBoundingBox": null,
+    "calculationProof": "SUGARS_EXCEED_CARBOHYDRATES",
+    "visibilityStatus": "NOT_APPLICABLE",
+    "limitations": "Source content sheet contains an arithmetic impossibility in nutritional values."
+  }
+]

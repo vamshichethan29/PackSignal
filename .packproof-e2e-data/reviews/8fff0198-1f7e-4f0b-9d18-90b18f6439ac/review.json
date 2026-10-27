@@ -1,0 +1,94 @@
+{
+  "id": "8fff0198-1f7e-4f0b-9d18-90b18f6439ac",
+  "name": "Fieldday · artwork V1",
+  "market": "Fictional company checklist",
+  "createdAt": "2026-10-24T11:18:27.819Z",
+  "status": "failed",
+  "progress": "Reading documents and locating evidence",
+  "mode": "local",
+  "options": {
+    "completeArtwork": false,
+    "sourceConfirmed": false,
+    "marketPreset": "none",
+    "panelZones": {
+      "front": {
+        "page": 1,
+        "box": [
+          0.03333333333333333,
+          0.06976744186046512,
+          0.425,
+          0.9325581395348838
+        ]
+      },
+      "back": {
+        "page": 1,
+        "box": [
+          0.44333333333333336,
+          0.06976744186046512,
+          0.9666666666666667,
+          0.9325581395348838
+        ]
+      }
+    },
+    "panelZoneSource": "authored synthetic sample geometry",
+    "confirmationFingerprints": {},
+    "staleConfirmations": {}
+  },
+  "files": [
+    {
+      "id": "9ef9d79d-eff4-4bcd-8dfc-b501aa1b53fc",
+      "name": "fieldday-v1.pdf",
+      "role": "artwork",
+      "disk": "9ef9d79d-eff4-4bcd-8dfc-b501aa1b53fc.pdf"
+    },
+    {
+      "id": "b1addcd1-73b7-4266-9290-e312f71ffb5c",
+      "name": "product-spec.json",
+      "role": "spec",
+      "disk": "b1addcd1-73b7-4266-9290-e312f71ffb5c.json"
+    },
+    {
+      "id": "50c2db67-6dd7-4ed3-a6f1-3dcfda47db6a",
+      "name": "company-rulebook.json",
+      "role": "rules",
+      "disk": "50c2db67-6dd7-4ed3-a6f1-3dcfda47db6a.json"
+    },
+    {
+      "id": "66da48a8-e895-42e4-9290-96904f05cecb",
+      "name": "claims-register.json",
+      "role": "claims",
+      "disk": "66da48a8-e895-42e4-9290-96904f05cecb.json"
+    }
+  ],
+  "documents": [],
+  "decisions": {},
+  "audit": [
+    {
+      "eventId": "155bff40-d71e-48f6-866a-1ed025c0caf0",
+      "reviewId": "8fff0198-1f7e-4f0b-9d18-90b18f6439ac",
+      "sequence": 1,
+      "timestampUTC": "2026-10-24T11:18:27.820Z",
+      "at": "2026-10-24T11:18:27.820Z",
+      "action": "review_created",
+      "detail": "Files supplied for review.",
+      "actorId": "local-user",
+      "actorName": "Local reviewer",
+      "actorType": "authenticated_user",
+      "targetType": "review",
+      "targetId": "8fff0198-1f7e-4f0b-9d18-90b18f6439ac",
+      "safeDetails": "Files supplied for review.",
+      "previousEventHash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "eventHash": "d715ed17649139fc337c6f07357773c21ff929fe41aed86e3ad787d728907bbf"
+    }
+  ],
+  "team": {
+    "createdBy": "local-user",
+    "createdByName": "Local reviewer",
+    "assignments": {},
+    "comments": [],
+    "approvals": [],
+    "assignmentHistory": []
+  },
+  "sample": "fieldday",
+  "error": "The server stopped during processing. Create a new review to retry."
+}

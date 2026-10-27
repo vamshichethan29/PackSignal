@@ -1,0 +1,26 @@
+{
+  "id": "US-001",
+  "version": "1.0.0",
+  "market": "us",
+  "regulator": "FDA",
+  "productScope": "conventional_packaged_food",
+  "sourceCitation": "21 CFR 101.105",
+  "sourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-G/section-101.105",
+  "sourceQuote": "The principal display panel of an edible food shall bear a declaration of the net quantity of contents in both customary inch/pound and metric units.",
+  "quoteVerificationStatus": "VERIFIED_QUOTATION",
+  "legalStatus": "IN_FORCE",
+  "effectiveDate": "2016-07-26",
+  "checkType": "QUANTITY_EQUIVALENCE",
+  "parameters": {
+    "field": "net_quantity",
+    "placement": "principal_display_panel",
+    "dualUnitsRequired": true
+  },
+  "requiredFacts": ["net_quantity"],
+  "applicability": {
+    "market": "us",
+    "foodCategory": "conventional_food"
+  },
+  "exceptions": ["Random weight packages with retail weighing"],
+  "reviewStatus": "APPROVED"
+}

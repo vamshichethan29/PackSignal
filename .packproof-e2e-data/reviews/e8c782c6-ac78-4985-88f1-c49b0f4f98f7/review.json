@@ -1,0 +1,62 @@
+{
+  "id": "e8c782c6-ac78-4985-88f1-c49b0f4f98f7",
+  "name": "Dancing Fish · Berry Crunch",
+  "market": "United States",
+  "createdAt": "2026-10-27T04:25:31.533Z",
+  "status": "failed",
+  "progress": "Reading documents and locating evidence",
+  "mode": "local",
+  "options": {
+    "completeArtwork": false,
+    "sourceConfirmed": false,
+    "marketPreset": "none",
+    "panelZones": {},
+    "confirmationFingerprints": {},
+    "staleConfirmations": {}
+  },
+  "files": [
+    {
+      "id": "bf96e316-1034-4618-8275-157720bbd671",
+      "name": "DancingFish_Granola_Berry_US_Carton.pdf",
+      "role": "artwork",
+      "disk": "bf96e316-1034-4618-8275-157720bbd671.pdf"
+    },
+    {
+      "id": "831c213e-78f7-4999-8cfd-3a0eed0da6c7",
+      "name": "DancingFish_Granola_BerryCrunch_US_Content_Sheet.xlsx",
+      "role": "spec",
+      "disk": "831c213e-78f7-4999-8cfd-3a0eed0da6c7.xlsx"
+    }
+  ],
+  "documents": [],
+  "decisions": {},
+  "audit": [
+    {
+      "eventId": "6f2e9141-a6f7-480d-9baf-f53c2e2cf04f",
+      "reviewId": "e8c782c6-ac78-4985-88f1-c49b0f4f98f7",
+      "sequence": 1,
+      "timestampUTC": "2026-10-27T04:25:31.578Z",
+      "at": "2026-10-27T04:25:31.578Z",
+      "action": "review_created",
+      "detail": "Files supplied for review.",
+      "actorId": "local-user",
+      "actorName": "Local reviewer",
+      "actorType": "authenticated_user",
+      "targetType": "review",
+      "targetId": "e8c782c6-ac78-4985-88f1-c49b0f4f98f7",
+      "safeDetails": "Files supplied for review.",
+      "previousEventHash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "eventHash": "c9234a94a647421eb16cf68c5affd0a76cbca0d6b8d0bbc384dd8016ae1c38e9"
+    }
+  ],
+  "team": {
+    "createdBy": "local-user",
+    "createdByName": "Local reviewer",
+    "assignments": {},
+    "comments": [],
+    "approvals": [],
+    "assignmentHistory": []
+  },
+  "sample": "organizer",
+  "error": "The server stopped during processing. Create a new review to retry."
+}

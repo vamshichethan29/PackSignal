@@ -1369,7 +1369,9 @@ dialog.wide {
     justify-self: start;
   }
   .tabs {
-    gap: 23px;
+    gap: 12px;
+    overflow-x: auto;
+    max-width: 100%;
   }
   .proof-grid {
     grid-template-columns: 1fr;

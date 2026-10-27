@@ -1,0 +1,46 @@
+{
+  "jurisdiction": "IN",
+  "authority": "FSSAI (Labelling and Display) Regulations, 2020",
+  "allergens": [
+    {
+      "name": "Cereals containing gluten",
+      "species": ["wheat", "rye", "barley", "oats", "spelt"],
+      "declarationType": "BOLD_OR_HIGHLIGHT"
+    },
+    {
+      "name": "Crustaceans and their products",
+      "species": ["crabs", "prawns", "lobsters"],
+      "declarationType": "MANDATORY"
+    },
+    {
+      "name": "Eggs and egg products",
+      "species": ["chicken egg"],
+      "declarationType": "MANDATORY"
+    },
+    {
+      "name": "Fish and fish products",
+      "species": ["finfish"],
+      "declarationType": "MANDATORY"
+    },
+    {
+      "name": "Peanuts, tree nuts and their products",
+      "species": ["almonds", "walnuts", "cashews", "pistachios", "pecans", "brazil nuts"],
+      "declarationType": "SPECIFIC_SPECIES_REQUIRED"
+    },
+    {
+      "name": "Soybeans and their products",
+      "species": ["soy"],
+      "declarationType": "MANDATORY"
+    },
+    {
+      "name": "Milk and milk products",
+      "species": ["cow milk", "buffalo milk"],
+      "declarationType": "MANDATORY"
+    },
+    {
+      "name": "Sulphite in concentrations of 10mg/kg or more",
+      "species": ["sulphur dioxide", "sulphites"],
+      "declarationType": "MANDATORY_THRESHOLD"
+    }
+  ]
+}

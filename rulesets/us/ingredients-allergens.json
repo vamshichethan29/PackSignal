@@ -1,0 +1,24 @@
+{
+  "id": "US-003",
+  "version": "1.0.0",
+  "market": "us",
+  "regulator": "FDA",
+  "productScope": "conventional_packaged_food",
+  "sourceCitation": "21 CFR 101.4, 21 U.S.C. 343(w)",
+  "sourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.4",
+  "sourceQuote": "Ingredients required to be declared on the label shall be listed by common or usual name in descending order of predominance by weight.",
+  "quoteVerificationStatus": "VERIFIED_QUOTATION",
+  "legalStatus": "IN_FORCE",
+  "effectiveDate": "2023-01-01",
+  "checkType": "EXACT_COPY",
+  "parameters": {
+    "field": "ingredients",
+    "majorAllergenList": ["milk", "egg", "fish", "shellfish", "tree_nuts", "peanuts", "wheat", "soybeans", "sesame"]
+  },
+  "requiredFacts": ["ingredients_list"],
+  "applicability": {
+    "market": "us"
+  },
+  "exceptions": ["Single ingredient foods whose common name is stated in the product identity"],
+  "reviewStatus": "APPROVED"
+}

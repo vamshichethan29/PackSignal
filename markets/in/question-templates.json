@@ -1,0 +1,42 @@
+{
+  "market": "IN",
+  "authority": "FSSAI & Legal Metrology",
+  "templates": [
+    {
+      "id": "q-in-mrp",
+      "ruleId": "FSSAI-GRANOLA-004",
+      "question": "Please provide the approved Indian maximum retail price (MRP incl. of all taxes).",
+      "context": "Legal Metrology Rule 6(1)(e) requires an explicit MRP declaration in Indian Rupees. PackSignal will not fabricate price data.",
+      "requiredFields": ["pricing.mrp_inr"],
+      "impact": "Unblocks MRP declaration block on Back panel and enables Unit Sale Price (USP) arithmetic.",
+      "defaultAnswer": "₹ 450.00 (inclusive of all taxes)"
+    },
+    {
+      "id": "q-in-fssai-licence",
+      "ruleId": "FSSAI-GRANOLA-006",
+      "question": "Please provide the 14-digit FSSAI Manufacturing / Importer Licence Number.",
+      "context": "FSSAI (Labelling and Display) Reg. 5(7) mandates the 14-digit licence identifier on the label.",
+      "requiredFields": ["company.fssai_licence_number"],
+      "impact": "Populates statutory FSSAI licence block contiguous to the FSSAI wordmark.",
+      "defaultAnswer": "10012011000142"
+    },
+    {
+      "id": "q-in-consumer-care",
+      "ruleId": "FSSAI-GRANOLA-007",
+      "question": "Please provide the complete Consumer Grievance / Care Contact details.",
+      "context": "Legal Metrology Rule 6(1)(f) requires Name, Address, Telephone, and Email of the consumer care contact.",
+      "requiredFields": ["company.care_email", "company.care_phone", "company.care_address"],
+      "impact": "Completes mandatory Consumer Care block on the Back panel.",
+      "defaultAnswer": "care@dancingfish.in | Toll-Free: 1800-11-2233 | 42 MG Road, Bengaluru 560001"
+    },
+    {
+      "id": "q-in-vegan-endorsement",
+      "ruleId": "FSSAI-GRANOLA-022",
+      "question": "Does this product have statutory FSSAI Vegan Logo endorsement approval?",
+      "context": "FSSAI Vegan Foods Regulations 2022 mandate prior FSSAI registration. Private vegan marks are not statutory proof in India, and honey is an animal-derived ingredient.",
+      "requiredFields": ["certifications.fssai_vegan_approval"],
+      "impact": "Determines whether the FSSAI Vegan Logo may appear or whether vegan claims must be removed.",
+      "defaultAnswer": "No official FSSAI vegan endorsement; remove vegan claim/mark due to honey content."
+    }
+  ]
+}

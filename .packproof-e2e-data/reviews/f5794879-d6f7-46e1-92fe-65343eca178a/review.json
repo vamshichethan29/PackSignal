@@ -1,0 +1,72 @@
+{
+  "id": "f5794879-d6f7-46e1-92fe-65343eca178a",
+  "name": "New packaging review",
+  "market": "Unspecified",
+  "createdAt": "2026-10-24T11:41:51.673Z",
+  "status": "failed",
+  "progress": "Review could not complete",
+  "mode": "ai",
+  "options": {
+    "completeArtwork": false,
+    "sourceConfirmed": false,
+    "marketPreset": "none",
+    "panelZones": {},
+    "confirmationFingerprints": {},
+    "staleConfirmations": {}
+  },
+  "files": [
+    {
+      "id": "664ac570-cd21-40bc-9b7b-ada29f96e8c7",
+      "name": "corrupt.pdf",
+      "role": "artwork",
+      "disk": "664ac570-cd21-40bc-9b7b-ada29f96e8c7.pdf"
+    }
+  ],
+  "documents": [],
+  "decisions": {},
+  "audit": [
+    {
+      "eventId": "16b4b67e-7431-44e6-ae07-468de6b7d804",
+      "reviewId": "f5794879-d6f7-46e1-92fe-65343eca178a",
+      "sequence": 1,
+      "timestampUTC": "2026-10-24T11:41:51.674Z",
+      "at": "2026-10-24T11:41:51.674Z",
+      "action": "review_created",
+      "detail": "Files supplied for review.",
+      "actorId": "local-user",
+      "actorName": "Local reviewer",
+      "actorType": "authenticated_user",
+      "targetType": "review",
+      "targetId": "f5794879-d6f7-46e1-92fe-65343eca178a",
+      "safeDetails": "Files supplied for review.",
+      "previousEventHash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "eventHash": "1f809bc7720327018422a81720b33ee9828ae089bc0e522688a878106aa6f2e8"
+    },
+    {
+      "eventId": "dac15c10-31c7-400b-a837-04200f82c885",
+      "reviewId": "f5794879-d6f7-46e1-92fe-65343eca178a",
+      "sequence": 2,
+      "timestampUTC": "2026-10-24T11:42:31.122Z",
+      "at": "2026-10-24T11:42:31.122Z",
+      "action": "analysis_failed",
+      "detail": "Failed to load document (PDFium: Data format error).",
+      "actorId": "system",
+      "actorName": "PackSignal System",
+      "actorType": "system",
+      "targetType": "review",
+      "targetId": "f5794879-d6f7-46e1-92fe-65343eca178a",
+      "safeDetails": "Failed to load document (PDFium: Data format error).",
+      "previousEventHash": "1f809bc7720327018422a81720b33ee9828ae089bc0e522688a878106aa6f2e8",
+      "eventHash": "adec37c503c07d1d33de1efd04fbb36ea9a320e16424fc5b2e51540e1c5a86f3"
+    }
+  ],
+  "team": {
+    "createdBy": "local-user",
+    "createdByName": "Local reviewer",
+    "assignments": {},
+    "comments": [],
+    "approvals": [],
+    "assignmentHistory": []
+  },
+  "error": "Failed to load document (PDFium: Data format error)."
+}

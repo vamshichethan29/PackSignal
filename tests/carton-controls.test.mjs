@@ -31,7 +31,7 @@ function setup(t,{angle=42,tilt=-13,reducedMotion=false}={}){
   const saved=new Map();
   const install=(key,value)=>{saved.set(key,Object.getOwnPropertyDescriptor(globalThis,key));Object.defineProperty(globalThis,key,{value,writable:true,configurable:true});};
   const win=new EventTarget(),doc=new EventTarget(),motion=new EventTarget(),callbacks=new Map();let nextFrame=0;
-  doc.hidden=false;motion.matches=reducedMotion;
+  doc.hidden=false;doc.getElementById=()=>null;motion.matches=reducedMotion;
   install('window',win);install('document',doc);install('matchMedia',()=>motion);install('ResizeObserver',undefined);
   install('requestAnimationFrame',callback=>{callbacks.set(++nextFrame,callback);return nextFrame;});
   install('cancelAnimationFrame',id=>callbacks.delete(id));

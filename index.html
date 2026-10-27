@@ -7,6 +7,10 @@
     <meta name="description" content="PackSignal — packaging decisions with evidence attached." />
     <title>PackSignal — Packaging review workspace</title>
     <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="creative-brief.css" />
+    <link rel="stylesheet" href="reviewer-lenses.css" />
+    <link rel="stylesheet" href="pack-canvas.css" />
+    <link rel="stylesheet" href="shopper-lenses.css" />
   </head>
   <body>
     <div class="app-shell">
@@ -25,6 +29,12 @@
         <div class="nav-label">WORKSPACE</div>
         <nav class="primary-nav">
           <button class="nav-item active" data-page="overview"><span class="nav-icon">◫</span>Overview</button>
+          <button class="nav-item" data-page="radar"><span class="nav-icon">🌐</span>India & Radar<span class="nav-count" id="radar-nav-count" style="background:#4f46e5;color:#fff;">P7</span></button>
+          <button class="nav-item" data-page="shopper"><span class="nav-icon">🛒</span>Shopper Lenses<span class="nav-count" id="shopper-nav-count" style="background:#ea580c;color:#fff;">UX</span></button>
+          <button class="nav-item" data-page="lenses"><span class="nav-icon">✍️</span>Reviewer Lenses<span class="nav-count" id="lenses-nav-count" style="background:#dc2626;color:#fff;">8</span></button>
+          <button class="nav-item" data-page="canvas"><span class="nav-icon">📐</span>Pack Canvas<span class="nav-count" id="canvas-nav-count" style="background:#16a34a;color:#fff;">Fit</span></button>
+          <button class="nav-item" data-page="desk"><span class="nav-icon">⚡</span>Evidence Desk<span class="nav-count" id="desk-nav-count">3</span></button>
+          <button class="nav-item" data-page="brief"><span class="nav-icon">📋</span>Creative Brief<span class="nav-count" id="brief-nav-count" style="background:#0284c7;color:#fff;">Draft</span></button>
           <button class="nav-item" data-page="reviews"><span class="nav-icon">▣</span>Reviews<span class="nav-count">1</span></button>
           <button class="nav-item" data-page="rules"><span class="nav-icon">☷</span>Rule library</button>
           <button class="nav-item" data-page="sources"><span class="nav-icon">▤</span>Source files</button>
@@ -69,7 +79,184 @@
           <footer class="page-footer"><span>PACKPROOF <i>·</i> PACKAGING DECISIONS WITH PROOF ATTACHED</span><span>PROTOTYPE 0.1 <b>◆</b></span></footer>
         </section>
 
+        <!-- Phase 4: Evidence Desk Page -->
+        <section id="desk-page" class="page desk-page hidden">
+          <div class="desk-header">
+            <div>
+              <div class="eyebrow">PHASE 4 — CORE UI FLOW <span class="eyebrow-line"></span> EVIDENCE DESK</div>
+              <div class="title-line">
+                <h1>Evidence Desk</h1>
+                <span class="desk-live-badge"><i class="status-dot status-green"></i>LIVE ENGINE</span>
+                <span class="desk-market-badge">MARKET: US (FDA) · LAUNCH: OCT 16, 2026</span>
+              </div>
+              <p>Upload multi-source files, inspect proven facts with clickable source chips, resolve active conflicts, and answer prioritized questions live.</p>
+            </div>
+            <div class="desk-header-actions">
+              <button id="desk-load-samples" class="button button-dark" title="Load official Esko sample files and Phase 4 inputs">
+                <span>⚡</span> Load Esko Samples + Extra Inputs
+              </button>
+              <button id="desk-open-upload" class="button button-outline" title="Upload custom document or paste notes">
+                <span>+</span> Add Document / Notes
+              </button>
+              <button id="desk-reset" class="button button-outline" title="Reset desk state">
+                <span>↻</span> Reset
+              </button>
+            </div>
+          </div>
+
+          <!-- Live Progress Stepper -->
+          <div class="desk-progress-panel">
+            <div class="desk-progress-top">
+              <div class="desk-stepper">
+                <div class="step-item step-done" id="step-intake"><span class="step-num">01</span><span class="step-icon">▤</span><div><strong>Multi-Source Intake</strong><small>PDF, XLSX, DOCX, Plain-PDF, Notes, Vision</small></div></div>
+                <span class="step-arrow">→</span>
+                <div class="step-item step-done" id="step-positions"><span class="step-num">02</span><span class="step-icon">⌕</span><div><strong>Piece Coordinates</strong><small>Panels, Cells, Paragraphs, Lines</small></div></div>
+                <span class="step-arrow">→</span>
+                <div class="step-item step-done" id="step-facts"><span class="step-num">03</span><span class="step-icon">⚖</span><div><strong>Fact Sheet & Quotes</strong><small>3 States, Unit conversions, Mark detection</small></div></div>
+                <span class="step-arrow">→</span>
+                <div class="step-item step-done" id="step-rules"><span class="step-num">04</span><span class="step-icon">☷</span><div><strong>FDA Rules & Math</strong><small>DVs, Atwater calories, Serving size</small></div></div>
+                <span class="step-arrow">→</span>
+                <div class="step-item step-done" id="step-ready"><span class="step-num">05</span><span class="step-icon">✓</span><div><strong>Ready & Interactive</strong><small>Conflicts, Questions, Brief Matrix</small></div></div>
+              </div>
+            </div>
+            <div class="desk-progress-bar-wrap">
+              <div class="desk-progress-bar"><span id="desk-progress-fill" style="width: 100%;"></span></div>
+              <span class="desk-progress-text" id="desk-progress-status">Ready · 6 source files parsed, 403 pieces located, 17 facts extracted, 3 conflicts flagged, 10 questions ranked.</span>
+            </div>
+          </div>
+
+          <!-- Summary Metric Strip -->
+          <div class="desk-metrics-strip">
+            <div class="d-metric"><small>SOURCES LINKED</small><strong id="d-metric-files">6</strong><span>PDF, XLSX, DOCX, Plain-PDF, TXT, PNG</span></div>
+            <div class="d-metric"><small>TOTAL PIECES</small><strong id="d-metric-pieces">403</strong><span>Located with exact coordinates</span></div>
+            <div class="d-metric"><small>PROVEN FACTS</small><strong class="metric-green" id="d-metric-proven">6</strong><span>Proven with verbatim sources</span></div>
+            <div class="d-metric"><small>AI-SUGGESTED</small><strong class="metric-blue" id="d-metric-ai">8</strong><span>Notes, unverified or vision facts</span></div>
+            <div class="d-metric attention-metric"><small>ACTIVE CONFLICTS</small><strong class="metric-red" id="d-metric-conflicts">3</strong><span>Require reviewer resolution</span></div>
+            <div class="d-metric"><small>QUESTIONS</small><strong class="metric-amber" id="d-metric-questions">10</strong><span>Ranked by regulatory impact</span></div>
+          </div>
+
+          <!-- 3-Column Desk Workspace -->
+          <div class="desk-workspace-grid">
+            <!-- Left Column: Source Files Desk -->
+            <section class="desk-col desk-files-col">
+              <div class="desk-col-header">
+                <div>
+                  <span class="section-kicker">EVIDENCE SOURCES</span>
+                  <h2>Source Files <span class="badge-count" id="files-badge-count">6</span></h2>
+                </div>
+                <button class="small-text-btn" id="btn-quick-upload">+ Intake</button>
+              </div>
+
+              <!-- Upload Dropzone -->
+              <div class="desk-dropzone" id="desk-dropzone">
+                <span class="dropzone-icon">↧</span>
+                <strong>Drop file here or click to browse</strong>
+                <small>Supports .pdf (dieline/plain), .xlsx (cols A–C), .docx (paragraphs), .txt (lines), .png/.jpg (vision)</small>
+                <input type="file" id="desk-file-input" style="display:none;" accept=".pdf,.xlsx,.xls,.docx,.txt,.text,.md,.png,.jpg,.jpeg,.webp" />
+              </div>
+
+              <!-- File Cards List -->
+              <div class="desk-files-list" id="desk-files-list"></div>
+            </section>
+
+            <!-- Middle Column: Conflict Cards & Questions Stack & Brief Matrix -->
+            <section class="desk-col desk-actions-col">
+              <!-- Conflict Cards Header -->
+              <div class="desk-col-header">
+                <div>
+                  <span class="section-kicker">DECISION REQUIRED</span>
+                  <h2>Conflict Cards <span class="badge-count badge-red" id="conflicts-badge-count">3</span></h2>
+                </div>
+                <small class="desk-header-hint">Resolve to update Fact Sheet</small>
+              </div>
+
+              <!-- Conflict Cards Container -->
+              <div class="conflict-cards-container" id="conflict-cards-container"></div>
+
+              <!-- Questions Stack Header -->
+              <div class="desk-col-header" style="margin-top: 24px;">
+                <div>
+                  <span class="section-kicker">REGULATORY & BRAND QUESTIONS</span>
+                  <h2>Questions Stack <span class="badge-count badge-amber" id="questions-badge-count">10</span></h2>
+                </div>
+                <small class="desk-header-hint">Ranked by impact · feeds brief</small>
+              </div>
+
+              <!-- Questions Stack Container -->
+              <div class="questions-stack-container" id="questions-stack-container"></div>
+
+              <!-- Creative Brief Matrix Feed -->
+              <div class="brief-feed-card" id="brief-feed-card">
+                <div class="brief-feed-header">
+                  <div>
+                    <span class="section-kicker">CREATIVE BRIEF FEED</span>
+                    <h3>Keep / Change / Add / Remove Matrix</h3>
+                  </div>
+                  <span class="feed-live-dot">● LIVE SYNC</span>
+                </div>
+                <div class="brief-matrix-grid">
+                  <div class="matrix-col matrix-keep">
+                    <div class="matrix-title"><span>✓</span> KEEP</div>
+                    <ul id="brief-matrix-keep"></ul>
+                  </div>
+                  <div class="matrix-col matrix-change">
+                    <div class="matrix-title"><span>✎</span> CHANGE</div>
+                    <ul id="brief-matrix-change"></ul>
+                  </div>
+                  <div class="matrix-col matrix-add">
+                    <div class="matrix-title"><span>+</span> ADD</div>
+                    <ul id="brief-matrix-add"></ul>
+                  </div>
+                  <div class="matrix-col matrix-remove">
+                    <div class="matrix-title"><span>✕</span> REMOVE</div>
+                    <ul id="brief-matrix-remove"></ul>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Right Column: Fact Sheet with Clickable Source Chips -->
+            <section class="desk-col desk-facts-col">
+              <div class="desk-col-header">
+                <div>
+                  <span class="section-kicker">GROUND TRUTH</span>
+                  <h2>Fact Sheet <span class="badge-count" id="facts-badge-count">17</span></h2>
+                </div>
+                <div class="facts-search-wrap">
+                  <input type="text" id="facts-search-input" placeholder="Search facts..." aria-label="Search facts" />
+                </div>
+              </div>
+
+              <!-- Fact Filter Tabs -->
+              <div class="facts-filter-tabs">
+                <button class="fact-tab active" data-fact-filter="all">All <span id="tab-cnt-all">17</span></button>
+                <button class="fact-tab" data-fact-filter="proven">Proven <span id="tab-cnt-proven">6</span></button>
+                <button class="fact-tab" data-fact-filter="ai">AI-Suggested <span id="tab-cnt-ai">8</span></button>
+                <button class="fact-tab" data-fact-filter="conflict">Conflicts <span id="tab-cnt-conflict">3</span></button>
+              </div>
+
+              <!-- Fact Sheet Table / List -->
+              <div class="fact-sheet-list" id="fact-sheet-list" aria-live="polite"></div>
+            </section>
+          </div>
+
+          <footer class="page-footer">
+            <span>PACKPROOF <i>·</i> EVIDENCE DESK CORE UI FLOW</span>
+            <span>PHASE 4 <b>◆</b> 100% PROVENANCE TRACEABLE</span>
+          </footer>
+        </section>
+
+        <!-- Phase 5A Reviewer Lenses Page -->
+        <section id="lenses-page" class="page hidden" style="padding: 1.5rem; max-width: 1500px; margin: 0 auto;"></section>
+
+        <!-- Phase 6 Pack Canvas Page -->
+        <section id="canvas-page" class="page hidden" style="padding: 1.5rem; max-width: 1500px; margin: 0 auto;"></section>
+
+        <!-- Phase 5 Creative Brief Page -->
+        <section id="brief-page" class="page hidden" style="padding: 1.5rem; max-width: 1400px; margin: 0 auto;"></section>
+
         <section id="review-page" class="page review-page hidden">
+
           <div class="review-title-row"><div><div class="breadcrumb-small"><button data-page="overview">Reviews</button><span>/</span><span>Fieldday Oat Drink</span></div><div class="title-line"><h1>Artwork review</h1><span class="review-live-badge"><i></i>IN REVIEW</span></div><p>Compare the print artwork against approved product facts and the supplied checklist.</p></div><button id="export-report" class="button button-outline">↧ <span>Export report</span></button></div>
           <div class="product-strip"><div class="product-ident"><span class="product-monogram">F</span><div><strong>Fieldday Oat Drink</strong><small>Original · SKU FD-OAT-1042</small></div></div><span class="strip-divider"></span><div class="strip-data"><small>MARKET</small><strong>India · demo scope</strong></div><div class="strip-data"><small>ARTWORK VERSION</small><strong>V07 <span class="version-change">↗ new</span></strong></div><div class="strip-data"><small>LAST REVIEWED</small><strong>Today, 10:38 AM</strong></div><button class="more-button" aria-label="More review options">···</button></div>
 
@@ -98,6 +285,70 @@
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <dialog id="scope-dialog" class="scope-dialog"><button class="dialog-close" id="close-scope" aria-label="Close">×</button><span class="section-kicker">SAMPLE REVIEW SCOPE</span><h2>What this review can tell you</h2><p>This demo compares the sample artwork with fictional product facts and a user-supplied style of checklist. It does not use live regulations or certify packaging for sale.</p><div class="scope-facts"><span><b>Product</b> Fieldday Original Oat Drink</span><span><b>Market</b> India · demo only</span><span><b>Rule source</b> Northstar internal sample checklist v1.2</span><span><b>Review run</b> PP-2026-1042 · artwork V07</span></div><button class="button button-dark" id="scope-done">Got it</button></dialog>
     <dialog id="evidence-dialog" class="scope-dialog evidence-dialog"><button class="dialog-close" id="close-evidence" aria-label="Close">×</button><span class="section-kicker">SOURCE EVIDENCE</span><h2 id="evidence-title">Evidence</h2><p id="evidence-description"></p><div id="evidence-quote" class="evidence-quote"></div><div id="evidence-location" class="evidence-location"></div><button class="button button-dark" id="evidence-done">Close evidence</button></dialog>
+
+    <!-- Phase 4 File Spot Inspector Dialog -->
+    <dialog id="file-spot-dialog" class="scope-dialog file-spot-dialog">
+      <button class="dialog-close" id="close-file-spot" aria-label="Close">×</button>
+      <div class="spot-dialog-header">
+        <span class="section-kicker">EXACT SOURCE SPOT</span>
+        <h2 id="spot-file-title">Source File Spot</h2>
+        <div class="spot-badges-row">
+          <span class="spot-type-badge" id="spot-type-badge">PDF DIELINE</span>
+          <span class="spot-location-badge" id="spot-location-badge">Back panel</span>
+          <span class="spot-proven-badge">✓ VERIFIED QUOTE</span>
+        </div>
+      </div>
+      <div class="spot-quote-box">
+        <small>VERBATIM EXTRACTED QUOTE</small>
+        <p id="spot-quote-text"></p>
+      </div>
+      <div class="spot-context-box">
+        <small>FILE LOCATION &amp; SURROUNDING CONTEXT</small>
+        <div id="spot-context-snippet" class="spot-snippet"></div>
+      </div>
+      <div class="spot-actions">
+        <button class="button button-dark" id="spot-close-btn">Done</button>
+      </div>
+    </dialog>
+
+    <!-- Phase 4 Upload / Paste Note Dialog -->
+    <dialog id="upload-dialog" class="scope-dialog upload-dialog">
+      <button class="dialog-close" id="close-upload-dialog" aria-label="Close">×</button>
+      <span class="section-kicker">INTAKE WORKSPACE</span>
+      <h2>Add Source Document or Paste Notes</h2>
+      <p>Add specifications (.docx, plain-PDF), notes (.txt / pasted), or images of an old design.</p>
+      
+      <div class="upload-tabs-row">
+        <button class="upload-tab active" id="tab-btn-file">Upload File</button>
+        <button class="upload-tab" id="tab-btn-paste">Paste Text / Notes</button>
+      </div>
+
+      <div id="upload-file-pane">
+        <div class="desk-dropzone" id="dialog-dropzone">
+          <span class="dropzone-icon">↧</span>
+          <strong>Select a file from your computer</strong>
+          <small>Accepts Word (.docx), plain PDF (.pdf), text (.txt), or images (.png, .jpg)</small>
+          <input type="file" id="dialog-file-input" style="display:none;" accept=".pdf,.docx,.txt,.md,.png,.jpg,.jpeg" />
+        </div>
+        <div id="dialog-selected-file" class="dialog-selected-file hidden">
+          <span class="file-icon">📄</span>
+          <strong id="selected-file-name"></strong>
+        </div>
+      </div>
+
+      <div id="upload-paste-pane" class="hidden">
+        <label for="paste-note-title" class="paste-label">Note Title / Source Name</label>
+        <input type="text" id="paste-note-title" class="paste-input" placeholder="e.g. QA_Handover_Notes.txt" />
+        <label for="paste-note-content" class="paste-label" style="margin-top: 8px;">Notes Content (Line numbers become source locations)</label>
+        <textarea id="paste-note-content" class="paste-textarea" rows="6" placeholder="Line 1: Batch formulation details...&#10;Line 2: Tree nut line validation note...&#10;Line 3: Honey sugar disclaimer..."></textarea>
+      </div>
+
+      <div class="dialog-btn-row">
+        <button class="button button-outline" id="cancel-upload-btn">Cancel</button>
+        <button class="button button-dark" id="submit-upload-btn">Process into Evidence Desk ↗</button>
+      </div>
+    </dialog>
+
     <script src="app.js"></script>
   </body>
 </html>

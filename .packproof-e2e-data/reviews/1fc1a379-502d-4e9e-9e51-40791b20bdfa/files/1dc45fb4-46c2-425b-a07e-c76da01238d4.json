@@ -1,0 +1,47 @@
+{
+  "document_id": "FD-SPEC-031",
+  "version": "3.1",
+  "status": "APPROVED_WITHIN_FICTIONAL_SCENARIO",
+  "effective_date": "2026-10-14",
+  "synthetic": true,
+  "notice": "Original synthetic PackSignal sample. No real product, regulatory approval, certification or commercial claim substantiation is represented.",
+  "product": {
+    "sku": "FD-OAT-1042",
+    "brand": "Fieldday",
+    "name": "Oat Drink",
+    "variant": "Original",
+    "net_quantity": {
+      "value": 1000,
+      "unit": "mL",
+      "preferred_display": "1 L",
+      "equivalent_display": "1000 mL"
+    },
+    "ingredients": "Water, oats (12%), sunflower oil, sea salt.",
+    "allergen_statement": "Contains oats.",
+    "storage_statement": "Refrigerate after opening.",
+    "manufacturer": "Northstar Foods (Fictional)",
+    "customer_care": "hello@fieldday.example",
+    "recycling_copy": "Carton recyclable where facilities exist."
+  },
+  "nutrition": {
+    "basis": {
+      "value": 100,
+      "unit": "mL"
+    },
+    "energy_kj": 196,
+    "energy_kcal": 47,
+    "fat_g": 1.5,
+    "saturates_g": 0.2,
+    "carbohydrate_g": 7.0,
+    "sugars_g": 3.5,
+    "fibre_g": 0.7,
+    "protein_g": 1.1,
+    "salt_g": 0.1
+  },
+  "scope": {
+    "language": "English",
+    "market_context": "Jurisdiction-neutral fictional company checklist",
+    "package": "Flat two-panel carton artwork; illustrative dimensions only"
+  },
+  "authority_note": "Approved means approved only inside this artificial scenario. Conflicting uploaded values must be surfaced; do not silently infer authority from dates or filenames."
+}

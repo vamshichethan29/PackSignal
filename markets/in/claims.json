@@ -1,0 +1,42 @@
+{
+  "jurisdiction": "IN",
+  "authority": "FSSAI (Advertising and Claims) Regulations, 2018",
+  "nutrientContentClaims": [
+    {
+      "claim": "No Added Sugar",
+      "aliases": ["no added sugars", "without added sugar", "zero added sugar"],
+      "citation": "FSSAI Reg. 4(3) & Schedule I",
+      "status": "RESTRICTED",
+      "prohibitedIfIngredientsContain": ["sugar", "honey", "jaggery", "glucose", "fructose", "syrup"],
+      "condition": "The food must contain no added sugars of any kind, including honey, and the naturally occurring sugars shall not exceed 10-15%."
+    },
+    {
+      "claim": "Natural",
+      "aliases": ["all natural", "100% natural"],
+      "citation": "FSSAI Reg. 4(1) & Schedule V",
+      "status": "RESTRICTED",
+      "condition": "Permitted only for single food without any processing except washing, peeling, chilling or freezing."
+    },
+    {
+      "claim": "Pure",
+      "aliases": ["100% pure"],
+      "citation": "FSSAI Reg. 4(2) & Schedule V",
+      "status": "RESTRICTED",
+      "condition": "Permitted only for single ingredient foods with nothing added and nothing taken away."
+    },
+    {
+      "claim": "100% Vegetarian",
+      "aliases": ["pure vegetarian", "vegetarian"],
+      "citation": "FSSAI Packaging Reg. 2.2.2.4",
+      "status": "PERMITTED_WITH_SYMBOL",
+      "condition": "Mandatory display of Green Veg Dot logo on Principal Display Panel."
+    },
+    {
+      "claim": "Certified Vegan",
+      "aliases": ["vegan", "100% vegan"],
+      "citation": "FSSAI (Vegan Foods) Regulations, 2022",
+      "status": "RESTRICTED",
+      "condition": "Must carry approved FSSAI Vegan Logo; prohibits animal/insect derived ingredients including bee-produced honey."
+    }
+  ]
+}

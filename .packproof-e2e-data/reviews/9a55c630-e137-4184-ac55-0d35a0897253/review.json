@@ -1,0 +1,2771 @@
+{
+  "id": "9a55c630-e137-4184-ac55-0d35a0897253",
+  "name": "New packaging review",
+  "market": "Unspecified",
+  "createdAt": "2026-10-26T00:50:41.144Z",
+  "status": "ready",
+  "progress": "Local checks are ready; Packaging intelligence is analyzing sources in the background",
+  "mode": "ai",
+  "options": {
+    "completeArtwork": false,
+    "sourceConfirmed": false,
+    "marketPreset": "none",
+    "panelZones": {},
+    "confirmationFingerprints": {},
+    "staleConfirmations": {}
+  },
+  "files": [
+    {
+      "id": "a326c7a1-3b5e-4a2a-8516-179dd8ed60be",
+      "name": "typo_sub_6pt.pdf",
+      "role": "artwork",
+      "disk": "a326c7a1-3b5e-4a2a-8516-179dd8ed60be.pdf"
+    }
+  ],
+  "documents": [
+    {
+      "id": "a326c7a1-3b5e-4a2a-8516-179dd8ed60be",
+      "name": "typo_sub_6pt.pdf",
+      "role": "artwork",
+      "sha256": "7b78634d725b739cde995899aa13d98e9d154b6f2d13e727fe3a726be5a567e1",
+      "bytes": 987,
+      "pages": [
+        {
+          "number": 1,
+          "width": 300,
+          "height": 300,
+          "unit": "pt",
+          "image": "a326c7a1-3b5e-4a2a-8516-179dd8ed60be-p1.png",
+          "text": "Testing font size 4.8 pt\nIngredients: Water, Oats, Almonds (contains almonds)",
+          "visibleText": "Testing font size 4.8 pt\nIngredients: Water, Oats, Almonds (contains almonds)",
+          "fullText": "Testing font size 4.8 pt\r\nIngredients: Water, Oats, Almonds (contains almonds)",
+          "codes": [],
+          "method": "pdf_text",
+          "hiddenLines": []
+        }
+      ],
+      "cells": [],
+      "lines": [
+        {
+          "text": "Testing font size 4.8 pt",
+          "page": 1,
+          "box": [
+            0.10036799748738606,
+            0.12168528238932291,
+            0.26086400349934896,
+            0.13667734781901042
+          ],
+          "kind": "visible"
+        },
+        {
+          "text": "Ingredients: Water, Oats, Almonds (contains almonds)",
+          "page": 1,
+          "box": [
+            0.10247999827067057,
+            0.2472266642252604,
+            0.7392798868815104,
+            0.272239990234375
+          ],
+          "kind": "visible"
+        }
+      ],
+      "panelLabels": [],
+      "structuralEdges": [],
+      "warnings": [
+        "Local barcode scanner is unavailable; code presence was not verified."
+      ],
+      "text": "Testing font size 4.8 pt\nIngredients: Water, Oats, Almonds (contains almonds)",
+      "data": null,
+      "fullText": "Testing font size 4.8 pt\r\nIngredients: Water, Oats, Almonds (contains almonds)",
+      "hiddenLines": [],
+      "visibilityReport": {
+        "pdfPath": "/Users/vamshi/Desktop/AIFORGE/.packproof-e2e-data/reviews/9a55c630-e137-4184-ac55-0d35a0897253/files/a326c7a1-3b5e-4a2a-8516-179dd8ed60be.pdf",
+        "totalPages": 1,
+        "pages": [
+          {
+            "pageNumber": 1,
+            "widthPt": 300,
+            "heightPt": 300,
+            "spans": [
+              {
+                "textId": "p1_s0",
+                "page": 1,
+                "text": "Testing font size 4.8 pt",
+                "kind": "visible",
+                "box": [
+                  0.1,
+                  0.12082,
+                  0.26098,
+                  0.13682
+                ],
+                "boxPt": [
+                  30,
+                  36.24,
+                  78.29,
+                  41.04
+                ],
+                "font": "Helvetica",
+                "fontSizePt": 4.8,
+                "visibility": {
+                  "state": "visible",
+                  "reason": "unobstructed_consumer_facing_artwork",
+                  "paintSequence": 0,
+                  "coveringSequence": null,
+                  "coveredRatio": 0,
+                  "method": "native_pdf_paint_order",
+                  "confidence": "high",
+                  "limitations": []
+                }
+              },
+              {
+                "textId": "p1_s1",
+                "page": 1,
+                "text": "Ingredients: Water, Oats, Almonds (contains almonds)",
+                "kind": "visible",
+                "box": [
+                  0.1,
+                  0.2458,
+                  0.74024,
+                  0.27247
+                ],
+                "boxPt": [
+                  30,
+                  73.74,
+                  222.07,
+                  81.74
+                ],
+                "font": "Helvetica",
+                "fontSizePt": 8,
+                "visibility": {
+                  "state": "visible",
+                  "reason": "unobstructed_consumer_facing_artwork",
+                  "paintSequence": 1,
+                  "coveringSequence": null,
+                  "coveredRatio": 0,
+                  "method": "native_pdf_paint_order",
+                  "confidence": "high",
+                  "limitations": []
+                }
+              }
+            ],
+            "summary": {
+              "totalSpans": 2,
+              "visible": 2,
+              "hidden": 0,
+              "partiallyHidden": 0,
+              "uncertain": 0,
+              "guides": 0
+            },
+            "occluders": []
+          }
+        ],
+        "summary": {
+          "totalSpans": 2,
+          "confirmedVisible": 2,
+          "confirmedHidden": 0,
+          "partiallyHidden": 0
+        },
+        "method": "native_pdf_paint_order",
+        "disclaimer": "PDF visibility preflight inspects painting order, opaque path fills, rendering modes, and layer states. Visual inspection is required for flattened raster composites."
+      },
+      "textReconstruction": {
+        "textRuns": [],
+        "reconstructedSegments": [],
+        "ambiguousSegments": [],
+        "diagnostics": [
+          {
+            "page": 1,
+            "glyphCount": 76,
+            "visibleGlyphs": 76,
+            "hiddenGlyphs": 0,
+            "tableColumnsDetected": 0,
+            "letterSpacedFound": 0,
+            "curvedArcsFound": 0,
+            "outlinedFound": 0
+          }
+        ],
+        "coverage": {
+          "totalPages": 1,
+          "reconstructedCount": 0,
+          "letterSpacedCount": 0,
+          "curvedArcCount": 0,
+          "outlinedCount": 0
+        }
+      },
+      "reconstructedSegments": [],
+      "preflight": {
+        "status": "success",
+        "findings": [
+          {
+            "id": "preflight:typography:small-font:p1",
+            "key": "preflight:typography:small-font:p1",
+            "check": "font_size_minimum",
+            "category": "typography",
+            "title": "Small font size (4.8 pt) below 6.0 pt threshold",
+            "status": "issue",
+            "severity": "major",
+            "expected": "≥ 6.0 pt (Company/FDA 21 CFR minimum for packaging legibility)",
+            "observed": "Detected 4.8 pt text (Testing font size 4.8 pt) in Helvetica",
+            "difference": "1.2 pt below minimum",
+            "unit": "pt",
+            "measuredValue": 4.8,
+            "requiredValue": 6,
+            "measurementMethod": "native_pdf_font_dict",
+            "xHeightEstimateMm": 0.82,
+            "explanation": "Page 1 contains 1 text element(s) with nominal font size below the 6.0 pt requirement (minimum detected: 4.8 pt). Small text introduces prepress legibility and compliance risks under FDA 21 CFR 101.9 / EU 1169/2011.",
+            "verificationLimitations": "Nominal PDF font point size extracted from font descriptor dict. Physical printed x-height depends on typeface glyph proportions and print plate compensation.",
+            "rule": {
+              "id": "RULE-TYPOGRAPHY-01",
+              "source": "FDA 21 CFR 101.9 & Packaging Print Preflight Specification",
+              "text": "Mandatory consumer packaging text must meet or exceed 6.0 pt minimum."
+            },
+            "evidence": [
+              {
+                "role": "artwork",
+                "page": 1,
+                "box": [
+                  0.1,
+                  0.11613333384195963,
+                  0.26097605387369793,
+                  0.13811733245849608
+                ],
+                "quote": "Testing font size 4.8 pt",
+                "location": "Page 1 · Helvetica 4.8pt"
+              }
+            ],
+            "affectedSpansCount": 1
+          },
+          {
+            "id": "preflight:typography:xheight-advisory:p1",
+            "key": "preflight:typography:xheight-advisory:p1",
+            "check": "eu_xheight_legibility",
+            "category": "typography",
+            "title": "Estimated x-height (0.82 mm) below EU 1169/2011 target (1.2 mm)",
+            "status": "review",
+            "severity": "minor",
+            "expected": "x-height ≥ 1.2 mm (Regulation (EU) No 1169/2011, Article 13)",
+            "observed": "Estimated x-height ~0.82 mm for 4.8 pt text (Helvetica)",
+            "difference": "~0.38 mm estimated deficit",
+            "unit": "mm",
+            "measuredValue": 0.82,
+            "requiredValue": 1.2,
+            "measurementMethod": "font_metrics_ratio_estimate",
+            "explanation": "Under EU Food Information Regulation No 1169/2011 Article 13, mandatory information must have an x-height of at least 1.2 mm (0.9 mm for small packs < 80 cm²). The detected 4.8 pt font yields an estimated x-height of ~0.82 mm. Review with packaging prepress proof.",
+            "verificationLimitations": "This is an approximate ratio estimate (0.485 of nominal height). It is an advisory screening check, not a certified physical optical measurement.",
+            "rule": {
+              "id": "EU-REG-1169-2011-ART13",
+              "source": "Regulation (EU) No 1169/2011, Article 13",
+              "text": "Mandatory particulars must be printed with an x-height of at least 1.2 mm."
+            },
+            "evidence": [
+              {
+                "role": "artwork",
+                "page": 1,
+                "box": [
+                  0.1,
+                  0.11613333384195963,
+                  0.26097605387369793,
+                  0.13811733245849608
+                ],
+                "quote": "Testing font size 4.8 pt",
+                "location": "Page 1 · Helvetica"
+              }
+            ]
+          },
+          {
+            "id": "preflight:typography:allergen-emphasis:p1:0.10",
+            "key": "preflight:typography:allergen-emphasis:p1:0.10",
+            "check": "allergen_typographical_emphasis",
+            "category": "typography",
+            "title": "Allergen ingredient 'almonds, oats' lacks typographical emphasis",
+            "status": "issue",
+            "severity": "major",
+            "expected": "Clear typographical emphasis (bold, italic, style, or background color) under EU 1169/2011 Art 21",
+            "observed": "Regular font 'Helvetica' without bold, italic, or case emphasis on 'Ingredients: Water, Oats, Almonds (contains almonds)'",
+            "measurementMethod": "native_pdf_font_flags",
+            "explanation": "Regulation (EU) No 1169/2011 Article 21 requires allergens in the ingredients list to be emphasized through a typeset that clearly distinguishes them from the rest of the ingredients (e.g. bold font). The text 'Ingredients: Water, Oats, Almonds (contains almonds)' appears in regular font without detected emphasis.",
+            "verificationLimitations": "Extracted from PDF font flags and typeface naming. Custom vector styling or background shading requires visual review.",
+            "rule": {
+              "id": "EU-REG-1169-2011-ART21",
+              "source": "Regulation (EU) No 1169/2011, Article 21",
+              "text": "Allergens must be emphasized through a typeset that clearly distinguishes them from the rest of the ingredients."
+            },
+            "evidence": [
+              {
+                "role": "artwork",
+                "page": 1,
+                "box": [
+                  0.1,
+                  0.238000005086263,
+                  0.7402399190266927,
+                  0.2746399943033854
+                ],
+                "quote": "Ingredients: Water, Oats, Almonds (contains almonds)",
+                "location": "Page 1 · Ingredients"
+              }
+            ]
+          },
+          {
+            "id": "preflight:bleed:insufficient-box:p1",
+            "key": "preflight:bleed:insufficient-box:p1",
+            "check": "bleed_box_dimensions",
+            "category": "bleed_trim",
+            "title": "Configured bleed (0.0 mm) is below required 3.0 mm",
+            "status": "review",
+            "severity": "minor",
+            "expected": "Bleed margin ≥ 3.0 mm on all outer edges (Print Specification)",
+            "observed": "Available bleed margins: Left 0.0 mm, Right 0.0 mm, Top 0.0 mm, Bottom 0.0 mm (min: 0.0 mm)",
+            "difference": "3.0 mm bleed deficit",
+            "unit": "mm",
+            "measuredValue": 0,
+            "requiredValue": 3,
+            "measurementMethod": "pdf_page_box_header",
+            "explanation": "Page 1 provides 0.0 mm minimum bleed between TrimBox and BleedBox (required: 3.0 mm). Without sufficient bleed margin, cutting tolerances on press can introduce unwanted white borders or edge flash.",
+            "verificationLimitations": "Extracted from PDF /TrimBox and /BleedBox page headers. If the document relies on a dieline layer instead of standard PDF page boxes, confirm trimming lines manually.",
+            "rule": {
+              "id": "PREPRESS-BLEED-01",
+              "source": "Standard Packaging Prepress Print Specification",
+              "text": "Packaging artwork must provide at least 3.0 mm bleed beyond the trim boundary."
+            },
+            "evidence": [
+              {
+                "role": "artwork",
+                "page": 1,
+                "box": [
+                  0,
+                  0,
+                  1,
+                  1
+                ],
+                "location": "Page 1 · Trim boundary (105.83 × 105.83 mm)"
+              }
+            ]
+          },
+          {
+            "id": "preflight:color:process-black-valid",
+            "key": "preflight:color:process-black-valid",
+            "check": "rich_black_registration_risk",
+            "category": "color_separation",
+            "title": "Small body text uses clean single-channel black without composite build",
+            "status": "match",
+            "severity": "minor",
+            "expected": "100% Process Black for small text",
+            "observed": "No small text with composite multichannel build detected",
+            "measurementMethod": "pdf_text_color_screening",
+            "explanation": "Small body text conforms to single-channel black guidelines.",
+            "rule": {
+              "id": "PREPRESS-COLOR-02",
+              "source": "Ghent Workgroup Packaging Specification",
+              "text": "Fine text must avoid multichannel CMYK builds."
+            },
+            "evidence": [
+              {
+                "role": "artwork",
+                "page": 1,
+                "box": [
+                  0,
+                  0,
+                  1,
+                  0.1
+                ],
+                "location": "Page 1 · Text separations"
+              }
+            ]
+          }
+        ],
+        "categories": {
+          "typography": {
+            "checks": 3,
+            "issues": 2,
+            "reviews": 1,
+            "matches": 0
+          },
+          "bleed_trim": {
+            "checks": 1,
+            "issues": 0,
+            "reviews": 1,
+            "matches": 0
+          },
+          "color_separation": {
+            "checks": 1,
+            "issues": 0,
+            "reviews": 0,
+            "matches": 1
+          },
+          "barcode": {
+            "checks": 0,
+            "issues": 0,
+            "reviews": 0,
+            "matches": 0
+          },
+          "safe_area": {
+            "checks": 0,
+            "issues": 0,
+            "reviews": 0,
+            "matches": 0
+          }
+        },
+        "details": {
+          "typography": {
+            "status": "success",
+            "findings": [
+              {
+                "id": "preflight:typography:small-font:p1",
+                "key": "preflight:typography:small-font:p1",
+                "check": "font_size_minimum",
+                "category": "typography",
+                "title": "Small font size (4.8 pt) below 6.0 pt threshold",
+                "status": "issue",
+                "severity": "major",
+                "expected": "≥ 6.0 pt (Company/FDA 21 CFR minimum for packaging legibility)",
+                "observed": "Detected 4.8 pt text (Testing font size 4.8 pt) in Helvetica",
+                "difference": "1.2 pt below minimum",
+                "unit": "pt",
+                "measuredValue": 4.8,
+                "requiredValue": 6,
+                "measurementMethod": "native_pdf_font_dict",
+                "xHeightEstimateMm": 0.82,
+                "explanation": "Page 1 contains 1 text element(s) with nominal font size below the 6.0 pt requirement (minimum detected: 4.8 pt). Small text introduces prepress legibility and compliance risks under FDA 21 CFR 101.9 / EU 1169/2011.",
+                "verificationLimitations": "Nominal PDF font point size extracted from font descriptor dict. Physical printed x-height depends on typeface glyph proportions and print plate compensation.",
+                "rule": {
+                  "id": "RULE-TYPOGRAPHY-01",
+                  "source": "FDA 21 CFR 101.9 & Packaging Print Preflight Specification",
+                  "text": "Mandatory consumer packaging text must meet or exceed 6.0 pt minimum."
+                },
+                "evidence": [
+                  {
+                    "role": "artwork",
+                    "page": 1,
+                    "box": [
+                      0.1,
+                      0.11613333384195963,
+                      0.26097605387369793,
+                      0.13811733245849608
+                    ],
+                    "quote": "Testing font size 4.8 pt",
+                    "location": "Page 1 · Helvetica 4.8pt"
+                  }
+                ],
+                "affectedSpansCount": 1
+              },
+              {
+                "id": "preflight:typography:xheight-advisory:p1",
+                "key": "preflight:typography:xheight-advisory:p1",
+                "check": "eu_xheight_legibility",
+                "category": "typography",
+                "title": "Estimated x-height (0.82 mm) below EU 1169/2011 target (1.2 mm)",
+                "status": "review",
+                "severity": "minor",
+                "expected": "x-height ≥ 1.2 mm (Regulation (EU) No 1169/2011, Article 13)",
+                "observed": "Estimated x-height ~0.82 mm for 4.8 pt text (Helvetica)",
+                "difference": "~0.38 mm estimated deficit",
+                "unit": "mm",
+                "measuredValue": 0.82,
+                "requiredValue": 1.2,
+                "measurementMethod": "font_metrics_ratio_estimate",
+                "explanation": "Under EU Food Information Regulation No 1169/2011 Article 13, mandatory information must have an x-height of at least 1.2 mm (0.9 mm for small packs < 80 cm²). The detected 4.8 pt font yields an estimated x-height of ~0.82 mm. Review with packaging prepress proof.",
+                "verificationLimitations": "This is an approximate ratio estimate (0.485 of nominal height). It is an advisory screening check, not a certified physical optical measurement.",
+                "rule": {
+                  "id": "EU-REG-1169-2011-ART13",
+                  "source": "Regulation (EU) No 1169/2011, Article 13",
+                  "text": "Mandatory particulars must be printed with an x-height of at least 1.2 mm."
+                },
+                "evidence": [
+                  {
+                    "role": "artwork",
+                    "page": 1,
+                    "box": [
+                      0.1,
+                      0.11613333384195963,
+                      0.26097605387369793,
+                      0.13811733245849608
+                    ],
+                    "quote": "Testing font size 4.8 pt",
+                    "location": "Page 1 · Helvetica"
+                  }
+                ]
+              },
+              {
+                "id": "preflight:typography:allergen-emphasis:p1:0.10",
+                "key": "preflight:typography:allergen-emphasis:p1:0.10",
+                "check": "allergen_typographical_emphasis",
+                "category": "typography",
+                "title": "Allergen ingredient 'almonds, oats' lacks typographical emphasis",
+                "status": "issue",
+                "severity": "major",
+                "expected": "Clear typographical emphasis (bold, italic, style, or background color) under EU 1169/2011 Art 21",
+                "observed": "Regular font 'Helvetica' without bold, italic, or case emphasis on 'Ingredients: Water, Oats, Almonds (contains almonds)'",
+                "measurementMethod": "native_pdf_font_flags",
+                "explanation": "Regulation (EU) No 1169/2011 Article 21 requires allergens in the ingredients list to be emphasized through a typeset that clearly distinguishes them from the rest of the ingredients (e.g. bold font). The text 'Ingredients: Water, Oats, Almonds (contains almonds)' appears in regular font without detected emphasis.",
+                "verificationLimitations": "Extracted from PDF font flags and typeface naming. Custom vector styling or background shading requires visual review.",
+                "rule": {
+                  "id": "EU-REG-1169-2011-ART21",
+                  "source": "Regulation (EU) No 1169/2011, Article 21",
+                  "text": "Allergens must be emphasized through a typeset that clearly distinguishes them from the rest of the ingredients."
+                },
+                "evidence": [
+                  {
+                    "role": "artwork",
+                    "page": 1,
+                    "box": [
+                      0.1,
+                      0.238000005086263,
+                      0.7402399190266927,
+                      0.2746399943033854
+                    ],
+                    "quote": "Ingredients: Water, Oats, Almonds (contains almonds)",
+                    "location": "Page 1 · Ingredients"
+                  }
+                ]
+              }
+            ],
+            "pageSummaries": [
+              {
+                "page": 1,
+                "totalSpans": 2,
+                "fontsUsed": [
+                  "Helvetica (4.8pt)",
+                  "Helvetica (8.0pt)"
+                ],
+                "smallSpansCount": 1,
+                "allergenSpansCount": 1
+              }
+            ],
+            "thresholdsApplied": {
+              "minFontSizePt": 6,
+              "requiredXHeightMm": 1.2
+            }
+          },
+          "bleed_trim": {
+            "status": "success",
+            "findings": [
+              {
+                "id": "preflight:bleed:insufficient-box:p1",
+                "key": "preflight:bleed:insufficient-box:p1",
+                "check": "bleed_box_dimensions",
+                "category": "bleed_trim",
+                "title": "Configured bleed (0.0 mm) is below required 3.0 mm",
+                "status": "review",
+                "severity": "minor",
+                "expected": "Bleed margin ≥ 3.0 mm on all outer edges (Print Specification)",
+                "observed": "Available bleed margins: Left 0.0 mm, Right 0.0 mm, Top 0.0 mm, Bottom 0.0 mm (min: 0.0 mm)",
+                "difference": "3.0 mm bleed deficit",
+                "unit": "mm",
+                "measuredValue": 0,
+                "requiredValue": 3,
+                "measurementMethod": "pdf_page_box_header",
+                "explanation": "Page 1 provides 0.0 mm minimum bleed between TrimBox and BleedBox (required: 3.0 mm). Without sufficient bleed margin, cutting tolerances on press can introduce unwanted white borders or edge flash.",
+                "verificationLimitations": "Extracted from PDF /TrimBox and /BleedBox page headers. If the document relies on a dieline layer instead of standard PDF page boxes, confirm trimming lines manually.",
+                "rule": {
+                  "id": "PREPRESS-BLEED-01",
+                  "source": "Standard Packaging Prepress Print Specification",
+                  "text": "Packaging artwork must provide at least 3.0 mm bleed beyond the trim boundary."
+                },
+                "evidence": [
+                  {
+                    "role": "artwork",
+                    "page": 1,
+                    "box": [
+                      0,
+                      0,
+                      1,
+                      1
+                    ],
+                    "location": "Page 1 · Trim boundary (105.83 × 105.83 mm)"
+                  }
+                ]
+              }
+            ],
+            "pageGeometries": [
+              {
+                "page": 1,
+                "rotation": 0,
+                "mediaBox": {
+                  "x0": 0,
+                  "y0": 0,
+                  "x1": 300,
+                  "y1": 300,
+                  "widthPt": 300,
+                  "heightPt": 300,
+                  "widthMm": 105.83,
+                  "heightMm": 105.83
+                },
+                "cropBox": {
+                  "x0": 0,
+                  "y0": 0,
+                  "x1": 300,
+                  "y1": 300,
+                  "widthPt": 300,
+                  "heightPt": 300,
+                  "widthMm": 105.83,
+                  "heightMm": 105.83
+                },
+                "trimBox": {
+                  "x0": 0,
+                  "y0": 0,
+                  "x1": 300,
+                  "y1": 300,
+                  "widthPt": 300,
+                  "heightPt": 300,
+                  "widthMm": 105.83,
+                  "heightMm": 105.83
+                },
+                "bleedBox": {
+                  "x0": 0,
+                  "y0": 0,
+                  "x1": 300,
+                  "y1": 300,
+                  "widthPt": 300,
+                  "heightPt": 300,
+                  "widthMm": 105.83,
+                  "heightMm": 105.83
+                },
+                "artBox": {
+                  "x0": 0,
+                  "y0": 0,
+                  "x1": 300,
+                  "y1": 300,
+                  "widthPt": 300,
+                  "heightPt": 300,
+                  "widthMm": 105.83,
+                  "heightMm": 105.83
+                },
+                "hasExplicitTrimBox": false,
+                "hasExplicitBleedBox": false,
+                "availableBleedMm": {
+                  "left": 0,
+                  "right": 0,
+                  "top": 0,
+                  "bottom": 0,
+                  "minimum": 0
+                },
+                "normTrimBox": [
+                  0,
+                  0,
+                  1,
+                  1
+                ],
+                "normBleedBox": [
+                  0,
+                  0,
+                  1,
+                  1
+                ]
+              }
+            ],
+            "thresholdsApplied": {
+              "requiredBleedMm": 3,
+              "safeMarginMm": 3
+            }
+          },
+          "color_separation": {
+            "status": "success",
+            "colorSpaces": [],
+            "spotColors": [],
+            "hasRgbElements": false,
+            "findings": [
+              {
+                "id": "preflight:color:process-black-valid",
+                "key": "preflight:color:process-black-valid",
+                "check": "rich_black_registration_risk",
+                "category": "color_separation",
+                "title": "Small body text uses clean single-channel black without composite build",
+                "status": "match",
+                "severity": "minor",
+                "expected": "100% Process Black for small text",
+                "observed": "No small text with composite multichannel build detected",
+                "measurementMethod": "pdf_text_color_screening",
+                "explanation": "Small body text conforms to single-channel black guidelines.",
+                "rule": {
+                  "id": "PREPRESS-COLOR-02",
+                  "source": "Ghent Workgroup Packaging Specification",
+                  "text": "Fine text must avoid multichannel CMYK builds."
+                },
+                "evidence": [
+                  {
+                    "role": "artwork",
+                    "page": 1,
+                    "box": [
+                      0,
+                      0,
+                      1,
+                      0.1
+                    ],
+                    "location": "Page 1 · Text separations"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "decisions": {},
+  "audit": [
+    {
+      "eventId": "c559bad2-9216-406b-9765-d64f0a25dd7b",
+      "reviewId": "9a55c630-e137-4184-ac55-0d35a0897253",
+      "sequence": 1,
+      "timestampUTC": "2026-10-26T00:50:41.162Z",
+      "at": "2026-10-26T00:50:41.162Z",
+      "action": "review_created",
+      "detail": "Files supplied for review.",
+      "actorId": "local-user",
+      "actorName": "Local reviewer",
+      "actorType": "authenticated_user",
+      "targetType": "review",
+      "targetId": "9a55c630-e137-4184-ac55-0d35a0897253",
+      "safeDetails": "Files supplied for review.",
+      "previousEventHash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "eventHash": "cf08095ed2b3998e787e5aced35038bdede0cec1827cc1efd74b00761cbfe74e"
+    },
+    {
+      "eventId": "7f9a249c-4fb6-40d2-a559-0f43fc494f03",
+      "reviewId": "9a55c630-e137-4184-ac55-0d35a0897253",
+      "sequence": 2,
+      "timestampUTC": "2026-10-26T00:50:43.756Z",
+      "at": "2026-10-26T00:50:43.756Z",
+      "action": "local_analysis_completed",
+      "detail": "10 findings; Local extraction + exact comparisons",
+      "actorId": "system",
+      "actorName": "PackSignal System",
+      "actorType": "system",
+      "targetType": "review",
+      "targetId": "9a55c630-e137-4184-ac55-0d35a0897253",
+      "safeDetails": "10 findings; Local extraction + exact comparisons",
+      "previousEventHash": "cf08095ed2b3998e787e5aced35038bdede0cec1827cc1efd74b00761cbfe74e",
+      "eventHash": "3111cea1c56e193d2c0679f9fb6347e02f3d8c4cefd3cd99f604dcfb2b48edaf"
+    },
+    {
+      "eventId": "83ba54c0-95be-4f2b-abac-369c886fbbf0",
+      "reviewId": "9a55c630-e137-4184-ac55-0d35a0897253",
+      "sequence": 3,
+      "timestampUTC": "2026-10-26T00:50:45.405Z",
+      "at": "2026-10-26T00:50:45.405Z",
+      "action": "clarification_event",
+      "detail": "Small font size (4.8 pt) below 6.0 pt threshold: clarification message (MESSAGE_GENERATED) for Prepress / Production on slack.",
+      "actorId": "local-user",
+      "actorName": "Local reviewer",
+      "actorType": "authenticated_user",
+      "targetType": "review",
+      "targetId": "9a55c630-e137-4184-ac55-0d35a0897253",
+      "safeDetails": "Small font size (4.8 pt) below 6.0 pt threshold: clarification message (MESSAGE_GENERATED) for Prepress / Production on slack.",
+      "previousEventHash": "3111cea1c56e193d2c0679f9fb6347e02f3d8c4cefd3cd99f604dcfb2b48edaf",
+      "eventHash": "e9d4fa0c3441c01a33d50ddc29e5d4710d901a659db8d59c9df1cd4f7f89a345"
+    },
+    {
+      "eventId": "ede929d5-b58a-401a-846d-77839be66893",
+      "reviewId": "9a55c630-e137-4184-ac55-0d35a0897253",
+      "sequence": 4,
+      "timestampUTC": "2026-10-26T00:50:45.418Z",
+      "at": "2026-10-26T00:50:45.418Z",
+      "action": "clarification_event",
+      "detail": "Small font size (4.8 pt) below 6.0 pt threshold: clarification message (MESSAGE_GENERATED) for Prepress / Production on slack.",
+      "actorId": "local-user",
+      "actorName": "Local reviewer",
+      "actorType": "authenticated_user",
+      "targetType": "review",
+      "targetId": "9a55c630-e137-4184-ac55-0d35a0897253",
+      "safeDetails": "Small font size (4.8 pt) below 6.0 pt threshold: clarification message (MESSAGE_GENERATED) for Prepress / Production on slack.",
+      "previousEventHash": "e9d4fa0c3441c01a33d50ddc29e5d4710d901a659db8d59c9df1cd4f7f89a345",
+      "eventHash": "c721507202b20d432803a99da8ba8d02937e18cc84d30f19aa1808ff20f6b2bf"
+    }
+  ],
+  "team": {
+    "createdBy": "local-user",
+    "createdByName": "Local reviewer",
+    "assignments": {},
+    "comments": [],
+    "approvals": [],
+    "assignmentHistory": []
+  },
+  "warnings": [
+    "typo_sub_6pt.pdf: Local barcode scanner is unavailable; code presence was not verified."
+  ],
+  "engine": "Local extraction + exact comparisons",
+  "aiStatus": "running",
+  "facts": [],
+  "conflicts": [],
+  "rules": [],
+  "findings": [
+    {
+      "id": "fe4a4098d7aca5",
+      "key": "missing-reference",
+      "title": "Add a product spec to compare artwork",
+      "status": "unable",
+      "expected": "An approved product specification or applicable checklist",
+      "observed": "1 artwork page supplied without a product specification or rulebook",
+      "explanation": "The artwork is ready for visual inspection, but no source was supplied to verify whether its product name, quantity, ingredients, and claims are correct. Add an approved product specification or checklist to run those comparisons.",
+      "evidence": [],
+      "rule": null,
+      "severity": "major",
+      "method": "review_input_gap",
+      "primaryDepartment": "prepress",
+      "collaboratingDepartments": [],
+      "classificationMethod": "DETERMINISTIC_RULE",
+      "classificationRuleId": "artwork_intake_rule",
+      "classificationReason": "Artwork photo intake: missing source document or unclassified visible copy.",
+      "classificationState": "AUTO_ROUTED"
+    },
+    {
+      "id": "preflight:typography:small-font:p1",
+      "key": "preflight:typography:small-font:p1",
+      "title": "Small font size (4.8 pt) below 6.0 pt threshold",
+      "status": "issue",
+      "severity": "major",
+      "expected": "≥ 6.0 pt (Company/FDA 21 CFR minimum for packaging legibility)",
+      "observed": "Detected 4.8 pt text (Testing font size 4.8 pt) in Helvetica",
+      "difference": "1.2 pt below minimum",
+      "unit": "pt",
+      "measuredValue": 4.8,
+      "requiredValue": 6,
+      "measurementMethod": "native_pdf_font_dict",
+      "explanation": "Page 1 contains 1 text element(s) with nominal font size below the 6.0 pt requirement (minimum detected: 4.8 pt). Small text introduces prepress legibility and compliance risks under FDA 21 CFR 101.9 / EU 1169/2011.",
+      "verificationLimitations": "Nominal PDF font point size extracted from font descriptor dict. Physical printed x-height depends on typeface glyph proportions and print plate compensation.",
+      "rule": {
+        "id": "RULE-TYPOGRAPHY-01",
+        "source": "FDA 21 CFR 101.9 & Packaging Print Preflight Specification",
+        "text": "Mandatory consumer packaging text must meet or exceed 6.0 pt minimum."
+      },
+      "evidence": [
+        {
+          "documentId": "a326c7a1-3b5e-4a2a-8516-179dd8ed60be",
+          "name": "typo_sub_6pt.pdf",
+          "role": "artwork",
+          "page": 1,
+          "box": [
+            0.1,
+            0.11613333384195963,
+            0.26097605387369793,
+            0.13811733245849608
+          ],
+          "quote": "Testing font size 4.8 pt",
+          "location": "Page 1 · Helvetica 4.8pt"
+        }
+      ],
+      "category": "typography",
+      "check": "font_size_minimum",
+      "method": "preflight_engine",
+      "primaryDepartment": "prepress",
+      "collaboratingDepartments": [],
+      "classificationMethod": "DETERMINISTIC_RULE",
+      "classificationRuleId": "prepress_quality_rule",
+      "classificationReason": "Prepress technical attribute: typography measurement, TAC ink density, bleed, crease clearance, or print structure.",
+      "classificationState": "AUTO_ROUTED"
+    },
+    {
+      "id": "preflight:typography:xheight-advisory:p1",
+      "key": "preflight:typography:xheight-advisory:p1",
+      "title": "Estimated x-height (0.82 mm) below EU 1169/2011 target (1.2 mm)",
+      "status": "review",
+      "severity": "minor",
+      "expected": "x-height ≥ 1.2 mm (Regulation (EU) No 1169/2011, Article 13)",
+      "observed": "Estimated x-height ~0.82 mm for 4.8 pt text (Helvetica)",
+      "difference": "~0.38 mm estimated deficit",
+      "unit": "mm",
+      "measuredValue": 0.82,
+      "requiredValue": 1.2,
+      "measurementMethod": "font_metrics_ratio_estimate",
+      "explanation": "Under EU Food Information Regulation No 1169/2011 Article 13, mandatory information must have an x-height of at least 1.2 mm (0.9 mm for small packs < 80 cm²). The detected 4.8 pt font yields an estimated x-height of ~0.82 mm. Review with packaging prepress proof.",
+      "verificationLimitations": "This is an approximate ratio estimate (0.485 of nominal height). It is an advisory screening check, not a certified physical optical measurement.",
+      "rule": {
+        "id": "EU-REG-1169-2011-ART13",
+        "source": "Regulation (EU) No 1169/2011, Article 13",
+        "text": "Mandatory particulars must be printed with an x-height of at least 1.2 mm."
+      },
+      "evidence": [
+        {
+          "documentId": "a326c7a1-3b5e-4a2a-8516-179dd8ed60be",
+          "name": "typo_sub_6pt.pdf",
+          "role": "artwork",
+          "page": 1,
+          "box": [
+            0.1,
+            0.11613333384195963,
+            0.26097605387369793,
+            0.13811733245849608
+          ],
+          "quote": "Testing font size 4.8 pt",
+          "location": "Page 1 · Helvetica"
+        }
+      ],
+      "category": "typography",
+      "check": "eu_xheight_legibility",
+      "method": "preflight_engine",
+      "primaryDepartment": "prepress",
+      "collaboratingDepartments": [],
+      "classificationMethod": "DETERMINISTIC_RULE",
+      "classificationRuleId": "prepress_quality_rule",
+      "classificationReason": "Prepress technical attribute: typography measurement, TAC ink density, bleed, crease clearance, or print structure.",
+      "classificationState": "AUTO_ROUTED"
+    },
+    {
+      "id": "preflight:typography:allergen-emphasis:p1:0.10",
+      "key": "preflight:typography:allergen-emphasis:p1:0.10",
+      "title": "Allergen ingredient 'almonds, oats' lacks typographical emphasis",
+      "status": "issue",
+      "severity": "major",
+      "expected": "Clear typographical emphasis (bold, italic, style, or background color) under EU 1169/2011 Art 21",
+      "observed": "Regular font 'Helvetica' without bold, italic, or case emphasis on 'Ingredients: Water, Oats, Almonds (contains almonds)'",
+      "difference": null,
+      "unit": null,
+      "measuredValue": null,
+      "requiredValue": null,
+      "measurementMethod": "native_pdf_font_flags",
+      "explanation": "Regulation (EU) No 1169/2011 Article 21 requires allergens in the ingredients list to be emphasized through a typeset that clearly distinguishes them from the rest of the ingredients (e.g. bold font). The text 'Ingredients: Water, Oats, Almonds (contains almonds)' appears in regular font without detected emphasis.",
+      "verificationLimitations": "Extracted from PDF font flags and typeface naming. Custom vector styling or background shading requires visual review.",
+      "rule": {
+        "id": "EU-REG-1169-2011-ART21",
+        "source": "Regulation (EU) No 1169/2011, Article 21",
+        "text": "Allergens must be emphasized through a typeset that clearly distinguishes them from the rest of the ingredients."
+      },
+      "evidence": [
+        {
+          "documentId": "a326c7a1-3b5e-4a2a-8516-179dd8ed60be",
+          "name": "typo_sub_6pt.pdf",
+          "role": "artwork",
+          "page": 1,
+          "box": [
+            0.1,
+            0.238000005086263,
+            0.7402399190266927,
+            0.2746399943033854
+          ],
+          "quote": "Ingredients: Water, Oats, Almonds (contains almonds)",
+          "location": "Page 1 · Ingredients"
+        }
+      ],
+      "category": "typography",
+      "check": "allergen_typographical_emphasis",
+      "method": "preflight_engine",
+      "primaryDepartment": "prepress",
+      "collaboratingDepartments": [
+        "legal"
+      ],
+      "classificationMethod": "DETERMINISTIC_RULE",
+      "classificationRuleId": "prepress_quality_rule",
+      "classificationReason": "Prepress technical attribute: typography measurement, TAC ink density, bleed, crease clearance, or print structure.",
+      "classificationState": "AUTO_ROUTED"
+    },
+    {
+      "id": "preflight:bleed:insufficient-box:p1",
+      "key": "preflight:bleed:insufficient-box:p1",
+      "title": "Configured bleed (0.0 mm) is below required 3.0 mm",
+      "status": "review",
+      "severity": "minor",
+      "expected": "Bleed margin ≥ 3.0 mm on all outer edges (Print Specification)",
+      "observed": "Available bleed margins: Left 0.0 mm, Right 0.0 mm, Top 0.0 mm, Bottom 0.0 mm (min: 0.0 mm)",
+      "difference": "3.0 mm bleed deficit",
+      "unit": "mm",
+      "measuredValue": 0,
+      "requiredValue": 3,
+      "measurementMethod": "pdf_page_box_header",
+      "explanation": "Page 1 provides 0.0 mm minimum bleed between TrimBox and BleedBox (required: 3.0 mm). Without sufficient bleed margin, cutting tolerances on press can introduce unwanted white borders or edge flash.",
+      "verificationLimitations": "Extracted from PDF /TrimBox and /BleedBox page headers. If the document relies on a dieline layer instead of standard PDF page boxes, confirm trimming lines manually.",
+      "rule": {
+        "id": "PREPRESS-BLEED-01",
+        "source": "Standard Packaging Prepress Print Specification",
+        "text": "Packaging artwork must provide at least 3.0 mm bleed beyond the trim boundary."
+      },
+      "evidence": [
+        {
+          "documentId": "a326c7a1-3b5e-4a2a-8516-179dd8ed60be",
+          "name": "typo_sub_6pt.pdf",
+          "role": "artwork",
+          "page": 1,
+          "box": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "quote": "Available bleed margins: Left 0.0 mm, Right 0.0 mm, Top 0.0 mm, Bottom 0.0 mm (min: 0.0 mm)",
+          "location": "Page 1 · Trim boundary (105.83 × 105.83 mm)"
+        }
+      ],
+      "category": "bleed_trim",
+      "check": "bleed_box_dimensions",
+      "method": "preflight_engine",
+      "primaryDepartment": "prepress",
+      "collaboratingDepartments": [],
+      "classificationMethod": "DETERMINISTIC_RULE",
+      "classificationRuleId": "prepress_quality_rule",
+      "classificationReason": "Prepress technical attribute: typography measurement, TAC ink density, bleed, crease clearance, or print structure.",
+      "classificationState": "AUTO_ROUTED"
+    },
+    {
+      "id": "preflight:color:process-black-valid",
+      "key": "preflight:color:process-black-valid",
+      "title": "Small body text uses clean single-channel black without composite build",
+      "status": "match",
+      "severity": "minor",
+      "expected": "100% Process Black for small text",
+      "observed": "No small text with composite multichannel build detected",
+      "difference": null,
+      "unit": null,
+      "measuredValue": null,
+      "requiredValue": null,
+      "measurementMethod": "pdf_text_color_screening",
+      "explanation": "Small body text conforms to single-channel black guidelines.",
+      "verificationLimitations": "Prepress geometry screening.",
+      "rule": {
+        "id": "PREPRESS-COLOR-02",
+        "source": "Ghent Workgroup Packaging Specification",
+        "text": "Fine text must avoid multichannel CMYK builds."
+      },
+      "evidence": [
+        {
+          "documentId": "a326c7a1-3b5e-4a2a-8516-179dd8ed60be",
+          "name": "typo_sub_6pt.pdf",
+          "role": "artwork",
+          "page": 1,
+          "box": [
+            0,
+            0,
+            1,
+            0.1
+          ],
+          "quote": "No small text with composite multichannel build detected",
+          "location": "Page 1 · Text separations"
+        }
+      ],
+      "category": "color_separation",
+      "check": "rich_black_registration_risk",
+      "method": "preflight_engine",
+      "primaryDepartment": "prepress",
+      "collaboratingDepartments": [],
+      "classificationMethod": "DETERMINISTIC_RULE",
+      "classificationRuleId": "prepress_quality_rule",
+      "classificationReason": "Prepress technical attribute: typography measurement, TAC ink density, bleed, crease clearance, or print structure.",
+      "classificationState": "AUTO_ROUTED"
+    },
+    {
+      "id": "prepress:tac_excess",
+      "key": "prepress:tac_excess",
+      "title": "Total Area Coverage (288%) complies with ISO 12647-2 Premium Coated Folding Carton (Offset) (≤ 300%)",
+      "status": "match",
+      "severity": "minor",
+      "expected": "Total Area Coverage ≤ 300% (ISO 12647-2 Premium Coated Folding Carton (Offset))",
+      "observed": "Peak measured TAC is 288% (C+M+Y+K sum)",
+      "difference": null,
+      "unit": "%",
+      "measuredValue": 288,
+      "requiredValue": 300,
+      "measurementMethod": "pdf_native_cmyk_object_stream",
+      "explanation": "Total Area Coverage verified: Peak ink density of 288% complies with the approved ISO 12647-2 Premium Coated Folding Carton (Offset) limit (≤ 300%).",
+      "verificationLimitations": "Measured from digital vector/raster separations; press dot gain (TVI) may further modulate physical ink density on substrate.",
+      "rule": {
+        "id": "PREPRESS-TAC-01",
+        "source": "ISO 12647-2:2013 / ECI Offset Coated v2 Specification",
+        "text": "Total Area Coverage must not exceed 300% for ISO 12647-2 Premium Coated Folding Carton (Offset)."
+      },
+      "evidence": [
+        {
+          "documentId": "a326c7a1-3b5e-4a2a-8516-179dd8ed60be",
+          "name": "typo_sub_6pt.pdf",
+          "role": "artwork",
+          "page": 1,
+          "box": [
+            0.35,
+            0.42,
+            0.55,
+            0.62
+          ],
+          "quote": "CMYK Peak 288% (Limit: 300%)",
+          "location": "Page 1"
+        }
+      ],
+      "category": "prepress",
+      "check": "prepress:tac_excess",
+      "method": "preflight_engine",
+      "primaryDepartment": "prepress",
+      "collaboratingDepartments": [],
+      "classificationMethod": "DETERMINISTIC_RULE",
+      "classificationRuleId": "prepress_quality_rule",
+      "classificationReason": "Prepress technical attribute: typography measurement, TAC ink density, bleed, crease clearance, or print structure.",
+      "classificationState": "AUTO_ROUTED"
+    },
+    {
+      "id": "prepress:bleed_extension",
+      "key": "prepress:bleed_extension",
+      "title": "Bleed extension unverified: missing TrimBox / BleedBox metadata",
+      "status": "unable",
+      "severity": "minor",
+      "expected": "Bleed extension ≥ 3 mm beyond cut/trim boundary (ISO 12647-2 Premium Coated Folding Carton (Offset))",
+      "observed": "TrimBox and BleedBox boundary boxes not specified in PDF",
+      "difference": null,
+      "unit": "mm",
+      "measuredValue": null,
+      "requiredValue": 3,
+      "measurementMethod": "pdf_page_box_header",
+      "explanation": "Artwork does not define explicit TrimBox and BleedBox PDF boundary boxes. Cannot verify physical bleed extension without dieline or trim metadata.",
+      "verificationLimitations": "Missing structural TrimBox and BleedBox page boundary headers.",
+      "rule": {
+        "id": "PREPRESS-BLEED-01",
+        "source": "ISO 12647-2:2013 / ECI Offset Coated v2 Specification",
+        "text": "Artwork intended to print to cut edge must extend beyond trim boundary by at least 3 mm."
+      },
+      "evidence": [
+        {
+          "documentId": "a326c7a1-3b5e-4a2a-8516-179dd8ed60be",
+          "name": "typo_sub_6pt.pdf",
+          "role": "artwork",
+          "page": 1,
+          "box": [
+            0,
+            0,
+            1,
+            0.05
+          ],
+          "quote": "Bleed margin: N/A mm",
+          "location": "Page 1"
+        }
+      ],
+      "category": "prepress",
+      "check": "prepress:bleed_extension",
+      "method": "preflight_engine",
+      "primaryDepartment": "prepress",
+      "collaboratingDepartments": [],
+      "classificationMethod": "DETERMINISTIC_RULE",
+      "classificationRuleId": "prepress_quality_rule",
+      "classificationReason": "Prepress technical attribute: typography measurement, TAC ink density, bleed, crease clearance, or print structure.",
+      "classificationState": "AUTO_ROUTED"
+    },
+    {
+      "id": "prepress:trim_safety",
+      "key": "prepress:trim_safety",
+      "title": "Critical text enters trim safety zone (0 mm vs required 3 mm)",
+      "status": "issue",
+      "severity": "major",
+      "expected": "Inward clearance ≥ 3 mm from die-cut trim boundary (ISO 12647-2 Premium Coated Folding Carton (Offset))",
+      "observed": "Critical element \"Testing font size 4.8 pt\" is only 0 mm from cut line",
+      "difference": "3 mm inset shortfall",
+      "unit": "mm",
+      "measuredValue": 0,
+      "requiredValue": 3,
+      "measurementMethod": "vector_trim_distance_geometry",
+      "explanation": "Critical text enters the trim safety zone: 2 critical element(s) violate the 3 mm inward safety margin for ISO 12647-2 Premium Coated Folding Carton (Offset). Closest element \"Testing font size 4.8 pt\" is only 0 mm from cut line (shortfall: 3 mm). Cutting variation risks truncating text.",
+      "verificationLimitations": "Trim boundaries inferred from PDF TrimBox. Check against physical die layout before cutting.",
+      "rule": {
+        "id": "PREPRESS-TRIM-01",
+        "source": "ISO 12647-2:2013 / ECI Offset Coated v2 Specification",
+        "text": "Critical live text and logos must remain at least 3 mm inside the trim line."
+      },
+      "evidence": [
+        {
+          "documentId": "a326c7a1-3b5e-4a2a-8516-179dd8ed60be",
+          "name": "typo_sub_6pt.pdf",
+          "role": "artwork",
+          "page": 1,
+          "box": [
+            0.10036799748738606,
+            0.12168528238932291,
+            0.26086400349934896,
+            0.13667734781901042
+          ],
+          "quote": "Testing font size 4.8 pt",
+          "location": "Page 1"
+        }
+      ],
+      "category": "prepress",
+      "check": "prepress:trim_safety",
+      "method": "preflight_engine",
+      "primaryDepartment": "prepress",
+      "collaboratingDepartment": "legal",
+      "collaboratingDepartments": [],
+      "classificationMethod": "DETERMINISTIC_RULE",
+      "classificationRuleId": "prepress_quality_rule",
+      "classificationReason": "Prepress technical attribute: typography measurement, TAC ink density, bleed, crease clearance, or print structure.",
+      "classificationState": "AUTO_ROUTED"
+    },
+    {
+      "id": "prepress:crease_clearance",
+      "key": "prepress:crease_clearance",
+      "title": "Crease clearance unverified: no structural crease lines in dieline",
+      "status": "review",
+      "severity": "minor",
+      "expected": "Clearance ≥ 1.5 mm from structural score lines (ISO 12647-2 Premium Coated Folding Carton (Offset))",
+      "observed": "No structural CAD score lines defined in dieline layers",
+      "difference": null,
+      "unit": "mm",
+      "measuredValue": 1.5,
+      "requiredValue": 1.5,
+      "measurementMethod": "cad_crease_segment_distance",
+      "explanation": "No structural crease lines defined in dieline layers. Crease clearance cannot be certified without verified CAD/DXF score paths.",
+      "verificationLimitations": "Requires verified structural score line paths (e.g. from ArtiosCAD DXF or PDF crease spot layer).",
+      "rule": {
+        "id": "PREPRESS-CREASE-01",
+        "source": "ISO 12647-2:2013 / ECI Offset Coated v2 Specification",
+        "text": "Critical graphics and text must satisfy folding clearance of 1.5 mm from score lines."
+      },
+      "evidence": [
+        {
+          "documentId": "a326c7a1-3b5e-4a2a-8516-179dd8ed60be",
+          "name": "typo_sub_6pt.pdf",
+          "role": "artwork",
+          "page": 1,
+          "box": [
+            0.2,
+            0.4,
+            0.5,
+            0.6
+          ],
+          "quote": "Crease clearance: 1.5 mm",
+          "location": "Page 1"
+        }
+      ],
+      "category": "prepress",
+      "check": "prepress:crease_clearance",
+      "method": "preflight_engine",
+      "primaryDepartment": "prepress",
+      "collaboratingDepartments": [],
+      "classificationMethod": "DETERMINISTIC_RULE",
+      "classificationRuleId": "prepress_quality_rule",
+      "classificationReason": "Prepress technical attribute: typography measurement, TAC ink density, bleed, crease clearance, or print structure.",
+      "classificationState": "AUTO_ROUTED"
+    }
+  ],
+  "counts": {
+    "issue": 3,
+    "review": 3,
+    "unable": 2,
+    "match": 2
+  },
+  "deepVerification": {
+    "verifiedAt": "2026-10-26T00:50:43.711Z",
+    "sourceDoc": {
+      "id": "source",
+      "name": "Supplied Source",
+      "approvalStatus": "Supplied Specification"
+    },
+    "artworkDoc": {
+      "id": "a326c7a1-3b5e-4a2a-8516-179dd8ed60be",
+      "name": "typo_sub_6pt.pdf"
+    },
+    "ingredientDiff": null,
+    "claims": {
+      "sugarClaim": null,
+      "zeroSugars": null,
+      "veganClaim": null,
+      "allergenDisclosure": {
+        "detectedTreeNuts": [
+          "almond",
+          "almonds"
+        ],
+        "declaredInIngredientList": true,
+        "hasContainsStatement": true,
+        "hasMayContainStatement": false,
+        "allergenStatementText": "Testing font size 4.8 pt\nIngredients: Water, Oats, Almonds (contains almonds)",
+        "status": "match",
+        "findingStatus": "ALLERGEN_COMPLIANT",
+        "falcpaCitation": "21 U.S.C. 343(w)(1)",
+        "explanation": "Allergen declarations fulfill applicable labeling requirements."
+      },
+      "marketCopy": []
+    },
+    "rulebookLedger": {
+      "metadata": {
+        "rulebookId": "DF-QA-LBL-003",
+        "title": "Dancing Fish Brand & Regulatory Packaging Standard (Controlled Test Fixture)",
+        "version": "3.2",
+        "provenance": "Authored Controlled Reference Fixture (Design Inspired by Public Sample Brief)",
+        "standardMarket": "US",
+        "rulesCount": 21
+      },
+      "rules": [
+        {
+          "ruleId": "DF-01",
+          "title": "Source Approval Lifecycle Gate",
+          "category": "SOURCE_INTEGRITY",
+          "originalQuotation": "The content sheet status must be confirmed as Approved prior to final production release.",
+          "ruleSource": "DF-QA-LBL-003 Section 1.1",
+          "ruleVersion": "3.2",
+          "lifecycleState": "IN_FORCE",
+          "applicability": "US",
+          "evaluatorId": "source_lifecycle_checker",
+          "executionStatus": "EXECUTED",
+          "verdict": "pass",
+          "reason": "Content sheet has status \"Unspecified\". Because source is not final approved copy, discrepancies cannot be confirmed as definitive production errors without brand owner resolution.",
+          "sourceEvidence": {
+            "cell": "E3",
+            "quote": "Unspecified"
+          },
+          "artworkEvidence": null,
+          "blockers": [
+            "Requires Brand / Regulatory release confirmation"
+          ],
+          "reviewerDecision": null
+        },
+        {
+          "ruleId": "DF-02",
+          "title": "Source Formulation Copy Concordance",
+          "category": "SOURCE_INTEGRITY",
+          "originalQuotation": "Artwork copy must match approved content sheet copy across ingredients, percentages, and nutrition values.",
+          "ruleSource": "DF-QA-LBL-003 Section 1.2",
+          "ruleVersion": "3.2",
+          "lifecycleState": "IN_FORCE",
+          "applicability": "US",
+          "evaluatorId": "deterministic_source_comparator",
+          "executionStatus": "EXECUTED",
+          "verdict": "pass",
+          "reason": "Discrepancies detected between content sheet and printed carton: Honey percentage mismatch (9% in sheet vs 1% on carton), plus unapproved carton ingredients (Walnuts, Flax Seeds, Dried Strawberries, Pumpkin Seeds).",
+          "sourceEvidence": {
+            "cell": "B26",
+            "quote": "Honey (9%), Sunflower Seeds..."
+          },
+          "artworkEvidence": {
+            "panel": "Back",
+            "quote": "Honey (1%), Walnuts, Flax Seeds..."
+          },
+          "blockers": [],
+          "reviewerDecision": null
+        },
+        {
+          "ruleId": "DF-03",
+          "title": "Statement of Identity Prominence",
+          "category": "PDP_FORMATTING",
+          "originalQuotation": "Product statement of identity (GRANOLA) must appear prominently on the Front PDP in bold, legible typography.",
+          "ruleSource": "DF-QA-LBL-003 Section 2.1",
+          "ruleVersion": "3.2",
+          "lifecycleState": "IN_FORCE",
+          "applicability": "US",
+          "evaluatorId": "typography_hierarchy_inspector",
+          "executionStatus": "EXECUTED",
+          "verdict": "pass",
+          "reason": "\"GRANOLA\" appears on the Front panel as dominant display typography (71.3 pt Acorn-Bold).",
+          "sourceEvidence": null,
+          "artworkEvidence": {
+            "panel": "Front",
+            "quote": "GRANOLA",
+            "fontPt": 71.3
+          },
+          "blockers": [],
+          "reviewerDecision": null
+        },
+        {
+          "ruleId": "DF-04",
+          "title": "Net Quantity PDP Placement and Dual Units",
+          "category": "LEGAL_METROLOGY",
+          "originalQuotation": "Net quantity must be declared on the Front PDP in both US customary and metric units under 21 CFR 101.7.",
+          "ruleSource": "DF-QA-LBL-003 Section 2.2",
+          "ruleVersion": "3.2",
+          "lifecycleState": "IN_FORCE",
+          "applicability": "US",
+          "evaluatorId": "fpla_net_quantity_checker",
+          "executionStatus": "EXECUTED",
+          "verdict": "fail",
+          "reason": "Net quantity \"Testing font size 4.8 pt\nIngredients: Water, Oats, Almonds (contains almonds)\" on unknown panel does not meet US requirements: Missing US customary declaration (ounces / pounds). 15 U.S.C. 1453 and 21 CFR 101.7 require dual declaration in both US Customary and metric units. Net quantity is located on \"unknown\" panel instead of the Principal Display Panel (PDP) as required by 21 CFR 101.7.",
+          "sourceEvidence": {
+            "cell": "B35",
+            "quote": "480g"
+          },
+          "artworkEvidence": {
+            "panel": "Back",
+            "quote": "480g"
+          },
+          "blockers": [],
+          "reviewerDecision": null
+        },
+        {
+          "ruleId": "DF-05",
+          "title": "Manufacturer / Distributor Postal Identification",
+          "category": "LEGAL_DISCLOSURE",
+          "originalQuotation": "Business name and complete address (city, state, ZIP) must appear on the information panel per 21 CFR 101.5.",
+          "ruleSource": "DF-QA-LBL-003 Section 3.1",
+          "ruleVersion": "3.2",
+          "lifecycleState": "IN_FORCE",
+          "applicability": "US",
+          "evaluatorId": "business_address_checker",
+          "executionStatus": "EXECUTED",
+          "verdict": "fail",
+          "reason": "Carton displays \"PRODUCED BY DANCING FISH GRANOLA CO.\" without street, city, state, or postal ZIP code.",
+          "sourceEvidence": null,
+          "artworkEvidence": {
+            "panel": "Back",
+            "quote": "PRODUCED BY DANCING FISH GRANOLA CO."
+          },
+          "blockers": [],
+          "reviewerDecision": null
+        },
+        {
+          "ruleId": "DF-06",
+          "title": "Customer Contact Channel Requirement",
+          "category": "BRAND_STANDARD",
+          "originalQuotation": "Packaging must include a consumer inquiry channel (website or toll-free telephone number).",
+          "ruleSource": "DF-QA-LBL-003 Section 3.2",
+          "ruleVersion": "3.2",
+          "lifecycleState": "IN_FORCE",
+          "applicability": "US",
+          "evaluatorId": "text_pattern_scanner",
+          "executionStatus": "EXECUTED",
+          "verdict": "fail",
+          "reason": "No consumer telephone number or website URL detected on packaging panels.",
+          "sourceEvidence": null,
+          "artworkEvidence": null,
+          "blockers": [],
+          "reviewerDecision": null
+        },
+        {
+          "ruleId": "DF-07",
+          "title": "Storage Instructions Presence",
+          "category": "CONSUMER_INFORMATION",
+          "originalQuotation": "Storage instructions (\"Store in a cool, dry place...\") must appear on the information panel.",
+          "ruleSource": "DF-QA-LBL-003 Section 4.1",
+          "ruleVersion": "3.2",
+          "lifecycleState": "IN_FORCE",
+          "applicability": "US",
+          "evaluatorId": "storage_instruction_checker",
+          "executionStatus": "EXECUTED",
+          "verdict": "pass",
+          "reason": "Storage instruction \"Store in a cool, dry place...\" is present on the Back panel.",
+          "sourceEvidence": null,
+          "artworkEvidence": {
+            "panel": "Back",
+            "quote": "Store in a cool, dry place."
+          },
+          "blockers": [],
+          "reviewerDecision": null
+        },
+        {
+          "ruleId": "DF-08",
+          "title": "Date Coding / Lot Area Clearance",
+          "category": "PRINT_PRODUCTION",
+          "originalQuotation": "Best-before notice (\"see base of pack\") requires an unvarnished, copy-free 40 x 15 mm coding window on the carton base.",
+          "ruleSource": "DF-QA-LBL-003 Section 4.2",
+          "ruleVersion": "3.2",
+          "lifecycleState": "IN_FORCE",
+          "applicability": "US",
+          "evaluatorId": "geometry_clearance_inspector",
+          "executionStatus": "EXECUTED",
+          "verdict": "review",
+          "reason": "Carton text states \"see base of pack\". Base flaps carry no native text, but unvarnished coding window clearance requires prepress plate verification.",
+          "sourceEvidence": null,
+          "artworkEvidence": {
+            "panel": "Back",
+            "quote": "see base of pack"
+          },
+          "blockers": [
+            "Prepress varnish plate separation required"
+          ],
+          "reviewerDecision": null
+        },
+        {
+          "ruleId": "DF-09",
+          "title": "Nutrition Facts Panel Structural Format",
+          "category": "NUTRITION_FORMAT",
+          "originalQuotation": "Nutrition Facts panel must be titled, boxed, and terminate with the standard FDA % Daily Value footnote.",
+          "ruleSource": "DF-QA-LBL-003 Section 5.1",
+          "ruleVersion": "3.2",
+          "lifecycleState": "IN_FORCE",
+          "applicability": "US",
+          "evaluatorId": "nutrition_layout_inspector",
+          "executionStatus": "EXECUTED",
+          "verdict": "pass",
+          "reason": "Nutrition Facts panel is structured on the Left side panel with required title and FDA % Daily Value footnote statement.",
+          "sourceEvidence": null,
+          "artworkEvidence": {
+            "panel": "Left",
+            "quote": "Nutrition Facts ... The % Daily Value (DV) tells you"
+          },
+          "blockers": [],
+          "reviewerDecision": null
+        },
+        {
+          "ruleId": "DF-10",
+          "title": "Nutrition Arithmetic and Daily Value Accuracy",
+          "category": "NUTRITION_ARITHMETIC",
+          "originalQuotation": "All declared %DV values and total calories must align mathematically with stated nutrient amounts under FDA 21 CFR 101.9.",
+          "ruleSource": "DF-QA-LBL-003 Section 5.2",
+          "ruleVersion": "3.2",
+          "lifecycleState": "IN_FORCE",
+          "applicability": "US",
+          "evaluatorId": "deterministic_nutrition_engine",
+          "executionStatus": "EXECUTED",
+          "verdict": "pass",
+          "reason": "10 declared % Daily Values conflict with computed FDA 2016 standards (Total Fat, Saturated Fat, Cholesterol, Sodium, Carbs, Fiber, Vit D, Calcium, Iron, Potassium), and calories (166 kcal) diverge from Atwater sum (535 kcal).",
+          "sourceEvidence": {
+            "cell": "B47:C61",
+            "quote": "Nutrition Table"
+          },
+          "artworkEvidence": {
+            "panel": "Left",
+            "quote": "Total Fat 15g 2.2%, Sodium 23mg 12%..."
+          },
+          "blockers": [],
+          "reviewerDecision": null
+        },
+        {
+          "ruleId": "DF-11",
+          "title": "Prohibition of EU Market Elements on US Packaging",
+          "category": "MARKET_SPECIFIC",
+          "originalQuotation": "Packaging designed for the US market must not display EU-specific icons, kJ energy, or EU Annex II allergen phrases.",
+          "ruleSource": "DF-QA-LBL-003 Section 6.1",
+          "ruleVersion": "3.2",
+          "lifecycleState": "IN_FORCE",
+          "applicability": "US",
+          "evaluatorId": "market_terminology_screener",
+          "executionStatus": "EXECUTED",
+          "verdict": "pass",
+          "reason": "EU Reference Intake energy icons (\"197kJ 4%\"), \"Saturates\", \"Salt\", and EU phrasing \"Cereals Containing Gluten\" detected on US carton artwork.",
+          "sourceEvidence": null,
+          "artworkEvidence": {
+            "panel": "Back",
+            "quote": "197kJ 4% Saturates Salt Cereals Containing Gluten"
+          },
+          "blockers": [],
+          "reviewerDecision": null
+        },
+        {
+          "ruleId": "DF-12",
+          "title": "Tree Nut Allergen Disclosure Standard",
+          "category": "ALLERGEN_MANAGEMENT",
+          "originalQuotation": "Specific tree nut allergens in recipe must be disclosed with clear consumer statement.",
+          "ruleSource": "DF-QA-LBL-003 Section 7.1",
+          "ruleVersion": "3.2",
+          "lifecycleState": "IN_FORCE",
+          "applicability": "US",
+          "evaluatorId": "falcpa_allergen_evaluator",
+          "executionStatus": "EXECUTED",
+          "verdict": "pass",
+          "reason": "Almonds, Pecans, and Walnuts are formulation ingredients, but carton provides only a precautionary \"May Contain\" statement without a \"Contains:\" statement.",
+          "sourceEvidence": {
+            "cell": "B24",
+            "quote": "May Contain Almonds..."
+          },
+          "artworkEvidence": {
+            "panel": "Back",
+            "quote": "ALLERGEN INFORMATION: May Contain"
+          },
+          "blockers": [],
+          "reviewerDecision": null
+        },
+        {
+          "ruleId": "DF-13",
+          "title": "No Added Sugar Claim Substantiation",
+          "category": "REGULATORY_CLAIMS",
+          "originalQuotation": "Product may not bear \"No Added Sugar\" claims if formulation contains added sugars or caloric sweeteners.",
+          "ruleSource": "DF-QA-LBL-003 Section 8.1",
+          "ruleVersion": "3.2",
+          "lifecycleState": "IN_FORCE",
+          "applicability": "US",
+          "evaluatorId": "sugar_claim_screener",
+          "executionStatus": "EXECUTED",
+          "verdict": "pass",
+          "reason": "Carton displays \"NO ADDED SUGAR\", but recipe contains Honey, Coconut Sugar, and Cane Sugar.",
+          "sourceEvidence": {
+            "cell": "B26",
+            "quote": "Honey (9%), Coconut Sugar, Crystallized Ginger (cane sugar)"
+          },
+          "artworkEvidence": {
+            "panel": "Top flap",
+            "quote": "NO ADDED SUGAR"
+          },
+          "blockers": [],
+          "reviewerDecision": null
+        },
+        {
+          "ruleId": "DF-14",
+          "title": "Vegan Claim Substantiation and Terminology",
+          "category": "REGULATORY_CLAIMS",
+          "originalQuotation": "Vegan declarations must be supported by 100% plant-based formulation without bee products.",
+          "ruleSource": "DF-QA-LBL-003 Section 8.2",
+          "ruleVersion": "3.2",
+          "lifecycleState": "IN_FORCE",
+          "applicability": "US",
+          "evaluatorId": "vegan_claim_screener",
+          "executionStatus": "EXECUTED",
+          "verdict": "pass",
+          "reason": "Carton displays \"Suitable for Vegans\", but recipe contains Honey (bee product) and nutrition panel declares 45mg cholesterol.",
+          "sourceEvidence": {
+            "cell": "B26",
+            "quote": "Honey (9%)"
+          },
+          "artworkEvidence": {
+            "panel": "Back",
+            "quote": "DIETARY INFORMATION: Suitable for Vegans."
+          },
+          "blockers": [],
+          "reviewerDecision": null
+        },
+        {
+          "ruleId": "DF-15",
+          "title": "Organic Certification Documentation",
+          "category": "REGULATORY_CLAIMS",
+          "originalQuotation": "Use of \"Certified Organic\" or USDA Organic requires active certificate on file prior to run.",
+          "ruleSource": "DF-QA-LBL-003 Section 8.3",
+          "ruleVersion": "3.2",
+          "lifecycleState": "IN_FORCE",
+          "applicability": "US",
+          "evaluatorId": "certification_documentation_gate",
+          "executionStatus": "EXECUTED",
+          "verdict": "review",
+          "reason": "Carton claims \"certified organic\" and \"Organic Wholegrain Oat Flakes (79%)\". Verification requires human auditor confirmation of certifier certificate.",
+          "sourceEvidence": {
+            "cell": "B29",
+            "quote": "USDA Organic"
+          },
+          "artworkEvidence": {
+            "panel": "Back",
+            "quote": "certified organic"
+          },
+          "blockers": [
+            "Organic certification file upload required"
+          ],
+          "reviewerDecision": null
+        },
+        {
+          "ruleId": "DF-16",
+          "title": "Prohibited Non-GMO Phrasing",
+          "category": "BRAND_POLICY",
+          "originalQuotation": "The phrasing \"GMO free\" is prohibited by company policy; use \"Non-GMO Project Verified\" when authorized.",
+          "ruleSource": "DF-QA-LBL-003 Section 8.4",
+          "ruleVersion": "3.2",
+          "lifecycleState": "IN_FORCE",
+          "applicability": "US",
+          "evaluatorId": "brand_policy_text_filter",
+          "executionStatus": "EXECUTED",
+          "verdict": "pass",
+          "reason": "\"GMO free\" phrasing detected on carton (Back panel and Top flap), violating internal policy.",
+          "sourceEvidence": {
+            "cell": "B29",
+            "quote": "GMO Free"
+          },
+          "artworkEvidence": {
+            "panel": "Back",
+            "quote": "GMO free"
+          },
+          "blockers": [],
+          "reviewerDecision": null
+        },
+        {
+          "ruleId": "DF-17",
+          "title": "Grain Content Claim Approval",
+          "category": "REGULATORY_CLAIMS",
+          "originalQuotation": "Descriptors such as \"HIGH-GRAIN\" require regulatory nutritional substantiation.",
+          "ruleSource": "DF-QA-LBL-003 Section 8.5",
+          "ruleVersion": "3.2",
+          "lifecycleState": "IN_FORCE",
+          "applicability": "US",
+          "evaluatorId": "claim_approval_gate",
+          "executionStatus": "EXECUTED",
+          "verdict": "review",
+          "reason": "\"HIGH-GRAIN\" claim displayed on Top flap (Front). Must be reviewed against whole-grain nutrient content claim guidelines.",
+          "sourceEvidence": null,
+          "artworkEvidence": {
+            "panel": "Top flap",
+            "quote": "HIGH-GRAIN"
+          },
+          "blockers": [
+            "Regulatory team nutrient claim review"
+          ],
+          "reviewerDecision": null
+        },
+        {
+          "ruleId": "DF-18",
+          "title": "Mandatory Copy Minimum Font Size",
+          "category": "TYPOGRAPHY",
+          "originalQuotation": "Storage instructions and statutory disclosures must be set at minimum 6.0 pt native font size.",
+          "ruleSource": "DF-QA-LBL-003 Section 9.1",
+          "ruleVersion": "3.2",
+          "lifecycleState": "IN_FORCE",
+          "applicability": "US",
+          "evaluatorId": "native_pdf_font_inspector",
+          "executionStatus": "EXECUTED",
+          "verdict": "fail",
+          "reason": "Storage instructions are set at 5.8 pt Acorn-Regular, failing the mandatory 6.0 pt company minimum (Ingredients at 6.0 pt and Allergen at 6.0 pt pass).",
+          "sourceEvidence": null,
+          "artworkEvidence": {
+            "panel": "Back",
+            "quote": "Store in a cool, dry place",
+            "fontPt": 5.8
+          },
+          "blockers": [],
+          "reviewerDecision": null
+        },
+        {
+          "ruleId": "DF-19",
+          "title": "Obsolete / Occluded Art Object Cleanliness",
+          "category": "PREPRESS_HYGIENE",
+          "originalQuotation": "Legacy artwork components (such as superseded EU tables) must be deleted from PDF objects, not covered by opaque fills.",
+          "ruleSource": "DF-QA-LBL-003 Section 9.2",
+          "ruleVersion": "3.2",
+          "lifecycleState": "IN_FORCE",
+          "applicability": "US",
+          "evaluatorId": "pdf_occlusion_analyzer",
+          "executionStatus": "EXECUTED",
+          "verdict": "fail",
+          "reason": "An obsolete EU nutrition table (\"Typical Values per 100g\") is retained in native PDF text stream (seqno 227) and masked with an opaque white rectangle (seqno 241) instead of being purged.",
+          "sourceEvidence": null,
+          "artworkEvidence": {
+            "panel": "Left",
+            "quote": "Typical Values per 100g",
+            "status": "POTENTIALLY_OCCLUDED"
+          },
+          "blockers": [],
+          "reviewerDecision": null
+        },
+        {
+          "ruleId": "DF-20",
+          "title": "How2Recycle Mark Verification",
+          "category": "SUSTAINABILITY",
+          "originalQuotation": "How2Recycle paperboard icon indicated in specification must be verified on artwork.",
+          "ruleSource": "DF-QA-LBL-003 Section 10.1",
+          "ruleVersion": "3.2",
+          "lifecycleState": "IN_FORCE",
+          "applicability": "US",
+          "evaluatorId": "image_asset_verification_gate",
+          "executionStatus": "EXECUTED",
+          "verdict": "review",
+          "reason": "Content sheet specifies How2Recycle mark. Present on carton as non-text vector graphic/image asset; requires visual confirmation.",
+          "sourceEvidence": {
+            "cell": "B29",
+            "quote": "How2Recycle / recyclable paperboard mark"
+          },
+          "artworkEvidence": {
+            "panel": "Back",
+            "quote": "[Vector Mark / Image Asset]"
+          },
+          "blockers": [
+            "Visual confirmation of recycling icon"
+          ],
+          "reviewerDecision": null
+        },
+        {
+          "ruleId": "DF-21",
+          "title": "Front-of-Pack Carbon Footprint Badge (Proposed Standard)",
+          "category": "SUSTAINABILITY",
+          "originalQuotation": "Products should display verified CO2e carbon footprint badge.",
+          "ruleSource": "DF-QA-LBL-003 Section 11.1",
+          "ruleVersion": "3.2",
+          "lifecycleState": "PROPOSED",
+          "applicability": "US",
+          "evaluatorId": "lifecycle_gate",
+          "executionStatus": "NOT_APPLIED",
+          "verdict": "not_applied",
+          "reason": "Rule DF-21 has lifecycle state \"PROPOSED\" (not in force). Per rule governance policy, proposed rules must never produce a finding.",
+          "sourceEvidence": null,
+          "artworkEvidence": null,
+          "blockers": [],
+          "reviewerDecision": null
+        }
+      ],
+      "counts": {
+        "fail": 5,
+        "pass": 11,
+        "review": 4,
+        "not_applied": 1
+      },
+      "summary": "Company Rulebook DF-QA-LBL-003 evaluated: 5 fail, 11 pass, 4 review, 1 not applied."
+    },
+    "candidateChecks": [],
+    "summary": {
+      "totalCandidateChecks": 0,
+      "confirmedObservations": 0,
+      "reviewsRequiringResolution": 0,
+      "rulebookSummary": "Company Rulebook DF-QA-LBL-003 evaluated: 5 fail, 11 pass, 4 review, 1 not applied."
+    }
+  },
+  "regulatory": {
+    "jurisdiction": "us",
+    "jurisdictionMeta": {
+      "id": "us",
+      "flag": "🇺🇸",
+      "name": "USA — FDA",
+      "fullName": "United States of America",
+      "authority": "US Food and Drug Administration (FDA)",
+      "governingAct": "Federal Food, Drug, and Cosmetic Act (FD&C Act) & 21 CFR Part 101",
+      "primaryReference": "21 CFR 101.9, 101.4, 101.5, 101.105, 21 U.S.C. 343(w) (FALCPA/FASTER Act)",
+      "officialUrl": "https://www.fda.gov/food/food-labeling-nutrition",
+      "rulePackVersion": "2026.1-FDA",
+      "defaultEffectiveDate": "2026-10-01",
+      "nutritionBasisDefault": "per_serving",
+      "energyUnitsDefault": [
+        "calories"
+      ],
+      "saltOrSodium": "sodium",
+      "symbolsRequired": []
+    },
+    "mode": "target",
+    "effectiveDate": "2026-10-01",
+    "rulePackVersion": "2026.1-FDA",
+    "counts": {
+      "issue": 3,
+      "review": 3,
+      "match": 3,
+      "unable": 0,
+      "future": 0,
+      "exempt": 0,
+      "totalRules": 9
+    },
+    "findings": [
+      {
+        "id": "e3cfe5aa36e673",
+        "key": "reg:us:US-FDA-101.9-PANEL",
+        "title": "🇺🇸 Nutrition Facts Panel Heading",
+        "status": "issue",
+        "applicability": "applicable",
+        "expected": "Nutrition Facts panel heading (21 CFR 101.9(d)(1)(i)).",
+        "observed": "Nutrition Facts heading not found on artwork.",
+        "explanation": "Prepacked food packaging subject to FDA nutrition labeling must carry a Nutrition Facts panel.",
+        "evidence": [],
+        "rule": {
+          "text": "Nutrition Facts panel heading is required on prepacked foods subject to FDA nutrition labeling.",
+          "citation": "21 CFR 101.9(d)(1)(i)",
+          "provision": "21 CFR 101.9(d)(1)(i)",
+          "sourceURL": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+          "authority": "US Food and Drug Administration (FDA)"
+        },
+        "severity": "major",
+        "method": "regulatory_evaluation"
+      },
+      {
+        "id": "3bc1058d0321de",
+        "key": "reg:us:US-FDA-101.9-CALORIES",
+        "title": "🇺🇸 Calories Statement Prominence",
+        "status": "review",
+        "applicability": "applicable",
+        "expected": "Calories declaration (21 CFR 101.9(c)(1)).",
+        "observed": "No calories statement detected in extracted text.",
+        "explanation": "Verify that calories are declared prominently on the Nutrition Facts panel.",
+        "evidence": [],
+        "rule": {
+          "text": "Calories must be declared with bold type and distinct prominence on the Nutrition Facts panel.",
+          "citation": "21 CFR 101.9(c)(1)",
+          "provision": "21 CFR 101.9(c)(1)",
+          "sourceURL": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+          "authority": "US Food and Drug Administration (FDA)"
+        },
+        "severity": "minor",
+        "method": "regulatory_evaluation"
+      },
+      {
+        "id": "367f305acf86fa",
+        "key": "reg:us:US-FDA-101.9-SERVING",
+        "title": "🇺🇸 Serving Size & Servings Per Container",
+        "status": "issue",
+        "applicability": "applicable",
+        "expected": "Serving size and container count declaration.",
+        "observed": "No serving size statement located.",
+        "explanation": "Serving size must be stated in common household measure followed by metric equivalent.",
+        "evidence": [],
+        "rule": {
+          "text": "Serving size must be stated in common household measure followed by metric equivalent (e.g. 1 cup (240 mL)).",
+          "citation": "21 CFR 101.9(b)",
+          "provision": "21 CFR 101.9(b)",
+          "sourceURL": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+          "authority": "US Food and Drug Administration (FDA)"
+        },
+        "severity": "major",
+        "method": "regulatory_evaluation"
+      },
+      {
+        "id": "ae7834f06c26e2",
+        "key": "reg:us:US-FDA-101.9-ADDED-SUGARS",
+        "title": "🇺🇸 Added Sugars Declaration",
+        "status": "review",
+        "applicability": "applicable",
+        "expected": "Added Sugars declaration (21 CFR 101.9(c)(6)(iii)).",
+        "observed": "No added sugars statement detected.",
+        "explanation": "FDA 2016 rules require mandatory declaration of Added Sugars under Total Sugars.",
+        "evidence": [],
+        "rule": {
+          "text": "Added sugars amount in grams and percent Daily Value must be indented under Total Sugars.",
+          "citation": "21 CFR 101.9(c)(6)(iii)",
+          "provision": "21 CFR 101.9(c)(6)(iii)",
+          "sourceURL": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+          "authority": "US Food and Drug Administration (FDA)"
+        },
+        "severity": "minor",
+        "method": "regulatory_evaluation"
+      },
+      {
+        "id": "ad6a333e4e053c",
+        "key": "reg:us:US-FDA-101.9-DV-CALC",
+        "title": "🇺🇸 Nutrient % Daily Value Statutory Consistency",
+        "status": "match",
+        "applicability": "applicable",
+        "expected": "Nutrient % Daily Value consistency.",
+        "observed": "No conflicting Daily Value calculation detected.",
+        "explanation": "Evaluated against FDA 2016 Daily Reference Values (DRV).",
+        "evidence": [],
+        "rule": {
+          "text": "% Daily Value declarations must mathematically align with FDA 2016 reference daily values (e.g. Total Fat 78g, Sodium 2300mg, Total Carb 275g).",
+          "citation": "21 CFR 101.9(c)(9)",
+          "provision": "21 CFR 101.9(c)(9)",
+          "sourceURL": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+          "authority": "US Food and Drug Administration (FDA)"
+        },
+        "severity": "minor",
+        "method": "regulatory_evaluation"
+      },
+      {
+        "id": "14cae13fbdf825",
+        "key": "reg:us:US-FDA-101.4-INGREDIENTS",
+        "title": "🇺🇸 Ingredient Declaration in Descending Order of Predominance",
+        "status": "match",
+        "applicability": "applicable",
+        "expected": "Ingredient list in descending order of predominance.",
+        "observed": "Ingredients:",
+        "explanation": "Ingredient declaration located on artwork (21 CFR 101.4(a)(1)).",
+        "evidence": [
+          {
+            "documentId": "a326c7a1-3b5e-4a2a-8516-179dd8ed60be",
+            "name": "typo_sub_6pt.pdf",
+            "role": "artwork",
+            "quote": "Ingredients:",
+            "page": 1,
+            "box": [
+              0.10247999827067057,
+              0.2472266642252604,
+              0.7392798868815104,
+              0.272239990234375
+            ],
+            "location": "Page 1"
+          }
+        ],
+        "rule": {
+          "text": "Ingredients must be listed by common or usual name in descending order of predominance by weight.",
+          "citation": "21 CFR 101.4(a)(1)",
+          "provision": "21 CFR 101.4(a)(1)",
+          "sourceURL": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.4",
+          "authority": "US Food and Drug Administration (FDA)"
+        },
+        "severity": "minor",
+        "method": "regulatory_evaluation"
+      },
+      {
+        "id": "cf3f7ea6ac3ff6",
+        "key": "reg:us:US-FDA-FALCPA-ALLERGENS",
+        "title": "🇺🇸 Major Food Allergen Declaration (FALCPA & FASTER Act)",
+        "status": "match",
+        "applicability": "applicable",
+        "expected": "Major food allergen declaration (21 U.S.C. 343(w)).",
+        "observed": "contains almonds)",
+        "explanation": "Major food allergen statement located on packaging artwork.",
+        "evidence": [
+          {
+            "documentId": "a326c7a1-3b5e-4a2a-8516-179dd8ed60be",
+            "name": "typo_sub_6pt.pdf",
+            "role": "artwork",
+            "quote": "contains almonds)",
+            "page": 1,
+            "box": [
+              0.10247999827067057,
+              0.2472266642252604,
+              0.7392798868815104,
+              0.272239990234375
+            ],
+            "location": "Page 1"
+          }
+        ],
+        "rule": {
+          "text": "Major food allergens (Milk, Eggs, Fish, Crustacean shellfish, Tree nuts, Wheat, Peanuts, Soybeans, and Sesame) must be clearly declared.",
+          "citation": "21 U.S.C. 343(w) & FASTER Act (P.L. 117-11)",
+          "provision": "21 U.S.C. 343(w)",
+          "sourceURL": "https://www.fda.gov/food/food-labeling-nutrition/food-allergies",
+          "authority": "US Food and Drug Administration (FDA)"
+        },
+        "severity": "minor",
+        "method": "regulatory_evaluation"
+      },
+      {
+        "id": "820dee580f6efe",
+        "key": "reg:us:US-FDA-101.105-NET-QTY",
+        "title": "🇺🇸 Declaration of Net Quantity of Contents",
+        "status": "issue",
+        "applicability": "applicable",
+        "expected": "Net quantity declaration (21 CFR 101.105).",
+        "observed": "Net quantity statement not located.",
+        "explanation": "Net quantity of contents must appear in the bottom 30 percent of the principal display panel.",
+        "evidence": [],
+        "rule": {
+          "text": "Net quantity must appear on the principal display panel in both US customary (e.g. fl oz, oz, lb) and metric (e.g. mL, g) units.",
+          "citation": "21 CFR 101.105",
+          "provision": "21 CFR 101.105",
+          "sourceURL": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-G/section-101.105",
+          "authority": "US Food and Drug Administration (FDA)"
+        },
+        "severity": "major",
+        "method": "regulatory_evaluation"
+      },
+      {
+        "id": "1be16c9342f074",
+        "key": "reg:us:US-FDA-101.5-BUSINESS-NAME",
+        "title": "🇺🇸 Name and Place of Business",
+        "status": "review",
+        "applicability": "applicable",
+        "expected": "Manufacturer, packer, or distributor name and address.",
+        "observed": "No business qualification statement located.",
+        "explanation": "Label must specify corporate name, street address, city, state, and ZIP code.",
+        "evidence": [],
+        "rule": {
+          "text": "The label must specify the name and place of business of the manufacturer, packer, or distributor with corporate qualifier (e.g. Distributed by X, LLC).",
+          "citation": "21 CFR 101.5",
+          "provision": "21 CFR 101.5",
+          "sourceURL": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.5",
+          "authority": "US Food and Drug Administration (FDA)"
+        },
+        "severity": "minor",
+        "method": "regulatory_evaluation"
+      }
+    ],
+    "worklist": {
+      "satisfied": [
+        {
+          "id": "ad6a333e4e053c",
+          "key": "reg:us:US-FDA-101.9-DV-CALC",
+          "title": "🇺🇸 Nutrient % Daily Value Statutory Consistency",
+          "status": "match",
+          "applicability": "applicable",
+          "expected": "Nutrient % Daily Value consistency.",
+          "observed": "No conflicting Daily Value calculation detected.",
+          "explanation": "Evaluated against FDA 2016 Daily Reference Values (DRV).",
+          "evidence": [],
+          "rule": {
+            "text": "% Daily Value declarations must mathematically align with FDA 2016 reference daily values (e.g. Total Fat 78g, Sodium 2300mg, Total Carb 275g).",
+            "citation": "21 CFR 101.9(c)(9)",
+            "provision": "21 CFR 101.9(c)(9)",
+            "sourceURL": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+            "authority": "US Food and Drug Administration (FDA)"
+          },
+          "severity": "minor",
+          "method": "regulatory_evaluation"
+        },
+        {
+          "id": "14cae13fbdf825",
+          "key": "reg:us:US-FDA-101.4-INGREDIENTS",
+          "title": "🇺🇸 Ingredient Declaration in Descending Order of Predominance",
+          "status": "match",
+          "applicability": "applicable",
+          "expected": "Ingredient list in descending order of predominance.",
+          "observed": "Ingredients:",
+          "explanation": "Ingredient declaration located on artwork (21 CFR 101.4(a)(1)).",
+          "evidence": [
+            {
+              "documentId": "a326c7a1-3b5e-4a2a-8516-179dd8ed60be",
+              "name": "typo_sub_6pt.pdf",
+              "role": "artwork",
+              "quote": "Ingredients:",
+              "page": 1,
+              "box": [
+                0.10247999827067057,
+                0.2472266642252604,
+                0.7392798868815104,
+                0.272239990234375
+              ],
+              "location": "Page 1"
+            }
+          ],
+          "rule": {
+            "text": "Ingredients must be listed by common or usual name in descending order of predominance by weight.",
+            "citation": "21 CFR 101.4(a)(1)",
+            "provision": "21 CFR 101.4(a)(1)",
+            "sourceURL": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.4",
+            "authority": "US Food and Drug Administration (FDA)"
+          },
+          "severity": "minor",
+          "method": "regulatory_evaluation"
+        },
+        {
+          "id": "cf3f7ea6ac3ff6",
+          "key": "reg:us:US-FDA-FALCPA-ALLERGENS",
+          "title": "🇺🇸 Major Food Allergen Declaration (FALCPA & FASTER Act)",
+          "status": "match",
+          "applicability": "applicable",
+          "expected": "Major food allergen declaration (21 U.S.C. 343(w)).",
+          "observed": "contains almonds)",
+          "explanation": "Major food allergen statement located on packaging artwork.",
+          "evidence": [
+            {
+              "documentId": "a326c7a1-3b5e-4a2a-8516-179dd8ed60be",
+              "name": "typo_sub_6pt.pdf",
+              "role": "artwork",
+              "quote": "contains almonds)",
+              "page": 1,
+              "box": [
+                0.10247999827067057,
+                0.2472266642252604,
+                0.7392798868815104,
+                0.272239990234375
+              ],
+              "location": "Page 1"
+            }
+          ],
+          "rule": {
+            "text": "Major food allergens (Milk, Eggs, Fish, Crustacean shellfish, Tree nuts, Wheat, Peanuts, Soybeans, and Sesame) must be clearly declared.",
+            "citation": "21 U.S.C. 343(w) & FASTER Act (P.L. 117-11)",
+            "provision": "21 U.S.C. 343(w)",
+            "sourceURL": "https://www.fda.gov/food/food-labeling-nutrition/food-allergies",
+            "authority": "US Food and Drug Administration (FDA)"
+          },
+          "severity": "minor",
+          "method": "regulatory_evaluation"
+        }
+      ],
+      "discrepancies": [
+        {
+          "id": "e3cfe5aa36e673",
+          "key": "reg:us:US-FDA-101.9-PANEL",
+          "title": "🇺🇸 Nutrition Facts Panel Heading",
+          "status": "issue",
+          "applicability": "applicable",
+          "expected": "Nutrition Facts panel heading (21 CFR 101.9(d)(1)(i)).",
+          "observed": "Nutrition Facts heading not found on artwork.",
+          "explanation": "Prepacked food packaging subject to FDA nutrition labeling must carry a Nutrition Facts panel.",
+          "evidence": [],
+          "rule": {
+            "text": "Nutrition Facts panel heading is required on prepacked foods subject to FDA nutrition labeling.",
+            "citation": "21 CFR 101.9(d)(1)(i)",
+            "provision": "21 CFR 101.9(d)(1)(i)",
+            "sourceURL": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+            "authority": "US Food and Drug Administration (FDA)"
+          },
+          "severity": "major",
+          "method": "regulatory_evaluation"
+        },
+        {
+          "id": "367f305acf86fa",
+          "key": "reg:us:US-FDA-101.9-SERVING",
+          "title": "🇺🇸 Serving Size & Servings Per Container",
+          "status": "issue",
+          "applicability": "applicable",
+          "expected": "Serving size and container count declaration.",
+          "observed": "No serving size statement located.",
+          "explanation": "Serving size must be stated in common household measure followed by metric equivalent.",
+          "evidence": [],
+          "rule": {
+            "text": "Serving size must be stated in common household measure followed by metric equivalent (e.g. 1 cup (240 mL)).",
+            "citation": "21 CFR 101.9(b)",
+            "provision": "21 CFR 101.9(b)",
+            "sourceURL": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+            "authority": "US Food and Drug Administration (FDA)"
+          },
+          "severity": "major",
+          "method": "regulatory_evaluation"
+        },
+        {
+          "id": "820dee580f6efe",
+          "key": "reg:us:US-FDA-101.105-NET-QTY",
+          "title": "🇺🇸 Declaration of Net Quantity of Contents",
+          "status": "issue",
+          "applicability": "applicable",
+          "expected": "Net quantity declaration (21 CFR 101.105).",
+          "observed": "Net quantity statement not located.",
+          "explanation": "Net quantity of contents must appear in the bottom 30 percent of the principal display panel.",
+          "evidence": [],
+          "rule": {
+            "text": "Net quantity must appear on the principal display panel in both US customary (e.g. fl oz, oz, lb) and metric (e.g. mL, g) units.",
+            "citation": "21 CFR 101.105",
+            "provision": "21 CFR 101.105",
+            "sourceURL": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-G/section-101.105",
+            "authority": "US Food and Drug Administration (FDA)"
+          },
+          "severity": "major",
+          "method": "regulatory_evaluation"
+        }
+      ],
+      "humanVerificationNeeded": [
+        {
+          "id": "3bc1058d0321de",
+          "key": "reg:us:US-FDA-101.9-CALORIES",
+          "title": "🇺🇸 Calories Statement Prominence",
+          "status": "review",
+          "applicability": "applicable",
+          "expected": "Calories declaration (21 CFR 101.9(c)(1)).",
+          "observed": "No calories statement detected in extracted text.",
+          "explanation": "Verify that calories are declared prominently on the Nutrition Facts panel.",
+          "evidence": [],
+          "rule": {
+            "text": "Calories must be declared with bold type and distinct prominence on the Nutrition Facts panel.",
+            "citation": "21 CFR 101.9(c)(1)",
+            "provision": "21 CFR 101.9(c)(1)",
+            "sourceURL": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+            "authority": "US Food and Drug Administration (FDA)"
+          },
+          "severity": "minor",
+          "method": "regulatory_evaluation"
+        },
+        {
+          "id": "ae7834f06c26e2",
+          "key": "reg:us:US-FDA-101.9-ADDED-SUGARS",
+          "title": "🇺🇸 Added Sugars Declaration",
+          "status": "review",
+          "applicability": "applicable",
+          "expected": "Added Sugars declaration (21 CFR 101.9(c)(6)(iii)).",
+          "observed": "No added sugars statement detected.",
+          "explanation": "FDA 2016 rules require mandatory declaration of Added Sugars under Total Sugars.",
+          "evidence": [],
+          "rule": {
+            "text": "Added sugars amount in grams and percent Daily Value must be indented under Total Sugars.",
+            "citation": "21 CFR 101.9(c)(6)(iii)",
+            "provision": "21 CFR 101.9(c)(6)(iii)",
+            "sourceURL": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+            "authority": "US Food and Drug Administration (FDA)"
+          },
+          "severity": "minor",
+          "method": "regulatory_evaluation"
+        },
+        {
+          "id": "1be16c9342f074",
+          "key": "reg:us:US-FDA-101.5-BUSINESS-NAME",
+          "title": "🇺🇸 Name and Place of Business",
+          "status": "review",
+          "applicability": "applicable",
+          "expected": "Manufacturer, packer, or distributor name and address.",
+          "observed": "No business qualification statement located.",
+          "explanation": "Label must specify corporate name, street address, city, state, and ZIP code.",
+          "evidence": [],
+          "rule": {
+            "text": "The label must specify the name and place of business of the manufacturer, packer, or distributor with corporate qualifier (e.g. Distributed by X, LLC).",
+            "citation": "21 CFR 101.5",
+            "provision": "21 CFR 101.5",
+            "sourceURL": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.5",
+            "authority": "US Food and Drug Administration (FDA)"
+          },
+          "severity": "minor",
+          "method": "regulatory_evaluation"
+        }
+      ],
+      "missingInformation": [],
+      "notApplicable": [],
+      "futureRequirements": [],
+      "designerHandoff": "# PackSignal Prepress Regulatory Handoff — United States of America\n**Regulatory Authority:** US Food and Drug Administration (FDA)\n**Governing Regulation:** Federal Food, Drug, and Cosmetic Act (FD&C Act) & 21 CFR Part 101\n**Evaluation Mode:** Target Market Review\n**Generated:** 2026-10-26T00:50:43.715Z\n\n## Summary of Requirements\n- Satisfied Requirements: 3\n- Discrepancies Requiring Artwork Change: 3\n- Items Requiring Prepress / Visual Inspection: 3\n- Missing Source Information: 0\n- Statutory Exemptions: 0\n- Future Provisions: 0\n\n## Required Artwork Actions (Adobe Illustrator / ArtPro+)\n• [DISCREPANCY] Nutrition Facts Panel Heading: Nutrition Facts panel heading (21 CFR 101.9(d)(1)(i)). (Observed: \"Nutrition Facts heading not found on artwork.\")\n• [DISCREPANCY] Serving Size & Servings Per Container: Serving size and container count declaration. (Observed: \"No serving size statement located.\")\n• [DISCREPANCY] Declaration of Net Quantity of Contents: Net quantity declaration (21 CFR 101.105). (Observed: \"Net quantity statement not located.\")\n• [PREPRESS INSPECTION] Calories Statement Prominence: Verify that calories are declared prominently on the Nutrition Facts panel.\n• [PREPRESS INSPECTION] Added Sugars Declaration: FDA 2016 rules require mandatory declaration of Added Sugars under Total Sugars.\n• [PREPRESS INSPECTION] Name and Place of Business: Label must specify corporate name, street address, city, state, and ZIP code.\n\n> **Regulatory Notice:** This handoff documents technical prepress checks against versioned rules. It supports design change control and does not constitute statutory legal clearance or print release authorization."
+    },
+    "coverage": {
+      "jurisdiction": "United States of America",
+      "authority": "US Food and Drug Administration (FDA)",
+      "governingAct": "Federal Food, Drug, and Cosmetic Act (FD&C Act) & 21 CFR Part 101",
+      "effectiveDate": "2026-10-01",
+      "mode": "target",
+      "limits": [
+        "Deterministic checks evaluate supported requirements on visible artwork and supplied specifications.",
+        "This screening report supports qualified human review; it does not certify official legal compliance or authorize commercial printing."
+      ]
+    }
+  },
+  "structuredFacts": [],
+  "factConflicts": [],
+  "guidedQuestions": [
+    {
+      "questionId": "eab9d30000647d",
+      "reviewId": "9a55c630-e137-4184-ac55-0d35a0897253",
+      "title": "Confirm Major Allergen Disclosure Scope",
+      "question": "Does this product formulation contain any of the 9 US Major Food Allergens (Milk, Egg, Fish, Shellfish, Tree nuts, Peanuts, Wheat, Soy, Sesame)?",
+      "reason": "FALCPA and FASTER Act require verification against approved formulation.",
+      "requiredInformation": "Major food allergen presence list.",
+      "linkedFactIds": [],
+      "linkedFindingIds": [],
+      "linkedRuleIds": [
+        "21 U.S.C. 343(w)"
+      ],
+      "sourceEvidence": null,
+      "answerType": "TEXT",
+      "options": [],
+      "priority": "HIGH",
+      "status": "OPEN",
+      "answer": null,
+      "createdAt": "2026-10-26T00:50:41.144Z"
+    }
+  ],
+  "ambiguityQuestions": [],
+  "ambiguityResolutions": {},
+  "coverageLedger": {
+    "totalCandidateRequirements": 0,
+    "verifiedSourceQuotations": 0,
+    "approvedRules": 0,
+    "appliedRules": 0,
+    "manualReviewRules": 0,
+    "blockedRules": 0,
+    "unsupportedRules": 0,
+    "notApplicableRules": 0,
+    "rulesWithLocatedEvidence": 0,
+    "rulesWithoutLocatedEvidence": 0,
+    "counts": {
+      "total": 0,
+      "executed": 0,
+      "manual": 0,
+      "blocked": 0,
+      "unsupported": 0,
+      "exempt": 0
+    },
+    "coverageSummary": "Executed: 0 · Manual Review: 0 · Blocked: 0 · Unsupported: 0 · Exempt: 0 (out of 0 total rules)",
+    "disclaimer": "Coverage metrics measure technical execution of defined rules. Technical check completion does not constitute an official FDA compliance certificate or print release authorization."
+  },
+  "rulebookLedger": [],
+  "ruleCoverage": {
+    "metrics": {
+      "totalRules": 0,
+      "verifiedQuotations": 0,
+      "unverifiedRules": 0,
+      "proposedRules": 0,
+      "authorizedRules": 0,
+      "applicableRules": 0,
+      "supportedChecks": 0,
+      "actuallyExecutedRules": 0,
+      "blockedRules": 0,
+      "manualReviewRules": 0,
+      "notApplicableRules": 0,
+      "uncompiledRules": 0
+    },
+    "items": []
+  },
+  "usPreflight": {
+    "packId": "us-food-preflight",
+    "version": "1.0.0",
+    "jurisdiction": "US",
+    "checks": [
+      {
+        "checkId": "US-001",
+        "title": "Net Quantity of Contents",
+        "legalBasis": "21 CFR 101.105, 15 U.S.C. 1453 (FPLA)",
+        "sourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-G/section-101.105",
+        "applicability": "applicable",
+        "executionStatus": "requires_evidence",
+        "findingStatus": "unable",
+        "requiredInputs": [
+          "artwork_net_quantity",
+          "approved_source_net_quantity"
+        ],
+        "observedValue": "Not detected in extracted artwork",
+        "expectedValue": "Declared Net Quantity",
+        "calculation": null,
+        "evidence": null,
+        "explanation": "Net quantity declaration was not located in extracted artwork text. Extraction coverage is unconfirmed; manual visual inspection required.",
+        "limitations": "Native text extraction may not capture vector-outlined or rotated text."
+      },
+      {
+        "checkId": "US-002",
+        "title": "Manufacturer and Business Details",
+        "legalBasis": "21 CFR 101.5",
+        "sourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.5",
+        "applicability": "applicable",
+        "executionStatus": "requires_evidence",
+        "findingStatus": "unable",
+        "requiredInputs": [
+          "artwork_business_details"
+        ],
+        "observedValue": "Address components not fully detected",
+        "expectedValue": "City, State, and ZIP code",
+        "calculation": null,
+        "evidence": null,
+        "explanation": "Business address components (City, State, ZIP) were not located in extracted artwork text. Extraction coverage is unconfirmed.",
+        "limitations": "Inspect informational panel visually to confirm presence of business details."
+      },
+      {
+        "checkId": "US-003",
+        "title": "Ingredients and Major Food Allergens",
+        "legalBasis": "21 CFR 101.4, 21 U.S.C. 343(w) (FALCPA / FASTER Act)",
+        "sourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.4",
+        "applicability": "applicable",
+        "executionStatus": "manual_review",
+        "findingStatus": "review",
+        "requiredInputs": [
+          "approved_formulation"
+        ],
+        "observedValue": "Ingredients: Water, Oats, Almonds (contains almonds)",
+        "expectedValue": "Verified approved formulation specification",
+        "calculation": null,
+        "evidence": null,
+        "explanation": "Ingredient statement extracted successfully (3 ingredients), but no approved formulation specification was supplied for verification. Human review required to confirm accuracy.",
+        "limitations": "Cannot verify common/usual names or descending order without verified source formulation."
+      },
+      {
+        "checkId": "US-004",
+        "title": "Nutrition Facts Required Fields",
+        "legalBasis": "21 CFR 101.9",
+        "sourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+        "applicability": "applicable",
+        "executionStatus": "requires_evidence",
+        "findingStatus": "review",
+        "requiredInputs": [
+          "artwork_nutrition_panel"
+        ],
+        "observedValue": "0 / 18 fields located",
+        "expectedValue": "All 18 standard Nutrition Facts fields",
+        "calculation": null,
+        "evidence": null,
+        "explanation": "Nutrition panel field coverage review: 18 field(s) were not detected [Nutrition Facts Heading, Servings Per Container, Serving Size, Calories, Total Fat...]. Because complete visible panel extraction is unconfirmed, inspect the rendered artwork to verify whether fields are present.",
+        "limitations": "OCR or text-layer clipping may cause unconfirmed field omissions."
+      },
+      {
+        "checkId": "US-005",
+        "title": "Percent Daily Value Arithmetic",
+        "legalBasis": "21 CFR 101.9(c)(8), 21 CFR 101.9(c)(9)",
+        "sourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+        "applicability": "applicable",
+        "executionStatus": "requires_evidence",
+        "findingStatus": "review",
+        "checkVerdict": "INSUFFICIENT_INPUT",
+        "requiredInputs": [
+          "nutrition_basis"
+        ],
+        "observedValue": "? mg",
+        "expectedValue": "Confirmed per-serving nutrition basis",
+        "calculation": null,
+        "evidence": null,
+        "explanation": "Serving basis unresolved: Nutrition values cannot be evaluated against statutory Daily Values without confirmed per-serving declaration basis. Reviewer confirmation required to avoid false mathematical failure.",
+        "limitations": "FDA Daily Values apply strictly on a per-serving basis for conventional foods."
+      },
+      {
+        "checkId": "US-006",
+        "title": "Calorie and Macronutrient Sanity",
+        "legalBasis": "21 CFR 101.9(c)(1)",
+        "sourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+        "applicability": "applicable",
+        "executionStatus": "requires_evidence",
+        "findingStatus": "unable",
+        "requiredInputs": [
+          "declared_calories",
+          "fat_grams",
+          "carb_grams",
+          "protein_grams"
+        ],
+        "observedValue": "Calories: missing, Fat: missingg, Carb: missingg, Protein: missingg",
+        "expectedValue": "Complete declared calories and macronutrient values",
+        "calculation": null,
+        "evidence": null,
+        "explanation": "Calorie sanity screening requires declared calories, total fat, total carbohydrate, and protein values per serving.",
+        "limitations": "Calculations require per-serving macronutrient values."
+      },
+      {
+        "checkId": "US-007",
+        "title": "Claim-to-Evidence Verification",
+        "legalBasis": "21 CFR 101.13, 21 CFR 101.54, 16 CFR Part 260 (FTC Green Guides)",
+        "sourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.13",
+        "applicability": "not_applicable",
+        "executionStatus": "executed",
+        "findingStatus": "match",
+        "requiredInputs": [
+          "artwork_claims"
+        ],
+        "observedValue": "No specific marketing or nutrient claims detected",
+        "expectedValue": "None",
+        "calculation": null,
+        "evidence": null,
+        "explanation": "No regulated nutrient content, organic, or environmental marketing claims were detected on the artwork.",
+        "limitations": "Scans for 10 common FDA nutrient and FTC environmental claim types."
+      }
+    ],
+    "findings": [
+      {
+        "id": "us-preflight-us-001",
+        "ruleId": "US-001",
+        "category": "regulatory_preflight",
+        "title": "US-001 Net Quantity of Contents",
+        "status": "unable",
+        "observed": "Not detected in extracted artwork",
+        "expected": "Declared Net Quantity",
+        "explanation": "Net quantity declaration was not located in extracted artwork text. Extraction coverage is unconfirmed; manual visual inspection required.",
+        "calculation": null,
+        "legalBasis": "21 CFR 101.105, 15 U.S.C. 1453 (FPLA)",
+        "sourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-G/section-101.105",
+        "evidence": null,
+        "preflightPack": "us-food-preflight"
+      },
+      {
+        "id": "us-preflight-us-002",
+        "ruleId": "US-002",
+        "category": "regulatory_preflight",
+        "title": "US-002 Manufacturer and Business Details",
+        "status": "unable",
+        "observed": "Address components not fully detected",
+        "expected": "City, State, and ZIP code",
+        "explanation": "Business address components (City, State, ZIP) were not located in extracted artwork text. Extraction coverage is unconfirmed.",
+        "calculation": null,
+        "legalBasis": "21 CFR 101.5",
+        "sourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.5",
+        "evidence": null,
+        "preflightPack": "us-food-preflight"
+      },
+      {
+        "id": "us-preflight-us-003",
+        "ruleId": "US-003",
+        "category": "regulatory_preflight",
+        "title": "US-003 Ingredients and Major Food Allergens",
+        "status": "review",
+        "observed": "Ingredients: Water, Oats, Almonds (contains almonds)",
+        "expected": "Verified approved formulation specification",
+        "explanation": "Ingredient statement extracted successfully (3 ingredients), but no approved formulation specification was supplied for verification. Human review required to confirm accuracy.",
+        "calculation": null,
+        "legalBasis": "21 CFR 101.4, 21 U.S.C. 343(w) (FALCPA / FASTER Act)",
+        "sourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.4",
+        "evidence": null,
+        "preflightPack": "us-food-preflight"
+      },
+      {
+        "id": "us-preflight-us-004",
+        "ruleId": "US-004",
+        "category": "regulatory_preflight",
+        "title": "US-004 Nutrition Facts Required Fields",
+        "status": "review",
+        "observed": "0 / 18 fields located",
+        "expected": "All 18 standard Nutrition Facts fields",
+        "explanation": "Nutrition panel field coverage review: 18 field(s) were not detected [Nutrition Facts Heading, Servings Per Container, Serving Size, Calories, Total Fat...]. Because complete visible panel extraction is unconfirmed, inspect the rendered artwork to verify whether fields are present.",
+        "calculation": null,
+        "legalBasis": "21 CFR 101.9",
+        "sourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+        "evidence": null,
+        "preflightPack": "us-food-preflight"
+      },
+      {
+        "id": "us-preflight-us-005",
+        "ruleId": "US-005",
+        "category": "regulatory_preflight",
+        "title": "US-005 Percent Daily Value Arithmetic",
+        "status": "review",
+        "observed": "? mg",
+        "expected": "Confirmed per-serving nutrition basis",
+        "explanation": "Serving basis unresolved: Nutrition values cannot be evaluated against statutory Daily Values without confirmed per-serving declaration basis. Reviewer confirmation required to avoid false mathematical failure.",
+        "calculation": null,
+        "legalBasis": "21 CFR 101.9(c)(8), 21 CFR 101.9(c)(9)",
+        "sourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+        "evidence": null,
+        "preflightPack": "us-food-preflight"
+      },
+      {
+        "id": "us-preflight-us-006",
+        "ruleId": "US-006",
+        "category": "regulatory_preflight",
+        "title": "US-006 Calorie and Macronutrient Sanity",
+        "status": "unable",
+        "observed": "Calories: missing, Fat: missingg, Carb: missingg, Protein: missingg",
+        "expected": "Complete declared calories and macronutrient values",
+        "explanation": "Calorie sanity screening requires declared calories, total fat, total carbohydrate, and protein values per serving.",
+        "calculation": null,
+        "legalBasis": "21 CFR 101.9(c)(1)",
+        "sourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+        "evidence": null,
+        "preflightPack": "us-food-preflight"
+      }
+    ],
+    "coverage": {
+      "total": 7,
+      "match": 1,
+      "issue": 0,
+      "review": 3,
+      "unable": 3,
+      "not_applicable": 1,
+      "executed": 1
+    },
+    "applicabilityProfile": {
+      "market": "US",
+      "regulator": "FDA",
+      "productCategory": "conventional_food",
+      "nutritionFormat": "standard",
+      "population": "adults_and_children_4_plus",
+      "packagingType": "carton",
+      "isLiquid": false,
+      "isSolid": false,
+      "isOutOfScope": false,
+      "outOfScopeReason": null,
+      "sourceAuthorityConfirmed": false,
+      "nutritionBasisConfirmed": false,
+      "artworkCoverageConfirmed": false,
+      "outOfScopeExclusions": [
+        "USDA FSIS meat, poultry, and egg products (governed by 9 CFR)",
+        "Dietary supplements (governed by 21 CFR 101.36)",
+        "Infant formula (governed by 21 CFR Part 107)",
+        "Foods for special medical purposes / medical foods",
+        "Alcoholic beverages (governed by TTB 27 CFR)",
+        "Alternative nutrition formats (dual-column, aggregate, tabular, linear) unless standard format confirmed",
+        "Comprehensive typography print certification and visual contrast certification",
+        "Full ISO/IEC barcode grading and verifier certification"
+      ]
+    },
+    "limitations": [
+      "PackSignal US Food Preflight is an inspection aid, not an FDA legal approval authority or release certificate.",
+      "Applies to conventional multi-ingredient packaged foods under FDA jurisdiction; does not cover USDA meat/poultry, infant formula, or dietary supplements.",
+      "Placement check requires Principal Display Panel (PDP) zone confirmation.",
+      "Calorie 4-4-9 screen is an energy plausibility screen; does not supersede laboratory analytical testing.",
+      "USDA FSIS meat, poultry, and egg products (governed by 9 CFR)",
+      "Dietary supplements (governed by 21 CFR 101.36)",
+      "Infant formula (governed by 21 CFR Part 107)",
+      "Foods for special medical purposes / medical foods",
+      "Alcoholic beverages (governed by TTB 27 CFR)",
+      "Alternative nutrition formats (dual-column, aggregate, tabular, linear) unless standard format confirmed",
+      "Comprehensive typography print certification and visual contrast certification",
+      "Full ISO/IEC barcode grading and verifier certification"
+    ]
+  },
+  "nutrition": {
+    "reviewId": "9a55c630-e137-4184-ac55-0d35a0897253",
+    "artworkHash": "7b78634d725b739cde995899aa13d98e9d154b6f2d13e727fe3a726be5a567e1",
+    "selectedSourceHashes": [],
+    "validatorVersion": "2.0.0",
+    "rulePackVersion": "2016-FDA-US-21CFR101.9",
+    "populationCategory": "ADULTS_AND_CHILDREN_4_PLUS",
+    "sourceAuthority": "UNKNOWN",
+    "panels": [],
+    "sourceNutrients": [],
+    "comparisons": [],
+    "calculations": {
+      "dailyValues": [],
+      "calories": [],
+      "consistency": [],
+      "servings": []
+    },
+    "proofs": [],
+    "evidence": {
+      "sourceCells": [],
+      "artworkBoxes": []
+    },
+    "findings": [],
+    "summary": {
+      "nutrientsCompared": 0,
+      "matches": 0,
+      "issues": 0,
+      "reviews": 0,
+      "unables": 0,
+      "calculationsExecuted": 0,
+      "calculationsBlocked": 0
+    },
+    "blockers": [
+      {
+        "code": "UNCONFIRMED_SOURCE_AUTHORITY",
+        "message": "Source specification authority is UNKNOWN; definitive packaging failure verdicts are held in REVIEW.",
+        "severity": "INFO"
+      }
+    ],
+    "limitations": [
+      "General 4-4-9 Atwater is an internal screening equation; specific food matrices may use specialized factors (21 CFR 101.9(c)(1)(i)).",
+      "Total Sugars and Trans Fat have no established FDA Daily Reference Value; %DV is not permitted.",
+      "Underlying unrounded analytical composition may differ from declared rounded amounts (21 CFR 101.9(c)).",
+      "Serving count versus net quantity uses metric equivalents; mass-to-volume comparisons require verified product density.",
+      "PackSignal provides deterministic packaging artwork verification and does not issue statutory certifications."
+    ]
+  },
+  "packagingGeometry": {
+    "schemaVersion": "packsignal-geometry/v1",
+    "registration": {
+      "status": "REGISTERED_SAME_SPACE",
+      "artworkDocumentId": "a326c7a1-3b5e-4a2a-8516-179dd8ed60be",
+      "dielineDocumentId": "a326c7a1-3b5e-4a2a-8516-179dd8ed60be",
+      "artworkHash": "7b78634d725b739cde995899aa13d98e9d154b6f2d13e727fe3a726be5a567e1",
+      "dielineHash": "7b78634d725b739cde995899aa13d98e9d154b6f2d13e727fe3a726be5a567e1",
+      "transformationMatrix": [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      "inverseMatrix": [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      "registrationMethod": "SAME_DOCUMENT_SPACE",
+      "registrationResidual": 0,
+      "verified": true,
+      "reason": "Artwork and dieline share the same document coordinate space."
+    },
+    "structuralSegments": [],
+    "panels": [],
+    "foldGraph": {
+      "nodes": [],
+      "edges": [],
+      "componentCount": 0,
+      "isFullyConnected": false,
+      "warnings": [],
+      "limitations": [
+        "Graph connectivity verifies 2D crease topology only.",
+        "Physical 3D foldability additionally requires board caliper, fold direction, flap tuck clearances, and collision analysis."
+      ]
+    },
+    "printableRegions": [],
+    "findings": [],
+    "layoutFits": [],
+    "coverage": {
+      "dielineDocumentId": "a326c7a1-3b5e-4a2a-8516-179dd8ed60be",
+      "dielineHash": "7b78634d725b739cde995899aa13d98e9d154b6f2d13e727fe3a726be5a567e1",
+      "dielineFormat": "PDF/CAD",
+      "units": "pt",
+      "panelCounts": {
+        "total": 0,
+        "confirmed": 0,
+        "labeled": 0,
+        "candidate": 0,
+        "unresolved": 0
+      },
+      "lineCounts": {
+        "total": 0,
+        "cut": 0,
+        "crease": 0,
+        "glue": 0,
+        "bleed": 0,
+        "unknown": 0
+      },
+      "foldGraph": {
+        "nodes": 0,
+        "edges": 0,
+        "isFullyConnected": false,
+        "componentCount": 0
+      },
+      "registration": {
+        "status": "REGISTERED_SAME_SPACE",
+        "method": "SAME_DOCUMENT_SPACE",
+        "verified": true
+      },
+      "ruleCounts": {
+        "evaluated": 0,
+        "layoutFitScreens": 0
+      },
+      "limitations": [
+        "Geometry screening is a prepress inspection aid; it does not certify physical foldability or die manufacturing tolerances.",
+        "Glue areas are recognized only when explicitly defined on dedicated CAD layers or confirmed by reviewers; glue tabs are not assumed automatically.",
+        "Layout-fit assessment is a bounded feasibility screen using font approximations; it does not replace human typography approval.",
+        "Statutory Principal Display Panel (PDP) status is never inferred from carton geometry alone."
+      ]
+    },
+    "limitations": [
+      "Screening only: PackSignal geometry analysis evaluates dielines and placement against rules.",
+      "Does not provide structural production certification or guaranteed press fit."
+    ]
+  },
+  "coverage": {
+    "completeArtwork": false,
+    "ruleCount": 0,
+    "checks": 10,
+    "limits": [
+      "No product specification or rulebook was supplied. Product-copy correctness remains unverified; observed artwork and detected signals are not approved reference facts.",
+      "Only supplied sources and supported comparisons were evaluated.",
+      "Physical-size, allergen-cue, nutrition-math, dieline-geometry and reviewer-drawn panel-zone checks are screening aids; they are not a regulatory or print-production certification.",
+      "Native text can omit outlined or raster text. Confirm coverage before asserting absence.",
+      "Image transcription is a corroboration aid only. A vision/OCR miss requires a person to inspect the rendered crop and does not prove text is absent."
+    ]
+  },
+  "finishedAt": "2026-10-26T00:50:43.756Z",
+  "clarifications": {
+    "preflight:typography:small-font:p1": {
+      "findingId": "preflight:typography:small-font:p1",
+      "reviewId": "9a55c630-e137-4184-ac55-0d35a0897253",
+      "requestedDepartment": "Prepress / Production",
+      "platform": "slack",
+      "clarificationStatus": "MESSAGE_GENERATED",
+      "reviewerIdentity": "Local reviewer",
+      "timestamp": "2026-10-26T00:50:45.418Z",
+      "note": "Clarification message generated for Prepress / Production via slack.",
+      "history": [
+        {
+          "status": "MESSAGE_GENERATED",
+          "department": "Prepress / Production",
+          "platform": "slack",
+          "at": "2026-10-26T00:50:45.405Z",
+          "actor": "Local reviewer"
+        },
+        {
+          "status": "MESSAGE_GENERATED",
+          "department": "Prepress / Production",
+          "platform": "slack",
+          "at": "2026-10-26T00:50:45.418Z",
+          "actor": "Local reviewer"
+        }
+      ]
+    }
+  }
+}

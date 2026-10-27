@@ -1,0 +1,39 @@
+{
+  "market": "US",
+  "statute": "21 U.S.C. 343(w) (FALCPA of 2004) and FASTER Act of 2021",
+  "majorAllergens": [
+    { "id": "milk", "name": "Milk" },
+    { "id": "eggs", "name": "Eggs" },
+    { "id": "fish", "name": "Fish" },
+    { "id": "crustacean_shellfish", "name": "Crustacean Shellfish" },
+    { "id": "tree_nuts", "name": "Tree Nuts", "requiresSpecificSpecies": true },
+    { "id": "wheat", "name": "Wheat" },
+    { "id": "peanuts", "name": "Peanuts" },
+    { "id": "soybeans", "name": "Soybeans" },
+    { "id": "sesame", "name": "Sesame", "effectiveDate": "2023-01-01" }
+  ],
+  "treeNutSpecies": [
+    "almond",
+    "beech nut",
+    "brazil nut",
+    "butternut",
+    "cashew",
+    "chestnut",
+    "chinquapin",
+    "coconut",
+    "ginkgo nut",
+    "hickory nut",
+    "larch nut",
+    "macadamia nut",
+    "pecan",
+    "pine nut",
+    "pili nut",
+    "pistachio",
+    "sheanut",
+    "walnut"
+  ],
+  "precautionaryAdvisoryPolicy": {
+    "substituteProhibition": "Precautionary allergen advisory statements (e.g. 'May Contain', 'Produced in a facility that also processes') cannot substitute for required declaration of intentional ingredients in the ingredient list or Contains statement.",
+    "misleadingLabelingConcern": "When an ingredient is intentionally present in the recipe (e.g. Almonds, Pecans, Walnuts), including that same allergen in a 'May Contain' advisory is misleading to consumers and requires Legal/QA reconciliation."
+  }
+}

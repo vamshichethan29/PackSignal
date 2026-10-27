@@ -79,7 +79,7 @@ try {
   let retryResult;
   while (Date.now() < retryDeadline) {
     retryResult = await json(await fetch(`${base}/api/reviews/${retryReview.id}`));
-    if (retryResult.status === 'ready' || retryResult.status === 'failed') break;
+    if ((retryResult.status === 'ready' || retryResult.status === 'failed') && retryResult.aiStatus !== 'pending') break;
     await new Promise(resolve => setTimeout(resolve, 200));
   }
   assert.equal(retryResult?.status, 'ready', retryResult?.error || 'Image-reading retry review did not finish.');
@@ -184,7 +184,7 @@ try {
   let review;
   while (Date.now() < deadline) {
     review = await json(await fetch(`${base}/api/reviews/${created.id}`));
-    if (review.status === 'ready' || review.status === 'failed') break;
+    if ((review.status === 'ready' && review.aiStatus !== 'pending') || review.status === 'failed') break;
     await new Promise(resolve => setTimeout(resolve, 300));
   }
   assert.equal(review?.status, 'ready', review?.error || 'Organizer review did not finish.');

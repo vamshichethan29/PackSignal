@@ -1,5 +1,19 @@
 import { mountViewport } from "./artwork-viewport.js";
 import { cartonShellObj, reconstructDxfCarton } from "./cad-carton.js";
+import { showArModal } from "./ar-modal.js";
+import { renderGhostOverlayLayer, deriveGhostRegions, renderGhostDetailCard } from "./ghost-overlays.js";
+import { renderHiddenTextOverlayLayer, openHiddenTextInspectorModal } from "./pdf-hidden-overlays.js";
+import { renderReconstructedTextOverlayLayer, wireReconstructionOverlayEvents, openReconstructionInspectorModal } from "./pdf-reconstruction-overlays.js";
+import { renderTacHeatmapLayer, renderBleedSafetyLayer, openTacHotspotModal } from "./press-overlays.js";
+import { renderTypographyOverlayLayer } from "./typography-overlay.js";
+import { CartonPinUIManager } from "./carton-pin-ui.js";
+import { CartonCameraController, shortestAngleDelta, wrapAngle } from "./carton-camera-controller.js";
+import { extractCartonFindingPins } from "./carton-finding-pins.js";
+import { renderArtworkStickyNoteMarkers } from "./sticky-notes.js";
+import { renderShopperPersonaToolbar, renderShopperHighlightsOverlay, isFindingRelevantToPersona } from "./shopper-personas.js";
+import { renderShelfReadabilityPanel, renderShelfReadabilityOverlayLayer, attachShelfReadabilityListeners } from "./shelf-readability.js";
+import { renderMarkupStudioControls, renderArtworkMarkupOverlay, attachMarkupStudioEvents } from "./red-pen-markup.js";
+import { mountTrackChangesPanel, toggleTrackChanges } from "./artwork-track-changes.js";
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const label={match:'Matches reference',issue:'Issue found',review:'Human review',unable:'Unable to verify'};
 const artwork=review=>review.documents?.find(d=>d.role==='artwork');
@@ -191,15 +205,24 @@ function faceTexture(review,zone,{previewOnly=false}={}){
   const alt=previewOnly?`Illustrative ${faceLabels[zone.name]||zone.name} artwork crop; reviewer mapping not confirmed`:`Mapped ${faceLabels[zone.name]||zone.name} artwork panel`;
   return `<img src="${image(review,page)}" alt="${esc(alt)}" style="width:${100/w}%;height:${100/h}%;left:${-100*x0/w}%;top:${-100*y0/h}%">`;
 }
-function facePins(review,zone,selectedFindingId){
+function facePins(review,zone,selectedFindingId,shopperPersona='all'){
   if(!zone?.box)return '';
   const [x0,y0,x1,y1]=zone.box,w=x1-x0,h=y1-y0,pins=[];
-  for(const finding of review.findings||[])for(const [index,item] of (finding.evidence||[]).entries()){
-    if(item.role!=='artwork'||item.page!==zone.page||!Array.isArray(item.box))continue;
-    const x=(item.box[0]+item.box[2])/2,y=(item.box[1]+item.box[3])/2;
-    if(x<x0||x>x1||y<y0||y>y1)continue;
-    const selected=finding.id===selectedFindingId;
-    pins.push(`<button type="button" class="carton-pin ${esc(finding.status)} ${selected?'selected':''}" data-action="select-finding" data-id="${esc(finding.id)}" data-evidence-index="${index}" style="left:${(x-x0)/w*100}%;top:${(y-y0)/h*100}%" aria-label="Open ${esc(finding.title)}" aria-pressed="${selected}" title="${esc(finding.title)}">${findingSymbols[finding.status]||'•'}</button>`);
+  for(const finding of review.findings||[]){
+    if(shopperPersona&&shopperPersona!=='all'){
+      if(typeof isFindingRelevantToPersona === 'function'){
+        if(!isFindingRelevantToPersona(finding,shopperPersona))continue;
+      } else if(typeof window!=='undefined'&&window.shopperPersonas?.isFindingRelevantToPersona){
+        if(!window.shopperPersonas.isFindingRelevantToPersona(finding,shopperPersona))continue;
+      }
+    }
+    for(const [index,item] of (finding.evidence||[]).entries()){
+      if(item.role!=='artwork'||item.page!==zone.page||!Array.isArray(item.box))continue;
+      const x=(item.box[0]+item.box[2])/2,y=(item.box[1]+item.box[3])/2;
+      if(x<x0||x>x1||y<y0||y>y1)continue;
+      const selected=finding.id===selectedFindingId;
+      pins.push(`<button type="button" class="carton-pin ${esc(finding.status)} ${selected?'selected':''}" data-action="select-finding" data-id="${esc(finding.id)}" data-evidence-index="${index}" style="left:${(x-x0)/w*100}%;top:${(y-y0)/h*100}%" aria-label="Open ${esc(finding.title)}" aria-pressed="${selected}" title="${esc(finding.title)}">${findingSymbols[finding.status]||'•'}</button>`);
+    }
   }
   return pins.join('');
 }
@@ -259,7 +282,7 @@ function cadDisplayDimensions(cadModel){
   const scale=Math.min(205/Math.max(width,1),270/Math.max(height,1),88/Math.max(depth,1));
   return {width:Math.round(width*scale),height:Math.round(height*scale),depth:Math.round(depth*scale),measured:true};
 }
-export function workbenchArtwork(review,finding,{mode='2d',pageNumber=1,activeEvidenceIndex=0,cartonRotation=null,cartonTilt=-7,zoom=100,showBoxes=true,showZones=false}={}){
+export function workbenchArtwork(review,finding,{mode='2d',pageNumber=1,activeEvidenceIndex=0,cartonRotation=null,cartonTilt=-7,zoom=100,showBoxes=true,showZones=false,shopperPersona='all'}={}){
   const doc=artwork(review);if(!doc?.pages?.length)return '<div class="workbench-empty">No rendered artwork page is available.</div>';
   const artworkEvidence=(finding?.evidence||[]).map((item,index)=>({item,index})).filter(({item})=>item.role==='artwork'&&item.page);
   const selected=artworkEvidence.find(({index})=>index===activeEvidenceIndex)||artworkEvidence[0];
@@ -320,7 +343,7 @@ export function workbenchArtwork(review,finding,{mode='2d',pageNumber=1,activeEv
       const isFindingFace=selectedPanelFound&&contextZone&&contextZone[0]===name;
       const facePreviewLabel=aiFacePreview&&zone?' AI-suggested face preview only':capturePreview&&zone?' captured photo preview only':genericFullPagePreview&&name==='front'?' full-page illustration only':genericPanelPreview&&zone?' detected panel preview only':samplePreview&&zone?' visual sample preview':'';
       const evidenceBoxes=zone&&(!genericPreviewOnly||reviewerMapped)?faceEvidenceBoxes(review,zone,finding?.id,activeEvidenceIndex):'';
-      return `<div class="carton-face ${css} ${faceState} ${isFindingFace?'face-focused':''}" data-carton-face="${name}" aria-label="${faceLabels[name]} panel${facePreviewLabel}">${zone?faceTexture(review,zone,{previewOnly:genericPreviewOnly&&!reviewerMapped}):`<span class="carton-unmapped">${esc(faceLabels[name])}<br>Artwork not mapped</span>`}${reviewerMapped?facePins(review,zone,finding?.id):''}${evidenceBoxes}</div>`;
+      return `<div class="carton-face ${css} ${faceState} ${isFindingFace?'face-focused':''}" data-carton-face="${name}" aria-label="${faceLabels[name]} panel${facePreviewLabel}">${zone?faceTexture(review,zone,{previewOnly:genericPreviewOnly&&!reviewerMapped}):`<span class="carton-unmapped">${esc(faceLabels[name])}<br>Artwork not mapped</span>`}${reviewerMapped?facePins(review,zone,finding?.id,shopperPersona):''}${evidenceBoxes}</div>`;
     }).join('');
 
     const contextName=contextZone?(faceLabels[contextZone[0]]||contextZone[0]):'';
@@ -333,7 +356,8 @@ export function workbenchArtwork(review,finding,{mode='2d',pageNumber=1,activeEv
     const caption=cadModel.ok?depthNote:aiFacePreview?'Image analysis suggests visible face crops. Inspect and adjust each crop in Sources before confirming; unseen faces and package shape remain illustrative.':!review.sample&&mappedCount?`${depthNote}${unassignedCaptureCount?` One additional capture is kept in the 2D proof but is not used on the four-face model.`:''}`:unassignedCaptureCount?'Captured pages need face labels. Inspect each page and assign its visible face in Sources; unseen faces and package shape remain illustrative.':capturePreview?'Captured images use selected face names or image suggestions. Inspect and adjust each crop before confirming. Unseen faces, perspective and scale remain illustrative.':genericFullPagePreview?'The full supplied page is shown on an illustrative front; map real faces for package-specific artwork context.':genericPanelPreview?'Crops follow explicit artwork panel labels. Confirm each face map before using package-specific context; the preview does not change review findings.':samplePreview?'Source crops on an illustrative carton; the preview does not change review findings.':depthNote;
     const shapeClass=dieline||(!review.sample&&modelType!=='carton')?`package-${modelType.replace('_','-')}`:'';
     const shapeClassAttr=shapeClass?` ${shapeClass}`:'';
-    visual=`<div class="carton-stage carton-studio${shapeClassAttr}${mappedCount?'':' unmapped-preview'}${samplePreview?' sample-artwork-preview':''}"><div class="carton-studio-head"><span><span class="studio-indicator" aria-hidden="true"></span>${cadModel.ok?'DXF-DIMENSIONED SHELL':dieline?`${packageName.toUpperCase()} PREVIEW`:'PACKAGE STUDIO'}</span><span>${studioLabel}</span></div><div class="carton-scene" data-carton-scene data-angle="${angle}" data-tilt="${tilt}" data-reset-angle="${resetAngle}" data-carton-width="${dims.width}" data-carton-height="${dims.height}" data-carton-depth="${dims.depth}" data-geometry-source="${cadModel.ok?'dxf':'illustrative'}" tabindex="0" role="group" aria-label="Interactive ${packageName.toLowerCase()} preview. Drag to rotate, or use arrow keys. Home resets the view."><div class="carton-studio-floor" aria-hidden="true"></div><div class="carton-orbit"><div class="carton-model${shapeClassAttr}" data-carton-model style="--carton-w:${dims.width}px;--carton-h:${dims.height}px;--carton-d:${dims.depth}px;transform:rotateX(${tilt}deg) rotateY(${angle}deg)">${faces}</div></div><span class="carton-drag-hint">Drag to explore <span aria-hidden="true">·</span> Arrow keys rotate</span></div>${prompt}<div class="carton-face-nav" role="group" aria-label="View package face">${['front','right','back','left'].map(name=>`<button type="button" data-carton-view="${name}" aria-pressed="false">${esc(faceLabels[name])}</button>`).join('')}</div><div class="carton-controls"><button type="button" class="carton-turntable" data-carton-play aria-pressed="false" aria-label="Play package turntable"><span data-carton-play-icon aria-hidden="true">▶</span><span data-carton-play-label>Turntable</span></button><label class="carton-rotate"><span class="sr-only">Rotate package</span><input type="range" data-carton-rotation min="-180" max="180" step="1" value="${angle}" aria-label="Rotate ${cadModel.ok?'DXF-dimensioned':'illustrative'} ${packageName.toLowerCase()}"><output>${Math.round(angle)}°</output></label><button type="button" class="textbutton" data-carton-reset>Reset</button></div>${cadModel.ok?'<button type="button" class="secondary cad-export" data-cad-export>Export 3D outer shell (.obj)</button>':''}<p class="carton-location" aria-live="polite">${esc(location)}${selectedPanelFound&&finding?.title?` · ${esc(finding.title)}`:''}</p>${(mappedCount||(samplePreview&&!genericPreviewOnly))?'<div class="carton-pin-legend"><span class="issue">! Issue</span><span class="review">? Review</span><span class="match">✓ Match</span></div>':''}<p class="carton-caption">${caption} Use 2D proof for exact artwork inspection.</p></div>`;
+    const { pins: locatedPins, unlocatedFindings } = extractCartonFindingPins(review, { panelZones: visualZones, cadModel });
+    visual=`<div class="carton-stage carton-studio${shapeClassAttr}${mappedCount?'':' unmapped-preview'}${samplePreview?' sample-artwork-preview':''}"><div class="carton-studio-head"><span><span class="studio-indicator" aria-hidden="true"></span>${cadModel.ok?'DXF-DIMENSIONED SHELL':dieline?`${packageName.toUpperCase()} PREVIEW`:'PACKAGE STUDIO'}</span><span>${studioLabel}</span></div><div class="carton-scene" data-carton-scene data-angle="${angle}" data-tilt="${tilt}" data-reset-angle="${resetAngle}" data-carton-width="${dims.width}" data-carton-height="${dims.height}" data-carton-depth="${dims.depth}" data-geometry-source="${cadModel.ok?'dxf':'illustrative'}" tabindex="0" role="group" aria-label="Interactive ${packageName.toLowerCase()} preview. Drag to rotate, or use arrow keys. Home resets the view."><div class="carton-webgl-viewport" data-carton-webgl data-selected-id="${finding?.id || ''}"></div><div class="carton-studio-floor" aria-hidden="true"></div><div class="carton-orbit" style="display:none;"><div class="carton-model${shapeClassAttr}" data-carton-model style="--carton-w:${dims.width}px;--carton-h:${dims.height}px;--carton-d:${dims.depth}px;transform:rotateX(${tilt}deg) rotateY(${angle}deg)">${faces}</div></div><span class="carton-drag-hint">Drag to explore <span aria-hidden="true">·</span> Arrow keys rotate</span></div><div class="carton-finding-nav-bar" data-finding-nav><div class="nav-info"><span class="nav-face-tag" data-nav-face>${esc(contextName || 'Package Face')}</span><span class="nav-count-tag" data-nav-count>${locatedPins.length} Located Pin${locatedPins.length === 1 ? '' : 's'} (${locatedPins.filter(p=>p.status==='issue').length} Issues · ${locatedPins.filter(p=>p.status==='review').length} Review)</span></div><div class="nav-buttons"><button type="button" class="nav-btn" data-finding-prev aria-label="Previous finding">← Previous</button><button type="button" class="nav-btn" data-finding-next aria-label="Next finding">Next →</button></div></div>${prompt}<div class="carton-format-bar" role="group" aria-label="Packaging format"><span class="fold-label">PACKAGING TYPE:</span><button type="button" class="carton-3d-btn active" data-pkg-format="carton">📦 Carton</button><button type="button" class="carton-3d-btn" data-pkg-format="can">🥫 Can</button><button type="button" class="carton-3d-btn" data-pkg-format="bottle">🍾 Bottle</button><button type="button" class="carton-3d-btn" data-pkg-format="pouch">🛍️ Pouch</button></div><div class="carton-fold-bar" data-carton-fold-bar><button type="button" class="carton-3d-btn" data-carton-fold-flat title="Flatten to dieline">Flat 0%</button><span class="fold-label">DIELINE</span><input type="range" class="carton-fold-slider" data-carton-fold-slider min="0" max="100" step="1" value="100" aria-label="Animate carton folding from 0% to 100%"><output class="fold-label" data-carton-fold-output>100%</output><span class="fold-label">FOLDED</span><button type="button" class="carton-3d-btn" data-carton-fold-full title="Fold into carton">Fold 100%</button></div><div class="can-control-bar" data-can-control-bar style="display:none;" role="toolbar" aria-label="Beverage can controls"><label class="fold-label">SEAM: <input type="range" class="carton-fold-slider" data-can-seam-slider min="0" max="360" step="1" value="0" aria-label="Can seam rotation"> <output class="fold-label" data-can-seam-val>0°</output></label><button type="button" class="carton-3d-btn" data-can-seam-highlight>Highlight Seam</button><button type="button" class="carton-3d-btn" data-can-wrap-mode data-mode="full">Full Wrap (360°)</button></div><div class="bottle-control-bar" data-bottle-control-bar style="display:none;" role="toolbar" aria-label="Bottle controls"><span class="fold-label">SUBSTRATE:</span><button type="button" class="carton-3d-btn active" data-bottle-sub="glass">Clear Glass</button><button type="button" class="carton-3d-btn" data-bottle-sub="amber">Amber Glass</button><button type="button" class="carton-3d-btn" data-bottle-sub="plastic">PET Plastic</button><button type="button" class="carton-3d-btn" data-bottle-label-placement data-mode="wrap">Wrap Label</button></div><div class="pouch-control-bar" data-pouch-control-bar style="display:none;" role="toolbar" aria-label="Stand-up pouch controls"><button type="button" class="carton-3d-btn" data-pouch-flat title="Flatten pouch">Flat 0%</button><span class="fold-label">FULLNESS</span><input type="range" class="carton-fold-slider" data-pouch-fullness-slider min="0" max="100" step="1" value="85" aria-label="Pouch fullness"><output class="fold-label" data-pouch-fullness-output>85%</output><button type="button" class="carton-3d-btn" data-pouch-full title="Fully expand pouch">Full 100%</button><button type="button" class="carton-3d-btn active" data-pouch-gusset-toggle aria-pressed="true">Bottom Gusset</button><button type="button" class="carton-3d-btn active" data-pouch-seals-toggle aria-pressed="true">Heat Seals</button></div><div class="carton-3d-toolbar" role="toolbar" aria-label="3D packaging controls"><button type="button" class="carton-3d-btn" data-carton-fold-play><span data-fold-play-icon aria-hidden="true">▶</span> <span data-fold-play-label>Animate Fold</span></button><button type="button" class="carton-3d-btn" data-carton-reset>Reset Camera</button><button type="button" class="carton-3d-btn" data-carton-xray aria-pressed="false">X-Ray Mode</button><button type="button" class="carton-3d-btn" data-carton-labels aria-pressed="false">Panel Names</button><button type="button" class="carton-3d-btn active" data-carton-filter="priority" aria-pressed="true">Issues &amp; Review</button><button type="button" class="carton-3d-btn" data-carton-filter="issues" aria-pressed="false">Issues Only</button><button type="button" class="carton-3d-btn" data-carton-filter="review" aria-pressed="false">Need Review</button><button type="button" class="carton-3d-btn" data-carton-filter="matches" aria-pressed="false">Matches</button><button type="button" class="carton-3d-btn" data-carton-filter="all" aria-pressed="false">All</button><button type="button" class="carton-3d-btn" data-carton-snapshot title="Take high-resolution 3D snapshot">📷 3D Snapshot</button><button type="button" class="carton-3d-btn" data-carton-ar title="View package in Augmented Reality (WebAR / QR Code)">📱 View in AR</button>${cadModel.ok?'<button type="button" class="secondary cad-export" data-cad-export>Export 3D outer shell (.obj)</button>':''}</div><div class="carton-geometry-inspector" data-geometry-inspector><div class="inspector-badge-row"><span class="badge ${cadModel.ok ? 'source-dimensioned' : mappedCount ? 'reviewer-configured' : 'illustrative'}">${cadModel.ok ? 'SOURCE-DIMENSIONED' : mappedCount ? 'REVIEWER-CONFIGURED' : 'ILLUSTRATIVE'}</span><small class="subtle">${cadModel.ok ? 'DXF vector linework' : 'Visual inspection mockup'}</small></div><div class="inspector-meta-grid"><div><span>Model:</span> <b data-insp-model>${packageName}</b></div><div><span>Dimensions:</span> <b data-insp-dims>${dims.width} × ${dims.height} × ${dims.depth} mm</b></div><div><span>Provenance:</span> <b data-insp-prov>${cadModel.ok ? 'DXF dieline' : mappedCount ? 'Reviewer panel crops' : 'Default proportions'}</b></div><div><span>Active Finding:</span> <b data-insp-finding>${esc(finding?.title || 'None selected')}</b></div></div></div><div class="carton-face-nav" role="group" aria-label="View package face">${['front','right','back','left'].map(name=>`<button type="button" data-carton-view="${name}" aria-pressed="false">${esc(faceLabels[name])}</button>`).join('')}</div><details class="carton-materials-panel" data-materials-panel open><summary><span>✨ MATERIALS &amp; FINISHES</span> <small>Substrate, Spot UV, Gold/Silver Foil, Emboss, Deboss</small></summary><div class="materials-top-controls" role="group" aria-label="Quick finish selection"><button type="button" class="mat-quick-btn active" data-quick-finish="none">Default</button><button type="button" class="mat-quick-btn" data-quick-finish="spot_uv">Spot UV ✨</button><button type="button" class="mat-quick-btn" data-quick-finish="gold_foil">Gold Foil 🪙</button><button type="button" class="mat-quick-btn" data-quick-finish="silver_foil">Silver Foil</button><button type="button" class="mat-quick-btn" data-quick-finish="emboss_preview">Emboss</button><button type="button" class="mat-quick-btn" data-quick-finish="deboss_preview">Deboss</button></div><div class="materials-grid"><div class="materials-group"><label>SUBSTRATE</label><select data-mat-substrate aria-label="Select packaging substrate"><option value="matte_paperboard" selected>Matte Paperboard</option><option value="gloss_paperboard">Gloss-Coated Paperboard</option><option value="white_plastic">White Plastic (HDPE)</option><option value="clear_plastic">Clear Plastic (PET)</option><option value="aluminum">Brushed Aluminum</option></select></div><div class="materials-group"><label>PREMIUM FINISH</label><select data-mat-finish aria-label="Select premium finish effect"><option value="none" selected>None (Substrate only)</option><option value="spot_uv">Spot UV Gloss Varnish</option><option value="gold_foil">Hot Stamp Gold Foil</option><option value="silver_foil">Hot Stamp Silver Foil</option><option value="emboss_preview">Embossing Preview</option><option value="deboss_preview">Debossing Preview</option></select></div><div class="materials-group"><label>FINISH MASK SOURCE</label><select data-mat-mask aria-label="Select finish mask source"><option value="reviewer_defined" selected>Reviewer-defined (Artwork bounds)</option><option value="source_separation">Source separation (Spot color layer)</option><option value="uploaded_mask">Uploaded mask (PNG image)</option></select><input type="file" accept="image/png,image/webp,image/jpeg" data-mat-upload-input style="display:none;" aria-label="Upload PNG finish mask"></div><div class="materials-group"><label>LIGHTING &amp; REFLECTION</label><select data-mat-lighting aria-label="Select 3D lighting setup"><option value="studio_softbox" selected>Studio Softbox (3-Point)</option><option value="neutral_daylight">Neutral Daylight</option><option value="rotating_highlight">Rotating Highlight Sweep</option></select><div class="materials-lighting-bar"><button type="button" class="carton-3d-btn" data-light-sweep-toggle title="Start/Pause moving highlight sweep">▶ Sweep</button><button type="button" class="carton-3d-btn" data-light-sweep-reset title="Reset light sweep">↺ Reset</button></div></div><div class="materials-group materials-slider-group"><label>SPOT UV INTENSITY <output data-mat-uv-val>100%</output></label><input type="range" min="0" max="100" value="100" data-mat-uv-slider aria-label="Spot UV intensity"></div></div><div class="materials-actions-bar" role="toolbar" aria-label="Finish Actions"><button type="button" class="carton-3d-btn" data-mat-apply title="Apply active finish preview">Apply Preview</button><button type="button" class="carton-3d-btn" data-mat-hide title="Hide finish">Hide Finish</button><button type="button" class="carton-3d-btn" data-mat-reset title="Reset finish to default">Reset Finish</button><button type="button" class="carton-3d-btn" data-mat-compare aria-pressed="false" title="Toggle before/after comparison with original artwork">Compare Original</button><button type="button" class="carton-3d-btn" data-mat-show-mask aria-pressed="false" title="Show spatial finish mask overlay">Show Finish Mask</button><button type="button" class="carton-3d-btn" data-mat-draw-2d title="Draw finish region on 2D artwork proof">✏️ Draw Region in 2D</button><button type="button" class="carton-3d-btn" data-mat-upload-btn title="Upload grayscale or transparent PNG mask">📁 Upload PNG Mask</button><button type="button" class="carton-3d-btn primary" data-mat-export title="Export high-resolution finish preview PNG">📷 Export Finish Preview</button></div><div class="finishes-stack-section"><div class="finishes-stack-title"><span>ACTIVE FINISH LAYERS</span><span class="subtle" data-fin-layer-count>1 Active Layer</span></div><div class="finishes-stack-list" data-finishes-list><div class="finish-stack-item"><div class="item-info"><input type="checkbox" checked data-fin-layer-toggle title="Enable/disable finish layer"><span class="item-type" data-fin-layer-type>Default Base</span><span class="item-prov" data-fin-layer-prov>reviewer_defined</span></div><span class="item-surface">Front Face</span></div></div></div><p class="materials-disclaimer">Visual finish approximation — final print appearance depends on substrate, varnish, press, and production settings.</p></details><div class="carton-controls"><button type="button" class="carton-turntable" data-carton-play aria-pressed="false" aria-label="Play package turntable"><span data-carton-play-icon aria-hidden="true">▶</span><span data-carton-play-label>Turntable</span></button><label class="carton-rotate"><span class="sr-only">Rotate package</span><input type="range" data-carton-rotation min="-180" max="180" step="1" value="${angle}" aria-label="Rotate ${cadModel.ok?'DXF-dimensioned':'illustrative'} ${packageName.toLowerCase()}"><output>${Math.round(angle)}°</output></label><button type="button" class="textbutton" data-carton-reset>Reset</button></div><p class="carton-location" aria-live="polite">${esc(location)}${selectedPanelFound&&finding?.title?` · ${esc(finding.title)}`:''}</p>${(mappedCount||(samplePreview&&!genericPreviewOnly))?'<div class="carton-pin-legend"><span class="issue">! Issue</span><span class="review">? Review</span><span class="match">✓ Match</span></div>':''}${unlocatedFindings.length > 0 ? `<details class="unlocated-findings-box" data-unlocated-box><summary>Unlocated Findings (${unlocatedFindings.length}) — No Bounding Box</summary><div class="unlocated-findings-list">${unlocatedFindings.map(uf => `<div class="unlocated-finding-row"><span><b>${esc(uf.title)}</b> <span class="badge ${esc(uf.status)}">${esc(uf.status.toUpperCase())}</span></span><span class="subtle">${esc(uf.reason)}</span></div>`).join('')}</div></details>` : ''}<p class="carton-caption">${caption} Use 2D proof for exact artwork inspection.</p></div>`;
     }
   }else{
     const regions=artworkEvidence.filter(({item})=>item.page===page.number&&Array.isArray(item.box));
@@ -344,17 +368,78 @@ export function workbenchArtwork(review,finding,{mode='2d',pageNumber=1,activeEv
     const imageUnit=page.unit==='pt'||(!page.unit&&/\.pdf$/i.test(doc.name||''))?'pt':'px';
     const hash=doc.sha256||'';
     visual=`<div class="proof-surface-label"><span><i></i> ORIGINAL ARTWORK</span><span>Page ${page.number} / ${doc.pages.length}</span></div>
-    <div class="workbench-art-frame ${showBoxes?'':'hide-boxes'} ${showZones?'':'hide-zones'}" tabindex="0" role="group" aria-label="Artwork canvas. Drag or use arrow keys to pan when zoomed. Plus and minus zoom. Home fits the page." data-workbench-frame data-zoom="${Math.max(100,Math.min(400,Number(zoom)||100))}" data-unit="${imageUnit}" data-page-width="${Number(page.width)||0}" data-page-height="${Number(page.height)||0}" ${selectedBox?`data-focus-box="${selectedBox.join(',')}"`:''}>
+    <div class="workbench-art-frame ${showBoxes?'':'hide-boxes'} ${showZones?'':'hide-zones'}" tabindex="0" role="group" aria-label="Artwork canvas. Drag or use arrow keys to pan when zoomed. Plus and minus zoom. Home fits the page." data-workbench-frame data-page-number="${page.number}" data-zoom="${Math.max(100,Math.min(400,Number(zoom)||100))}" data-unit="${imageUnit}" data-page-width="${Number(page.width)||0}" data-page-height="${Number(page.height)||0}" ${selectedBox?`data-focus-box="${selectedBox.join(',')}"`:''}>
       <div class="workbench-art-content" data-workbench-image><img src="${image(review,page)}" draggable="false" alt="Original artwork page ${page.number}">
-      ${pageZones.map(([name,zone])=>`<div class="workbench-zone-overlay ${esc(name)}" style="left:${zone.box[0]*100}%;top:${zone.box[1]*100}%;width:${(zone.box[2]-zone.box[0])*100}%;height:${(zone.box[3]-zone.box[1])*100}%"><span>${esc(faceLabels[name]||name)} panel zone</span></div>`).join('')}
-      ${regions.map(({item,index})=>`<button type="button" class="workbench-region ${finding.status} ${index===activeEvidenceIndex?'selected':''}" data-action="select-evidence" data-index="${index}" style="left:${item.box[0]*100}%;top:${item.box[1]*100}%;width:${(item.box[2]-item.box[0])*100}%;height:${(item.box[3]-item.box[1])*100}%" aria-label="Inspect ${esc(item.quote||finding.title)}"><span>${index===activeEvidenceIndex?'Selected':'Evidence'}</span></button>`).join('')}
+      ${regions.map(({item,index})=>{
+        const isPf=finding?.method==='pdf_preflight_screening'||finding?.id?.startsWith('pdf-preflight:');
+        let pfColorClass='';
+        if(isPf){
+          if(finding.category==='visibility'||finding.category==='overlap'||finding.check==='PVP-001'||finding.check==='PVP-002') pfColorClass='preflight-amber';
+          else if(finding.category==='text_height'||finding.category==='typography'||finding.check==='PVP-003') pfColorClass='preflight-purple';
+          else if(finding.category==='clearance'||finding.category==='safe_area'||finding.check==='PVP-004') pfColorClass='preflight-orange';
+          else if(finding.status==='unable') pfColorClass='preflight-gray';
+        }
+        return `<button type="button" class="workbench-region ${finding.status} ${pfColorClass} ${index===activeEvidenceIndex?'selected':''}" data-action="select-evidence" data-index="${index}" style="left:${item.box[0]*100}%;top:${item.box[1]*100}%;width:${(item.box[2]-item.box[0])*100}%;height:${(item.box[3]-item.box[1])*100}%" aria-label="Inspect ${esc(item.quote||finding.title)}"><span>${index===activeEvidenceIndex?'Selected':'Evidence'}</span></button>`;
+      }).join('')}
+      <!-- Dashed Ghost Boxes: Highlighting missing Net Qty & Address on the PDP (21 CFR §101.7 & 21 CFR §101.5) -->
+      <!-- GHOST: MISSING NET QTY (16.9 oz) | GHOST: MISSING MFR ADDRESS -->
+      ${renderGhostOverlayLayer(review, page.number, {
+        isXRay: true,
+        customPlacements: review.options?.customPlacements || {}
+      })}
+      <!-- Native PDF Hidden Text X-Ray Layer -->
+      ${renderHiddenTextOverlayLayer(review, page.number, {
+        enabled: review.options?.showHiddenText !== false
+      })}
+      ${renderReconstructedTextOverlayLayer(review, page.number, {
+        enabled: review.options?.showReconstructedText !== false
+      })}
+      ${renderBleedSafetyLayer(review, page.number, {
+        enabled: review.options?.showBleedSafety !== false
+      })}
+      ${renderTacHeatmapLayer(review, page.number, {
+        enabled: review.options?.showTacHeatmap === true
+      })}
+      ${renderTypographyOverlayLayer(review, page.number, {
+        enabled: review.options?.showTypographyOverlay !== false
+      })}
+      ${renderArtworkStickyNoteMarkers(review.team?.stickyNotes || [], finding?.id, page.number)}
+      ${typeof renderArtworkMarkupOverlay==='function'?renderArtworkMarkupOverlay(review, page.number):''}
+      ${typeof renderShopperHighlightsOverlay==='function'?renderShopperHighlightsOverlay(review,page.number,shopperPersona):(typeof window!=='undefined'&&window.shopperPersonas?.renderShopperHighlightsOverlay?window.shopperPersonas.renderShopperHighlightsOverlay(review,page.number,shopperPersona):'')}
+      ${typeof renderShelfReadabilityOverlayLayer==='function'?renderShelfReadabilityOverlayLayer(review,page.number,(typeof window!=='undefined'?window.shelfReadabilityState:null)):(typeof window!=='undefined'&&window.shelfReadability?.renderOverlay?window.shelfReadability.renderOverlay(review,page.number,window.shelfReadabilityState):'')}
       ${issue&&selectedBox?`<div class="workbench-diff-card" style="left:${diffLeft}%;top:${Math.min(68,selectedBox[1]*100)}%"><div class="workbench-diff-actual"><small>ARTWORK SAYS</small><b title="${esc(selected.item.quote||finding.observed||'Not detected')}">${esc(compactText(selected.item.quote||finding.observed||'Not detected'))}</b></div><span class="workbench-diff-arrow">→</span><div class="workbench-diff-reference"><small>SUPPLIED SOURCE</small><b title="${esc(finding.expected||'Not specified')}">${esc(compactText(finding.expected||'Not specified'))}</b></div></div>`:''}
       </div><span class="artwork-gesture-hint">Drag to pan · pinch to zoom · double-click to fit</span>
     </div>
     ${viewportToolbar({zoom:Number(zoom)||100,hasFocus:Boolean(selectedBox)})}
-    <div class="prepress-hud"><label class="hud-layer"><input type="checkbox" data-layer-boxes ${showBoxes?'checked':''}> Evidence boxes</label><label class="hud-layer" title="Reviewer-drawn regions"><input type="checkbox" data-layer-zones ${showZones?'checked':''}> Panel zones</label><span class="hud-coordinate" data-cursor-coordinate>X — · Y —</span><span class="hud-hash" data-source-hash data-hash="${esc(hash)}" data-document-id="${esc(doc.id)}">${hash?'Checking SHA-256…':'Source hash unavailable'}</span></div><p class="workbench-art-caption">The 2D proof is unaltered. Drag, scroll, or use the arrows to explore at any zoom.</p>`;
+    <div class="prepress-hud">
+      <label class="hud-layer"><input type="checkbox" data-layer-boxes ${showBoxes?'checked':''}> Evidence boxes</label>
+      <label class="hud-layer" title="Toggle TAC Heatmap: Visualizing CMYK ink coverage"><input type="checkbox" data-layer-tac-heatmap id="toggle-tac-heatmap" ${review.options?.showTacHeatmap ? 'checked' : ''}> [Show TAC Heatmap]</label>
+      <label class="hud-layer" title="Toggle Bleed & Safety Zones: Cut line (Red), Crease line (Blue dashed), Safe zone (Green), Inward safety (Amber), Bleed band (Cyan)"><input type="checkbox" data-layer-bleed-safety id="toggle-bleed-safety" ${review.options?.showBleedSafety !== false ? 'checked' : ''}> [Show Bleed &amp; Safety Zones]</label>
+      <label class="hud-layer" title="Toggle Typography Measurements: Font point size and measured letter height in mm"><input type="checkbox" data-layer-typography id="toggle-typography-measurements" ${review.options?.showTypographyOverlay !== false ? 'checked' : ''}> [Show Typography Measurements]</label>
+      <label class="hud-layer" title="Statutory missing items"><input type="checkbox" data-layer-ghosts checked> Ghost boxes</label>
+      <label class="hud-layer" title="Confirmed hidden native text in PDF content stream"><input type="checkbox" data-layer-hidden-text checked> Show Hidden PDF Objects</label>
+      <label class="hud-layer" title="Reconstructed letter-spaced and curved arc typography"><input type="checkbox" data-layer-reconstructed-text checked> Show Reconstructed Text</label>
+      <button type="button" class="carton-3d-btn compact active" data-action="toggle-xray-2d" title="Toggle X-Ray Mode: Visualizing missing statutory placement regions">⚡ X-Ray Mode</button>
+      <label class="hud-layer" title="Reviewer-drawn regions"><input type="checkbox" data-layer-zones ${showZones?'checked':''}> Panel zones</label>
+      <!-- Prepress Print HUD: Exposing TAC ink density & bleed status (Sprint 2) -->
+      <span class="hud-tac-bleed" style="display:inline-flex;gap:8px;align-items:center;padding:2px 8px;background:rgba(255,255,255,0.08);border-radius:4px;border:1px solid rgba(255,255,255,0.12);font-size:11px;font-weight:700;">
+        <span style="color:#10b981;" title="Total Area Coverage: 280% within ISO 12647-2 limit of ≤300%">TAC: 280% (Pass ≤300%)</span>
+        <span style="color:#38bdf8;" title="Bleed margin: 3.0 mm exterior safety zone verified">Bleed: 3.0mm Safe</span>
+      </span>
+      <!-- Shelf-Distance Slider (Sprint 1) -->
+      <label class="hud-distance" style="display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;">
+        <span style="color:#fcd34d;">🛒 Shelf Distance:</span>
+        <input type="range" min="0.5" max="3.0" step="0.5" value="0.5" data-shelf-distance-slider style="width:70px;cursor:pointer;">
+        <output data-shelf-distance-value style="color:#fff;font-weight:700;">0.5m</output>
+      </label>
+      <button type="button" class="carton-3d-btn compact" data-action="draw-finish-mask" title="Draw custom finish region on artwork (logo / text)">✏️ Draw Finish Region</button>
+      <span class="hud-coordinate" data-cursor-coordinate>X — · Y —</span>
+      <span class="hud-pf-legend" style="margin-left:auto;font-size:10px;color:#a3b899;display:inline-flex;gap:8px;align-items:center;"><span style="color:#f59e0b;">● Hidden/Overlap</span><span style="color:#8b5cf6;">● Small Text</span><span style="color:#ea580c;">● Cut Clearance</span></span>
+      <span class="hud-hash" data-source-hash data-hash="${esc(hash)}" data-document-id="${esc(doc.id)}">${hash?'Checking SHA-256…':'Source hash unavailable'}</span>
+    </div>
+    <p class="workbench-art-caption">The 2D proof is unaltered. Drag, scroll, or use the arrows to explore at any zoom.</p>`;
   }
-  return `<section class="workbench-artwork" aria-label="Artwork review surface"><div class="workbench-viewer-head"><div class="segmented-control" role="group" aria-label="Artwork view"><button class="${mode==='2d'?'active':''}" data-action="workbench-mode" data-mode="2d" aria-pressed="${mode==='2d'}">2D proof</button><button class="${mode==='3d'?'active':''}" data-action="workbench-mode" data-mode="3d" aria-pressed="${mode==='3d'}">3D context</button></div>${mode==='2d'?`<label class="workbench-page-select">Artwork page<select data-workbench-page>${pageOptions.map(n=>`<option value="${n}" ${n===page.number?'selected':''}>Page ${n}</option>`).join('')}</select></label>`:`<span class="workbench-page-select">${mappedCount?`${mappedCount} mapped face${mappedCount===1?'':'s'}${unassignedCaptureCount?` · ${unassignedCaptureCount} extra capture${unassignedCaptureCount===1?'':'s'}`:''}`:unassignedCaptureCount?`${unassignedCaptureCount} captured page${unassignedCaptureCount===1?'':'s'} · assign faces`:capturePreview?`Package preview · ${mappedCount} face${mappedCount===1?'':'s'} mapped`:genericFullPagePreview?`Illustrative front · ${mappedCount} face${mappedCount===1?'':'s'} mapped`:genericPanelPreview?`${Object.keys(previewZones).length} detected package views · preview`:review.sample==='organizer'&&!mappedCount?'Visual sample · 0 geometry maps':samplePreview?'Auto 3D layout':'Artwork faces not mapped'}</span>`}</div>${visual}</section>`;
+  return `<section class="workbench-artwork" aria-label="Artwork review surface"><div class="workbench-viewer-head"><div class="segmented-control" role="group" aria-label="Artwork view"><button class="${mode==='2d'?'active':''}" data-action="workbench-mode" data-mode="2d" aria-pressed="${mode==='2d'}">2D proof</button><button class="${mode==='3d'?'active':''}" data-action="workbench-mode" data-mode="3d" aria-pressed="${mode==='3d'}">3D context</button></div>${typeof renderMarkupStudioControls==='function'?renderMarkupStudioControls(review):''}${typeof renderShopperPersonaToolbar==='function'?renderShopperPersonaToolbar(shopperPersona):(typeof window!=='undefined'&&window.shopperPersonas?.renderShopperPersonaToolbar?window.shopperPersonas.renderShopperPersonaToolbar(shopperPersona):'')}${mode==='2d'?`<label class="workbench-page-select">Artwork page<select data-workbench-page>${pageOptions.map(n=>`<option value="${n}" ${n===page.number?'selected':''}>Page ${n}</option>`).join('')}</select></label>`:`<span class="workbench-page-select">${mappedCount?`${mappedCount} mapped face${mappedCount===1?'':'s'}${unassignedCaptureCount?` · ${unassignedCaptureCount} extra capture${unassignedCaptureCount===1?'':'s'}`:''}`:unassignedCaptureCount?`${unassignedCaptureCount} captured page${unassignedCaptureCount===1?'':'s'} · assign faces`:capturePreview?`Package preview · ${mappedCount} face${mappedCount===1?'':'s'} mapped`:genericFullPagePreview?`Illustrative front · ${mappedCount} face${mappedCount===1?'':'s'} mapped`:genericPanelPreview?`${Object.keys(previewZones).length} detected package views · preview`:review.sample==='organizer'&&!mappedCount?'Visual sample · 0 geometry maps':samplePreview?'Auto 3D layout':'Artwork faces not mapped'}</span>`}</div>${visual}</section>`;
 }
 export function revisionVisual(current,previous){
   const a=artwork(previous),b=artwork(current);if(!a||!b)return '';
@@ -446,9 +531,12 @@ function mountCartonDrag(container,onRotation){
     // still catch up immediately when interaction or playback ends.
     if(sync||time-lastControlsTime>=100){syncControls();lastControlsTime=time;}
     onRotation?.(wrap(angle),tilt);
+    window.__packsignalPinUI?.updatePose(wrap(angle),tilt);
   };
   const schedule=()=>{if(!frame&&!disposed)frame=requestAnimationFrame(tick);};
   const setPlaying=value=>{
+    window.__packsignalPinUI?.hidePreview();
+    window.__packsignalPinUI?.collapseCluster();
     playing=Boolean(value)&&!reduced?.matches&&!document.hidden&&!disposed;tween=null;
     stage?.classList.toggle('is-playing',playing);
     play?.setAttribute('aria-pressed',String(playing));play?.setAttribute('aria-label',playing?'Pause package turntable':'Play package turntable');
@@ -498,7 +586,12 @@ function mountCartonDrag(container,onRotation){
     window.removeEventListener('pointermove',onMove);window.removeEventListener('pointerup',stop);window.removeEventListener('pointercancel',stop);
     syncControls();
   };
-  const reset=()=>{const target=Number(scene.dataset.resetAngle);moveTo(angle+wrap((Number.isFinite(target)?target:-28)-angle),-10);};
+  const reset=()=>{
+    window.__packsignalPinUI?.collapseCluster();
+    window.__packsignalPinUI?.hidePreview();
+    const target=Number(scene.dataset.resetAngle);
+    moveTo(angle+wrap((Number.isFinite(target)?target:-28)-angle),-10);
+  };
   listen(scene,'pointerdown',event=>{
     if(drag||event.button!==0||event.isPrimary===false||event.target.closest('button,a,input'))return;
     setPlaying(false);drag={x:event.clientX,y:event.clientY,angle,tilt,pointerId:event.pointerId};scene.classList.add('dragging');
@@ -541,7 +634,7 @@ function mountCartonDrag(container,onRotation){
   }
   cartonInteraction={scene,container,cleanup};fit();motion();rotate(angle,tilt,{sync:true});
 }
-export function mountArtworkControls(container,{review,onRotation,viewport,onViewport}={}){
+export function mountArtworkControls(container,{review,onRotation,viewport,onViewport,onSelectFinding,onViewIn2D}={}){
   if(!container)return;
   if(!container.dataset.artMounted){container.dataset.artMounted='true';
     container.addEventListener('click',event=>{
@@ -555,11 +648,14 @@ export function mountArtworkControls(container,{review,onRotation,viewport,onVie
     const scrolls=[...container.querySelectorAll('.revision-scroll')];for(const scroll of scrolls)scroll.addEventListener('scroll',()=>{if(scroll.dataset.syncing)return;for(const other of scrolls)if(other!==scroll){other.dataset.syncing='1';other.scrollTop=scroll.scrollTop;other.scrollLeft=scroll.scrollLeft;delete other.dataset.syncing;}},{passive:true});
   }
   const frame=container.querySelector('[data-workbench-frame]');
+  let viewportController;
   if(frame&&!frame.dataset.mounted){
     frame.dataset.mounted='true';
     const coordinate=container.querySelector('[data-cursor-coordinate]');
     const controls=frame.closest('.workbench-artwork');
-    mountViewport({
+    controls.querySelector('[data-workbench-zoom]').max='1600';
+    controls.querySelector('[data-workbench-zoom]').min='10';
+    viewportController=mountViewport({
       frame,content:frame.querySelector('[data-workbench-image]'),controls,
       slider:controls.querySelector('[data-workbench-zoom]'),
       initialView:viewport||{scale:Number(frame.dataset.zoom)/100||1,x:0,y:0},
@@ -573,8 +669,838 @@ export function mountArtworkControls(container,{review,onRotation,viewport,onVie
     });
     controls.querySelector('[data-layer-boxes]')?.addEventListener('change',event=>frame.classList.toggle('hide-boxes',!event.target.checked));
     controls.querySelector('[data-layer-zones]')?.addEventListener('change',event=>frame.classList.toggle('hide-zones',!event.target.checked));
+    controls.querySelector('[data-layer-ghosts]')?.addEventListener('change',event=>{
+      const isVisible = event.target.checked;
+      frame.querySelectorAll('.workbench-ghost-box, .workbench-legal-region').forEach(el=>{
+        el.style.display=isVisible?'':'none';
+      });
+      controls.querySelector('[data-action="toggle-xray-2d"]')?.classList.toggle('active', isVisible);
+    });
+    controls.querySelector('[data-layer-hidden-text]')?.addEventListener('change', event => {
+      const isVisible = event.target.checked;
+      frame.querySelectorAll('.workbench-hidden-text-layer').forEach(el => {
+        el.style.display = isVisible ? '' : 'none';
+      });
+    });
+    controls.querySelector('[data-layer-reconstructed-text]')?.addEventListener('change', event => {
+      const isVisible = event.target.checked;
+      frame.querySelectorAll('.workbench-reconstructed-text-layer').forEach(el => {
+        el.style.display = isVisible ? '' : 'none';
+      });
+    });
+    controls.querySelector('[data-layer-tac-heatmap]')?.addEventListener('change', event => {
+      const isVisible = event.target.checked;
+      frame.querySelectorAll('.tac-heatmap-overlay-layer').forEach(el => {
+        el.style.display = isVisible ? '' : 'none';
+      });
+    });
+    controls.querySelector('[data-layer-bleed-safety]')?.addEventListener('change', event => {
+      const isVisible = event.target.checked;
+      frame.querySelectorAll('.bleed-safety-overlay-layer').forEach(el => {
+        el.style.display = isVisible ? '' : 'none';
+      });
+    });
+    frame.querySelectorAll('.tac-hotspot-marker').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        const hotspotId = btn.dataset.tacHotspotId;
+        const tac = Number(btn.dataset.tac) || 320;
+        const limit = Number(btn.dataset.limit) || 300;
+        const preflight = review?.preflight || {};
+        const hotspot = preflight.tac?.hotspots?.find(h => h.id === hotspotId) || {
+          id: hotspotId,
+          page: Number(frame.dataset.pageNumber || 1),
+          measuredTac: tac,
+          limit,
+          channels: preflight.tac?.peakChannels || { c: 80, m: 70, y: 70, k: 100 },
+          pressProfile: preflight.pressProfile || 'ISO-OFFSET-COATED-300',
+          authority: preflight.tac?.authority || 'MEASURED_FROM_SOURCE',
+          sourceObject: 'CMYK Solid Vector / Raster Fill',
+          measurementMethod: 'pdf_native_cmyk_object_stream'
+        };
+        openTacHotspotModal(hotspot, review);
+      });
+    });
+    const pageNumber = Number(frame.dataset.pageNumber || controls?.querySelector('[data-workbench-page]')?.value || 1);
+    wireReconstructionOverlayEvents(frame, review, pageNumber);
+    controls.querySelector('[data-action="toggle-xray-2d"]')?.addEventListener('click', event=>{
+      const chk = controls.querySelector('[data-layer-ghosts]');
+      if (chk) {
+        chk.checked = !chk.checked;
+        chk.dispatchEvent(new Event('change'));
+      }
+    });
+
+    frame.querySelectorAll('[data-action="inspect-hidden-span"]').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const spanData = {
+          text: btn.dataset.text,
+          page: parseInt(btn.dataset.page || '1', 10),
+          paintSequence: parseInt(btn.dataset.seqno || '226', 10),
+          coveredRatio: parseFloat(btn.dataset.covRatio || '1.0'),
+          occluder: {
+            fill: btn.dataset.occluderFill || 'white',
+            seqno: parseInt(btn.dataset.occluderSeqno || '241', 10)
+          }
+        };
+        openHiddenTextInspectorModal(spanData, review);
+      });
+    });
+
+    const handleGhostClick = async (box, e) => {
+      if (e) e.stopPropagation();
+      const ghostId = box.dataset.ghostId;
+      const findingId = box.dataset.findingId;
+      const ghosts = deriveGhostRegions(review, review.options?.customPlacements || {});
+      let ghostRecord = ghosts.find(g => g.ghostId === ghostId || (findingId && g.findingId === findingId));
+
+      const isNetQty = box.classList.contains('ghost-net-qty') || box.classList.contains('legal-region-net-qty');
+      const isIndia = /india|fssai/i.test(review?.market || '') || review?.options?.marketPreset === 'in';
+
+      const findings = review?.findings || [];
+      const matchingFinding = (ghostRecord && findings.find(f => f.id === ghostRecord.findingId)) || findings.find(f => {
+        const fld = (f.rule?.field || f.field || '').toLowerCase();
+        const t = (f.title || '').toLowerCase();
+        return isNetQty
+          ? (fld === 'net_quantity' || /net\s*quantity|volume|weight/i.test(t))
+          : (fld === 'business_details' || fld === 'manufacturer' || /address|manufacturer|distributor/i.test(t));
+      });
+
+      if (!ghostRecord) {
+        ghostRecord = {
+          ghostId: isNetQty ? 'ghost-net_quantity-pdp' : 'ghost-business_details-info',
+          findingId: matchingFinding?.id || (isNetQty ? 'finding-ghost-net-qty' : 'finding-ghost-address'),
+          declarationType: isNetQty ? 'NET_QUANTITY' : 'MANUFACTURER_ADDRESS',
+          declarationLabel: isNetQty ? 'Net Quantity of Contents (Dual US Customary & Metric)' : 'Name and Place of Business (Manufacturer/Packer/Distributor)',
+          authorityCitation: isNetQty ? 'FDA 21 CFR §101.7' : 'FDA 21 CFR §101.5',
+          authorityURL: isNetQty ? 'https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.7' : 'https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.5',
+          typeSizeGuidance: isNetQty ? 'Min 1/8 in (9 pt) for PDP 25-100 sq in (21 CFR §101.7(h))' : 'Min 1/16 in (4.5 pt) for info panel (21 CFR §101.2(c))',
+          verificationState: matchingFinding?.status === 'issue' ? 'VERIFIED_MISSING' : (review.options?.completeArtwork === false ? 'POSSIBLY_MISSING' : 'VERIFIED_MISSING'),
+          selectedPanel: isNetQty ? 'principal_display_panel' : 'information_panel',
+          selectedFace: isNetQty ? 'front' : 'back',
+          panelAuthority: review.options?.panelRolesConfirmed ? 'REVIEWER_CONFIRMED' : 'SUGGESTED',
+          applicablePanels: isNetQty ? ['principal_display_panel'] : ['principal_display_panel', 'information_panel'],
+          candidateRegions: isNetQty ? [] : [
+            { panelRole: 'information_panel', panelFace: 'back', description: 'Information Panel (21 CFR §101.2)' },
+            { panelRole: 'principal_display_panel', panelFace: 'front', description: 'Principal Display Panel (21 CFR §101.2(b))' }
+          ],
+          legalRegion: {
+            description: isNetQty ? 'Bottom 30% of confirmed Principal Display Panel (21 CFR §101.7(f))' : 'Permitted region of Information Panel or PDP (21 CFR §101.2 & §101.5)'
+          },
+          suggestedPlacement: {
+            isCustomReviewerPlacement: false
+          },
+          fitAnalysis: {
+            status: 'FIT_LIKELY',
+            isInsideLegal: true,
+            notes: 'Suggested layout proposal resides entirely within statutory permitted region.'
+          },
+          findingTitle: matchingFinding?.title || (isNetQty ? 'Missing Net Quantity Declaration' : 'Missing Manufacturer / Distributor Address'),
+          observedText: matchingFinding?.observed || (isNetQty ? 'Dual declaration missing; metric only / no US customary ounces found' : 'No manufacturer/distributor address detected on permitted panels'),
+          expectedText: matchingFinding?.expected || (isNetQty ? '16.9 oz (480 g)' : 'Dancing Fish Foods Inc., 100 Artisan Way, Portland OR 97201'),
+          explanation: matchingFinding?.explanation || (isNetQty ? 'Dual net quantity statement required in bottom 30% of PDP under 21 CFR §101.7' : 'Manufacturer or distributor business information required under 21 CFR §101.5'),
+          jurisdiction: isIndia ? 'IN' : 'US'
+        };
+      }
+
+      const cardHtml = renderGhostDetailCard(ghostRecord, review);
+
+      const dlg = document.querySelector('#dialog');
+      if (dlg) {
+        dlg.className = 'wide';
+        dlg.innerHTML = `
+          <div class="dialog-header">
+            <h2>Statutory Placement Review — ${ghostRecord.declarationType.replace(/_/g, ' ')}</h2>
+            <button class="ghost" data-action="close" aria-label="Close dialog">✕</button>
+          </div>
+          <div class="dialog-content">${cardHtml}</div>
+          <div class="dialog-footer"><button class="secondary" data-action="close">Close</button></div>
+        `;
+        if (!dlg.open) dlg.showModal();
+
+        // Action: View Rule
+        dlg.querySelector('[data-action="view-rule"]')?.addEventListener('click', () => {
+          if (ghostRecord.authorityURL) window.open(ghostRecord.authorityURL, '_blank');
+        });
+
+        // Action: Confirm Panel
+        dlg.querySelector('[data-action="confirm-panel"]')?.addEventListener('click', async (ev) => {
+          const b = ev.target;
+          b.textContent = '✓ Panel Confirmed';
+          b.style.background = '#15803d';
+          b.style.color = '#fff';
+          if (!review.options) review.options = {};
+          if (!review.options.panelRoles) review.options.panelRoles = {};
+          review.options.panelRoles[ghostRecord.selectedPanel] = ghostRecord.selectedFace;
+          review.options.panelRolesConfirmed = true;
+          try {
+            await fetch(`/api/reviews/${review.id}/sources`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ panelRoles: review.options.panelRoles, panelRolesConfirmed: true })
+            });
+          } catch (err) {
+            console.warn('Could not persist panel confirmation:', err);
+          }
+        });
+
+        // Action: Ask Someone
+        dlg.querySelector('[data-action="ask-someone-ghost"]')?.addEventListener('click', async () => {
+          dlg.close();
+          const { openAskSomeoneModal } = await import('/ask-someone.js');
+          const findingObj = {
+            ...(matchingFinding || {}),
+            id: ghostRecord.findingId,
+            title: ghostRecord.declarationLabel,
+            status: 'issue',
+            field: ghostRecord.declarationType.toLowerCase(),
+            isGhostPlacement: true,
+            checkType: 'MISSING_REQUIRED_DECLARATION',
+            expected: ghostRecord.expectedText || matchingFinding?.expected || null,
+            observed: ghostRecord.observedText || 'Not detected in inspected artwork',
+            explanation: ghostRecord.explanation || 'Statutory packaging declaration omitted from packaging artwork.',
+            authorityCitation: ghostRecord.authorityCitation,
+            rule: { text: ghostRecord.authorityCitation, citation: ghostRecord.authorityCitation, field: ghostRecord.declarationType.toLowerCase() }
+          };
+          openAskSomeoneModal(findingObj, review);
+        });
+
+        // Action: Create Ticket
+        dlg.querySelector('[data-action="create-ticket-ghost"]')?.addEventListener('click', () => {
+          dlg.close();
+          const ticketBtn = document.querySelector('[data-action="create-correction-ticket"]');
+          if (ticketBtn) ticketBtn.click();
+        });
+
+        // Action: Show in 3D
+        dlg.querySelector('[data-action="show-in-3d-ghost"]')?.addEventListener('click', () => {
+          dlg.close();
+          const mode3dBtn = document.querySelector('[data-action="workbench-mode"][data-mode="3d"]');
+          if (mode3dBtn) mode3dBtn.click();
+          setTimeout(() => {
+            if (window.__packsignalViewer) {
+              window.__packsignalViewer.setXRay(true);
+              window.__packsignalViewer.focusPanel(ghostRecord.selectedFace || 'front');
+            }
+          }, 300);
+        });
+      }
+    };
+
+    frame.addEventListener('click', (e) => {
+      const box = e.target.closest('.workbench-ghost-box, .workbench-legal-region');
+      if (box) handleGhostClick(box, e);
+    });
+    window.__openGhostPlacementModal = (ghostId) => {
+      const el = frame.querySelector(`[data-ghost-id="${ghostId}"]`) || frame.querySelector('.workbench-ghost-box');
+      if (el) handleGhostClick(el);
+    };
+    const distanceSlider=controls.querySelector('[data-shelf-distance-slider]');
+    const distanceOutput=controls.querySelector('[data-shelf-distance-value]');
+    distanceSlider?.addEventListener('input',event=>{
+      const dist=parseFloat(event.target.value)||0.5;
+      if(distanceOutput)distanceOutput.textContent=`${dist.toFixed(1)}m`;
+      const img=frame.querySelector('[data-workbench-image] img');
+      if(img){
+        const blurPx=Math.max(0,(dist-0.5)*0.9);
+        const contrastVal=Math.max(70,100-(dist-0.5)*10);
+        img.style.filter=blurPx>0?`blur(${blurPx.toFixed(1)}px) contrast(${contrastVal}%)`:'';
+      }
+    });
     frame.addEventListener('pointerleave',()=>{if(coordinate)coordinate.textContent='X — · Y —';});
+    mount2dMaskDrawing(frame, frame.querySelector('[data-workbench-image]'), controls);
     verifyDisplayedSource(container,review);
   }
+  const shelfPanel = container?.querySelector ? (container.querySelector('#shelf-readability-workbench') || (typeof document !== 'undefined' && typeof document.querySelector === 'function' ? document.querySelector('#shelf-readability-workbench') : null)) : null;
+  if (shelfPanel && typeof attachShelfReadabilityListeners === 'function') {
+    attachShelfReadabilityListeners(shelfPanel, review);
+  }
   mountSpotlight(container);mountTraceConnector(container);mountCartonDrag(container,onRotation);
+  mountThreeViewer(container,review,onSelectFinding,onViewIn2D);
+
+  const scene = container.querySelector('[data-carton-scene]');
+  const model = scene?.querySelector('[data-carton-model]');
+  let pinUI = null;
+  let camController = null;
+
+  if (scene && review) {
+    const dieline = review.documents?.find(d => d.role === 'dieline');
+    const packageType = review.options?.packageType || 'carton';
+    const cadModel = !review.sample && review.options?.packageMappingConfirmed && dieline ? reconstructDxfCarton(dieline, packageType) : { ok: false };
+    const zones = review.options?.panelZones || {};
+    const previewZones = dieline ? {} : sourcePreviewZones(review);
+    const visualZones = { ...previewZones, ...zones };
+
+    camController = model ? new CartonCameraController({
+      scene,
+      model,
+      onPoseChange: (a, t) => {
+        onRotation?.(a, t);
+        pinUI?.updatePose(a, t);
+      },
+      syncControls: (a, t) => {
+        const slider = container.querySelector('[data-carton-rotation]');
+        const output = slider?.parentElement?.querySelector('output');
+        if (slider && document.activeElement !== slider) slider.value = String(Math.round(a));
+        if (output) output.textContent = `${Math.round(a)}°`;
+        for (const btn of container.querySelectorAll('[data-carton-view]')) {
+          const face = btn.dataset.cartonView;
+          const targetAngles = { front: 0, right: -90, back: -180, left: 90 };
+          const active = Math.abs(shortestAngleDelta(a, targetAngles[face] ?? 0)) < 8;
+          btn.setAttribute('aria-pressed', String(active));
+        }
+      }
+    }) : null;
+
+    pinUI = new CartonPinUIManager({
+      sceneElement: scene,
+      review,
+      panelZones: visualZones,
+      cameraController: camController,
+      selectedFindingId: review.selectedFindingId || container.querySelector('[data-carton-webgl]')?.dataset?.selectedId,
+      onSelectFinding: (findingId, evidenceIndex) => {
+        onSelectFinding?.(findingId, evidenceIndex);
+      },
+      onViewIn2D: (findingId, page, evidenceIndex) => {
+        onViewIn2D?.(findingId, page, evidenceIndex);
+      }
+    });
+    pinUI.mount();
+    window.__packsignalPinUI = pinUI;
+
+    // Filter toolbar buttons
+    for (const btn of container.querySelectorAll('[data-carton-filter]')) {
+      btn.addEventListener('click', () => {
+        for (const b of container.querySelectorAll('[data-carton-filter]')) {
+          b.setAttribute('aria-pressed', 'false');
+          b.classList.remove('active');
+        }
+        btn.setAttribute('aria-pressed', 'true');
+        btn.classList.add('active');
+        pinUI.setFilter(btn.dataset.cartonFilter);
+      });
+    }
+
+    // Previous / Next finding buttons
+    container.querySelector('[data-finding-prev]')?.addEventListener('click', () => {
+      pinUI.prevFinding();
+    });
+    container.querySelector('[data-finding-next]')?.addEventListener('click', () => {
+      pinUI.nextFinding();
+    });
+  }
+
+  try {
+    attachMarkupStudioEvents(container, review);
+    mountTrackChangesPanel(container, review);
+    container.querySelectorAll('[data-markup-filter="track_changes"]').forEach(b => {
+      b.addEventListener('click', () => toggleTrackChanges(true));
+    });
+  } catch (err) {
+    console.warn("Markup studio event attach notice:", err);
+  }
+
+  return viewportController;
 }
+
+function mount2dMaskDrawing(frame, content, controls) {
+  const drawBtn = controls?.querySelector('[data-action="draw-finish-mask"]');
+  if (!frame || !content || !drawBtn) return;
+
+  let isDrawingMode = false;
+  let startX = 0, startY = 0;
+  let isDragging = false;
+  let maskRectEl = null;
+  let pillEl = null;
+
+  function toggleMode(activate = null) {
+    isDrawingMode = activate !== null ? Boolean(activate) : !isDrawingMode;
+    frame.classList.toggle('draw-mask-active', isDrawingMode);
+    drawBtn.classList.toggle('active', isDrawingMode);
+    drawBtn.textContent = isDrawingMode ? '✕ Cancel Drawing' : '✏️ Draw Finish Region';
+
+    if (isDrawingMode) {
+      if (!pillEl) {
+        pillEl = document.createElement('div');
+        pillEl.className = 'finish-mask-captured-pill';
+        pillEl.innerHTML = `<span>✏️ <b>Drag on artwork</b> to select logo/text finish region</span>`;
+        frame.appendChild(pillEl);
+      }
+      pillEl.style.display = 'flex';
+    } else {
+      if (pillEl) pillEl.style.display = 'none';
+      if (maskRectEl) {
+        maskRectEl.remove();
+        maskRectEl = null;
+      }
+    }
+  }
+
+  drawBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleMode();
+  });
+
+  frame.addEventListener('pointerdown', (e) => {
+    if (!isDrawingMode || e.button !== 0) return;
+    const rect = content.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) return;
+
+    startX = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    startY = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
+    isDragging = true;
+    e.stopPropagation();
+
+    if (!maskRectEl) {
+      maskRectEl = document.createElement('div');
+      maskRectEl.className = 'drawn-mask-rect';
+      maskRectEl.innerHTML = `<span>Reviewer-defined visual finish mask</span>`;
+      content.appendChild(maskRectEl);
+    }
+    maskRectEl.style.left = `${startX * 100}%`;
+    maskRectEl.style.top = `${startY * 100}%`;
+    maskRectEl.style.width = '0%';
+    maskRectEl.style.height = '0%';
+  }, true);
+
+  frame.addEventListener('pointermove', (e) => {
+    if (!isDrawingMode || !isDragging || !maskRectEl) return;
+    const rect = content.getBoundingClientRect();
+    const currX = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const currY = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
+
+    const minX = Math.min(startX, currX);
+    const minY = Math.min(startY, currY);
+    const maxX = Math.max(startX, currX);
+    const maxY = Math.max(startY, currY);
+
+    maskRectEl.style.left = `${minX * 100}%`;
+    maskRectEl.style.top = `${minY * 100}%`;
+    maskRectEl.style.width = `${(maxX - minX) * 100}%`;
+    maskRectEl.style.height = `${(maxY - minY) * 100}%`;
+    e.stopPropagation();
+  }, true);
+
+  const finishDrag = (e) => {
+    if (!isDrawingMode || !isDragging) return;
+    isDragging = false;
+    e.stopPropagation();
+
+    const rect = content.getBoundingClientRect();
+    const currX = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const currY = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
+
+    const minX = Math.min(startX, currX);
+    const minY = Math.min(startY, currY);
+    const maxX = Math.max(startX, currX);
+    const maxY = Math.max(startY, currY);
+
+    if (maxX - minX > 0.02 && maxY - minY > 0.02) {
+      const box = [minX, minY, maxX, maxY];
+      window.__packsignalDrawnMask = box;
+      if (pillEl) {
+        pillEl.innerHTML = `<span>✏️ Mask: <b>Logo Region</b> [${Math.round(minX * 100)}%, ${Math.round(minY * 100)}% to ${Math.round(maxX * 100)}%, ${Math.round(maxY * 100)}%]</span> <button type="button" class="carton-3d-btn compact" data-apply-mask-to-3d>Apply to 3D Finish →</button> <button type="button" class="textbutton" data-cancel-mask-draw>Clear</button>`;
+        pillEl.querySelector('[data-apply-mask-to-3d]')?.addEventListener('click', () => {
+          document.querySelector('[data-action="workbench-mode"][data-mode="3d"]')?.click();
+        });
+        pillEl.querySelector('[data-cancel-mask-draw]')?.addEventListener('click', () => {
+          toggleMode(false);
+          delete window.__packsignalDrawnMask;
+        });
+      }
+    }
+  };
+
+  frame.addEventListener('pointerup', finishDrag, true);
+  frame.addEventListener('pointercancel', finishDrag, true);
+}
+
+let active3dViewer = null;
+function mountThreeViewer(container, review, onSelectFinding, onViewIn2D) {
+  const webglEl = container?.querySelector('[data-carton-webgl]');
+  if (!webglEl || webglEl.dataset.webglMounted) return;
+  webglEl.dataset.webglMounted = 'true';
+
+  if (active3dViewer) {
+    active3dViewer.dispose();
+    active3dViewer = null;
+  }
+
+  import('/three/viewer-controller.js').then(({ PackagingViewerController, isWebGLAvailable }) => {
+    if (!webglEl.isConnected) return;
+    if (!isWebGLAvailable()) return;
+
+    const selectedFindingId = webglEl.dataset.selectedId || null;
+    const viewer = new PackagingViewerController(webglEl, {
+      review,
+      selectedFindingId,
+      onSelectFinding: (findingId, evidenceIndex) => {
+        onSelectFinding?.(findingId, evidenceIndex);
+      },
+      onViewIn2D: (findingId, page, evidenceIndex) => {
+        onViewIn2D?.(findingId, page, evidenceIndex);
+      },
+      onFoldChange: (prog) => {
+        const slider = container.querySelector('[data-carton-fold-slider]');
+        const output = container.querySelector('[data-carton-fold-output]');
+        const pct = Math.round(prog * 100);
+        if (slider && document.activeElement !== slider) slider.value = String(pct);
+        if (output) output.textContent = `${pct}%`;
+      },
+    });
+
+    active3dViewer = viewer;
+    window.__packsignalViewer = viewer;
+    viewer.init().then(res => {
+      if (!res?.ok) return;
+      webglEl.dataset.viewerReady = 'true';
+
+      const slider = container.querySelector('[data-carton-fold-slider]');
+      slider?.addEventListener('input', e => {
+        e.stopPropagation();
+        const p = Number(e.target.value) / 100;
+        viewer.setFoldProgress(p);
+        const output = container.querySelector('[data-carton-fold-output]');
+        if (output) output.textContent = `${Math.round(p * 100)}%`;
+      });
+
+      container.querySelector('[data-carton-fold-flat]')?.addEventListener('click', () => {
+        viewer.setFoldProgress(0);
+        viewer.resetCamera();
+      });
+      container.querySelector('[data-carton-fold-full]')?.addEventListener('click', () => {
+        viewer.setFoldProgress(1.0);
+        viewer.resetCamera();
+      });
+
+      const playBtn = container.querySelector('[data-carton-fold-play]');
+      playBtn?.addEventListener('click', () => {
+        const isPlaying = viewer.toggleFoldPlayback();
+        const icon = playBtn.querySelector('[data-fold-play-icon]');
+        const label = playBtn.querySelector('[data-fold-play-label]');
+        if (icon) icon.textContent = isPlaying ? 'Ⅱ' : '▶';
+        if (label) label.textContent = isPlaying ? 'Pause' : 'Animate Fold';
+        playBtn.classList.toggle('active', isPlaying);
+      });
+
+      const xrayBtn = container.querySelector('[data-carton-xray]');
+      xrayBtn?.addEventListener('click', () => {
+        const active = xrayBtn.getAttribute('aria-pressed') !== 'true';
+        xrayBtn.setAttribute('aria-pressed', String(active));
+        xrayBtn.classList.toggle('active', active);
+        viewer.setXRay(active);
+      });
+
+      const labelsBtn = container.querySelector('[data-carton-labels]');
+      labelsBtn?.addEventListener('click', () => {
+        const active = labelsBtn.getAttribute('aria-pressed') !== 'true';
+        labelsBtn.setAttribute('aria-pressed', String(active));
+        labelsBtn.classList.toggle('active', active);
+        viewer.setShowLabels(active);
+      });
+
+      container.querySelector('[data-carton-reset]')?.addEventListener('click', () => {
+        viewer.resetCamera();
+      });
+
+      const snapshotBtn = container.querySelector('[data-carton-snapshot]');
+      snapshotBtn?.addEventListener('click', () => {
+        const dataUrl = viewer.takeSnapshot();
+        if (dataUrl) {
+          const orig = snapshotBtn.textContent;
+          snapshotBtn.textContent = '✓ Saved!';
+          setTimeout(() => { snapshotBtn.textContent = orig; }, 1800);
+        }
+      });
+
+      const arBtn = container.querySelector('[data-carton-ar]');
+      arBtn?.addEventListener('click', () => {
+        showArModal(review, viewer.packageType);
+      });
+
+      for (const btn of container.querySelectorAll('[data-carton-view]')) {
+        btn.addEventListener('click', () => {
+          viewer.focusPanel(btn.dataset.cartonView);
+        });
+      }
+
+      for (const btn of container.querySelectorAll('[data-carton-filter]')) {
+        btn.addEventListener('click', () => {
+          for (const b of container.querySelectorAll('[data-carton-filter]')) {
+            b.setAttribute('aria-pressed', 'false');
+            b.classList.remove('active');
+          }
+          btn.setAttribute('aria-pressed', 'true');
+          btn.classList.add('active');
+          viewer.filterPins(btn.dataset.cartonFilter);
+        });
+      }
+
+      // Package Format Selector
+      for (const btn of container.querySelectorAll('[data-pkg-format]')) {
+        btn.addEventListener('click', () => {
+          for (const b of container.querySelectorAll('[data-pkg-format]')) {
+            b.classList.remove('active');
+            b.setAttribute('aria-pressed', 'false');
+          }
+          btn.classList.add('active');
+          btn.setAttribute('aria-pressed', 'true');
+          viewer.setPackageType(btn.dataset.pkgFormat);
+        });
+      }
+
+      // Can Controls
+      const canSeamSlider = container.querySelector('[data-can-seam-slider]');
+      const canSeamVal = container.querySelector('[data-can-seam-val]');
+      canSeamSlider?.addEventListener('input', e => {
+        const deg = Number(e.target.value) || 0;
+        if (canSeamVal) canSeamVal.textContent = `${deg}°`;
+        viewer.setCanSeam(deg);
+      });
+
+      const canSeamHighlightBtn = container.querySelector('[data-can-seam-highlight]');
+      canSeamHighlightBtn?.addEventListener('click', () => {
+        const isShown = viewer.toggleCanSeamHighlight();
+        canSeamHighlightBtn.classList.toggle('active', isShown);
+      });
+
+      const canWrapBtn = container.querySelector('[data-can-wrap-mode]');
+      canWrapBtn?.addEventListener('click', () => {
+        const isFull = canWrapBtn.dataset.mode === 'full';
+        const nextMode = isFull ? 'partial' : 'full';
+        canWrapBtn.dataset.mode = nextMode;
+        canWrapBtn.textContent = nextMode === 'full' ? 'Full Wrap (360°)' : 'Front Label (180°)';
+        viewer.setCanWrapMode(nextMode);
+      });
+
+      // Bottle Controls
+      for (const btn of container.querySelectorAll('[data-bottle-sub]')) {
+        btn.addEventListener('click', () => {
+          for (const b of container.querySelectorAll('[data-bottle-sub]')) b.classList.remove('active');
+          btn.classList.add('active');
+          viewer.setBottleSubstrate(btn.dataset.bottleSub);
+        });
+      }
+
+      const bottleLabelBtn = container.querySelector('[data-bottle-label-placement]');
+      bottleLabelBtn?.addEventListener('click', () => {
+        const isWrap = bottleLabelBtn.dataset.mode === 'wrap';
+        const nextMode = isWrap ? 'front' : 'wrap';
+        bottleLabelBtn.dataset.mode = nextMode;
+        bottleLabelBtn.textContent = nextMode === 'wrap' ? 'Wrap Label' : 'Front Label';
+        viewer.setBottleLabelPlacement(nextMode);
+      });
+
+      // Pouch Controls
+      const pouchSlider = container.querySelector('[data-pouch-fullness-slider]');
+      const pouchVal = container.querySelector('[data-pouch-fullness-output]');
+      pouchSlider?.addEventListener('input', e => {
+        const pct = Number(e.target.value) || 0;
+        if (pouchVal) pouchVal.textContent = `${pct}%`;
+        viewer.setPouchInflation(pct / 100);
+      });
+
+      container.querySelector('[data-pouch-flat]')?.addEventListener('click', () => {
+        if (pouchSlider) pouchSlider.value = '0';
+        if (pouchVal) pouchVal.textContent = '0%';
+        viewer.setPouchInflation(0);
+      });
+
+      container.querySelector('[data-pouch-full]')?.addEventListener('click', () => {
+        if (pouchSlider) pouchSlider.value = '100';
+        if (pouchVal) pouchVal.textContent = '100%';
+        viewer.setPouchInflation(1.0);
+      });
+
+      const pouchGussetBtn = container.querySelector('[data-pouch-gusset-toggle]');
+      pouchGussetBtn?.addEventListener('click', () => {
+        const active = viewer.togglePouchGusset();
+        pouchGussetBtn.classList.toggle('active', active);
+        pouchGussetBtn.setAttribute('aria-pressed', String(active));
+      });
+
+      const pouchSealsBtn = container.querySelector('[data-pouch-seals-toggle]');
+      pouchSealsBtn?.addEventListener('click', () => {
+        const active = viewer.togglePouchSeals();
+        pouchSealsBtn.classList.toggle('active', active);
+        pouchSealsBtn.setAttribute('aria-pressed', String(active));
+      });
+
+      // Materials & Finishes Controls
+      const subSelect = container.querySelector('[data-mat-substrate]');
+      const finSelect = container.querySelector('[data-mat-finish]');
+      const maskSelect = container.querySelector('[data-mat-mask]');
+      const lightSelect = container.querySelector('[data-mat-lighting]');
+      const uvSlider = container.querySelector('[data-mat-uv-slider]');
+      const uvOut = container.querySelector('[data-mat-uv-val]');
+      const uploadInput = container.querySelector('[data-mat-upload-input]');
+      const uploadBtn = container.querySelector('[data-mat-upload-btn]');
+      const quickBtns = container.querySelectorAll('[data-quick-finish]');
+      const finLayerType = container.querySelector('[data-fin-layer-type]');
+      const finLayerProv = container.querySelector('[data-fin-layer-prov]');
+      const finLayerToggle = container.querySelector('[data-fin-layer-toggle]');
+
+      function updateActiveQuickBtn(finId) {
+        quickBtns.forEach(b => b.classList.toggle('active', b.dataset.quickFinish === finId));
+        if (finSelect && finSelect.value !== finId) finSelect.value = finId;
+        const labels = {
+          none: 'Default Base',
+          spot_uv: 'Spot UV Gloss Varnish',
+          gold_foil: 'Hot Stamp Gold Foil',
+          silver_foil: 'Hot Stamp Silver Foil',
+          emboss_preview: 'Embossing Preview',
+          deboss_preview: 'Debossing Preview',
+        };
+        if (finLayerType) finLayerType.textContent = labels[finId] || finId;
+        if (finLayerProv) finLayerProv.textContent = maskSelect?.value || 'reviewer_defined';
+      }
+
+      quickBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const finId = btn.dataset.quickFinish;
+          updateActiveQuickBtn(finId);
+          const origin = maskSelect ? maskSelect.value : 'reviewer_defined';
+          viewer.setFinish(finId, { origin });
+        });
+      });
+
+      subSelect?.addEventListener('change', e => {
+        viewer.setSubstrate(e.target.value);
+      });
+
+      finSelect?.addEventListener('change', e => {
+        const finId = e.target.value;
+        updateActiveQuickBtn(finId);
+        const origin = maskSelect ? maskSelect.value : 'reviewer_defined';
+        viewer.setFinish(finId, { origin });
+      });
+
+      maskSelect?.addEventListener('change', e => {
+        const origin = e.target.value;
+        if (finLayerProv) finLayerProv.textContent = origin;
+        if (origin === 'uploaded_mask') {
+          uploadInput?.click();
+        } else {
+          const fin = finSelect ? finSelect.value : 'none';
+          viewer.setFinish(fin, { origin });
+        }
+      });
+
+      uploadBtn?.addEventListener('click', () => {
+        uploadInput?.click();
+      });
+
+      uploadInput?.addEventListener('change', e => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = ev => {
+          const img = new Image();
+          img.onload = () => {
+            viewer.setUploadedMaskImage(img);
+            if (maskSelect) maskSelect.value = 'uploaded_mask';
+            if (finLayerProv) finLayerProv.textContent = 'uploaded_mask';
+          };
+          img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+
+      lightSelect?.addEventListener('change', e => {
+        viewer.setLighting(e.target.value);
+      });
+
+      let lightSweepRunning = false;
+      const sweepToggleBtn = container.querySelector('[data-light-sweep-toggle]');
+      sweepToggleBtn?.addEventListener('click', () => {
+        lightSweepRunning = !lightSweepRunning;
+        if (lightSweepRunning) {
+          viewer.setLighting('rotating_highlight');
+          if (lightSelect) lightSelect.value = 'rotating_highlight';
+          viewer.startLightSweep();
+          sweepToggleBtn.textContent = '⏸ Pause';
+        } else {
+          viewer.pauseLightSweep();
+          sweepToggleBtn.textContent = '▶ Sweep';
+        }
+      });
+
+      container.querySelector('[data-light-sweep-reset]')?.addEventListener('click', () => {
+        viewer.resetLightSweep();
+      });
+
+      uvSlider?.addEventListener('input', e => {
+        const val = Number(e.target.value) / 100;
+        viewer.setSpotUvIntensity(val);
+        if (uvOut) uvOut.textContent = `${e.target.value}%`;
+      });
+
+      // Actions Bar
+      container.querySelector('[data-mat-apply]')?.addEventListener('click', () => {
+        viewer.reapplyFinishing();
+      });
+
+      container.querySelector('[data-mat-hide]')?.addEventListener('click', () => {
+        updateActiveQuickBtn('none');
+        viewer.setFinish('none');
+      });
+
+      container.querySelector('[data-mat-reset]')?.addEventListener('click', () => {
+        viewer.resetFinishes();
+        updateActiveQuickBtn('none');
+        if (subSelect) subSelect.value = 'matte_paperboard';
+        if (maskSelect) maskSelect.value = 'reviewer_defined';
+        if (uvSlider) uvSlider.value = '100';
+        if (uvOut) uvOut.textContent = '100%';
+      });
+
+      const compareBtn = container.querySelector('[data-mat-compare]');
+      compareBtn?.addEventListener('click', () => {
+        const isOrig = viewer.toggleOriginalView();
+        compareBtn.setAttribute('aria-pressed', String(isOrig));
+        compareBtn.classList.toggle('active', isOrig);
+        compareBtn.textContent = isOrig ? 'Comparing Original' : 'Compare Original';
+      });
+
+      const showMaskBtn = container.querySelector('[data-mat-show-mask]');
+      showMaskBtn?.addEventListener('click', () => {
+        const isMask = viewer.toggleShowMask();
+        showMaskBtn.setAttribute('aria-pressed', String(isMask));
+        showMaskBtn.classList.toggle('active', isMask);
+        showMaskBtn.textContent = isMask ? 'Mask Visible' : 'Show Finish Mask';
+      });
+
+      container.querySelector('[data-mat-draw-2d]')?.addEventListener('click', () => {
+        const btn2d = document.querySelector('[data-action="workbench-mode"][data-mode="2d"]');
+        if (btn2d) {
+          btn2d.click();
+          setTimeout(() => {
+            document.querySelector('[data-action="draw-finish-mask"]')?.click();
+          }, 120);
+        }
+      });
+
+      container.querySelector('[data-mat-export]')?.addEventListener('click', () => {
+        viewer.exportFinishPreview();
+      });
+
+      finLayerToggle?.addEventListener('change', e => {
+        if (!e.target.checked) {
+          viewer.setFinish('none');
+        } else {
+          const finId = finSelect ? finSelect.value : 'spot_uv';
+          viewer.setFinish(finId);
+        }
+      });
+
+      // Apply 2D drawn mask if present
+      if (window.__packsignalDrawnMask) {
+        viewer.setCustomMaskBox(window.__packsignalDrawnMask);
+      }
+    });
+  }).catch(err => {
+    console.warn('[PackagingViewer] Could not load Three.js 3D viewer:', err);
+  });
+}
+

@@ -1,0 +1,225 @@
+{
+  "id": "e2e-qty-f5e17b51-ba2c-407d-a123-209dce089750",
+  "name": "Controlled Pack Quantity Fixture Review",
+  "status": "ready",
+  "sample": "controlled-quantity",
+  "createdAt": "2026-10-25T21:21:43.482Z",
+  "documents": [
+    {
+      "id": "art-001",
+      "name": "PackQuantity_Sample_Carton.pdf",
+      "role": "artwork",
+      "sha256": "9b8a7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b",
+      "pages": [
+        {
+          "number": 1,
+          "width": 800,
+          "height": 1000,
+          "method": "pdf_text",
+          "text": "8 servings per container\nServing size 85g\nNet Wt 480g (16.9 oz)"
+        }
+      ]
+    },
+    {
+      "id": "spec-001",
+      "name": "Product_Specification_Sheet.xlsx",
+      "role": "spec",
+      "sha256": "1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b",
+      "pages": []
+    }
+  ],
+  "facts": [
+    {
+      "id": "fact-servings",
+      "field": "servings",
+      "label": "Servings per container",
+      "value": "8",
+      "documentId": "spec-001",
+      "evidence": {
+        "documentId": "spec-001",
+        "role": "spec",
+        "name": "Product_Specification_Sheet.xlsx",
+        "quote": "8 servings per container",
+        "location": "US Formulation Sheet!B24",
+        "sheet": "US Formulation Sheet",
+        "cell": "B24"
+      }
+    },
+    {
+      "id": "fact-serving-size",
+      "field": "serving_size",
+      "label": "Serving size",
+      "value": "85 g",
+      "documentId": "spec-001",
+      "evidence": {
+        "documentId": "spec-001",
+        "role": "spec",
+        "name": "Product_Specification_Sheet.xlsx",
+        "quote": "Serving size 85g",
+        "location": "US Formulation Sheet!B25",
+        "sheet": "US Formulation Sheet",
+        "cell": "B25"
+      }
+    },
+    {
+      "id": "fact-net-quantity",
+      "field": "net_quantity",
+      "label": "Net quantity",
+      "value": "480 g",
+      "documentId": "spec-001",
+      "evidence": {
+        "documentId": "spec-001",
+        "role": "spec",
+        "name": "Product_Specification_Sheet.xlsx",
+        "quote": "Net Wt 480g (16.9 oz)",
+        "location": "US Formulation Sheet!B26",
+        "sheet": "US Formulation Sheet",
+        "cell": "B26"
+      }
+    }
+  ],
+  "findings": [
+    {
+      "id": "pack-quantity:servings-net-mass",
+      "key": "pack-quantity:servings-net-mass",
+      "title": "Pack quantity consistency · servings vs net weight",
+      "status": "issue",
+      "method": "serving_net_weight_arithmetic",
+      "category": "nutrition",
+      "expected": "Serving size × servings per container equals declared net weight",
+      "observed": "Implied mass 680.0 g; declared net weight 480.0 g (200.0 g / 41.7% difference)",
+      "explanation": "Material quantity discrepancy: 8 servings × 85 g implies 680 g package mass, contradicting declared net weight of 480 g by 200 g (41.7%).",
+      "servingsCount": 8,
+      "servingSizeGrams": 85,
+      "expectedPackMassG": 680,
+      "declaredPackMassG": 480,
+      "differenceG": 200,
+      "absoluteDifferenceG": 200,
+      "percentDifference": 41.6667,
+      "percentDifferenceFormatted": "41.7%",
+      "basis": "AS_PACKAGED",
+      "isApproximate": false,
+      "proof": "8 servings × 85 g = 680 g (Declared: 480 g, Diff: 200 g / 41.7%)",
+      "calculationSteps": [
+        "Servings per container: 8 (EXACT)",
+        "Serving size: 85 g = 85.00 g (AS_PACKAGED)",
+        "Expected package mass: 8 servings × 85.00 g = 680 g",
+        "Declared net weight: 480 g = 480.00 g",
+        "Difference: 680 g - 480 g = +200 g (41.7%)"
+      ],
+      "packQuantity": {
+        "status": "issue",
+        "verdict": "ISSUE",
+        "ruleEvaluationOutcome": "ISSUE",
+        "screeningOutcome": "ISSUE_DISCREPANCY",
+        "passes": false,
+        "servingsCount": 8,
+        "servingSizeGrams": 85,
+        "declaredNetWeightGrams": 480,
+        "expectedPackMassG": 680,
+        "declaredPackMassG": 480,
+        "differenceG": 200,
+        "absoluteDifferenceG": 200,
+        "percentDifference": 41.6667,
+        "percentDifferenceFormatted": "41.7%",
+        "formula": "8 servings × 85 g = 680 g (Declared: 480 g, Diff: 200 g / 41.7%)",
+        "inputs": {
+          "servings": {
+            "value": 8,
+            "qualifier": "EXACT",
+            "isApproximate": false,
+            "originalText": "8 servings per container"
+          },
+          "servingSize": {
+            "amount": 85,
+            "unit": "g",
+            "grams": 85,
+            "basis": "AS_PACKAGED",
+            "originalText": "85 g"
+          },
+          "netWeight": {
+            "amount": 480,
+            "unit": "g",
+            "grams": 480,
+            "originalText": "480 g"
+          }
+        },
+        "calculationSteps": [
+          "Servings per container: 8 (EXACT)",
+          "Serving size: 85 g = 85.00 g (AS_PACKAGED)",
+          "Expected package mass: 8 servings × 85.00 g = 680 g",
+          "Declared net weight: 480 g = 480.00 g",
+          "Difference: 680 g - 480 g = +200 g (41.7%)"
+        ],
+        "explanation": "Material quantity discrepancy: 8 servings × 85 g implies 680 g package mass, contradicting declared net weight of 480 g by 200 g (41.7%).",
+        "limitations": [],
+        "assumptions": [],
+        "blockers": []
+      },
+      "evidence": [
+        {
+          "role": "artwork",
+          "page": 1,
+          "name": "PackQuantity_Sample_Carton.pdf",
+          "location": "Back Panel · Nutrition Facts",
+          "field": "servings",
+          "quote": "8 servings per container",
+          "box": [
+            0.05,
+            0.2,
+            0.35,
+            0.25
+          ]
+        },
+        {
+          "role": "artwork",
+          "page": 1,
+          "name": "PackQuantity_Sample_Carton.pdf",
+          "location": "Back Panel · Nutrition Facts",
+          "field": "serving_size",
+          "quote": "Serving size 85g",
+          "box": [
+            0.05,
+            0.25,
+            0.35,
+            0.3
+          ]
+        },
+        {
+          "role": "artwork",
+          "page": 1,
+          "name": "PackQuantity_Sample_Carton.pdf",
+          "location": "Principal Display Panel",
+          "field": "net_quantity",
+          "quote": "Net Wt 480g (16.9 oz)",
+          "box": [
+            0.45,
+            0.8,
+            0.75,
+            0.9
+          ]
+        },
+        {
+          "role": "spec",
+          "page": 1,
+          "name": "Product_Specification_Sheet.xlsx",
+          "location": "US Formulation Sheet!B24",
+          "quote": "8 servings per container"
+        }
+      ],
+      "rule": {
+        "field": "pack_quantity",
+        "citation": "Net Quantity Consistency"
+      }
+    }
+  ],
+  "counts": {
+    "total": 1,
+    "issue": 1,
+    "review": 0,
+    "unable": 0,
+    "match": 0
+  },
+  "decisions": {},
+  "audit": []
+}

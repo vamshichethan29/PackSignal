@@ -1,0 +1,41 @@
+{
+  "market": "US",
+  "citation": "21 CFR 101.9(c)(1)(i)",
+  "permittedMethods": [
+    {
+      "id": "GENERAL_ATWATER_4_4_9",
+      "name": "General Atwater Factors (4-4-9)",
+      "cfrReference": "21 CFR 101.9(c)(1)(i)(C)",
+      "factors": {
+        "protein": 4.0,
+        "carbohydrate": 4.0,
+        "fat": 9.0
+      },
+      "formula": "Calories = (Fat × 9) + (Carbohydrate × 4) + (Protein × 4)",
+      "tolerancePercent": 20.0,
+      "isScreeningHeuristic": true
+    },
+    {
+      "id": "GENERAL_ATWATER_MINUS_INSOLUBLE_FIBER",
+      "name": "General Factors minus Insoluble Dietary Fiber",
+      "cfrReference": "21 CFR 101.9(c)(1)(i)(D)",
+      "factors": {
+        "protein": 4.0,
+        "carbohydrateMinusInsolubleFiber": 4.0,
+        "fat": 9.0
+      },
+      "tolerancePercent": 20.0
+    },
+    {
+      "id": "SPECIFIC_FOOD_FACTORS",
+      "name": "Specific Food Factors (USDA Agriculture Handbook 74)",
+      "cfrReference": "21 CFR 101.9(c)(1)(i)(A)",
+      "requiresDetailedFormulation": true
+    }
+  ],
+  "calorieRoundingRules": {
+    "under_5_calories": "Expressed as zero.",
+    "5_to_50_calories": "Expressed to nearest 5-calorie increment.",
+    "over_50_calories": "Expressed to nearest 10-calorie increment."
+  }
+}

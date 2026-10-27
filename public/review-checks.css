@@ -1,0 +1,192 @@
+/**
+ * PackSignal Review Checks Component Styles (public/review-checks.css)
+ * Wave 1B: Checks workspace layout, verdict badges, mathematical proof boxes, and status filters.
+ */
+
+.review-checks-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  background: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.review-checks-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #183b2b;
+}
+
+.review-checks-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #183b2b;
+}
+
+.review-checks-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.review-check-filter-btn {
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 20px;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.review-check-filter-btn.active {
+  background: #183b2b;
+  color: #ffffff;
+  border-color: #183b2b;
+}
+
+.review-check-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: box-shadow 0.2s ease;
+}
+
+.review-check-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.review-check-card.status-issue {
+  border-left: 4px solid #ef4444;
+}
+
+.review-check-card.status-review {
+  border-left: 4px solid #f59e0b;
+}
+
+.review-check-card.status-match {
+  border-left: 4px solid #10b981;
+}
+
+.review-check-card.status-unable {
+  border-left: 4px solid #94a3b8;
+}
+
+.review-check-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.review-check-headline {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.review-check-badge {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+.badge-issue { background: #fee2e2; color: #b91c1c; }
+.badge-review { background: #fef3c7; color: #b45309; }
+.badge-match { background: #dcfce7; color: #15803d; }
+.badge-unable { background: #f1f5f9; color: #475569; }
+
+.review-check-why {
+  font-size: 12px;
+  color: #475569;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.review-check-comparison {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+  background: #f8fafc;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #f1f5f9;
+}
+
+.review-check-side label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #64748b;
+  display: block;
+  margin-bottom: 3px;
+}
+
+.review-check-side code {
+  font-size: 12px;
+  font-family: inherit;
+  font-weight: 600;
+}
+
+.review-check-side.side-expected code { color: #166534; }
+.review-check-side.side-observed code { color: #991b1b; }
+
+.review-check-proof {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 4px;
+  padding: 8px 10px;
+  font-size: 11px;
+  color: #166534;
+  line-height: 1.4;
+}
+
+.review-check-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+  padding-top: 8px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.review-check-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.review-check-actions button {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #1e293b;
+}
+
+.review-check-actions button.btn-primary {
+  background: #183b2b;
+  color: #ffffff;
+  border-color: #183b2b;
+}

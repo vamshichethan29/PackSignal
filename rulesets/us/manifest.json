@@ -1,0 +1,14 @@
+{
+  "market": "us",
+  "version": "1.0.0",
+  "regulator": "FDA",
+  "name": "US Conventional Food Labeling Pack",
+  "rules": [
+    "net-quantity.json",
+    "business-information.json",
+    "ingredients-allergens.json",
+    "nutrition-fields.json",
+    "daily-values.json",
+    "claims.json"
+  ]
+}

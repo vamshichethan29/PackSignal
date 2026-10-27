@@ -1,0 +1,65 @@
+flowchart TD
+    subgraph INTAKE["1. DOCUMENT INTAKE & INGESTION"]
+        DOCS["User Documents\n(Artwork PDF, Content Sheet XLSX, Spec DOCX)"]
+        UPLOAD["Validated Multipart Upload\n(SHA-256 digest, MIME verification, session lock)"]
+        DOCS --> UPLOAD
+    end
+
+    subgraph EXTRACTION["2. MULTI-MODAL EXTRACTION"]
+        PYTHON["Python Extraction Engine\n(pypdfium2, openpyxl, python-docx, Pillow)"]
+        PIECES["Positioned Source Pieces\n(Text tokens, bounding boxes, font metrics, cell coords)"]
+        UPLOAD --> PYTHON
+        PYTHON --> PIECES
+    end
+
+    subgraph FACT_SYSTEM["3. FACT CANONICALIZATION & EVIDENCE TRACE"]
+        FACTS["Packaging Fact Sheet\n(Normalized nutrition, claims, net quantity, allergens)"]
+        QUOTE["Cryptographic Quote Verifier\n(Exact character matching, source locator hashing)"]
+        CONFLICT["Conflict & Authority Resolver\n(Hierarchy: Spec Sheet > Artwork > Marketing Copy)"]
+        PIECES --> FACTS
+        FACTS --> QUOTE
+        QUOTE --> CONFLICT
+    end
+
+    subgraph DUAL_EVALUATION["4. DUAL-TRACK COMPLIANCE ENGINE"]
+        RULES["Deterministic Market Rule Packs\n- US FDA 21 CFR 101 Nutrition & Claims\n- India FSSAI & Legal Metrology Act\n- Prepress Preflight (TAC, Dielines, Min Font Pt)"]
+        AI["Optional AI Multimodal Vision\n- Gemini 3.8 Flash (Freeze Selected)\n- Visual copy transcription & layout reading\n- Fallback: Deterministic local engine"]
+        CONFLICT --> RULES
+        CONFLICT -.-> AI
+    end
+
+    subgraph FINDINGS_SYSTEM["5. CANONICAL FINDINGS & EPISTEMIC STATES"]
+        CANONICAL["Canonical Findings Engine\nStates: Match | Issue | Human Review | Unable to Verify"]
+        RULES --> CANONICAL
+        AI --> CANONICAL
+    end
+
+    subgraph WORKFLOW_UI["6. REVIEWER COCKPIT & COLLABORATION"]
+        ARTWORK_2D["2D Proof View & Prepress HUD\n(Millimeter coordinates, TAC heatmaps, separation layers)"]
+        ARTWORK_3D["3D Tuck-End Carton Viewer\n(Real WebGL fold graph, UV texture projection, finding pins)"]
+        QUESTIONS["Ambiguity & Question Hub\n(Dependency graphs, ripple preview, guided resolution)"]
+        TRIAGE["Department Review & Approvals\n(Regulatory, Legal, Prepress, Marketing disposition logs)"]
+        CANONICAL --> ARTWORK_2D
+        CANONICAL --> ARTWORK_3D
+        CANONICAL --> QUESTIONS
+        CANONICAL --> TRIAGE
+    end
+
+    subgraph BRIEF_EXPORT["7. CREATIVE BRIEF & AUDITED EXPORTS"]
+        BRIEF["Evidence-Backed Creative Brief\n(Sentence-level source citations, live re-auditing)"]
+        POSTER["A3 Review Wall Poster & Inspection Bundles\n(High-res vector proof, side-by-side revision diffs)"]
+        ARTWORK_2D --> BRIEF
+        QUESTIONS --> BRIEF
+        TRIAGE --> BRIEF
+        BRIEF --> POSTER
+    end
+
+    subgraph TRUST_AND_STORAGE["8. CRYPTOGRAPHIC SEAL & PERSISTENCE"]
+        SEAL["Ed25519 Cryptographic Review Seal (v2)\n(SHA-256 evidence merkle root, tamper-evident signature)"]
+        PERSIST["Persistent Storage & Audit Ledger\n(.packproof directory, Render persistent disk, append-only log)"]
+        TRUST["Trust Console & Self-Test Suite\n(Synthetic mutation engine, reproducible release gates)"]
+        BRIEF --> SEAL
+        POSTER --> SEAL
+        SEAL --> PERSIST
+        TRUST -. Validates Engine .-> RULES
+    end

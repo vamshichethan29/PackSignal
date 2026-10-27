@@ -1,0 +1,103 @@
+{
+  "locale": "en",
+  "direction": "ltr",
+  "name": "English",
+  "nativeName": "English",
+  "nav": {
+    "brand": "PackSignal",
+    "spotMistakes": "Spot the Mistakes",
+    "evidenceDesk": "Evidence Desk",
+    "factSheet": "Fact Sheet",
+    "requirements": "Requirements Map",
+    "redPen": "Reviewer Red Pen",
+    "packCanvas": "Pack Canvas",
+    "shopperLenses": "Shopper Personas",
+    "3dView": "3D Pack View",
+    "arView": "AR View",
+    "trustConsole": "Trust Console",
+    "campusDemo": "Campus Demo",
+    "approvedBrief": "Approved Brief",
+    "resetDemo": "Reset Demo"
+  },
+  "actions": {
+    "runAnalysis": "Run Analysis",
+    "revealFindings": "Reveal Findings",
+    "switchMarket": "Switch Market",
+    "switchLanguage": "Switch Language",
+    "exportPdf": "Export PDF",
+    "exportPoster": "Export A3 Poster",
+    "resetDemoState": "Reset Campus Demo",
+    "openSource": "Open Source Evidence",
+    "saveDecision": "Save Reviewer Decision",
+    "applyCanvasFix": "Apply Layout Fix",
+    "viewOnTable": "View on Your Table"
+  },
+  "requirements": {
+    "fssai_veg_logo": {
+      "title": "Vegetarian Logo Declaration",
+      "authority": "FSSAI Food Safety and Standards (Packaging and Labelling) Regulations",
+      "explanation": "Packaged food must display the standardized green circle inside a green square border indicating vegetarian status.",
+      "question": "Is the vegetarian logo displayed with the statutory minimum 3mm diameter circle on the Principal Display Panel?"
+    },
+    "mrp_declaration": {
+      "title": "Maximum Retail Price (MRP)",
+      "authority": "Legal Metrology (Packaged Commodities) Rules, 2011",
+      "explanation": "Must state 'MRP Rs. / ₹ ... (inclusive of all taxes)' in conspicuous, unambiguous lettering.",
+      "question": "Does the retail price declaration include statutory tax inclusion wording?"
+    },
+    "fssai_licence_number": {
+      "title": "FSSAI 14-Digit Licence Number",
+      "authority": "FSSAI (Licensing and Registration of Food Businesses) Regulations",
+      "explanation": "The 14-digit FSSAI licence number must accompany the FSSAI logo on the package.",
+      "question": "Does the package display a valid 14-digit FSSAI registration/licence number matching company registry?"
+    },
+    "metric_net_quantity": {
+      "title": "Metric Net Quantity Declaration",
+      "authority": "Legal Metrology (Packaged Commodities) Rules, 2011 Rule 12",
+      "explanation": "Net weight or volume must be declared in standard metric units (g, kg, mL, L) with minimum numeral height.",
+      "question": "Is the net quantity declared using standard SI metric units with compliant minimum font height?"
+    },
+    "consumer_care_details": {
+      "title": "Consumer Care & Grievance Contact",
+      "authority": "Legal Metrology Rules 2011 Rule 6(1)(f)",
+      "explanation": "Must provide name, address, telephone number, and email address of person/office to contact for consumer complaints.",
+      "question": "Are telephone, email, and postal address clearly designated for customer grievance redressal?"
+    },
+    "unit_sale_price": {
+      "title": "Unit Sale Price (USP)",
+      "authority": "Legal Metrology (Packaged Commodities) Amendment Rules",
+      "explanation": "Packages containing more than 1 kg/L must declare unit sale price per gram/millilitre.",
+      "question": "Is unit sale price calculated and formatted according to statutory rules?"
+    },
+    "date_of_manufacture": {
+      "title": "Date of Manufacture / Best Before",
+      "authority": "FSSAI Labelling and Display Regulations",
+      "explanation": "Must declare date of manufacture or packaging along with 'Best Before' or expiry timeframe.",
+      "question": "Are manufacturing date and shelf-life period formatted without ambiguous truncation?"
+    },
+    "allergen_declaration": {
+      "title": "Allergen Declaration",
+      "authority": "FSSAI Food Safety and Standards (Labelling and Display) Regulations",
+      "explanation": "Must declare common allergens present or potential cross-contamination warnings.",
+      "question": "Are all major food allergens identified in bold type or under a dedicated Contains header?"
+    }
+  },
+  "labels": {
+    "sourceEvidence": "Source Evidence",
+    "verifiedFact": "Verified Fact",
+    "discrepancy": "Discrepancy Detected",
+    "statutoryRule": "Statutory Rule",
+    "reviewerDecision": "Reviewer Decision",
+    "auditTrail": "Audit Trail",
+    "confidenceScore": "Confidence Score",
+    "resolved": "Resolved",
+    "stillOpen": "Still Open",
+    "newIssues": "New Issues",
+    "needsReview": "Needs Review"
+  },
+  "notices": {
+    "bilingualExplanation": "UI localization is provided for reviewer convenience. Regulatory requirements derive from statutory gazette notifications.",
+    "dualLanguageRegulatoryNote": "Under FSSAI Rule 2.1.1, declarations on packaged food shall be in English or Hindi (Devanagari script), unless another official state language is explicitly designated.",
+    "aiSuggestedNote": "Extracted competitor packaging elements are AI-suggested visual readings and do not constitute legal compliance clearance."
+  }
+}

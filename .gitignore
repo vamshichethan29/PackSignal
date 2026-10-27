@@ -9,3 +9,8 @@ dist/
 *.log
 .DS_Store
 submission/*.zip
+scratch/
+output/
+packsignal-extracted/
+*.zip
+

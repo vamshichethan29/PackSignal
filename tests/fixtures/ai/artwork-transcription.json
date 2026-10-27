@@ -1,0 +1,49 @@
+{
+  "taskName": "artwork_transcription",
+  "promptVersion": "1.0",
+  "schemaVersion": "1.0",
+  "modelIdentifier": "gemini-2.5-flash",
+  "inputHash": "796718df0ebdd89ade7ea326b16a163e0037ff1cc0616c50a49b276a1d3ee3a7",
+  "output": {
+    "pages": [
+      {
+        "pageNumber": 1,
+        "transcriptions": [
+          {
+            "text": "Dancing Fish Granola Berry Crunch",
+            "confidence": 0.98,
+            "box": [
+              0.1,
+              0.1,
+              0.8,
+              0.25
+            ]
+          },
+          {
+            "text": "NET WT 12 OZ (340g)",
+            "confidence": 0.99,
+            "box": [
+              0.3,
+              0.8,
+              0.7,
+              0.9
+            ]
+          },
+          {
+            "text": "Honey (1%), Coconut Sugar",
+            "confidence": 0.95,
+            "box": [
+              0.1,
+              0.4,
+              0.9,
+              0.6
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "recordedAt": "2026-10-24T18:02:31.829Z",
+  "validationStatus": "RECORDED_AND_VALIDATED",
+  "status": "success"
+}

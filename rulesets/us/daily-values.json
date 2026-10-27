@@ -1,0 +1,37 @@
+{
+  "id": "US-005",
+  "version": "1.0.0",
+  "market": "us",
+  "regulator": "FDA",
+  "productScope": "conventional_packaged_food",
+  "sourceCitation": "21 CFR 101.9(c)(8), 21 CFR 101.9(c)(9)",
+  "sourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+  "sourceQuote": "The declaration of the quantitative amount of each nutrient and the percent Daily Value shall be expressed to the nearest whole percent.",
+  "quoteVerificationStatus": "VERIFIED_QUOTATION",
+  "legalStatus": "IN_FORCE",
+  "effectiveDate": "2016-07-26",
+  "checkType": "NUTRIENT_DV",
+  "parameters": {
+    "referenceDailyValues": {
+      "total_fat": { "amount": 78, "unit": "g" },
+      "saturated_fat": { "amount": 20, "unit": "g" },
+      "cholesterol": { "amount": 300, "unit": "mg" },
+      "sodium": { "amount": 2300, "unit": "mg" },
+      "total_carbohydrate": { "amount": 275, "unit": "g" },
+      "dietary_fiber": { "amount": 28, "unit": "g" },
+      "added_sugars": { "amount": 50, "unit": "g" },
+      "vitamin_d": { "amount": 20, "unit": "mcg" },
+      "calcium": { "amount": 1300, "unit": "mg" },
+      "iron": { "amount": 18, "unit": "mg" },
+      "potassium": { "amount": 4700, "unit": "mg" }
+    },
+    "roundingRule": "FDA_21_CFR_101_9_C"
+  },
+  "requiredFacts": ["nutrition_basis", "nutrient_amounts", "declared_dv_percentages"],
+  "applicability": {
+    "market": "us",
+    "targetPopulation": "adults_and_children_ge_4"
+  },
+  "exceptions": [],
+  "reviewStatus": "APPROVED"
+}

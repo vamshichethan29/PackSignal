@@ -1,0 +1,27 @@
+{
+  "jurisdiction": "IN",
+  "authority": "ICMR-National Institute of Nutrition (NIN) 2020 RDA",
+  "category": "Adult Reference Daily Intakes (Sedentary Adult)",
+  "referenceDailyValues": {
+    "energy_kcal": 2000,
+    "protein_g": 54,
+    "total_fat_g": 30,
+    "saturated_fat_g": 22,
+    "trans_fat_g": 2,
+    "cholesterol_mg": 300,
+    "sodium_mg": 2000,
+    "total_carbohydrate_g": 130,
+    "dietary_fiber_g": 30,
+    "added_sugars_g": 25,
+    "calcium_mg": 1000,
+    "iron_mg": 19,
+    "zinc_mg": 17,
+    "potassium_mg": 3500,
+    "vitamin_d_mcg": 15
+  },
+  "atwaterFactors": {
+    "fat": 9,
+    "carbohydrate": 4,
+    "protein": 4
+  }
+}

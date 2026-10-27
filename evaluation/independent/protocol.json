@@ -1,0 +1,133 @@
+{
+  "schema": "packsignal-independent-eval-protocol/v1",
+  "protocolVersion": "1.0.0",
+  "gitCommit": "cd3db9dc2b19422667e8be7f2c87c70d145d6191",
+  "deployedVersion": "1.0.0",
+  "frozenDate": "2026-10-24",
+  "title": "PackSignal Independent Mini-Evaluation Protocol",
+  "description": "Preregistered evaluation protocol for blind, evidence-backed evaluation using three previously unseen packaging sets.",
+  "scope": "Independent pilot assessment of deterministic regulatory and copy checks. Not an FDA compliance certification or general production accuracy study.",
+  "evaluationUnits": {
+    "format": "(packageId, checkId, instanceKey)",
+    "description": "Each unit represents an independently evaluable check instance on a specific package. Multiple findings referencing the same underlying defect or declaration are treated as one unit to prevent duplicate count inflation."
+  },
+  "eligibleChecks": [
+    {
+      "checkId": "US-001",
+      "name": "Net Quantity Equivalence",
+      "field": "net_quantity",
+      "description": "Verifies dual-unit net quantity declarations against approved product specification."
+    },
+    {
+      "checkId": "US-002",
+      "name": "Manufacturer & Business Address Consistency",
+      "field": "manufacturer_address",
+      "description": "Verifies manufacturer, packer, or distributor identity and street address against approved company registry."
+    },
+    {
+      "checkId": "US-003",
+      "name": "Ingredients & Major Allergens Wording",
+      "field": "ingredients_allergens",
+      "description": "Verifies ingredient declaration wording and major allergen disclosures against formulation reference."
+    },
+    {
+      "checkId": "US-004",
+      "name": "Nutrition Facts Required Fields Presence",
+      "field": "nutrition_presence",
+      "description": "Verifies mandatory FDA Nutrition Facts fields presence (Serving Size, Servings Per Container, Calories, Fat, Sodium, Carbs, Sugars, Protein)."
+    },
+    {
+      "checkId": "US-005",
+      "name": "Percent Daily Value Arithmetic",
+      "field": "nutrition_dv_arithmetic",
+      "description": "Deterministic screening of declared % Daily Values against US 2016 reference daily intakes (e.g. Sodium 2300mg, Total Fat 78g)."
+    },
+    {
+      "checkId": "US-006",
+      "name": "Calorie & Macronutrient Sanity",
+      "field": "calorie_sanity",
+      "description": "Screening of declared calories against Atwater 4-4-9 calorie contribution bounds."
+    },
+    {
+      "checkId": "US-007",
+      "name": "Claim-to-Approved-Source Verification",
+      "field": "claims_evidence",
+      "description": "Verifies on-pack marketing claims against approved claim register entries."
+    }
+  ],
+  "groundTruthLabels": [
+    {
+      "label": "ISSUE",
+      "meaning": "Authoritative source and artwork establish a concrete supported discrepancy."
+    },
+    {
+      "label": "MATCH",
+      "meaning": "Authoritative source and artwork establish agreement for the specific check."
+    },
+    {
+      "label": "AMBIGUOUS",
+      "meaning": "Sources conflict, source authority is unconfirmed, or applicable interpretation remains uncertain."
+    },
+    {
+      "label": "UNVERIFIABLE",
+      "meaning": "Necessary artwork or source evidence is unavailable or unreadable."
+    },
+    {
+      "label": "NOT_APPLICABLE",
+      "meaning": "The specific requirement does not apply to this packaging format or product category."
+    },
+    {
+      "label": "REVIEWER_DISPUTED",
+      "meaning": "Reviewer cannot determine label after evidence inspection; preserved for documented adjudication."
+    }
+  ],
+  "scoringFormulas": {
+    "truePositive": {
+      "definition": "Ground truth is ISSUE, PackSignal reports a definite ISSUE for the same unit, identifies the correct discrepancy, and provides traceable source and artwork evidence.",
+      "code": "TP"
+    },
+    "falsePositive": {
+      "definition": "Ground truth is MATCH, but PackSignal reports a definite ISSUE.",
+      "code": "FP"
+    },
+    "falseNegative": {
+      "definition": "Ground truth is ISSUE, but PackSignal fails to report a qualifying definite ISSUE (returns MATCH, REVIEW, or UNABLE).",
+      "code": "FN"
+    },
+    "trueNegative": {
+      "definition": "Ground truth is MATCH, and PackSignal reports MATCH for the same supported check.",
+      "code": "TN"
+    },
+    "precision": "TP / (TP + FP) where denominator > 0, otherwise N/A",
+    "recall": "TP / (TP + FN) where denominator > 0, otherwise N/A",
+    "f1": "2 * Precision * Recall / (Precision + Recall) where (Precision + Recall) > 0, otherwise N/A"
+  },
+  "abstentionPolicy": {
+    "correctAbstention": {
+      "definition": "Ground truth is AMBIGUOUS or UNVERIFIABLE, and PackSignal appropriately returns REVIEW or UNABLE rather than asserting an unsupported definitive verdict.",
+      "code": "CORRECT_ABSTENTION"
+    },
+    "unsafeDefinitiveIssue": {
+      "definition": "Ground truth is AMBIGUOUS or UNVERIFIABLE, but PackSignal prematurely declares a definitive ISSUE without adequate authority or evidence.",
+      "code": "UNSAFE_DEFINITIVE_ISSUE"
+    },
+    "unsupportedMatch": {
+      "definition": "Ground truth is AMBIGUOUS or UNVERIFIABLE, but PackSignal declares a definitive MATCH without verified source authority.",
+      "code": "UNSUPPORTED_MATCH"
+    },
+    "ruleOnDefiniteIssues": "When ground truth is ISSUE, an abstention (REVIEW or UNABLE) is recorded as a missed automated detection (False Negative) for the primary recall denominator, while acknowledging that requesting human review is safer than reporting a false MATCH."
+  },
+  "evidenceQualityRubric": {
+    "sourceEvidence": ["CORRECT", "PARTIAL", "INCORRECT", "NOT_AVAILABLE"],
+    "artworkEvidence": ["CORRECT", "PARTIAL", "INCORRECT", "NOT_AVAILABLE"],
+    "ruleEvidence": ["CORRECT", "PARTIAL", "INCORRECT", "NOT_AVAILABLE"],
+    "requirementForTruePositive": "For the primary evidence-backed TP metric, both source evidence and artwork evidence must be rated CORRECT. Status-only TP matches with broken or inaccurate evidence citations are categorized as PARTIAL_EVIDENCE_TP and tracked as evidence quality defects."
+  },
+  "antiLeakageAndIntegrityRules": [
+    "No test packaging files were used during development, feature tuning, or test-case calibration of the evaluated commit.",
+    "The independent human reviewer must complete the blind worksheet before viewing any PackSignal output or developer notes.",
+    "Scoring formulas and evaluation units are preregistered in this frozen protocol; they cannot be adjusted after predictions are revealed.",
+    "All three cases (CASE-01, CASE-02, CASE-03) must be retained in the final reporting; unfavorable outcomes cannot be omitted.",
+    "If an independent reviewer has not completed and signed the blind evaluation, status must remain INDEPENDENT_REVIEW_PENDING. Metrics must never be fabricated."
+  ]
+}

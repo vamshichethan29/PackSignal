@@ -1,0 +1,178 @@
+name: PackSignal CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  unit-integration:
+    name: Unit & Integration Tests (Node 24 & Python)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Node dependencies
+        run: npm ci || npm install
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run Node and Python test suites
+        run: npm test
+
+      - name: Run AI Fixtures Replay Test Suite
+        run: npm run test:ai-fixtures
+
+  deterministic-evaluation:
+    name: Deterministic Evaluation & Known-Sample Answer Key
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Run 21-case synthetic regression evaluation
+        run: npm run evaluate
+
+      - name: Run known-sample answer-key evaluation
+        run: npm run evaluate:known
+
+  backend-smoke:
+    name: HTTP & Team Review Backend Smoke
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Node dependencies
+        run: npm ci || npm install
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run HTTP backend smoke test
+        run: npm run smoke
+
+      - name: Run team review and sign-off smoke test
+        run: npm run smoke-team
+
+  playwright-e2e:
+    name: Playwright Real-Backend E2E Suite
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Node dependencies
+        run: npm ci || npm install
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Install Playwright Chromium with system dependencies
+        run: npx playwright install --with-deps chromium
+
+      - name: Run Playwright E2E browser tests against isolated backend
+        run: npm run test:e2e
+
+      - name: Upload Playwright test results and report on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
+
+  release-verification:
+    name: Phase 9 Release & Trust Gate Verification
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Verify release links and assets
+        run: node scripts/check-release-links.mjs
+
+      - name: Verify trust system and release gates
+        run: npm run trust:verify
+
+      - name: Verify package archive creation
+        run: npm run package
+
+  quality-gate:
+    name: Quality Gate (All Critical Tests Pass)
+    runs-on: ubuntu-latest
+    needs: [unit-integration, deterministic-evaluation, backend-smoke, playwright-e2e, release-verification]
+    steps:
+      - name: Verify all critical check suites succeeded
+        run: echo "Quality Gate Passed: All unit, integration, deterministic evaluation, backend smoke, Playwright E2E, and Phase 9 release validation test suites succeeded."

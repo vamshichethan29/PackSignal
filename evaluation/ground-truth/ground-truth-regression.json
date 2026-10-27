@@ -1,0 +1,401 @@
+[
+  {
+    "caseId": "case-regression-001-qty-01-mismatch",
+    "expectedOutcome": "issue",
+    "expectedField": "net_quantity",
+    "expectedRuleId": "rules:EVAL-QTY-01-MISMATCH",
+    "expectedSeverity": "critical",
+    "groundTruthAuthority": "DETERMINISTIC_MUTATION_ORACLE",
+    "mutationManifest": {
+      "caseId": "case-regression-001-qty-01-mismatch",
+      "mutationId": "QTY-01-MISMATCH",
+      "mutationType": "quantity",
+      "seed": 601103,
+      "originalHash": "96e26e1d20c3a300c7cf129aae5149f0b8c105d3552cae2eff5e3c1f1d55cf8a",
+      "generatedHash": "151c825a5f4256b8b37dcf39204c30d9a21d1ef7695123f3c840b0ce1b5a4984",
+      "transformedField": "net_quantity",
+      "expectedOutcome": "issue",
+      "verifiedDifference": true
+    }
+  },
+  {
+    "caseId": "case-regression-002-qty-02-equivalent-clean",
+    "expectedOutcome": "match",
+    "expectedField": "net_quantity",
+    "expectedRuleId": "rules:EVAL-QTY-02-EQUIVALENT-CLEAN",
+    "expectedSeverity": "pass",
+    "groundTruthAuthority": "DETERMINISTIC_MUTATION_ORACLE",
+    "mutationManifest": {
+      "caseId": "case-regression-002-qty-02-equivalent-clean",
+      "mutationId": "QTY-02-EQUIVALENT-CLEAN",
+      "mutationType": "quantity",
+      "seed": 448290,
+      "originalHash": "96e26e1d20c3a300c7cf129aae5149f0b8c105d3552cae2eff5e3c1f1d55cf8a",
+      "generatedHash": "999e2a21f2a7ad1d6eac2a5ede0c384c93092f2e365f95fb786b725bc5548ae6",
+      "transformedField": "net_quantity",
+      "expectedOutcome": "match",
+      "verifiedDifference": true
+    }
+  },
+  {
+    "caseId": "case-regression-003-qty-03-invalid-conversion",
+    "expectedOutcome": "issue",
+    "expectedField": "net_quantity",
+    "expectedRuleId": "rules:EVAL-QTY-03-INVALID-CONVERSION",
+    "expectedSeverity": "critical",
+    "groundTruthAuthority": "DETERMINISTIC_MUTATION_ORACLE",
+    "mutationManifest": {
+      "caseId": "case-regression-003-qty-03-invalid-conversion",
+      "mutationId": "QTY-03-INVALID-CONVERSION",
+      "mutationType": "quantity",
+      "seed": 852465,
+      "originalHash": "96e26e1d20c3a300c7cf129aae5149f0b8c105d3552cae2eff5e3c1f1d55cf8a",
+      "generatedHash": "13b80c8a53d718e8427df53579a1fd0a363c056e131b98919919bbb62831831c",
+      "transformedField": "net_quantity",
+      "expectedOutcome": "issue",
+      "verifiedDifference": true
+    }
+  },
+  {
+    "caseId": "case-regression-004-ing-01-omission",
+    "expectedOutcome": "issue",
+    "expectedField": "ingredients_list",
+    "expectedRuleId": "rules:EVAL-ING-01-OMISSION",
+    "expectedSeverity": "critical",
+    "groundTruthAuthority": "DETERMINISTIC_MUTATION_ORACLE",
+    "mutationManifest": {
+      "caseId": "case-regression-004-ing-01-omission",
+      "mutationId": "ING-01-OMISSION",
+      "mutationType": "ingredients",
+      "seed": 669734,
+      "originalHash": "96e26e1d20c3a300c7cf129aae5149f0b8c105d3552cae2eff5e3c1f1d55cf8a",
+      "generatedHash": "17942fd49431c75e417cc7c6a68212421ae2dfc7756719eb092818d2da1eb48a",
+      "transformedField": "ingredients_list",
+      "expectedOutcome": "issue",
+      "verifiedDifference": true
+    }
+  },
+  {
+    "caseId": "case-regression-005-ing-02-unexpected-addition",
+    "expectedOutcome": "issue",
+    "expectedField": "ingredients_list",
+    "expectedRuleId": "rules:EVAL-ING-02-UNEXPECTED-ADDITION",
+    "expectedSeverity": "critical",
+    "groundTruthAuthority": "DETERMINISTIC_MUTATION_ORACLE",
+    "mutationManifest": {
+      "caseId": "case-regression-005-ing-02-unexpected-addition",
+      "mutationId": "ING-02-UNEXPECTED-ADDITION",
+      "mutationType": "ingredients",
+      "seed": 174813,
+      "originalHash": "96e26e1d20c3a300c7cf129aae5149f0b8c105d3552cae2eff5e3c1f1d55cf8a",
+      "generatedHash": "ec9c4a8b452eb9cc914ea8aa63ce603ec0b0ddece7fb04121591bd48bd6587c9",
+      "transformedField": "ingredients_list",
+      "expectedOutcome": "issue",
+      "verifiedDifference": true
+    }
+  },
+  {
+    "caseId": "case-regression-006-ing-03-clean-list",
+    "expectedOutcome": "match",
+    "expectedField": "ingredients_list",
+    "expectedRuleId": "rules:EVAL-ING-03-CLEAN-LIST",
+    "expectedSeverity": "pass",
+    "groundTruthAuthority": "DETERMINISTIC_MUTATION_ORACLE",
+    "mutationManifest": {
+      "caseId": "case-regression-006-ing-03-clean-list",
+      "mutationId": "ING-03-CLEAN-LIST",
+      "mutationType": "ingredients",
+      "seed": 526592,
+      "originalHash": "96e26e1d20c3a300c7cf129aae5149f0b8c105d3552cae2eff5e3c1f1d55cf8a",
+      "generatedHash": "63d4bbb4093e41b363d06f03c50d1805dbd5c8cb4574ebf6c98b69c6e4e1265a",
+      "transformedField": "ingredients_list",
+      "expectedOutcome": "match",
+      "verifiedDifference": true
+    }
+  },
+  {
+    "caseId": "case-regression-007-all-01-tree-nut-omission",
+    "expectedOutcome": "issue",
+    "expectedField": "allergen_statement",
+    "expectedRuleId": "rules:EVAL-ALL-01-TREE-NUT-OMISSION",
+    "expectedSeverity": "critical",
+    "groundTruthAuthority": "DETERMINISTIC_MUTATION_ORACLE",
+    "mutationManifest": {
+      "caseId": "case-regression-007-all-01-tree-nut-omission",
+      "mutationId": "ALL-01-TREE-NUT-OMISSION",
+      "mutationType": "allergens",
+      "seed": 273227,
+      "originalHash": "96e26e1d20c3a300c7cf129aae5149f0b8c105d3552cae2eff5e3c1f1d55cf8a",
+      "generatedHash": "68b450b482cda524410fd26df2b15dd0bf4d182a8f2286712eb3a4d1d5bae48f",
+      "transformedField": "allergen_statement",
+      "expectedOutcome": "issue",
+      "verifiedDifference": true
+    }
+  },
+  {
+    "caseId": "case-regression-008-all-02-clean-allergen-banner",
+    "expectedOutcome": "match",
+    "expectedField": "allergen_statement",
+    "expectedRuleId": "rules:EVAL-ALL-02-CLEAN-ALLERGEN-BANNER",
+    "expectedSeverity": "pass",
+    "groundTruthAuthority": "DETERMINISTIC_MUTATION_ORACLE",
+    "mutationManifest": {
+      "caseId": "case-regression-008-all-02-clean-allergen-banner",
+      "mutationId": "ALL-02-CLEAN-ALLERGEN-BANNER",
+      "mutationType": "allergens",
+      "seed": 624744,
+      "originalHash": "96e26e1d20c3a300c7cf129aae5149f0b8c105d3552cae2eff5e3c1f1d55cf8a",
+      "generatedHash": "526aeb4613f6ce1ddba441d740b8539a94cc7d11177161df1a6eafca7f8ad0f6",
+      "transformedField": "allergen_statement",
+      "expectedOutcome": "match",
+      "verifiedDifference": true
+    }
+  },
+  {
+    "caseId": "case-regression-009-nut-01-sodium-dv-mismatch",
+    "expectedOutcome": "issue",
+    "expectedField": "nutrition.sodium_mg",
+    "expectedRuleId": "rules:EVAL-NUT-01-SODIUM-DV-MISMATCH",
+    "expectedSeverity": "critical",
+    "groundTruthAuthority": "DETERMINISTIC_MUTATION_ORACLE",
+    "mutationManifest": {
+      "caseId": "case-regression-009-nut-01-sodium-dv-mismatch",
+      "mutationId": "NUT-01-SODIUM-DV-MISMATCH",
+      "mutationType": "nutrition",
+      "seed": 865474,
+      "originalHash": "96e26e1d20c3a300c7cf129aae5149f0b8c105d3552cae2eff5e3c1f1d55cf8a",
+      "generatedHash": "89456581eb6c42679f03c246723287ac7e26d406bbe3e8eb8f4b9113e36b334f",
+      "transformedField": "nutrition.sodium_mg",
+      "expectedOutcome": "issue",
+      "verifiedDifference": true
+    }
+  },
+  {
+    "caseId": "case-regression-010-nut-02-atwater-calorie-mismatch",
+    "expectedOutcome": "issue",
+    "expectedField": "nutrition.calories",
+    "expectedRuleId": "rules:EVAL-NUT-02-ATWATER-CALORIE-MISMATCH",
+    "expectedSeverity": "high",
+    "groundTruthAuthority": "DETERMINISTIC_MUTATION_ORACLE",
+    "mutationManifest": {
+      "caseId": "case-regression-010-nut-02-atwater-calorie-mismatch",
+      "mutationId": "NUT-02-ATWATER-CALORIE-MISMATCH",
+      "mutationType": "nutrition",
+      "seed": 472317,
+      "originalHash": "96e26e1d20c3a300c7cf129aae5149f0b8c105d3552cae2eff5e3c1f1d55cf8a",
+      "generatedHash": "12299471414a8431ba75aadb547ea9d334debdbdea270f7df5d209be1f376871",
+      "transformedField": "nutrition.calories",
+      "expectedOutcome": "issue",
+      "verifiedDifference": true
+    }
+  },
+  {
+    "caseId": "case-regression-011-nut-03-clean-panel",
+    "expectedOutcome": "match",
+    "expectedField": "nutrition.calories",
+    "expectedRuleId": "rules:EVAL-NUT-03-CLEAN-PANEL",
+    "expectedSeverity": "pass",
+    "groundTruthAuthority": "DETERMINISTIC_MUTATION_ORACLE",
+    "mutationManifest": {
+      "caseId": "case-regression-011-nut-03-clean-panel",
+      "mutationId": "NUT-03-CLEAN-PANEL",
+      "mutationType": "nutrition",
+      "seed": 249923,
+      "originalHash": "96e26e1d20c3a300c7cf129aae5149f0b8c105d3552cae2eff5e3c1f1d55cf8a",
+      "generatedHash": "52aeedf8d3b18e3e5c130f3a6d1eccc950dbd0077ce55059695fc87bc799c83a",
+      "transformedField": "nutrition.calories",
+      "expectedOutcome": "match",
+      "verifiedDifference": true
+    }
+  },
+  {
+    "caseId": "case-regression-012-clm-01-unsupported-zero-sugar",
+    "expectedOutcome": "issue",
+    "expectedField": "marketing_claims",
+    "expectedRuleId": "rules:EVAL-CLM-01-UNSUPPORTED-ZERO-SUGAR",
+    "expectedSeverity": "critical",
+    "groundTruthAuthority": "DETERMINISTIC_MUTATION_ORACLE",
+    "mutationManifest": {
+      "caseId": "case-regression-012-clm-01-unsupported-zero-sugar",
+      "mutationId": "CLM-01-UNSUPPORTED-ZERO-SUGAR",
+      "mutationType": "claims",
+      "seed": 882058,
+      "originalHash": "96e26e1d20c3a300c7cf129aae5149f0b8c105d3552cae2eff5e3c1f1d55cf8a",
+      "generatedHash": "420b1a76a04bbfb3489732627f3cfee1271735bebe83a5f768cb36f6fccbc839",
+      "transformedField": "marketing_claims",
+      "expectedOutcome": "issue",
+      "verifiedDifference": true
+    }
+  },
+  {
+    "caseId": "case-regression-013-clm-02-honey-vegan-clash",
+    "expectedOutcome": "issue",
+    "expectedField": "dietary_claim",
+    "expectedRuleId": "rules:EVAL-CLM-02-HONEY-VEGAN-CLASH",
+    "expectedSeverity": "critical",
+    "groundTruthAuthority": "DETERMINISTIC_MUTATION_ORACLE",
+    "mutationManifest": {
+      "caseId": "case-regression-013-clm-02-honey-vegan-clash",
+      "mutationId": "CLM-02-HONEY-VEGAN-CLASH",
+      "mutationType": "claims",
+      "seed": 745737,
+      "originalHash": "96e26e1d20c3a300c7cf129aae5149f0b8c105d3552cae2eff5e3c1f1d55cf8a",
+      "generatedHash": "e5a0312baa8939ecc14e5435917ec9c923efaeffe3c14a9c7f0220245bd869a9",
+      "transformedField": "dietary_claim",
+      "expectedOutcome": "issue",
+      "verifiedDifference": true
+    }
+  },
+  {
+    "caseId": "case-regression-014-clm-03-supported-low-sodium-clean",
+    "expectedOutcome": "match",
+    "expectedField": "marketing_claims",
+    "expectedRuleId": "rules:EVAL-CLM-03-SUPPORTED-LOW-SODIUM-CLEAN",
+    "expectedSeverity": "pass",
+    "groundTruthAuthority": "DETERMINISTIC_MUTATION_ORACLE",
+    "mutationManifest": {
+      "caseId": "case-regression-014-clm-03-supported-low-sodium-clean",
+      "mutationId": "CLM-03-SUPPORTED-LOW-SODIUM-CLEAN",
+      "mutationType": "claims",
+      "seed": 307001,
+      "originalHash": "96e26e1d20c3a300c7cf129aae5149f0b8c105d3552cae2eff5e3c1f1d55cf8a",
+      "generatedHash": "d8e03d1eea0a44c20d5d879a140090be408395e5e494ff1b5a64630942cd1b1e",
+      "transformedField": "marketing_claims",
+      "expectedOutcome": "match",
+      "verifiedDifference": true
+    }
+  },
+  {
+    "caseId": "case-regression-015-doc-01-hidden-native-text",
+    "expectedOutcome": "issue",
+    "expectedField": "storage_statement",
+    "expectedRuleId": "rules:EVAL-DOC-01-HIDDEN-NATIVE-TEXT",
+    "expectedSeverity": "high",
+    "groundTruthAuthority": "DETERMINISTIC_MUTATION_ORACLE",
+    "mutationManifest": {
+      "caseId": "case-regression-015-doc-01-hidden-native-text",
+      "mutationId": "DOC-01-HIDDEN-NATIVE-TEXT",
+      "mutationType": "document_evidence",
+      "seed": 197253,
+      "originalHash": "96e26e1d20c3a300c7cf129aae5149f0b8c105d3552cae2eff5e3c1f1d55cf8a",
+      "generatedHash": "4d348158b3ecc1309ba53b76fb94855257f99cece8f9735686a23cb189446620",
+      "transformedField": "storage_statement",
+      "expectedOutcome": "issue",
+      "verifiedDifference": true
+    }
+  },
+  {
+    "caseId": "case-regression-016-bar-01-invalid-checksum",
+    "expectedOutcome": "issue",
+    "expectedField": "gtin_barcode",
+    "expectedRuleId": "rules:EVAL-BAR-01-INVALID-CHECKSUM",
+    "expectedSeverity": "critical",
+    "groundTruthAuthority": "DETERMINISTIC_MUTATION_ORACLE",
+    "mutationManifest": {
+      "caseId": "case-regression-016-bar-01-invalid-checksum",
+      "mutationId": "BAR-01-INVALID-CHECKSUM",
+      "mutationType": "barcode",
+      "seed": 500729,
+      "originalHash": "96e26e1d20c3a300c7cf129aae5149f0b8c105d3552cae2eff5e3c1f1d55cf8a",
+      "generatedHash": "e479b8310825455cecb19be4b74e3cb00f4cc92289160f9b5c3d0b8a93c3229c",
+      "transformedField": "gtin_barcode",
+      "expectedOutcome": "issue",
+      "verifiedDifference": true
+    }
+  },
+  {
+    "caseId": "case-regression-017-bar-02-clean-gtin",
+    "expectedOutcome": "match",
+    "expectedField": "gtin_barcode",
+    "expectedRuleId": "rules:EVAL-BAR-02-CLEAN-GTIN",
+    "expectedSeverity": "pass",
+    "groundTruthAuthority": "DETERMINISTIC_MUTATION_ORACLE",
+    "mutationManifest": {
+      "caseId": "case-regression-017-bar-02-clean-gtin",
+      "mutationId": "BAR-02-CLEAN-GTIN",
+      "mutationType": "barcode",
+      "seed": 686612,
+      "originalHash": "96e26e1d20c3a300c7cf129aae5149f0b8c105d3552cae2eff5e3c1f1d55cf8a",
+      "generatedHash": "08bf2f790c68247f5c930257408ecc46be82a931c68c49e26ee8c4fc9a0a7cca",
+      "transformedField": "gtin_barcode",
+      "expectedOutcome": "match",
+      "verifiedDifference": true
+    }
+  },
+  {
+    "caseId": "case-regression-018-rev-01-new-defect-in-rev2",
+    "expectedOutcome": "issue",
+    "expectedField": "storage_statement",
+    "expectedRuleId": "rules:EVAL-REV-01-NEW-DEFECT-IN-REV2",
+    "expectedSeverity": "critical",
+    "groundTruthAuthority": "DETERMINISTIC_MUTATION_ORACLE",
+    "mutationManifest": {
+      "caseId": "case-regression-018-rev-01-new-defect-in-rev2",
+      "mutationId": "REV-01-NEW-DEFECT-IN-REV2",
+      "mutationType": "revisions",
+      "seed": 610620,
+      "originalHash": "96e26e1d20c3a300c7cf129aae5149f0b8c105d3552cae2eff5e3c1f1d55cf8a",
+      "generatedHash": "902896463ca394c62a8f324b8aa6da8dfe251132662fbb94177c8a24a3e2bca0",
+      "transformedField": "storage_statement",
+      "expectedOutcome": "issue",
+      "verifiedDifference": true
+    }
+  },
+  {
+    "caseId": "case-regression-019-mkt-01-india-fssai-veg-missing",
+    "expectedOutcome": "issue",
+    "expectedField": "fssai_veg_logo",
+    "expectedRuleId": "rules:EVAL-MKT-01-INDIA-FSSAI-VEG-MISSING",
+    "expectedSeverity": "critical",
+    "groundTruthAuthority": "DETERMINISTIC_MUTATION_ORACLE",
+    "mutationManifest": {
+      "caseId": "case-regression-019-mkt-01-india-fssai-veg-missing",
+      "mutationId": "MKT-01-INDIA-FSSAI-VEG-MISSING",
+      "mutationType": "market_rules",
+      "seed": 3842,
+      "originalHash": "96e26e1d20c3a300c7cf129aae5149f0b8c105d3552cae2eff5e3c1f1d55cf8a",
+      "generatedHash": "e0ebe0125f9cd29bacd4d7f7b6d223eb11ae2241e3d26d069d515a10c378ca91",
+      "transformedField": "fssai_veg_logo",
+      "expectedOutcome": "issue",
+      "verifiedDifference": true
+    }
+  },
+  {
+    "caseId": "case-regression-020-cln-01-storage-exact-match",
+    "expectedOutcome": "match",
+    "expectedField": "storage_statement",
+    "expectedRuleId": "rules:EVAL-CLN-01-STORAGE-EXACT-MATCH",
+    "expectedSeverity": "pass",
+    "groundTruthAuthority": "DETERMINISTIC_MUTATION_ORACLE",
+    "mutationManifest": {
+      "caseId": "case-regression-020-cln-01-storage-exact-match",
+      "mutationId": "CLN-01-STORAGE-EXACT-MATCH",
+      "mutationType": "clean_controls",
+      "seed": 470781,
+      "originalHash": "96e26e1d20c3a300c7cf129aae5149f0b8c105d3552cae2eff5e3c1f1d55cf8a",
+      "generatedHash": "3122f9091eba3f4d6a524d85d689492ee8486fc98c32d9e687c90534ee1ef34e",
+      "transformedField": "storage_statement",
+      "expectedOutcome": "match",
+      "verifiedDifference": true
+    }
+  },
+  {
+    "caseId": "case-regression-021-amb-01-conflicting-spec-drafts",
+    "expectedOutcome": "review",
+    "expectedField": "storage_statement",
+    "expectedRuleId": "rules:EVAL-AMB-01-CONFLICTING-SPEC-DRAFTS",
+    "expectedSeverity": "medium",
+    "groundTruthAuthority": "DETERMINISTIC_MUTATION_ORACLE",
+    "mutationManifest": {
+      "caseId": "case-regression-021-amb-01-conflicting-spec-drafts",
+      "mutationId": "AMB-01-CONFLICTING-SPEC-DRAFTS",
+      "mutationType": "clean_controls",
+      "seed": 837337,
+      "originalHash": "96e26e1d20c3a300c7cf129aae5149f0b8c105d3552cae2eff5e3c1f1d55cf8a",
+      "generatedHash": "3122f9091eba3f4d6a524d85d689492ee8486fc98c32d9e687c90534ee1ef34e",
+      "transformedField": "storage_statement",
+      "expectedOutcome": "review",
+      "verifiedDifference": true
+    }
+  }
+]

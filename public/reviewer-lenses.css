@@ -1,0 +1,434 @@
+/* ==========================================================================
+   PackSignal Phase 5A — Reviewer Lenses: Red Pen, Sticky Notes, Track Changes
+   ========================================================================== */
+
+.lenses-workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  max-width: 1500px;
+  margin: 0 auto;
+  color: var(--text-primary, #0f172a);
+}
+
+/* Header & Controls */
+.lenses-header-card {
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.lenses-header-info h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.lenses-header-meta {
+  display: flex;
+  gap: 1.25rem;
+  font-size: 0.875rem;
+  color: #64748b;
+  flex-wrap: wrap;
+}
+
+/* Clean / Marked Toggle Switch */
+.lenses-toggle-wrap {
+  display: flex;
+  align-items: center;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 9999px;
+  padding: 4px;
+  gap: 4px;
+}
+
+.lens-mode-btn {
+  border: none;
+  background: transparent;
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.lens-mode-btn.active {
+  background: #0284c7;
+  color: #ffffff;
+  box-shadow: 0 2px 4px rgba(2, 132, 199, 0.3);
+}
+
+.lens-mode-btn.clean.active {
+  background: #16a34a;
+  color: #ffffff;
+  box-shadow: 0 2px 4px rgba(22, 163, 74, 0.3);
+}
+
+/* Main Workbench Layout: Flat Dieline (Left) + Reviewer Panels (Right) */
+.lenses-workbench-grid {
+  display: grid;
+  grid-template-columns: 62% 38%;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (max-width: 1200px) {
+  .lenses-workbench-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Flat Dieline Container */
+.dieline-canvas-card {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dieline-canvas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 0.75rem;
+}
+
+.dieline-canvas-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dieline-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1350 / 1100;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
+}
+
+/* Panels */
+.dieline-panel {
+  position: absolute;
+  border: 1px dashed #94a3b8;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+  z-index: 1;
+}
+
+.dieline-panel.pdp {
+  border: 2px solid #0284c7;
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.panel-header-tag {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #0369a1;
+  text-transform: uppercase;
+}
+
+.panel-dimensions-tag {
+  font-size: 0.65rem;
+  color: #64748b;
+  align-self: flex-end;
+}
+
+/* Finding Pins on Flat Dieline */
+.dieline-pin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  z-index: 15;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.25);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.dieline-pin:hover {
+  transform: translate(-50%, -50%) scale(1.25);
+  z-index: 20;
+}
+
+.dieline-pin.legal { background: #dc2626; border: 2px solid #ffffff; }
+.dieline-pin.rd { background: #0284c7; border: 2px solid #ffffff; }
+.dieline-pin.brand { background: #9333ea; border: 2px solid #ffffff; }
+
+.dieline-pin .pin-pulse {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid inherit;
+  opacity: 0.75;
+  animation: pulsePin 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes pulsePin {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+
+/* Self-Drawing Vector Red Pen Overlay */
+.redpen-svg-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.redpen-stroke-animated {
+  stroke-dasharray: 800;
+  stroke-dashoffset: 800;
+  animation: drawRedPenStroke 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes drawRedPenStroke {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.redpen-callout-text {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  opacity: 0;
+  animation: fadeInCallout 0.4s ease forwards 0.6s;
+}
+
+@keyframes fadeInCallout {
+  to { opacity: 1; }
+}
+
+/* Right Column: Sticky Notes & Track Changes */
+.reviewer-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Sticky Notes Section */
+.sticky-notes-card {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sticky-filter-row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.sticky-filter-btn {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sticky-filter-btn.active {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+}
+
+.sticky-feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  max-height: 480px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.reviewer-sticky-note {
+  border-radius: 8px;
+  padding: 1rem;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  border: 1px solid transparent;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.reviewer-sticky-note:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+.reviewer-sticky-note.legal { background: #fef3c7; border-color: #f59e0b; color: #78350f; }
+.reviewer-sticky-note.rd { background: #e0f2fe; border-color: #0284c7; color: #0c4a6e; }
+.reviewer-sticky-note.brand { background: #f3e8ff; border-color: #9333ea; color: #581c87; }
+
+.note-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.note-owner-pill {
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.note-panel-link {
+  font-size: 0.75rem;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.note-author-line {
+  font-weight: 700;
+  font-size: 0.8rem;
+  margin-bottom: 0.35rem;
+}
+
+.note-body-text {
+  margin: 0 0 0.5rem 0;
+}
+
+.note-action-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+/* Track Changes Diff Section */
+.track-changes-card {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.track-changes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.track-change-row {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.85rem;
+  background: #f8fafc;
+}
+
+.track-row-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.track-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.track-panel-badge {
+  font-size: 0.7rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.track-diff-preview {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 0.6rem 0.85rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  margin-bottom: 0.5rem;
+}
+
+.diff-del {
+  color: #dc2626;
+  text-decoration: line-through;
+  background: #fee2e2;
+  padding: 0 2px;
+}
+
+.diff-ins {
+  color: #16a34a;
+  text-decoration: underline;
+  background: #dcfce7;
+  padding: 0 2px;
+  font-weight: 700;
+}
+
+.track-rationale-note {
+  font-size: 0.75rem;
+  color: #475569;
+  line-height: 1.4;
+}

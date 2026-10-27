@@ -1,0 +1,290 @@
+{
+  "suiteVersion": "1.0.0",
+  "executedAt": "2026-10-27T08:07:54.768Z",
+  "hashes": {
+    "DancingFish_Granola_Berry_US_Carton.pdf": "c633ab2f9d227c14aee4f9065cee980cf2efe1a602db963b1cf5e474fec929be",
+    "DancingFish_Granola_BerryCrunch_US_Content_Sheet.xlsx": "289b39eb38e39128974a0f9e9042e764c73d7f83da0730a32338b6d3e79c972d"
+  },
+  "metrics": {
+    "totalCandidateChecks": 16,
+    "checksEvaluated": 16,
+    "confirmedChecks": {
+      "total": 12,
+      "matched": 12,
+      "missed": 0
+    },
+    "provisionalChecks": {
+      "total": 4,
+      "surfaced": 4,
+      "missed": 0
+    },
+    "positiveControls": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0
+    },
+    "extractionCoverage": {
+      "pdfTextSpansLocated": 16,
+      "sourceCellsPinned": 14,
+      "arithmeticProofsGenerated": 17
+    }
+  },
+  "checks": [
+    {
+      "checkId": "DF-01",
+      "title": "Honey Percentage Discrepancy",
+      "department": "R&D",
+      "adjudicationStatus": "PROVISIONAL_EXPECTATION",
+      "expectedStatus": "issue",
+      "observedStatus": "issue",
+      "statusMatch": true,
+      "evidencePinned": {
+        "cell": "B26",
+        "artworkQuote": "Honey (1%)",
+        "hasProof": true
+      },
+      "sourceAuthority": "Draft / In Review"
+    },
+    {
+      "checkId": "DF-02",
+      "title": "Ingredient List Discrepancies & Duplication",
+      "department": "R&D",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "expectedStatus": "issue",
+      "observedStatus": "issue",
+      "statusMatch": true,
+      "evidencePinned": {
+        "cell": "B26",
+        "artworkQuote": "INGREDIENTS: Organic Wholegrain Oat Flakes (79%), Almonds, Pecans, Walnuts, Flax Seeds, Vegetable Oil (Rapeseed and Sunflower in varying proportions), Dried Strawberries, Blueberries, Cranberries, Pumpkin Seeds, Sunflower Seeds,  Honey (1%), Coconut Sugar,  Crystallized Ginger (cane sugar), Himalayan Pink Salt. Natural Flavoring.",
+        "hasProof": true
+      },
+      "sourceAuthority": "Draft / In Review"
+    },
+    {
+      "checkId": "DF-03",
+      "title": "Allergen Disclosure & Precautionary Review",
+      "department": "LEGAL",
+      "adjudicationStatus": "PROVISIONAL_EXPECTATION",
+      "expectedStatus": "review",
+      "observedStatus": "review",
+      "statusMatch": true,
+      "evidencePinned": {
+        "cell": "B24",
+        "artworkQuote": "ALLERGEN INFORMATION: May Contain Nuts",
+        "hasProof": true
+      },
+      "sourceAuthority": "Draft / In Review"
+    },
+    {
+      "checkId": "DF-04",
+      "title": "No Added Sugar Claim & 0g Added Sugars Review",
+      "department": "LEGAL",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "expectedStatus": "issue",
+      "observedStatus": "issue",
+      "statusMatch": true,
+      "evidencePinned": {
+        "cell": "B29",
+        "artworkQuote": "NO ADDED SUGAR",
+        "hasProof": true
+      },
+      "sourceAuthority": "Draft / In Review"
+    },
+    {
+      "checkId": "DF-05",
+      "title": "Vegan Claim Formulation Consistency",
+      "department": "BRAND",
+      "adjudicationStatus": "PROVISIONAL_EXPECTATION",
+      "expectedStatus": "review",
+      "observedStatus": "review",
+      "statusMatch": true,
+      "evidencePinned": {
+        "cell": "B29",
+        "artworkQuote": "DIETARY INFORMATION: Suitable for Vegans.",
+        "hasProof": true
+      },
+      "sourceAuthority": "Draft / In Review"
+    },
+    {
+      "checkId": "DF-06",
+      "title": "Carbohydrate Source Mismatch",
+      "department": "R&D",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "expectedStatus": "issue",
+      "observedStatus": "issue",
+      "statusMatch": true,
+      "evidencePinned": {
+        "cell": "B53",
+        "artworkQuote": "Total Carbohydrate 66g",
+        "hasProof": true
+      },
+      "sourceAuthority": "Draft / In Review"
+    },
+    {
+      "checkId": "DF-07",
+      "title": "Sodium Source Mismatch",
+      "department": "R&D",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "expectedStatus": "issue",
+      "observedStatus": "issue",
+      "statusMatch": true,
+      "evidencePinned": {
+        "cell": "B52",
+        "artworkQuote": "Sodium 23mg",
+        "hasProof": true
+      },
+      "sourceAuthority": "Draft / In Review"
+    },
+    {
+      "checkId": "DF-08",
+      "title": "Total Fat Daily Value (%DV) Calculation",
+      "department": "R&D",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "expectedStatus": "issue",
+      "observedStatus": "issue",
+      "statusMatch": true,
+      "evidencePinned": {
+        "cell": "C48",
+        "artworkQuote": "Total Fat 15g 2.2%*",
+        "hasProof": true
+      },
+      "sourceAuthority": "Draft / In Review"
+    },
+    {
+      "checkId": "DF-09",
+      "title": "Vitamin D Daily Value (%DV) Calculation",
+      "department": "R&D",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "expectedStatus": "issue",
+      "observedStatus": "issue",
+      "statusMatch": true,
+      "evidencePinned": {
+        "cell": "C58",
+        "artworkQuote": "Vitamin D 89mcg 12%",
+        "hasProof": true
+      },
+      "sourceAuthority": "Draft / In Review"
+    },
+    {
+      "checkId": "DF-10",
+      "title": "Atwater 9/4/4 Calorie Plausibility Consistency",
+      "department": "R&D",
+      "adjudicationStatus": "PROVISIONAL_EXPECTATION",
+      "expectedStatus": "review",
+      "observedStatus": "review",
+      "statusMatch": true,
+      "evidencePinned": {
+        "cell": "B47",
+        "artworkQuote": "Calories 166",
+        "hasProof": true
+      },
+      "sourceAuthority": "Draft / In Review"
+    },
+    {
+      "checkId": "DF-11",
+      "title": "Servings × Serving Size vs Net Weight Consistency",
+      "department": "R&D",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "expectedStatus": "issue",
+      "observedStatus": "issue",
+      "statusMatch": true,
+      "evidencePinned": {
+        "cell": "B34, B35, B36",
+        "artworkQuote": "Serving size 85",
+        "hasProof": true
+      },
+      "sourceAuthority": "Draft / In Review"
+    },
+    {
+      "checkId": "DF-12",
+      "title": "Foreign / EU-style Visible Content on US Pack",
+      "department": "BRAND",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "expectedStatus": "review",
+      "observedStatus": "review",
+      "statusMatch": true,
+      "evidencePinned": {
+        "cell": null,
+        "artworkQuote": "197kJ 4% Saturates Salt Cereals Containing Gluten",
+        "hasProof": true
+      },
+      "sourceAuthority": "Draft / In Review"
+    },
+    {
+      "checkId": "DF-13",
+      "title": "Hidden Obsolete EU Nutrition Table Detection",
+      "department": "PREPRESS",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "expectedStatus": "match",
+      "observedStatus": "match",
+      "statusMatch": true,
+      "evidencePinned": {
+        "cell": null,
+        "artworkQuote": "Typical Values per 100g",
+        "hasProof": true
+      },
+      "sourceAuthority": "Not Applicable"
+    },
+    {
+      "checkId": "DF-14",
+      "title": "Net Quantity Format and Placement",
+      "department": "LEGAL",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "expectedStatus": "issue",
+      "observedStatus": "issue",
+      "statusMatch": true,
+      "evidencePinned": {
+        "cell": "B35",
+        "artworkQuote": "480g",
+        "hasProof": true
+      },
+      "sourceAuthority": "Draft / In Review"
+    },
+    {
+      "checkId": "DF-15",
+      "title": "Manufacturer / Distributor Business Address",
+      "department": "LEGAL",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "expectedStatus": "issue",
+      "observedStatus": "issue",
+      "statusMatch": true,
+      "evidencePinned": {
+        "cell": null,
+        "artworkQuote": "PRODUCED BY DANCING FISH GRANOLA CO.",
+        "hasProof": true
+      },
+      "sourceAuthority": "Draft / In Review"
+    },
+    {
+      "checkId": "DF-16",
+      "title": "Draft / Unapproved Source Authority Blocker",
+      "department": "LEGAL",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "expectedStatus": "review",
+      "observedStatus": "review",
+      "statusMatch": true,
+      "evidencePinned": {
+        "cell": "E3",
+        "artworkQuote": null,
+        "hasProof": true
+      },
+      "sourceAuthority": "Draft / In Review"
+    },
+    {
+      "checkId": "P01",
+      "title": "UPC-A Barcode Modulo-10 Check Digit (Positive Control)",
+      "department": "PREPRESS",
+      "adjudicationStatus": "CONFIRMED_EXPECTATION",
+      "expectedStatus": "match",
+      "observedStatus": "match",
+      "statusMatch": true,
+      "evidencePinned": {
+        "cell": "E12",
+        "artworkQuote": "1 20000 00003 6",
+        "hasProof": true
+      },
+      "sourceAuthority": "Draft / In Review"
+    }
+  ],
+  "overallPass": true
+}

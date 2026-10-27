@@ -1,0 +1,13 @@
+/**
+ * PackSignal — Departmental Sticky Notes Stylesheet
+ * public/department-sticky-notes.css
+ *
+ * Imports and extends sticky note and department filtering visual styles.
+ */
+
+@import url('/department-filters.css');
+@import url('/sticky-notes.css');
+
+.department-sticky-notes-wrapper {
+  margin: 16px 0;
+}

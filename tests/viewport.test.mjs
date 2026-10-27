@@ -149,3 +149,20 @@ test('evidence spotlight starts focused and uses the same pan controller', () =>
   assert.ok(h.controller.getView().x < before.x);
   assert.ok(h.controller.getView().y < before.y);
 });
+
+test('dynamic focus and page changes reuse one viewport and disposal removes its listeners', () => {
+  const h=setup();
+  const again=mountViewport({frame:h.frame,content:h.content,controls:h.controls,slider:h.slider});
+  assert.equal(again,h.controller);
+  h.controller.focusOnBox([.7,.7,.9,.9]);
+  assert.ok(h.controller.getView().x<0);
+  h.controller.setPage(400,1200);
+  assert.deepEqual(h.controller.getView(),{scale:1,x:0,y:0});
+  close(h.controller.getLayout().pageWidth/h.controller.getLayout().pageHeight,1/3);
+  h.controller.focusOnBox([.05,.1,.2,.2]);
+  assert.ok(h.controller.getView().y>0);
+  const before=h.changes();
+  h.controller.dispose();fire(h.frame,'keydown',{key:'+'});fire(h.slider,'input');
+  assert.equal(h.changes(),before);
+  assert.equal(h.frame.dataset.viewportMounted,undefined);
+});

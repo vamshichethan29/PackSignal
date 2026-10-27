@@ -1,0 +1,20 @@
+{
+  "taskName": "source_facts",
+  "promptVersion": "1.0",
+  "schemaVersion": "1.0",
+  "modelIdentifier": "gemini-2.5-flash",
+  "inputHash": "9a3d444d31091579a1065dd0381ab41accf8aed36602c2e29ca49bf416007d9a",
+  "output": {
+    "productName": "Granola Berry Crunch",
+    "brand": "Dancing Fish",
+    "declaredNetQuantity": "450g",
+    "suggestedAllergens": [
+      "Almonds",
+      "Pecans",
+      "Walnuts"
+    ]
+  },
+  "recordedAt": "2026-10-24T18:02:31.831Z",
+  "validationStatus": "RECORDED_AND_VALIDATED",
+  "status": "success"
+}

@@ -1,8 +1,12 @@
 """Bounded document parsing. Uploaded content is data; macros and links are never run."""
 import sys, json, re, csv, io, hashlib, zipfile, logging
 from pathlib import Path
+_lib_dir = str(Path(__file__).resolve().parent)
+if _lib_dir not in sys.path:
+    sys.path.insert(0, _lib_dir)
 from xml.sax.saxutils import escape
 from local_ocr import read_artwork
+from pdf_visibility import analyze_pdf_visibility
 logging.disable(logging.CRITICAL)
 MAX_PAGES = 12
 
@@ -242,7 +246,8 @@ def extract(path, role, outdir, artifact_id, name):
     from PIL import Image, ImageOps
     p = Path(path); out = Path(outdir); out.mkdir(parents=True, exist_ok=True)
     doc = dict(id=artifact_id, name=name, role=role, sha256=hashlib.sha256(p.read_bytes()).hexdigest(),
-               bytes=p.stat().st_size, pages=[], cells=[], lines=[], panelLabels=[], structuralEdges=[], warnings=[], text='', data=None)
+               bytes=p.stat().st_size, pages=[], cells=[], lines=[], panelLabels=[], structuralEdges=[],
+               sourcePieces=[], ignoredSourcePieces=[], extractionDiagnostics={}, warnings=[], text='', data=None)
     ext = p.suffix.lower()
     if ext=='.dxf':
         if role!='dieline':raise ValueError('DXF files are supported only as a dieline / structural reference.')
@@ -257,6 +262,13 @@ def extract(path, role, outdir, artifact_id, name):
             raise ValueError('File does not have a PDF signature.')
         pdf = pdfium.PdfDocument(str(p))
         if len(pdf) > MAX_PAGES: raise ValueError('Limit: 12 PDF pages per file. Split the document into relevant sections.')
+        vis_report = None
+        try:
+            from pdf_visibility import analyze_pdf_visibility
+            vis_report = analyze_pdf_visibility(str(p), max_pages=MAX_PAGES)
+        except Exception:
+            vis_report = None
+
         for n in range(len(pdf)):
             page = pdf[n]; width, height = page.get_size(); left, bottom, right, top = page.get_bbox()
             if width <= 0 or height <= 0: raise ValueError('Invalid PDF page dimensions.')
@@ -299,15 +311,116 @@ def extract(path, role, outdir, artifact_id, name):
                 if ocr_lines:
                     lines=ocr_lines;text='\n'.join(line['text'] for line in lines);method='ocr_transcription'
                 elif ocr_warning:doc['warnings'].append(ocr_warning)
+
+            # Correlate extracted lines with paint-order visibility analysis
+            page_vis = vis_report['pages'][n] if vis_report and n < len(vis_report.get('pages', [])) else None
+            vis_spans = page_vis.get('spans', []) if page_vis else []
+            hidden_spans = [s for s in vis_spans if s.get('kind') == 'hidden']
+
+            for line in lines:
+                l_box = line.get('box')
+                l_text = line.get('text', '').strip()
+                if not l_box:
+                    line['kind'] = 'visible'
+                    continue
+
+                matched_hidden = None
+                for hs in hidden_spans:
+                    hs_box = hs.get('box')
+                    hs_text = hs.get('text', '').strip()
+                    if not hs_box:
+                        continue
+                    if not (l_box[2] < hs_box[0] or l_box[0] > hs_box[2] or l_box[3] < hs_box[1] or l_box[1] > hs_box[3]):
+                        if hs_text in l_text or l_text in hs_text:
+                            matched_hidden = hs
+                            break
+                        ix0 = max(l_box[0], hs_box[0])
+                        iy0 = max(l_box[1], hs_box[1])
+                        ix1 = min(l_box[2], hs_box[2])
+                        iy1 = min(l_box[3], hs_box[3])
+                        inter_a = (ix1 - ix0) * (iy1 - iy0)
+                        line_a = max(1e-6, (l_box[2] - l_box[0]) * (l_box[3] - l_box[1]))
+                        if inter_a / line_a > 0.40:
+                            matched_hidden = hs
+                            break
+
+                if matched_hidden:
+                    line['kind'] = 'hidden'
+                    line['visibility'] = matched_hidden.get('visibility', {})
+                    if 'occluder' in matched_hidden:
+                        line['occluder'] = matched_hidden['occluder']
+                else:
+                    line['kind'] = 'visible'
+
+            visible_lines = [l for l in lines if l.get('kind') != 'hidden']
+            page_visible_text = '\n'.join(l['text'] for l in visible_lines)
+            page_full_text = text
+
             doc['lines'] += lines
-            doc['pages'].append(dict(number=n+1,width=width,height=height,unit='pt',image=image_name,text=text,codes=codes,
-                                      method=method))
+            doc['pages'].append(dict(number=n+1,width=width,height=height,unit='pt',image=image_name,
+                                      text=page_visible_text,
+                                      visibleText=page_visible_text,
+                                      fullText=page_full_text,
+                                      codes=codes,
+                                      method=method,
+                                      hiddenLines=[l for l in lines if l.get('kind') == 'hidden']))
             if scan_warning and scan_warning not in doc['warnings']: doc['warnings'].append(scan_warning)
             if method=='vision_needed':
                 doc['warnings'].append(f'Dieline page {n+1} has little extractable face-label text; inspect the line candidates and map faces manually.' if role=='dieline' else f'Page {n+1} has little extractable text. Vision or manual review is needed.')
             tp.close(); page.close()
         pdf.close()
         doc['text']='\n\n'.join(x['text'] for x in doc['pages'])
+        doc['fullText']='\n\n'.join(x.get('fullText', x['text']) for x in doc['pages'])
+        doc['hiddenLines'] = [l for l in doc['lines'] if l.get('kind') == 'hidden']
+        if vis_report:
+            doc['visibilityReport'] = vis_report
+
+        recon_report = None
+        try:
+            from pdf_text_reconstruction import reconstruct_pdf_text
+            recon_report = reconstruct_pdf_text(str(p), max_pages=MAX_PAGES, vis_report=vis_report)
+            if recon_report:
+                doc['textReconstruction'] = recon_report
+                doc['reconstructedSegments'] = recon_report.get('reconstructedSegments', [])
+                for seg in doc['reconstructedSegments']:
+                    p_num = seg.get('page', 1)
+                    if 0 < p_num <= len(doc['pages']):
+                        doc['pages'][p_num - 1].setdefault('reconstructedSegments', []).append(seg)
+                    for l in doc['lines']:
+                        if l.get('page') == p_num:
+                            raw_l = l.get('text', '').strip()
+                            raw_s = seg.get('rawText', '').strip()
+                            if raw_s and (raw_s in raw_l or raw_l in raw_s):
+                                l['reconstructedText'] = seg.get('reconstructedText')
+                                l['reconstructionSegmentId'] = seg.get('segmentId')
+                                l['reconstructionKind'] = seg.get('kind')
+                                l['reconstructionAuthority'] = seg.get('authority')
+                                break
+        except Exception:
+            recon_report = None
+        if role=='artwork':
+            try:
+                import importlib
+                preflight_mod=importlib.import_module('preflight')
+                doc['preflight']=preflight_mod.run_preflight_pipeline(str(p),dict(codes=[c for page in doc['pages'] for c in page.get('codes',[])]))
+            except Exception:
+                pass
+            try:
+                from pdf_typography import inspect_pdf_typography
+                typo_res = inspect_pdf_typography(str(p), dict(documentId=artifact_id))
+                if typo_res and typo_res.get('status') == 'ok':
+                    doc['nativeTypography'] = typo_res
+                    doc['vectorTypography'] = typo_res
+            except Exception:
+                pass
+        try:
+            from source_piece import parse_pdf_file
+            sp_res = parse_pdf_file(str(p), check_render=True)
+            doc['sourcePieces'] = sp_res.get('pieces', [])
+            doc['ignoredSourcePieces'] = sp_res.get('ignoredList', [])
+            doc['extractionDiagnostics'] = sp_res.get('extractionDiagnostics', sp_res.get('summary', {}))
+        except Exception:
+            pass
     elif ext in ('.png','.jpg','.jpeg','.webp'):
         Image.MAX_IMAGE_PIXELS=40_000_000
         im=Image.open(p); im=ImageOps.exif_transpose(im).convert('RGB')
@@ -339,6 +452,15 @@ def extract(path, role, outdir, artifact_id, name):
         wb.close()
         doc['text']='\n'.join(f"{c['sheet']}!{c['cell']}: {c['value']}" for c in doc['cells'])
         doc['warnings'].append('Spreadsheet formulas use their saved values; formulas, macros, and external links are not executed.')
+        try:
+            from source_piece import parse_excel_file
+            sp_res = parse_excel_file(str(p))
+            doc['sourcePieces'] = sp_res.get('pieces', [])
+            doc['ignoredSourcePieces'] = sp_res.get('ignoredList', [])
+            doc['metadataPieces'] = sp_res.get('metadataPieces', [])
+            doc['extractionDiagnostics'] = sp_res.get('extractionDiagnostics', sp_res.get('summary', {}))
+        except Exception:
+            pass
     elif ext=='.docx':
         from docx import Document
         d=Document(p)
@@ -364,62 +486,15 @@ def extract(path, role, outdir, artifact_id, name):
     return doc
 
 def report(review_path, output):
-    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, KeepTogether, Image as ReportImage, PageBreak
-    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-    from reportlab.lib.colors import HexColor
-    from reportlab.lib.pagesizes import A4
-    r=json.loads(Path(review_path).read_text()); styles=getSampleStyleSheet()
-    styles.add(ParagraphStyle(name='PP',fontName='Helvetica',fontSize=9,leading=13,spaceAfter=7,splitLongWords=True))
-    styles.add(ParagraphStyle(name='PPH',fontName='Helvetica-Bold',fontSize=12,leading=16,spaceBefore=12,spaceAfter=6,textColor=HexColor('#175b48'),keepWithNext=True))
-    def p(s,style='PP'):
-        s=str(s).replace('→',' -> ').replace('↔',' / ').replace('✓','match').replace('–','-').replace('—','-')
-        return Paragraph(escape(s).replace('\n','<br/>'),styles[style])
-    story=[p('PACKSIGNAL | Packaging review','Title'),Spacer(1,14),p(r['name'],'Heading1'),p(f"Review {r['id']} | {r['createdAt']}"),p(f"Market: {r.get('market','Unspecified')} | Engine: {r.get('engine','local')}"),p('Scope: comparison against supplied sources. This report does not certify legal compliance or authorize printing.'),p('Results','PPH')]
-    counts=r.get('counts',{})
-    story.append(p(' | '.join(f'{k}: {v}' for k,v in counts.items())))
-    for w in r.get('warnings',[]):story.append(p('Review note: '+w))
-    for limit in r.get('coverage',{}).get('limits',[]):story.append(p('Coverage: '+limit))
-    for f in r.get('findings',[]):
-        finding_story=[p(f"{f['status'].upper()} | {f['title']}",'PPH'),p('Expected: '+str(f.get('expected',''))),p('Observed: '+str(f.get('observed',''))),p(f.get('explanation',''))]
-        if f.get('rule'):finding_story.append(p('Rule: '+f['rule'].get('text','')))
-        seen_evidence=set()
-        for ev in f.get('evidence',[]):
-            evidence_key=json.dumps({key:ev.get(key) for key in ('documentId','name','location','page','box','quote')},sort_keys=True,ensure_ascii=False)
-            if evidence_key in seen_evidence:continue
-            seen_evidence.add(evidence_key)
-            finding_story.append(p(f"Evidence - {ev.get('name','')} {ev.get('location','')}: {ev.get('quote','')}"))
-        decision=r.get('decisions',{}).get(f['id'])
-        if decision:finding_story.append(p(f"Reviewer: {decision['disposition']} - {decision.get('note','')} ({decision['at']})"+(' [Needs review: source comparison changed]' if decision.get('stale') else '')))
-        story.append(KeepTogether(finding_story+[Spacer(1,2)]))
-    if r.get('revision'):
-        story.append(p('Revision comparison','PPH'))
-        story.append(p('Previous review: '+r['revision']['previousId']))
-        for change in r['revision']['changes']:story.append(p(f"{change['title']}: {change.get('before') or 'new'} -> {change.get('after') or 'not rechecked'} ({change['change']})"))
-    story.append(p('Source inventory','PPH'))
-    for d in r.get('documents',[]):story.append(p(f"{d['role']}: {d['name']} | SHA-256 {d['sha256']}"))
-    if r.get('signature'):
-        signature=r['signature']
-        story.extend([p('Cryptographic review seal','PPH'),p(f"{signature.get('algorithm','Signature')} | key {signature.get('publicKeyId','unknown')} | sealed {signature.get('sealedAt','')}"),p('Verification hash: '+str(signature.get('payloadHash',''))),p('Signature (Base64): '+str(signature.get('signature',''))),p('Public verification key: '+str(signature.get('publicKey',''))),p('The signed payload and signature are also available in the companion HTML or JSON export. Trust the public-key fingerprint through a separate channel to establish signer identity.')])
-    story.append(p('Audit history','PPH'))
-    for e in r.get('audit',[]):
-        story.append(p(f"{e['at']} | {e['action']} | {e.get('detail','')}"))
-        if e.get('options'):story.append(p('Recorded choices: '+json.dumps(e['options'])))
-    art=next((d for d in r.get('documents',[]) if d['role']=='artwork'),None)
-    if art:
-        story.extend([PageBreak(),p('Artwork reference','Heading1'),p('Reduced overview of supplied pages. Use the application and original source for detailed visual inspection.')])
-        for page in art['pages']:
-            image=Path(review_path).parent/'rendered'/page['image']
-            if image.exists():
-                width=490; height=width*page['height']/page['width']
-                if height>600:width*=600/height;height=600
-                story.extend([p(f"{art['name']} - page {page['number']} ({page['method']})"),ReportImage(str(image),width=width,height=height),Spacer(1,12)])
-    def footer(c,d):
-        c.setFont('Helvetica',8);c.setFillColor(HexColor('#68766f'));c.drawString(42,28,'PackSignal - human release decision required')
-        if r.get('signature'):
-            c.drawCentredString(A4[0]/2,12,'Seal '+str(r['signature'].get('payloadHash',''))[:16])
-        c.drawRightString(A4[0]-42,28,str(d.page))
-    SimpleDocTemplate(output,pagesize=A4,rightMargin=42,leftMargin=42,topMargin=42,bottomMargin=52).build(story,onFirstPage=footer,onLaterPages=footer)
-    return {'path':output}
+    import importlib.util
+    pdf_module_path = Path(__file__).parent / 'report-pdf.py'
+    if pdf_module_path.exists():
+        spec = importlib.util.spec_from_file_location('report_pdf', pdf_module_path)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return mod.generate_pdf_report(review_path, output)
+    raise RuntimeError('report-pdf.py generator not found.')
+
 
 if __name__=='__main__':
     try:

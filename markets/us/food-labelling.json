@@ -1,0 +1,639 @@
+{
+  "market": "US",
+  "version": "2026.1",
+  "effectiveFrom": "2020-01-01",
+  "rules": [
+    {
+      "ruleId": "US-PDP-001",
+      "title": "Statement of Identity on Principal Display Panel",
+      "market": "US",
+      "jurisdiction": "Federal",
+      "sourceLaw": "Federal Food, Drug, and Cosmetic Act",
+      "legalProvision": "21 CFR 101.3(a)",
+      "officialSourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.3",
+      "sourceQuote": "The principal display panel of a food in package form shall bear as one of its principal features a statement of the identity of the commodity.",
+      "rulePackVersion": "2026.1",
+      "publishedAt": "2020-01-01",
+      "effectiveFrom": "2020-01-01",
+      "effectiveUntil": null,
+      "appliesIf": {
+        "all": [
+          { "field": "market", "operator": "equals", "value": "US" },
+          { "field": "product.category", "operator": "in", "value": ["granola", "cereal", "conventional_food"] }
+        ]
+      },
+      "requiredInputs": ["brand.product_name", "panels.pdp"],
+      "evaluatorType": "STATEMENT_EXISTS",
+      "parameters": {
+        "targetField": "brand.product_name",
+        "requiredPanel": "PDP",
+        "expectedKeywords": ["granola", "cereal"]
+      },
+      "severity": "CRITICAL",
+      "questionPriority": 90,
+      "responsibleDepartment": "Regulatory & Legal",
+      "evidenceRequirements": ["Extracted text quote on Front panel (PDP)"],
+      "verificationLimitations": "Verifies presence and prominence of statement of identity on PDP."
+    },
+    {
+      "ruleId": "US-PDP-002",
+      "title": "Net Quantity Dual Unit Declaration (US Customary and Metric)",
+      "market": "US",
+      "jurisdiction": "Federal",
+      "sourceLaw": "Fair Packaging and Labeling Act",
+      "legalProvision": "21 CFR 101.7 / 15 U.S.C. 1453",
+      "officialSourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.7",
+      "sourceQuote": "The declaration of net quantity of contents shall be expressed in terms of weight, measure, numerical count, or a combination thereof... in both avoirdupois and metric units.",
+      "rulePackVersion": "2026.1",
+      "publishedAt": "2020-01-01",
+      "effectiveFrom": "2020-01-01",
+      "effectiveUntil": null,
+      "appliesIf": {
+        "all": [
+          { "field": "market", "operator": "equals", "value": "US" },
+          { "field": "product.category", "operator": "in", "value": ["granola", "cereal", "conventional_food"] }
+        ]
+      },
+      "requiredInputs": ["net_quantity"],
+      "evaluatorType": "DUAL_QUANTITY",
+      "parameters": {
+        "requireCustomaryAndMetric": true,
+        "tolerancePercent": 2.0
+      },
+      "severity": "CRITICAL",
+      "questionPriority": 85,
+      "responsibleDepartment": "Prepress & Packaging",
+      "evidenceRequirements": ["Extracted net quantity text declarations and unit normalization"],
+      "verificationLimitations": "Evaluates commercial display rounding equivalence between ounces and grams."
+    },
+    {
+      "ruleId": "US-RESP-001",
+      "title": "Responsible Party Name and Place of Business",
+      "market": "US",
+      "jurisdiction": "Federal",
+      "sourceLaw": "Federal Food, Drug, and Cosmetic Act",
+      "legalProvision": "21 CFR 101.5",
+      "officialSourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.5",
+      "sourceQuote": "The label of a food in packaged form shall specify conspicuously the name and place of business of the manufacturer, packer, or distributor.",
+      "rulePackVersion": "2026.1",
+      "publishedAt": "2020-01-01",
+      "effectiveFrom": "2020-01-01",
+      "effectiveUntil": null,
+      "appliesIf": {
+        "all": [
+          { "field": "market", "operator": "equals", "value": "US" }
+        ]
+      },
+      "requiredInputs": ["responsible_party.name_address"],
+      "evaluatorType": "RESPONSIBLE_PARTY",
+      "parameters": {
+        "requireCityStateZip": true
+      },
+      "severity": "HIGH",
+      "questionPriority": 75,
+      "responsibleDepartment": "Regulatory & Legal",
+      "evidenceRequirements": ["Extracted manufacturer, packer, or distributor address block"],
+      "verificationLimitations": "Checks address structure including street or PO box, city, state and postal code."
+    },
+    {
+      "ruleId": "US-INGR-001",
+      "title": "Ingredient List Declaration in Descending Order of Predominance",
+      "market": "US",
+      "jurisdiction": "Federal",
+      "sourceLaw": "Federal Food, Drug, and Cosmetic Act",
+      "legalProvision": "21 CFR 101.4(a)(1)",
+      "officialSourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.4",
+      "sourceQuote": "Ingredients required to be declared on the label... shall be listed by common or usual name in descending order of predominance by weight.",
+      "rulePackVersion": "2026.1",
+      "publishedAt": "2020-01-01",
+      "effectiveFrom": "2020-01-01",
+      "effectiveUntil": null,
+      "appliesIf": {
+        "all": [
+          { "field": "market", "operator": "equals", "value": "US" },
+          { "field": "product.category", "operator": "in", "value": ["granola", "cereal", "conventional_food"] }
+        ]
+      },
+      "requiredInputs": ["ingredient.list"],
+      "evaluatorType": "INGREDIENT_PREDOMINANCE",
+      "parameters": {
+        "requirePreamble": "INGREDIENTS:"
+      },
+      "severity": "CRITICAL",
+      "questionPriority": 90,
+      "responsibleDepartment": "R&D / Formulations",
+      "evidenceRequirements": ["Extracted ingredient statement text and sequence"],
+      "verificationLimitations": "Checks heading preamble and sequencing consistency against formulation sheet."
+    },
+    {
+      "ruleId": "US-INGR-002",
+      "title": "Compound Ingredient Sub-component Declaration",
+      "market": "US",
+      "jurisdiction": "Federal",
+      "sourceLaw": "Federal Food, Drug, and Cosmetic Act",
+      "legalProvision": "21 CFR 101.4(b)(2)",
+      "officialSourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.4",
+      "sourceQuote": "An ingredient which itself contains two or more ingredients shall be designated in the statement of ingredients... by declaring the established common or usual name of the ingredient followed by a parenthetical listing of all ingredients.",
+      "rulePackVersion": "2026.1",
+      "publishedAt": "2020-01-01",
+      "effectiveFrom": "2020-01-01",
+      "effectiveUntil": null,
+      "appliesIf": {
+        "all": [
+          { "field": "market", "operator": "equals", "value": "US" }
+        ]
+      },
+      "requiredInputs": ["ingredient.list"],
+      "evaluatorType": "INGREDIENT_PREDOMINANCE",
+      "parameters": {
+        "checkParentheses": true
+      },
+      "severity": "HIGH",
+      "questionPriority": 70,
+      "responsibleDepartment": "R&D / Formulations",
+      "evidenceRequirements": ["Extracted parenthetical sub-ingredients (e.g. Crystallized Ginger (cane sugar))"],
+      "verificationLimitations": "Verifies that compound components are declared parenthetically without silent truncation."
+    },
+    {
+      "ruleId": "US-ALLERG-001",
+      "title": "Major Allergen Source Declaration (FALCPA / FASTER Act)",
+      "market": "US",
+      "jurisdiction": "Federal",
+      "sourceLaw": "Food Allergen Labeling and Consumer Protection Act",
+      "legalProvision": "21 U.S.C. 343(w)",
+      "officialSourceUrl": "https://www.fda.gov/food/food-allergensgluten-free-guidance-documents-regulatory-information",
+      "sourceQuote": "A food is misbranded unless the label declares the presence of each major food allergen in the ingredient list or in a Contains statement immediately adjacent.",
+      "rulePackVersion": "2026.1",
+      "publishedAt": "2020-01-01",
+      "effectiveFrom": "2020-01-01",
+      "effectiveUntil": null,
+      "appliesIf": {
+        "all": [
+          { "field": "market", "operator": "equals", "value": "US" },
+          { "field": "product.category", "operator": "in", "value": ["granola", "cereal", "conventional_food"] }
+        ]
+      },
+      "requiredInputs": ["ingredient.list", "claims.allergens"],
+      "evaluatorType": "MAJOR_ALLERGEN_DISCLOSURE",
+      "parameters": {
+        "allergenRegistry": "allergens.json"
+      },
+      "severity": "CRITICAL",
+      "questionPriority": 95,
+      "responsibleDepartment": "Regulatory & Legal",
+      "evidenceRequirements": ["Declared ingredients matching FALCPA 8 + sesame allergen list"],
+      "verificationLimitations": "Ensures all recipe major allergens are declared either in ingredient copy or Contains block."
+    },
+    {
+      "ruleId": "US-ALLERG-002",
+      "title": "Tree Nut Specific Species Identification",
+      "market": "US",
+      "jurisdiction": "Federal",
+      "sourceLaw": "Food Allergen Labeling and Consumer Protection Act",
+      "legalProvision": "21 U.S.C. 343(w)(2)",
+      "officialSourceUrl": "https://www.fda.gov/food/food-allergensgluten-free-guidance-documents-regulatory-information",
+      "sourceQuote": "The term 'major food allergen' means... tree nuts (and the specific type of nut). Generic 'tree nuts' is not permitted.",
+      "rulePackVersion": "2026.1",
+      "publishedAt": "2020-01-01",
+      "effectiveFrom": "2020-01-01",
+      "effectiveUntil": null,
+      "appliesIf": {
+        "all": [
+          { "field": "market", "operator": "equals", "value": "US" }
+        ]
+      },
+      "requiredInputs": ["ingredient.list"],
+      "evaluatorType": "TREE_NUT_SPECIES_IDENTIFICATION",
+      "parameters": {
+        "speciesList": ["almond", "pecan", "walnut", "cashew", "brazil nut", "hazelnut", "pistachio"]
+      },
+      "severity": "CRITICAL",
+      "questionPriority": 95,
+      "responsibleDepartment": "Regulatory & Legal",
+      "evidenceRequirements": ["Specific common name of tree nut species in ingredients"],
+      "verificationLimitations": "Verifies specific species (Almonds, Pecans, Walnuts) instead of generic 'nuts'."
+    },
+    {
+      "ruleId": "US-ALLERG-003",
+      "title": "Precautionary Allergen Advisory Statement Consistency",
+      "market": "US",
+      "jurisdiction": "Federal",
+      "sourceLaw": "FDA Allergen Labeling Guidance & 21 U.S.C. 343(a)(1)",
+      "legalProvision": "FDA Guidance for Industry: Questions and Answers Regarding Food Allergens",
+      "officialSourceUrl": "https://www.fda.gov/food/food-allergensgluten-free-guidance-documents-regulatory-information/frequently-asked-questions-food-allergen-labeling-guidance-industry",
+      "sourceQuote": "Advisory statements should not be used in lieu of good manufacturing practices, and should not be used for ingredients intentionally added to the food.",
+      "rulePackVersion": "2026.1",
+      "publishedAt": "2020-01-01",
+      "effectiveFrom": "2020-01-01",
+      "effectiveUntil": null,
+      "appliesIf": {
+        "all": [
+          { "field": "market", "operator": "equals", "value": "US" }
+        ]
+      },
+      "requiredInputs": ["ingredient.list", "claims.allergen_advisory"],
+      "evaluatorType": "PRECAUTIONARY_ADVISORY_REVIEW",
+      "parameters": {
+        "checkIntentionalIngredientsOverlap": true
+      },
+      "severity": "HIGH",
+      "questionPriority": 85,
+      "responsibleDepartment": "Regulatory & Legal",
+      "evidenceRequirements": ["Comparison between intentional recipe ingredients and 'May Contain' copy"],
+      "verificationLimitations": "Flags misleading overlap where intentional recipe nuts also appear in 'May Contain' box."
+    },
+    {
+      "ruleId": "US-NUTR-001",
+      "title": "Nutrition Facts Panel Presence and Format",
+      "market": "US",
+      "jurisdiction": "Federal",
+      "sourceLaw": "Federal Food, Drug, and Cosmetic Act",
+      "legalProvision": "21 CFR 101.9(a)",
+      "officialSourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+      "sourceQuote": "Nutrition information relating to food shall be provided for all products intended for human consumption and offered for sale.",
+      "rulePackVersion": "2026.1",
+      "publishedAt": "2020-01-01",
+      "effectiveFrom": "2020-01-01",
+      "effectiveUntil": null,
+      "appliesIf": {
+        "all": [
+          { "field": "market", "operator": "equals", "value": "US" },
+          { "field": "product.category", "operator": "in", "value": ["granola", "cereal", "conventional_food"] }
+        ]
+      },
+      "requiredInputs": ["panels.nutrition"],
+      "evaluatorType": "STATEMENT_EXISTS",
+      "parameters": {
+        "targetField": "panels.nutrition",
+        "expectedKeywords": ["Nutrition Facts"]
+      },
+      "severity": "CRITICAL",
+      "questionPriority": 90,
+      "responsibleDepartment": "Prepress & Packaging",
+      "evidenceRequirements": ["Visible Nutrition Facts panel heading on packaging"],
+      "verificationLimitations": "Verifies that an approved US Nutrition Facts panel is present on packaging."
+    },
+    {
+      "ruleId": "US-NUTR-002",
+      "title": "Serving Size Declaration and Reference Amount Customarily Consumed",
+      "market": "US",
+      "jurisdiction": "Federal",
+      "sourceLaw": "Federal Food, Drug, and Cosmetic Act",
+      "legalProvision": "21 CFR 101.9(b) and 21 CFR 101.12",
+      "officialSourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.12",
+      "sourceQuote": "The serving size shall be determined from the Reference Amounts Customarily Consumed (RACC) established in § 101.12(b).",
+      "rulePackVersion": "2026.1",
+      "publishedAt": "2020-01-01",
+      "effectiveFrom": "2020-01-01",
+      "effectiveUntil": null,
+      "appliesIf": {
+        "all": [
+          { "field": "market", "operator": "equals", "value": "US" }
+        ]
+      },
+      "requiredInputs": ["nutrition.serving_size"],
+      "evaluatorType": "STATEMENT_EXISTS",
+      "parameters": {
+        "targetField": "nutrition.serving_size"
+      },
+      "severity": "HIGH",
+      "questionPriority": 80,
+      "responsibleDepartment": "R&D / Formulations",
+      "evidenceRequirements": ["Extracted serving size declaration (e.g. 85g / 2/3 cup)"],
+      "verificationLimitations": "Checks presence of metric and household measure for serving size."
+    },
+    {
+      "ruleId": "US-NUTR-003",
+      "title": "Servings Per Container × Serving Size Mathematical Consistency",
+      "market": "US",
+      "jurisdiction": "Federal",
+      "sourceLaw": "Federal Food, Drug, and Cosmetic Act",
+      "legalProvision": "21 CFR 101.9(b)(8)",
+      "officialSourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+      "sourceQuote": "The number of servings shall be based on the serving size recommended... The total weight accounted for by servings must match the package net weight within allowable rounding.",
+      "rulePackVersion": "2026.1",
+      "publishedAt": "2020-01-01",
+      "effectiveFrom": "2020-01-01",
+      "effectiveUntil": null,
+      "appliesIf": {
+        "all": [
+          { "field": "market", "operator": "equals", "value": "US" }
+        ]
+      },
+      "requiredInputs": ["nutrition.servings_per_container", "nutrition.serving_size", "net_quantity"],
+      "evaluatorType": "SERVING_NET_MATH",
+      "parameters": {
+        "tolerancePercent": 5.0
+      },
+      "severity": "CRITICAL",
+      "questionPriority": 85,
+      "responsibleDepartment": "R&D / Formulations",
+      "evidenceRequirements": ["Servings per container, serving size mass, and package net weight"],
+      "verificationLimitations": "Validates that Servings × Serving Size aligns with declared Net Weight."
+    },
+    {
+      "ruleId": "US-NUTR-004",
+      "title": "Nutrition Facts Calorie Declaration and Atwater Energy Plausibility",
+      "market": "US",
+      "jurisdiction": "Federal",
+      "sourceLaw": "Federal Food, Drug, and Cosmetic Act",
+      "legalProvision": "21 CFR 101.9(c)(1)",
+      "officialSourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+      "sourceQuote": "Caloric content may be calculated by the following methods... using the general factors of 4, 4, and 9 calories per gram for protein, total carbohydrate, and total fat.",
+      "rulePackVersion": "2026.1",
+      "publishedAt": "2020-01-01",
+      "effectiveFrom": "2020-01-01",
+      "effectiveUntil": null,
+      "appliesIf": {
+        "all": [
+          { "field": "market", "operator": "equals", "value": "US" }
+        ]
+      },
+      "requiredInputs": ["nutrition.calories", "nutrition.fat.total", "nutrition.carbohydrate.total", "nutrition.protein"],
+      "evaluatorType": "CALORIE_MATH",
+      "parameters": {
+        "methodRegistry": "calorie-methods.json",
+        "defaultMethod": "GENERAL_ATWATER_4_4_9"
+      },
+      "severity": "HIGH",
+      "questionPriority": 85,
+      "responsibleDepartment": "R&D / Formulations",
+      "evidenceRequirements": ["Declared calories, fat, carbohydrate, and protein per serving"],
+      "verificationLimitations": "Screening heuristic. Specific Atwater factors or fiber deductions may apply lawfully."
+    },
+    {
+      "ruleId": "US-NUTR-005",
+      "title": "Total Fat % Daily Value Calculation",
+      "market": "US",
+      "jurisdiction": "Federal",
+      "sourceLaw": "Federal Food, Drug, and Cosmetic Act",
+      "legalProvision": "21 CFR 101.9(c)(2) and (c)(9)",
+      "officialSourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+      "sourceQuote": "A statement of the number of grams of total fat in a serving... accompanied by the percent Daily Value based on 78g reference Daily Value.",
+      "rulePackVersion": "2026.1",
+      "publishedAt": "2020-01-01",
+      "effectiveFrom": "2020-01-01",
+      "effectiveUntil": null,
+      "appliesIf": {
+        "all": [
+          { "field": "market", "operator": "equals", "value": "US" }
+        ]
+      },
+      "requiredInputs": ["nutrition.fat.total"],
+      "evaluatorType": "NUTRIENT_DV",
+      "parameters": {
+        "nutrient": "total_fat",
+        "referenceId": "total_fat"
+      },
+      "severity": "HIGH",
+      "questionPriority": 80,
+      "responsibleDepartment": "R&D / Formulations",
+      "evidenceRequirements": ["Declared Total Fat amount and declared %DV"],
+      "verificationLimitations": "Calculates (grams / 78g) * 100 with legally specified rounding."
+    },
+    {
+      "ruleId": "US-NUTR-006",
+      "title": "Saturated Fat % Daily Value Calculation",
+      "market": "US",
+      "jurisdiction": "Federal",
+      "sourceLaw": "Federal Food, Drug, and Cosmetic Act",
+      "legalProvision": "21 CFR 101.9(c)(2)(i) and (c)(9)",
+      "officialSourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+      "sourceQuote": "A statement of the number of grams of saturated fat in a serving... accompanied by the percent Daily Value based on 20g reference Daily Value.",
+      "rulePackVersion": "2026.1",
+      "publishedAt": "2020-01-01",
+      "effectiveFrom": "2020-01-01",
+      "effectiveUntil": null,
+      "appliesIf": {
+        "all": [
+          { "field": "market", "operator": "equals", "value": "US" }
+        ]
+      },
+      "requiredInputs": ["nutrition.fat.saturated"],
+      "evaluatorType": "NUTRIENT_DV",
+      "parameters": {
+        "nutrient": "saturated_fat",
+        "referenceId": "saturated_fat"
+      },
+      "severity": "HIGH",
+      "questionPriority": 75,
+      "responsibleDepartment": "R&D / Formulations",
+      "evidenceRequirements": ["Declared Saturated Fat amount and declared %DV"],
+      "verificationLimitations": "Calculates (grams / 20g) * 100 with legally specified rounding."
+    },
+    {
+      "ruleId": "US-NUTR-007",
+      "title": "Cholesterol % Daily Value Calculation",
+      "market": "US",
+      "jurisdiction": "Federal",
+      "sourceLaw": "Federal Food, Drug, and Cosmetic Act",
+      "legalProvision": "21 CFR 101.9(c)(3) and (c)(9)",
+      "officialSourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+      "sourceQuote": "A statement of the cholesterol content in a serving... accompanied by the percent Daily Value based on 300mg reference Daily Value.",
+      "rulePackVersion": "2026.1",
+      "publishedAt": "2020-01-01",
+      "effectiveFrom": "2020-01-01",
+      "effectiveUntil": null,
+      "appliesIf": {
+        "all": [
+          { "field": "market", "operator": "equals", "value": "US" }
+        ]
+      },
+      "requiredInputs": ["nutrition.cholesterol"],
+      "evaluatorType": "NUTRIENT_DV",
+      "parameters": {
+        "nutrient": "cholesterol",
+        "referenceId": "cholesterol"
+      },
+      "severity": "HIGH",
+      "questionPriority": 75,
+      "responsibleDepartment": "R&D / Formulations",
+      "evidenceRequirements": ["Declared Cholesterol amount and declared %DV"],
+      "verificationLimitations": "Calculates (mg / 300mg) * 100 with legally specified rounding."
+    },
+    {
+      "ruleId": "US-NUTR-008",
+      "title": "Sodium % Daily Value Calculation",
+      "market": "US",
+      "jurisdiction": "Federal",
+      "sourceLaw": "Federal Food, Drug, and Cosmetic Act",
+      "legalProvision": "21 CFR 101.9(c)(4) and (c)(9)",
+      "officialSourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+      "sourceQuote": "A statement of the number of milligrams of sodium in a serving... accompanied by the percent Daily Value based on 2300mg reference Daily Value.",
+      "rulePackVersion": "2026.1",
+      "publishedAt": "2020-01-01",
+      "effectiveFrom": "2020-01-01",
+      "effectiveUntil": null,
+      "appliesIf": {
+        "all": [
+          { "field": "market", "operator": "equals", "value": "US" }
+        ]
+      },
+      "requiredInputs": ["nutrition.sodium"],
+      "evaluatorType": "NUTRIENT_DV",
+      "parameters": {
+        "nutrient": "sodium",
+        "referenceId": "sodium"
+      },
+      "severity": "HIGH",
+      "questionPriority": 75,
+      "responsibleDepartment": "R&D / Formulations",
+      "evidenceRequirements": ["Declared Sodium amount and declared %DV"],
+      "verificationLimitations": "Calculates (mg / 2300mg) * 100 with legally specified rounding."
+    },
+    {
+      "ruleId": "US-NUTR-009",
+      "title": "Total Carbohydrate % Daily Value Calculation",
+      "market": "US",
+      "jurisdiction": "Federal",
+      "sourceLaw": "Federal Food, Drug, and Cosmetic Act",
+      "legalProvision": "21 CFR 101.9(c)(6) and (c)(9)",
+      "officialSourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+      "sourceQuote": "A statement of the number of grams of total carbohydrate in a serving... accompanied by the percent Daily Value based on 275g reference Daily Value.",
+      "rulePackVersion": "2026.1",
+      "publishedAt": "2020-01-01",
+      "effectiveFrom": "2020-01-01",
+      "effectiveUntil": null,
+      "appliesIf": {
+        "all": [
+          { "field": "market", "operator": "equals", "value": "US" }
+        ]
+      },
+      "requiredInputs": ["nutrition.carbohydrate.total"],
+      "evaluatorType": "NUTRIENT_DV",
+      "parameters": {
+        "nutrient": "total_carbohydrate",
+        "referenceId": "total_carbohydrate"
+      },
+      "severity": "HIGH",
+      "questionPriority": 80,
+      "responsibleDepartment": "R&D / Formulations",
+      "evidenceRequirements": ["Declared Total Carbohydrate amount and declared %DV"],
+      "verificationLimitations": "Calculates (grams / 275g) * 100 with legally specified rounding."
+    },
+    {
+      "ruleId": "US-NUTR-010",
+      "title": "Dietary Fiber, Total Sugars and Added Sugars Declarations",
+      "market": "US",
+      "jurisdiction": "Federal",
+      "sourceLaw": "Federal Food, Drug, and Cosmetic Act",
+      "legalProvision": "21 CFR 101.9(c)(6)(i)-(iii)",
+      "officialSourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+      "sourceQuote": "Added sugars must be stated as 'Includes X g Added Sugars' with % Daily Value (based on 50g DV). Total Sugars has no Daily Value.",
+      "rulePackVersion": "2026.1",
+      "publishedAt": "2020-01-01",
+      "effectiveFrom": "2020-01-01",
+      "effectiveUntil": null,
+      "appliesIf": {
+        "all": [
+          { "field": "market", "operator": "equals", "value": "US" }
+        ]
+      },
+      "requiredInputs": ["nutrition.sugars.added", "nutrition.sugars.total"],
+      "evaluatorType": "NUTRIENT_DV",
+      "parameters": {
+        "nutrient": "added_sugars",
+        "referenceId": "added_sugars"
+      },
+      "severity": "CRITICAL",
+      "questionPriority": 85,
+      "responsibleDepartment": "R&D / Formulations",
+      "evidenceRequirements": ["Declared Total Sugars and Added Sugars with %DV"],
+      "verificationLimitations": "Verifies Added Sugars %DV (based on 50g) and confirms Total Sugars has no DV."
+    },
+    {
+      "ruleId": "US-NUTR-011",
+      "title": "Mandatory Vitamin D, Calcium, Iron and Potassium Declarations",
+      "market": "US",
+      "jurisdiction": "Federal",
+      "sourceLaw": "Federal Food, Drug, and Cosmetic Act",
+      "legalProvision": "21 CFR 101.9(c)(8)(iv)",
+      "officialSourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-A/section-101.9",
+      "sourceQuote": "Vitamin D, calcium, iron, and potassium shall be declared by quantitative amount and % Daily Value (Vit D: 20mcg, Ca: 1300mg, Fe: 18mg, K: 4700mg).",
+      "rulePackVersion": "2026.1",
+      "publishedAt": "2020-01-01",
+      "effectiveFrom": "2020-01-01",
+      "effectiveUntil": null,
+      "appliesIf": {
+        "all": [
+          { "field": "market", "operator": "equals", "value": "US" }
+        ]
+      },
+      "requiredInputs": ["nutrition.vitamin_d", "nutrition.calcium", "nutrition.iron", "nutrition.potassium"],
+      "evaluatorType": "MANDATORY_MICRONUTRIENTS",
+      "parameters": {
+        "requiredNutrients": ["vitamin_d", "calcium", "iron", "potassium"]
+      },
+      "severity": "HIGH",
+      "questionPriority": 80,
+      "responsibleDepartment": "R&D / Formulations",
+      "evidenceRequirements": ["Quantitative amounts and %DV for the four mandatory micronutrients"],
+      "verificationLimitations": "Verifies presence and tiered rounding rules for mandatory micronutrients."
+    },
+    {
+      "ruleId": "US-CLAIM-001",
+      "title": "'No Added Sugar' Nutrient Content Claim Substantiation",
+      "market": "US",
+      "jurisdiction": "Federal",
+      "sourceLaw": "Federal Food, Drug, and Cosmetic Act",
+      "legalProvision": "21 CFR 101.60(c)(2)",
+      "officialSourceUrl": "https://www.ecfr.gov/current/title-21/chapter-I/subchapter-B/part-101/subpart-D/section-101.60",
+      "sourceQuote": "The terms 'no added sugar' or 'without added sugar' may be used only if no sugar or sugar-containing ingredient is added during processing.",
+      "rulePackVersion": "2026.1",
+      "publishedAt": "2020-01-01",
+      "effectiveFrom": "2020-01-01",
+      "effectiveUntil": null,
+      "appliesIf": {
+        "all": [
+          { "field": "market", "operator": "equals", "value": "US" },
+          {
+            "any": [
+              { "field": "claims.nutrition.no_added_sugar", "operator": "exists" },
+              { "field": "claims.dietary.no_added_sugar", "operator": "exists" },
+              { "field": "claims.certifications", "operator": "contains", "value": "No Added Sugar" }
+            ]
+          }
+        ]
+      },
+      "requiredInputs": ["claims.nutrition.no_added_sugar", "ingredient.list", "nutrition.sugars.added"],
+      "evaluatorType": "ADDED_SUGAR_CLAIM",
+      "parameters": {
+        "claimsRegistry": "claims.json"
+      },
+      "severity": "CRITICAL",
+      "questionPriority": 95,
+      "responsibleDepartment": "Regulatory & Legal",
+      "evidenceRequirements": ["Marketing claim text, ingredient statement, and declared added sugars"],
+      "verificationLimitations": "Disqualifies claim if honey, coconut sugar, cane sugar or >0g added sugars are present."
+    },
+    {
+      "ruleId": "US-BARC-001",
+      "title": "Barcode Check Digit Verification (GS1 Modulo 10)",
+      "market": "US",
+      "jurisdiction": "Global / US",
+      "sourceLaw": "GS1 General Specifications / ISO/IEC 15420",
+      "legalProvision": "GS1 Section 7.9.1 / ISO 15420",
+      "officialSourceUrl": "https://www.gs1.org/standards/barcodes-epcrfid-id-keys/gs1-general-specifications",
+      "sourceQuote": "The check digit is calculated on all preceding digits of the GTIN using a weighted modulo 10 algorithm.",
+      "rulePackVersion": "2026.1",
+      "publishedAt": "2020-01-01",
+      "effectiveFrom": "2020-01-01",
+      "effectiveUntil": null,
+      "appliesIf": {
+        "all": [
+          { "field": "market", "operator": "equals", "value": "US" }
+        ]
+      },
+      "requiredInputs": ["barcode.value"],
+      "evaluatorType": "BARCODE_CHECK_DIGIT",
+      "parameters": {
+        "supportedTypes": ["UPC-A", "EAN-13", "GTIN-14", "GTIN-8"]
+      },
+      "severity": "HIGH",
+      "questionPriority": 70,
+      "responsibleDepartment": "Prepress & Packaging",
+      "evidenceRequirements": ["Extracted barcode symbol digits and symbology type"],
+      "verificationLimitations": "Validates check digit only; does not verify print contrast or GS1 company assignment."
+    }
+  ]
+}

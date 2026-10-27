@@ -1,0 +1,18 @@
+{
+  "requestType": "ambiguous_source",
+  "model": "gemini-2.5-flash-mock",
+  "schemaVersion": "1.0",
+  "status": "ambiguous",
+  "data": {
+    "conflicts": [
+      {
+        "field": "nutrition_basis",
+        "options": [
+          { "column": "B", "header": "Per Serving (40g)", "value": "Sodium 110mg" },
+          { "column": "C", "header": "Per 100g", "value": "Sodium 275mg" }
+        ],
+        "question": "The source spreadsheet contains two nutrition bases. Which is approved for this SKU?"
+      }
+    ]
+  }
+}

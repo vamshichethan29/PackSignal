@@ -1,0 +1,520 @@
+/* ==========================================================================
+   PackSignal Phase 5 — Creative Brief, Compliance Audit & Ask About This Panel
+   ========================================================================== */
+
+/* Main Brief Container */
+.brief-workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  color: var(--text-primary, #0f172a);
+}
+
+/* Header & Status Card */
+.brief-header-card {
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.brief-header-info h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-heading, #0f172a);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brief-meta {
+  display: flex;
+  gap: 1.25rem;
+  font-size: 0.875rem;
+  color: var(--text-muted, #64748b);
+  flex-wrap: wrap;
+}
+
+.brief-actions-bar {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* Audit Scoreboard */
+.audit-scoreboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.audit-metric-card {
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+}
+
+.audit-metric-card.pass {
+  border-left: 4px solid #16a34a;
+}
+
+.audit-metric-card.warn {
+  border-left: 4px solid #ea580c;
+}
+
+.audit-metric-card.danger {
+  border-left: 4px solid #dc2626;
+}
+
+.audit-metric-icon {
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
+.audit-metric-val {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-heading, #0f172a);
+}
+
+.audit-metric-label {
+  font-size: 0.8rem;
+  color: var(--text-muted, #64748b);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Brief Sections */
+.brief-section-card {
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+  margin-bottom: 1.5rem;
+}
+
+.brief-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--border-color, #e2e8f0);
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.brief-section-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0369a1;
+}
+
+.brief-sentences-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Sentence Row */
+.brief-sentence-row {
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 8px;
+  padding: 1rem;
+  background: #f8fafc;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.brief-sentence-row.proven {
+  border-left: 4px solid #16a34a;
+  background: #f0fdf4;
+}
+
+.brief-sentence-row.unproven {
+  border-left: 4px solid #dc2626;
+  background: #fef2f2;
+}
+
+.sentence-content-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.sentence-text-display {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #1e293b;
+  flex: 1;
+}
+
+.sentence-status-pill {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.sentence-status-pill.proven {
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+.sentence-status-pill.unproven {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.sentence-facts-tray {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  align-items: center;
+}
+
+.sentence-fact-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sentence-fact-chip:hover {
+  border-color: #0284c7;
+  color: #0284c7;
+  background: #f0f9ff;
+}
+
+.sentence-fact-chip.proven {
+  border-color: #86efac;
+  color: #15803d;
+}
+
+.sentence-fact-chip.conflict {
+  border-color: #fca5a5;
+  color: #b91c1c;
+}
+
+/* Sentence Audit Warning Box */
+.sentence-audit-alert {
+  margin-top: 0.75rem;
+  padding: 0.6rem 0.85rem;
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  border-radius: 6px;
+  color: #9f1239;
+  font-size: 0.825rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+/* Edit Mode Box */
+.sentence-edit-box {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sentence-edit-textarea {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #94a3b8;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 70px;
+}
+
+.sentence-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+/* Approval Certificate Seal */
+.approved-certificate-banner {
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border: 2px solid #22c55e;
+  border-radius: 12px;
+  padding: 1.75rem;
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  box-shadow: 0 10px 15px -3px rgba(34, 197, 94, 0.15);
+}
+
+.cert-seal-icon {
+  width: 80px;
+  height: 80px;
+  background: #16a34a;
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.cert-meta h3 {
+  margin: 0 0 0.5rem 0;
+  color: #15803d;
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.cert-meta p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+  color: #166534;
+}
+
+.cert-checksum-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.8rem;
+  background: #ffffff;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #bbf7d0;
+  color: #0f172a;
+}
+
+/* ==========================================================================
+   "Ask about this" Slide-Out Side Panel (CLOSED BY DEFAULT)
+   ========================================================================== */
+.ask-side-panel {
+  position: fixed;
+  top: 0;
+  right: -480px;
+  width: 460px;
+  max-width: 90vw;
+  height: 100vh;
+  background: #ffffff;
+  box-shadow: -6px 0 25px rgba(0, 0, 0, 0.15);
+  border-left: 1px solid #cbd5e1;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ask-side-panel.open {
+  right: 0;
+}
+
+.ask-panel-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  background: #0f172a;
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ask-panel-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ask-close-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 1.5rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0.25rem;
+  border-radius: 4px;
+}
+
+.ask-close-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.ask-panel-body {
+  flex: 1;
+  padding: 1.25rem 1.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.ask-prompts-tray {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ask-prompts-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.ask-pill-btn {
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.85rem;
+  color: #1e293b;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ask-pill-btn:hover {
+  background: #e0f2fe;
+  border-color: #7dd3fc;
+  color: #0369a1;
+}
+
+.ask-answer-box {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ask-answer-text {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #0f172a;
+}
+
+.ask-sources-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-top: 0.25rem;
+}
+
+.ask-source-item {
+  font-size: 0.8rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 0.35rem 0.6rem;
+  color: #334155;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ask-confirm-fact-wrap {
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ask-confirm-text {
+  font-size: 0.825rem;
+  color: #065f46;
+  font-weight: 500;
+}
+
+.ask-panel-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e2e8f0;
+  background: #ffffff;
+}
+
+.ask-input-form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.ask-input-field {
+  flex: 1;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.ask-input-field:focus {
+  outline: none;
+  border-color: #0284c7;
+  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+}
+
+.ask-toggle-tab-btn {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: #0284c7;
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.85rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(2, 132, 199, 0.4);
+  cursor: pointer;
+  z-index: 999;
+  transition: all 0.2s ease;
+}
+
+.ask-toggle-tab-btn:hover {
+  background: #0369a1;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 20px -3px rgba(2, 132, 199, 0.5);
+}

@@ -1,0 +1,31 @@
+{
+  "document_id": "MORI-MEADOW-DEMO-SPEC-01",
+  "version": "1.0",
+  "status": "APPROVED FOR FICTIONAL DEMO ONLY",
+  "product": {
+    "brand": "Mori Meadow",
+    "name": "Whole Milk",
+    "variant": "Pasteurized · Vitamin D",
+    "net_quantity": {
+      "value": 946,
+      "unit": "mL",
+      "preferred_display": "946 mL"
+    },
+    "ingredients": "Whole milk, Vitamin D3.",
+    "storage_statement": "Keep refrigerated. Shake gently. Use within 5 days of opening.",
+    "manufacturer": "Mori Meadow Dairy Co-op, Demo Lane, Green Valley (fictional)",
+    "allergens": ["milk"]
+  },
+  "nutrition": {
+    "basis": { "value": 240, "unit": "mL" },
+    "energy_kcal": 150,
+    "fat_g": 8,
+    "saturated_fat_g": 5,
+    "cholesterol_mg": 30,
+    "sodium_mg": 105,
+    "carbohydrate_g": 12,
+    "sugars_g": 12,
+    "protein_g": 8
+  },
+  "demo_note": "Intentional test conflict: supplied specification says 946 mL; sample artwork says 1 L. Fictional values are not for sale or regulatory use."
+}

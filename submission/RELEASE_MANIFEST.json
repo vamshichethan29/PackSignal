@@ -1,0 +1,59 @@
+{
+  "projectTitle": "PackSignal",
+  "subtitle": "Evidence-Backed Packaging Artwork Readiness Review",
+  "challengeTheme": "Is this Packaging Artwork ready to launch? (Esko AIForge Hackathon)",
+  "releasePhase": "PHASE 9 — SHIP",
+  "releaseTimestamp": "2026-10-27T05:37:12.629Z",
+  "gitCommit": "cd3db9dc2b19422667e8be7f2c87c70d145d6191",
+  "nodeRequirement": ">=24",
+  "pythonRequirement": ">=3.10",
+  "implementedFeatures": [
+    "Multi-format ingestion (PDF dielines, Excel copy sheets, Word specs)",
+    "Positioned token extraction with millimeter coordinates",
+    "Packaging Fact Sheet with explicit authority hierarchy",
+    "Cryptographic character-level quote verification",
+    "Deterministic US FDA 21 CFR 101 rule engine",
+    "Deterministic India FSSAI & Legal Metrology rule engine",
+    "Prepress preflight (Total Area Coverage TAC, spot separations, dieline fold lines)",
+    "4 Epistemic findings states: Matches Reference, Issue Found, Needs Human Review, Unable to Verify",
+    "2D Prepress HUD with calibrated zoom and TAC heatmaps",
+    "3D Parametric Tuck-End Carton Viewer with Three.js WebGL",
+    "3D Finding pins with camera fly-to animation",
+    "Ambiguity Hub with dependency graph and Decision Ripple simulation",
+    "Multi-department triage, permissions, and collaborative sticky notes",
+    "Evidence-backed Creative Brief export (HTML, PDF, checklist)",
+    "High-resolution A3 Review Wall Poster export",
+    "Ed25519 Cryptographic Review Seal (v2) with SHA-256 Merkle root",
+    "Trust Console with automated defect mutation engine (100% defect catch rate)",
+    "Model bake-off system with winning Gemini 3.8 Flash configuration and local fallback"
+  ],
+  "deferredFeatures": [
+    "Flexible pouch and bottle 3D CAD kinematic simulation (supported in 2D vector HUD)",
+    "External multi-tenant identity federation (local team auth and Basic Auth supported)"
+  ],
+  "testSummary": {
+    "nodeTestSuites": 58,
+    "nodeTestsPassing": 2211,
+    "pythonTestsPassing": 155,
+    "totalPassingTests": 2366,
+    "failingTests": 0,
+    "passRatePercent": 100
+  },
+  "architectureFileHashes": {
+    "docs/architecture.mmd": "e97a9e786b57898c8534b634aa79f548d73dff7033d814e67c8f973fa8528d7e",
+    "docs/architecture.svg": "d70f3f516d1dba24eb76a683c7e212d9cde1d82a94229aeaf8cf344320458872",
+    "docs/architecture.png": "56aa1cffd8273281a3d5e0935bb3ff93127b9dfc19b4def8270359a1da24244e"
+  },
+  "demoUrl": "https://packsignal.onrender.com/",
+  "demoVideoUrl": "https://www.loom.com/share/bfbb94f094344b0fa22baa7ead1a8970",
+  "sourceZip": {
+    "filename": "packsignal-source.zip",
+    "sha256": "842e3c3f0860870ad3b17d2a9cbc70b013f4a61a9cdb7da7a4542ebbcdf7b28b",
+    "sizeBytes": 12866608,
+    "sizeMegabytes": 12.27,
+    "sizeLimitMegabytes": 50,
+    "secretsScanned": "CLEAN (0 secrets detected)"
+  },
+  "readinessStatus": "READY_TO_RELEASE",
+  "dateContextDisclosure": "Original release plan targeted October 20, 2026; hackathon deadline was October 22, 2026. PackSignal is fully packaged, tested, and released for documentation, empirical verification, and subsequent eligible rounds."
+}

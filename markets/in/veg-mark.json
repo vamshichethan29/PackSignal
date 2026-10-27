@@ -1,0 +1,15 @@
+{
+  "symbol": "GREEN_VEG_DOT",
+  "name": "FSSAI Vegetarian Logo",
+  "citation": "FSSAI (Packaging and Labelling) Regulations, 2011, Regulation 2.2.2.4",
+  "geometry": {
+    "outerShape": "square",
+    "innerShape": "filled_circle",
+    "colorHex": "#15803d",
+    "borderColorHex": "#15803d",
+    "minSizeMm": 6.0,
+    "minCircleDiameterMm": 3.0,
+    "preferredPanel": "Principal Display Panel (PDP)"
+  },
+  "svgSnippet": "<svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\"><rect x=\"2\" y=\"2\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"#15803d\" stroke-width=\"2\" rx=\"2\"/><circle cx=\"12\" cy=\"12\" r=\"6\" fill=\"#15803d\"/></svg>"
+}

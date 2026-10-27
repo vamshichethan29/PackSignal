@@ -1,0 +1,453 @@
+/* PackSignal — Regulatory Time Machine & Launch Date Slider Styles */
+
+.regulatory-time-machine-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--border, #d1d5db);
+  border-left: 4px solid #0284c7;
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.rtm-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.rtm-brand-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rtm-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.rtm-title {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text, #111827);
+}
+
+.rtm-selectors-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.rtm-control-label {
+  font-size: 12px;
+  color: var(--text-muted, #6b7280);
+  font-weight: 500;
+}
+
+.rtm-select, .rtm-date-input {
+  background: var(--surface-secondary, #f9fafb);
+  border: 1px solid var(--border, #d1d5db);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text, #111827);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.rtm-select:focus, .rtm-date-input:focus {
+  border-color: #0284c7;
+  box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+}
+
+/* Slider Track and Markers */
+.rtm-slider-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+  width: 100%;
+}
+
+.rtm-slider-track-wrap {
+  position: relative;
+  width: 100%;
+  height: 28px;
+  display: flex;
+  align-items: center;
+}
+
+.rtm-range-slider {
+  width: 100%;
+  height: 6px;
+  appearance: none;
+  background: #e2e8f0;
+  border-radius: 9999px;
+  outline: none;
+  cursor: pointer;
+  margin: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.rtm-range-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #0284c7;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  cursor: grab;
+  transition: transform 0.1s ease;
+}
+
+.rtm-range-slider::-webkit-slider-thumb:active {
+  cursor: grabbing;
+  transform: scale(1.15);
+  background: #0369a1;
+}
+
+.rtm-range-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #0284c7;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+  cursor: grab;
+}
+
+/* Timeline Markers on Track */
+.rtm-timeline-marker {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  z-index: 1;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: transform 0.15s ease;
+}
+
+.rtm-timeline-marker:hover {
+  transform: translate(-50%, -50%) scale(1.4);
+}
+
+.rtm-marker-solid {
+  background: #0284c7;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1px #0284c7;
+}
+
+.rtm-marker-amendment {
+  background: #ea580c;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1px #ea580c;
+}
+
+.rtm-marker-company {
+  background: #16a34a;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1px #16a34a;
+}
+
+.rtm-marker-dashed {
+  background: #f59e0b;
+  border: 2px dashed #b45309;
+}
+
+.rtm-slider-ticks {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted, #64748b);
+  user-select: none;
+}
+
+/* Quick Action Buttons & Status Counts */
+.rtm-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-top: 1px solid var(--border-light, #f1f5f9);
+  padding-top: 8px;
+}
+
+.rtm-quick-buttons {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.rtm-btn {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border, #d1d5db);
+  background: var(--surface, #ffffff);
+  color: var(--text, #374151);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.rtm-btn:hover {
+  background: var(--surface-hover, #f3f4f6);
+  border-color: #9ca3af;
+}
+
+.rtm-btn-primary {
+  background: #0284c7;
+  border-color: #0284c7;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.rtm-btn-primary:hover {
+  background: #0369a1;
+  border-color: #0369a1;
+}
+
+.rtm-metrics-strip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.rtm-metric-badge {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rtm-metric-active {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+}
+
+.rtm-metric-new {
+  background: #fff7ed;
+  color: #c2410c;
+  border: 1px solid #fed7aa;
+}
+
+.rtm-metric-proposed {
+  background: #fefce8;
+  color: #a16207;
+  border: 1px solid #fef08a;
+}
+
+.rtm-metric-snapshot {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  font-family: monospace;
+}
+
+/* Change Summary Tray / Drawer */
+.rtm-change-panel {
+  background: var(--surface-secondary, #f8fafc);
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.rtm-change-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border, #e2e8f0);
+  padding-bottom: 8px;
+}
+
+.rtm-change-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text, #0f172a);
+}
+
+.rtm-accordion {
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 6px;
+  background: #ffffff;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.rtm-accordion summary {
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+
+.rtm-accordion[open] summary {
+  border-bottom: 1px solid #e2e8f0;
+  background: #f1f5f9;
+}
+
+.rtm-accordion-content {
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rtm-rule-card {
+  border: 1px solid #e2e8f0;
+  border-left: 3px solid #0284c7;
+  border-radius: 6px;
+  padding: 10px 12px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rtm-rule-card.proposed {
+  border-left-color: #f59e0b;
+}
+
+.rtm-rule-card.newly-effective {
+  border-left-color: #ea580c;
+  background: #fffbf5;
+}
+
+.rtm-rule-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.rtm-rule-name {
+  font-weight: 700;
+  font-size: 13px;
+  color: #1e293b;
+}
+
+.rtm-rule-meta {
+  font-size: 11px;
+  color: #64748b;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.rtm-rule-desc {
+  font-size: 12px;
+  color: #334155;
+  line-height: 1.4;
+}
+
+.rtm-rule-citation {
+  font-size: 11px;
+  color: #64748b;
+  font-style: italic;
+}
+
+/* Modal Dialogs (Compare Dates, Rule Source) */
+.rtm-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(2px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.rtm-modal-card {
+  background: var(--surface, #ffffff);
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 760px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.rtm-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border, #e2e8f0);
+}
+
+.rtm-modal-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.rtm-modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.rtm-diff-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.rtm-diff-matrix th, .rtm-diff-matrix td {
+  padding: 8px 10px;
+  border: 1px solid #e2e8f0;
+  text-align: left;
+  vertical-align: top;
+}
+
+.rtm-diff-matrix th {
+  background: #f8fafc;
+  font-weight: 600;
+}

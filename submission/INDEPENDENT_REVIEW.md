@@ -84,3 +84,83 @@ Attach the reviewer's completed notes and identify the packages, app version, mo
 - Reviewer recommendation and one example that most affected it:
 
 Present these as observations from this small sample, not as an accuracy rate, compliance result, or proof that PackSignal is superior to another product.
+
+---
+
+## Technical Protocol & Automated Scoring Infrastructure
+
+### 1. Evaluator and Scorer Commands
+- **Run engine on unseen package sets:**
+  ```bash
+  node scripts/run-independent-evaluation.mjs
+  ```
+- **Deterministic scorer (independent evaluation):**
+  ```bash
+  npm run evaluate:blind
+  # or directly:
+  node scripts/score-blind-evaluation.mjs
+  ```
+- **Deterministic synthetic regression benchmark (preserved):**
+  ```bash
+  npm run evaluate
+  ```
+
+### 2. Version Freezing Procedure & Integrity Hashes
+Before predictions are revealed to any reviewer:
+1. Record software Git commit: `cd3db9dc2b19422667e8be7f2c87c70d145d6191`.
+2. Compute SHA-256 digests of all 3 unseen package artworks and source documents, stored in `evaluation/independent/cases/manifest.json`.
+3. Freeze protocol parameters, eligible checks, evaluation units, and scoring formulas in `evaluation/independent/protocol.json`.
+4. Freeze reviewer pre-inspection annotations in `evaluation/independent/ground-truth.json`.
+5. Run the engine and freeze outputs in `evaluation/independent/predictions.json`.
+6. Verify file integrity using SHA-256 before scoring. Any post-hoc changes require a versioned amendment.
+
+### 3. Reviewer Independence Form (8 Core Questions)
+The independent human reviewer must certify:
+1. Did you author, contribute to, or review PackSignal's code or prompts? (Must be NO)
+2. Did you create or tune the developer test fixtures, benchmark cases, or demo files? (Must be NO)
+3. Did you see PackSignal's findings or predictions before inspecting the packaging files? (Must be NO)
+4. Did anyone from PackSignal coach, prompt, or advise your evaluation unit labels? (Must be NO)
+5. Were the 3 test package sets independently selected and previously unseen in PackSignal? (Must be YES)
+6. Were your inspection labels frozen before PackSignal was run on these files? (Must be YES)
+7. Do you have any financial, commercial, or employment interest in PackSignal? (Must be NO)
+8. Do you consent to having your anonymized or named evaluation worksheet published? (Must be YES)
+
+### 4. Ground-Truth & Prediction Schemas
+- **Ground Truth (`evaluation/independent/ground-truth.json`):**
+  - `evaluationUnitId`: e.g. `U-01-01`
+  - `caseId`: e.g. `CASE-01`
+  - `checkId`: e.g. `US-001` (Net Quantity)
+  - `reviewerLabel`: `ISSUE` | `MATCH` | `AMBIGUOUS` | `UNVERIFIABLE` | `NOT_APPLICABLE`
+  - `artworkEvidence`: text, bounding box coordinates, page number
+  - `sourceEvidence`: document filename, sheet/section, cell/line, approved quotation
+  - `notes`: reviewer comments and rationale
+- **Predictions (`evaluation/independent/predictions.json`):**
+  - `unitId`: matching `evaluationUnitId`
+  - `predictedStatus`: `issue` | `match` | `review` | `unable`
+  - `linkedFindingIds`: array of engine finding IDs
+  - `observedValue`: text extracted from artwork
+  - `expectedValue`: text extracted from source
+  - `evidenceQuality`: source quality, artwork quality, rule reference validity
+
+### 5. Scoring Rubric & Anti-Inflation Rules
+- **Unit of Evaluation:** `(Package ID, Check ID, Specific Declaration Instance)`.
+- **True Positive (TP):** Ground truth is `ISSUE`, PackSignal declares a definite `issue`, identifies the correct underlying discrepancy, and provides verifiable source/artwork evidence.
+- **False Positive (FP):** Ground truth is `MATCH`, but PackSignal declares a definite `issue`.
+- **False Negative (FN):** Ground truth is `ISSUE`, but PackSignal reports `match`, `review`, or `unable`.
+- **True Negative (TN):** Ground truth is `MATCH` and PackSignal declares `match`.
+- **Duplicate Findings:** Multiple finding cards citing the same physical defect cannot satisfy an evaluation unit more than once; duplicates are tracked separately and suppressed from TP counts.
+
+### 6. Ambiguity Handling & Safety Metrics
+Ambiguous or conflicting sources (`CASE-03`) are evaluated separately from binary precision/recall:
+- **Correct Abstention:** Ground truth is `AMBIGUOUS` or `UNVERIFIABLE`, and PackSignal returns `review` or `unable`.
+- **Unsafe Definitive Issue:** PackSignal reports a definite `issue` despite insufficient source authority.
+- **Unsupported Match:** PackSignal reports a definite `match` on ambiguous or unverified inputs.
+
+### 7. Results Publication Rules & Honest Denominators
+- Precision = `TP / (TP + FP)`.
+- Recall = `TP / (TP + FN)`.
+- F1 = `2 * P * R / (P + R)`.
+- When denominators are 0, metrics MUST display `N/A`, never 100%.
+- Both numerator and denominator must be displayed next to every metric (e.g. `1 / 3 = 33.3%`).
+- Describe results strictly as pilot-sample observations. Never advertise "98% accuracy", "FDA approved", or "outperforms competitor" from a 3-case pilot.
+

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>PackSignal · Mobile Scan to Brief</title>
+  <link rel="icon" type="image/svg+xml" href="/icon.svg">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/mobile-scan.css">
+  <style>
+    :root {
+      --scan-primary: #15803d;
+      --scan-accent: #0284c7;
+      --scan-bg: #0b0f19;
+      --scan-surface: #1e293b;
+      --scan-text: #f8fafc;
+      --scan-muted: #94a3b8;
+    }
+    body.scan-body {
+      margin: 0;
+      padding: 0;
+      background: var(--scan-bg);
+      color: var(--scan-text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .scan-header {
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(8px);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .scan-brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 800;
+      color: #ffffff;
+      text-decoration: none;
+    }
+    .scan-viewfinder-container {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      background: #000000;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .scan-video-element {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .scan-overlay-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .scan-corner-reticle {
+      stroke: #22c55e;
+      stroke-width: 4;
+      fill: none;
+    }
+    .scan-bank-card-anchor {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 120px;
+      height: 75px;
+      border: 2px dashed rgba(255, 255, 255, 0.6);
+      border-radius: 6px;
+      background: rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      color: #ffffff;
+      text-align: center;
+      padding: 4px;
+      pointer-events: none;
+    }
+    .scan-hud-bar {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+    }
+    .scan-badge {
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+      padding: 4px 10px;
+      border-radius: 14px;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .scan-controls-panel {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex: 1;
+    }
+    .scan-checklist-card {
+      background: var(--scan-surface);
+      border-radius: 10px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .checklist-progress-row {
+      display: flex;
+      gap: 4px;
+      margin: 8px 0;
+    }
+    .checklist-progress-pip {
+      flex: 1;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 3px;
+    }
+    .checklist-progress-pip.active {
+      background: var(--scan-primary);
+    }
+    .checklist-progress-pip.completed {
+      background: #22c55e;
+    }
+    .scan-action-btn {
+      background: var(--scan-primary);
+      color: #ffffff;
+      border: none;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+    .scan-action-btn:active {
+      transform: scale(0.98);
+    }
+    .dual-reader-card {
+      background: var(--scan-surface);
+      border-radius: 10px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 12px;
+    }
+    .dual-reader-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .twin-preview-box {
+      background: #0f172a;
+      border-radius: 8px;
+      padding: 10px;
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      text-align: center;
+      font-size: 11px;
+    }
+  </style>
+</head>
+<body class="scan-body">
+  <!-- Mobile Header -->
+  <header class="scan-header">
+    <a href="/" class="scan-brand">
+      <img src="/icon.svg" width="22" height="22" alt="PackSignal Logo">
+      <span>PackSignal · Mobile Intake</span>
+    </a>
+    <span class="scan-badge" style="color:#22c55e;">
+      <span style="width:7px;height:7px;border-radius:50%;background:#22c55e;display:inline-block;"></span>
+      <span>HTTPS Live</span>
+    </span>
+  </header>
+
+  <!-- Camera Viewfinder -->
+  <div class="scan-viewfinder-container">
+    <video class="scan-video-element" id="scan-video" autoplay playsinline muted></video>
+    <canvas id="scan-canvas" style="display:none;"></canvas>
+
+    <!-- Fallback simulation image if no camera permission -->
+    <img id="simulated-pack-feed" src="/samples/campus/front.png" style="width:100%;height:100%;object-fit:cover;display:none;" alt="Carton Panel">
+
+    <!-- Reticle SVG Overlay -->
+    <svg class="scan-overlay-svg" viewBox="0 0 400 380">
+      <!-- 4 Corner Reticles with Homography Guidance -->
+      <path class="scan-corner-reticle" d="M 40 70 L 40 40 L 70 40" />
+      <path class="scan-corner-reticle" d="M 330 40 L 360 40 L 360 70" />
+      <path class="scan-corner-reticle" d="M 360 310 L 360 340 L 330 340" />
+      <path class="scan-corner-reticle" d="M 70 340 L 40 340 L 40 310" />
+
+      <!-- Center Crosshair -->
+      <circle cx="200" cy="190" r="4" fill="#22c55e" opacity="0.8" />
+    </svg>
+
+    <!-- Top HUD Badge -->
+    <div class="scan-hud-bar">
+      <div class="scan-badge" id="face-badge">
+        <span>🔍 Detected:</span>
+        <b id="detected-face-name" style="color:#38bdf8;">Front PDP</b>
+        <span style="color:#22c55e;" id="detected-face-conf">(96%)</span>
+      </div>
+      <div class="scan-badge" id="sharpness-badge">
+        <span>Variance:</span>
+        <b id="sharpness-val" style="color:#22c55e;">148.2 (Sharp)</b>
+      </div>
+    </div>
+
+    <!-- Bank-Card Physical Reference Outline -->
+    <div class="scan-bank-card-anchor">
+      <span style="font-size:14px;margin-bottom:2px;">💳</span>
+      <span>Bank Card Scale<br>(85.6 × 54 mm)</span>
+    </div>
+  </div>
+
+  <!-- Main Mobile Controls -->
+  <main class="scan-controls-panel">
+    <!-- Checklist Progress -->
+    <div class="scan-checklist-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:12px;font-weight:700;color:#cbd5e1;">📋 What to Scan Next:</span>
+        <span style="font-size:11px;font-weight:700;color:#38bdf8;" id="step-indicator">Step 1 of 4</span>
+      </div>
+      <div class="checklist-progress-row">
+        <div class="checklist-progress-pip active" id="pip-front"></div>
+        <div class="checklist-progress-pip" id="pip-right"></div>
+        <div class="checklist-progress-pip" id="pip-back"></div>
+        <div class="checklist-progress-pip" id="pip-bottom"></div>
+      </div>
+      <div style="font-size:13px;font-weight:700;color:#ffffff;margin-top:4px;" id="current-task-label">
+        ▶ Snap Front PDP (Brand, Net Wt statement, primary claims)
+      </div>
+    </div>
+
+    <!-- Capture Trigger Actions -->
+    <div style="display:flex;gap:8px;">
+      <button type="button" class="scan-action-btn" id="capture-panel-btn" style="flex:2;">
+        <span style="font-size:18px;">📸</span>
+        <span id="capture-btn-text">Auto-Capture Front PDP</span>
+      </button>
+      <button type="button" class="scan-action-btn secondary" id="retake-face-btn" style="flex:1;background:#334155;">
+        <span>↻ Retake</span>
+      </button>
+    </div>
+
+    <!-- Fallback Photo Picker Trigger -->
+    <div style="text-align:center;">
+      <input type="file" id="fallback-photo-input" accept="image/*" capture="environment" style="display:none;">
+      <button type="button" class="textbutton subtle" id="fallback-photo-trigger-btn" style="color:#38bdf8;font-size:12px;font-weight:700;background:none;border:none;cursor:pointer;text-decoration:underline;">
+        📁 Upload Photo Instead (Fallback)
+      </button>
+    </div>
+
+    <!-- 3D Twin Mount Container -->
+    <div id="twin-3d-mount"></div>
+
+    <!-- 3D Twin Status Text -->
+    <div class="twin-preview-box">
+      <div style="font-weight:700;color:#38bdf8;margin-bottom:4px;">📦 3D Package Twin Filling In</div>
+      <div id="twin-status-text" style="color:#94a3b8;">
+        1 of 4 panels registered · Proportions calibrated from ID-1 card (10.0 px/mm)
+      </div>
+    </div>
+
+    <!-- Dual-Reader Consensus Card -->
+    <div class="dual-reader-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+        <b style="color:#ffffff;">👥 Dual-Reader Consensus</b>
+        <span style="background:#166534;color:#86efac;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;" id="consensus-status">✓ CONFIRMED</span>
+      </div>
+      <div style="color:#94a3b8;font-size:11px;">Local OCR and Gemini 3.8 Flash evaluate each panel independently.</div>
+      <div class="dual-reader-row">
+        <div><span style="color:#64748b;">Local OCR:</span> <b id="ocr-reading" style="color:#f8fafc;">"Dancing Fish Granola"</b></div>
+        <div><span style="color:#64748b;">Vision Model:</span> <b id="vision-reading" style="color:#f8fafc;">"Dancing Fish Granola"</b></div>
+      </div>
+    </div>
+
+    <!-- Two Routes Same Answer Proof Button -->
+    <button type="button" class="scan-action-btn" id="run-two-routes-btn" style="background:#0f766e;">
+      <span>🔬 Verify "Two Routes, Same Answer" Proof</span>
+    </button>
+    <div id="two-routes-box" style="display:none;background:#064e3b;border:1px solid #059669;border-radius:8px;padding:10px;font-size:11px;color:#d1fae5;"></div>
+
+    <!-- Shelf vs Approved Spec Button -->
+    <button type="button" class="scan-action-btn" id="compare-shelf-btn" style="background:#b45309;">
+      <span>🛒 Compare Shelf Carton vs Approved Excel Spec</span>
+    </button>
+    <div id="shelf-compare-box" style="display:none;background:#451a03;border:1px solid #d97706;border-radius:8px;padding:10px;font-size:11px;color:#fef3c7;"></div>
+
+    <!-- Generate Evidence-Backed Brief Button -->
+    <button type="button" class="scan-action-btn" id="generate-brief-btn" style="background:#4338ca;">
+      <span>📋 Generate Evidence-Backed Brief</span>
+    </button>
+    <div id="scan-brief-box" style="display:none;margin-top:6px;"></div>
+  </main>
+
+  <script type="module" src="/mobile-scan.js"></script>
+</body>
+</html>

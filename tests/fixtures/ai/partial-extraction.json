@@ -1,0 +1,19 @@
+{
+  "requestType": "partial_extraction",
+  "model": "gemini-2.5-flash-mock",
+  "schemaVersion": "1.0",
+  "status": "partial",
+  "pagesProcessed": 1,
+  "totalPages": 3,
+  "reason": "Quota reached after batch 1; subsequent pages deferred to local deterministic extraction.",
+  "data": {
+    "pages": [
+      {
+        "pageNumber": 1,
+        "transcriptions": [
+          { "text": "Front Panel Title", "box": [0.1, 0.1, 0.9, 0.3] }
+        ]
+      }
+    ]
+  }
+}

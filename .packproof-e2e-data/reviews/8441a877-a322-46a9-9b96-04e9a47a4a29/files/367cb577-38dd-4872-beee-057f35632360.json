@@ -1,0 +1,28 @@
+{
+  "rulebookId": "RB-FIELD-2026",
+  "version": "1.2.0",
+  "title": "Fieldday Brand & Packaging Regulatory Guidelines",
+  "rules": [
+    {
+      "id": "RULE-QTY-01",
+      "field": "net_quantity",
+      "title": "Net Quantity Compliance",
+      "text": "The declared net quantity must accurately match the approved product specification.",
+      "citation": "21 CFR 101.7",
+      "authority": "US FDA",
+      "provision": "Declaration of net quantity of contents",
+      "comparison": "exact_or_equivalent",
+      "severity": "issue"
+    },
+    {
+      "id": "RULE-STORAGE-01",
+      "field": "storage_instructions",
+      "title": "Storage Instruction Integrity",
+      "text": "Store in a cool, dry place.",
+      "citation": "Brand Standard S-401",
+      "authority": "QA Standard",
+      "comparison": "phrase_match",
+      "severity": "issue"
+    }
+  ]
+}

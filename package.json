@@ -4,6 +4,54 @@
   "description": "Evidence-backed packaging artwork review for Esko AIForge",
   "private": true,
   "type": "module",
-  "scripts": {"start":"node server.mjs","doctor":"node scripts/doctor.mjs","test":"node --test && python3 -m unittest discover -s tests -p 'test_*.py'","evaluate":"node scripts/evaluate-engine.mjs","smoke":"node scripts/smoke.mjs","smoke-team":"node scripts/team-smoke.mjs","package":"node scripts/package.mjs"},
-  "engines": {"node": ">=24"}
+  "scripts": {
+    "dev": "node --watch server.mjs",
+    "start": "node server.mjs",
+    "doctor": "node scripts/doctor.mjs",
+    "test": "node --test && python3 -m unittest discover -s tests -p 'test_*.py'",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:report": "playwright show-report",
+    "test:e2e:smoke": "playwright test --grep @smoke",
+    "test:us-preflight-e2e": "node scripts/us-preflight-browser-e2e.mjs",
+    "test:ambiguity-e2e": "node scripts/ambiguity-browser-e2e.mjs",
+    "test:pdf-preflight-e2e": "node scripts/pdf-preflight-browser-e2e.mjs",
+    "test:rulebook-e2e": "node scripts/rulebook-trust-browser-e2e.mjs",
+    "test:nutrition-e2e": "node scripts/nutrition-studio-browser-e2e.mjs",
+    "test:ask-someone-e2e": "node scripts/ask-someone-browser-e2e.mjs",
+    "test:ai-fixtures": "node --test tests/ai-fixtures.test.mjs",
+    "test:record-ai": "node scripts/record-ai-fixtures.mjs",
+    "test:live-ai": "PACKSIGNAL_AI_LIVE=1 node --test tests/ai-fixtures.test.mjs",
+    "evaluate": "node scripts/evaluate-engine.mjs",
+    "evaluate:organizer": "node scripts/evaluate-organizer.mjs",
+    "evaluate:known": "node scripts/evaluate-answer-key.mjs",
+    "evaluate:blind": "node scripts/score-blind-evaluation.mjs",
+    "smoke": "node scripts/smoke.mjs",
+    "smoke-team": "node scripts/team-smoke.mjs",
+    "evaluate:dancing-fish": "node scripts/evaluate-dancing-fish.mjs",
+    "benchmark": "node scripts/benchmark.mjs",
+    "benchmark:mutations": "node scripts/mutation-benchmark.mjs",
+    "verify:deployment": "node scripts/deployment-readiness.mjs",
+    "demo:check": "node scripts/demo-preflight.mjs",
+    "build:three": "npx esbuild src/three-entry.js --bundle --minify --format=esm --outfile=public/three-bundle.js",
+    "package": "node scripts/package.mjs",
+    "trust:generate": "node scripts/generate-trust-cases.mjs",
+    "trust:run": "node scripts/run-trust-suite.mjs",
+    "trust:report": "node scripts/run-trust-suite.mjs --report",
+    "trust:bakeoff": "node scripts/run-model-bakeoff.mjs",
+    "trust:verify": "node scripts/verify-trust-system.mjs",
+    "verify:release": "node scripts/verify-release.mjs",
+    "test:clean-install": "node scripts/test-clean-install.mjs"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "dependencies": {
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "esbuild": "^0.28.2",
+    "playwright": "^1.64.1"
+  }
 }

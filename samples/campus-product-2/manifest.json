@@ -1,0 +1,30 @@
+{
+  "sampleId": "campus-product-2",
+  "productName": "Amrit Chai \u00b7 Masala Blend",
+  "brand": "Amrit Chai",
+  "category": "beverage/tea",
+  "market": "India / FSSAI & Legal Metrology",
+  "files": [
+    {
+      "name": "AmritChai_Masala_IN_Carton.pdf",
+      "role": "artwork"
+    },
+    {
+      "name": "AmritChai_Content_Sheet.xlsx",
+      "role": "spec"
+    },
+    {
+      "name": "AmritChai_Product_Spec.docx",
+      "role": "spec"
+    }
+  ],
+  "expectedFindings": {
+    "matches": [
+      "Brand Name: Amrit Chai",
+      "Net Quantity: 250 g",
+      "MRP: Rs. 275.00 (Incl. of all taxes)",
+      "FSSAI Licence: 10014011000185",
+      "Veg Logo: Present on PDP"
+    ]
+  }
+}

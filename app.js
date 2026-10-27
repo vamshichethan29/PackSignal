@@ -181,6 +181,10 @@ let toastTimer;
 
 const pageElements = {
   overview: document.querySelector("#overview-page"),
+  lenses: document.querySelector("#lenses-page"),
+  canvas: document.querySelector("#canvas-page"),
+  desk: document.querySelector("#desk-page"),
+  brief: document.querySelector("#brief-page"),
   reviews: document.querySelector("#review-page"),
   rules: document.querySelector("#rules-page"),
   sources: document.querySelector("#sources-page")
@@ -189,12 +193,19 @@ const pageElements = {
 function goTo(page) {
   if (!pageElements[page]) return;
   activePage = page;
-  Object.entries(pageElements).forEach(([key, element]) => element.classList.toggle("hidden", key !== page));
+  Object.entries(pageElements).forEach(([key, element]) => {
+    if (element) element.classList.toggle("hidden", key !== page);
+  });
   document.querySelectorAll(".nav-item[data-page]").forEach(button => button.classList.toggle("active", button.dataset.page === page));
-  document.querySelector("#topbar-context").textContent = ({overview: "Overview", reviews: "Artwork review", rules: "Rule library", sources: "Source files"})[page];
+  document.querySelector("#topbar-context").textContent = ({overview: "Overview", lenses: "Reviewer Lenses", canvas: "Pack Canvas", desk: "Evidence Desk", brief: "Creative Brief", reviews: "Artwork review", rules: "Rule library", sources: "Source files"})[page] || "Overview";
   window.scrollTo({top: 0, behavior: "smooth"});
   if (page === "reviews") renderReview();
+  if (page === "desk") renderDesk();
+  if (page === "brief") renderBrief();
+  if (page === "lenses") renderLenses();
+  if (page === "canvas") renderCanvas();
 }
+
 
 function unresolved() { return findings.filter(item => !item.resolved); }
 
@@ -377,16 +388,570 @@ document.querySelector("#view-findings").addEventListener("click", () => documen
 document.querySelector("#zoom-in").addEventListener("click", () => { zoom = Math.min(1.3, +(zoom + .1).toFixed(1)); document.querySelector("#artwork-wrap").style.transform = `scale(${zoom})`; document.querySelector("#zoom-level").textContent = `${Math.round(zoom * 100)}%`; });
 document.querySelector("#zoom-out").addEventListener("click", () => { zoom = Math.max(.8, +(zoom - .1).toFixed(1)); document.querySelector("#artwork-wrap").style.transform = `scale(${zoom})`; document.querySelector("#zoom-level").textContent = `${Math.round(zoom * 100)}%`; });
 document.querySelector("#fit-artwork").addEventListener("click", () => { zoom = 1; document.querySelector("#artwork-wrap").style.transform = "scale(1)"; document.querySelector("#zoom-level").textContent = "100%"; });
-document.querySelector("#toggle-markers").addEventListener("click", event => { markersVisible = !markersVisible; updateMarker(); event.currentTarget.querySelector("span").textContent = markersVisible ? "Evidence markers" : "Markers hidden"; });
-document.querySelector("#open-artwork").addEventListener("click", () => window.open("assets/fieldday-artwork.svg", "_blank", "noopener,noreferrer"));
-document.querySelector("#export-report").setAttribute("title", "Download a cited Markdown review report");
-document.querySelector("#scope-link").addEventListener("click", () => document.querySelector("#scope-dialog").showModal());
-document.querySelector("#close-scope").addEventListener("click", () => document.querySelector("#scope-dialog").close());
-document.querySelector("#scope-done").addEventListener("click", () => document.querySelector("#scope-dialog").close());
-document.querySelector("#close-evidence").addEventListener("click", () => document.querySelector("#evidence-dialog").close());
-document.querySelector("#evidence-done").addEventListener("click", () => document.querySelector("#evidence-dialog").close());
-document.querySelector("#finding-menu").addEventListener("click", () => showToast("All findings include source citations and artwork locations"));
-document.querySelector("#scope-dialog").addEventListener("click", event => { if (event.target === event.currentTarget) event.currentTarget.close(); });
-document.querySelector("#evidence-dialog").addEventListener("click", event => { if (event.target === event.currentTarget) event.currentTarget.close(); });
+// ============================================================================
+// Phase 4: Evidence Desk Controller & Handlers
+// ============================================================================
+let deskSession = null;
+let activeFactFilter = "all";
+let factSearchQuery = "";
+
+async function fetchDeskState() {
+  try {
+    const res = await fetch("/api/desk/state");
+    if (!res.ok) throw new Error("Failed to load desk state");
+    deskSession = await res.json();
+    updateDeskBadgeCounts();
+    return deskSession;
+  } catch (err) {
+    console.error("Desk state fetch error:", err);
+    return null;
+  }
+}
+
+function updateDeskBadgeCounts() {
+  if (!deskSession) return;
+  const openConflicts = deskSession.conflicts.filter(c => c.status === "OPEN").length;
+  const deskCountEl = document.querySelector("#desk-nav-count");
+  if (deskCountEl) deskCountEl.textContent = openConflicts;
+  const attentionTotal = document.querySelector("#attention-total");
+  if (attentionTotal) attentionTotal.textContent = String(openConflicts).padStart(2, "0");
+}
+
+async function renderDesk() {
+  if (!deskSession) {
+    await fetchDeskState();
+  }
+  if (!deskSession) return;
+
+  // 1. Metrics Strip
+  const dFiles = document.querySelector("#d-metric-files");
+  if (dFiles) dFiles.textContent = deskSession.files.length;
+  const dPieces = document.querySelector("#d-metric-pieces");
+  if (dPieces) dPieces.textContent = deskSession.summary.totalPieces;
+  const dProven = document.querySelector("#d-metric-proven");
+  if (dProven) dProven.textContent = deskSession.facts.filter(f => f.state === "PROVEN").length;
+  const dAi = document.querySelector("#d-metric-ai");
+  if (dAi) dAi.textContent = deskSession.facts.filter(f => f.state === "AI_SUGGESTED").length;
+  const openConflicts = deskSession.conflicts.filter(c => c.status === "OPEN").length;
+  const dConflicts = document.querySelector("#d-metric-conflicts");
+  if (dConflicts) dConflicts.textContent = openConflicts;
+  const openQuestions = deskSession.questions.filter(q => q.status === "OPEN").length;
+  const dQuestions = document.querySelector("#d-metric-questions");
+  if (dQuestions) dQuestions.textContent = openQuestions;
+
+  const fBadge = document.querySelector("#files-badge-count");
+  if (fBadge) fBadge.textContent = deskSession.files.length;
+  const cBadge = document.querySelector("#conflicts-badge-count");
+  if (cBadge) cBadge.textContent = openConflicts;
+  const qBadge = document.querySelector("#questions-badge-count");
+  if (qBadge) qBadge.textContent = openQuestions;
+  const factsBadge = document.querySelector("#facts-badge-count");
+  if (factsBadge) factsBadge.textContent = deskSession.facts.length;
+
+  // Filter tabs counts
+  const tabAll = document.querySelector("#tab-cnt-all");
+  if (tabAll) tabAll.textContent = deskSession.facts.length;
+  const tabProven = document.querySelector("#tab-cnt-proven");
+  if (tabProven) tabProven.textContent = deskSession.facts.filter(f => f.state === "PROVEN").length;
+  const tabAi = document.querySelector("#tab-cnt-ai");
+  if (tabAi) tabAi.textContent = deskSession.facts.filter(f => f.state === "AI_SUGGESTED").length;
+  const tabConflict = document.querySelector("#tab-cnt-conflict");
+  if (tabConflict) tabConflict.textContent = deskSession.facts.filter(f => f.state === "CONFLICT").length;
+
+  updateDeskBadgeCounts();
+
+  // 2. Render Source Files List
+  const filesListEl = document.querySelector("#desk-files-list");
+  if (filesListEl) {
+    filesListEl.innerHTML = deskSession.files.map(file => {
+      const extClass = `format-${file.type}`;
+      const featTags = (file.features || []).map(f => `<span class="file-feat-tag">${f}</span>`).join("");
+      return `
+        <article class="desk-file-card" data-file-id="${file.id}">
+          <div class="file-card-top">
+            <span class="file-format-badge ${extClass}">${file.formatLabel}</span>
+            <span class="file-pieces-count">${file.piecesCount} pieces</span>
+          </div>
+          <strong>${file.name}</strong>
+          <div class="file-features-list">${featTags}</div>
+        </article>
+      `;
+    }).join("");
+  }
+
+  // 3. Render Conflict Cards
+  const conflictsEl = document.querySelector("#conflict-cards-container");
+  if (conflictsEl) {
+    conflictsEl.innerHTML = deskSession.conflicts.map(c => {
+      const isResolved = c.status === "RESOLVED";
+      const statusPill = isResolved
+        ? `<span class="conflict-status-badge status-badge-resolved">✓ RESOLVED</span>`
+        : `<span class="conflict-status-badge status-badge-open">! OPEN CONFLICT</span>`;
+
+      let actionsHtml = "";
+      if (isResolved) {
+        actionsHtml = `
+          <div class="conflict-resolved-banner">
+            <span>✓</span>
+            <strong>Resolved: ${c.resolvedValue}</strong>
+            <span>(${c.resolvedSource})</span>
+          </div>
+        `;
+      } else {
+        const optButtons = (c.options || []).map(opt => `
+          <button class="btn-resolve-opt" data-conflict-id="${c.id}" data-val="${opt.value}" data-src="${opt.source}">
+            ${opt.label}
+          </button>
+        `).join("");
+        actionsHtml = `<div class="conflict-actions-row">${optButtons}</div>`;
+      }
+
+      return `
+        <article class="conflict-card ${isResolved ? 'resolved' : ''}" id="card-${c.id}">
+          <div class="conflict-card-header">
+            <span class="conflict-category">${c.category}</span>
+            ${statusPill}
+          </div>
+          <h3 class="conflict-title">${c.label}</h3>
+          <p class="conflict-explanation">${c.explanation}</p>
+          <div class="conflict-vs-grid">
+            <div class="conflict-side side-spec">
+              <small>SPECIFICATION</small>
+              <strong>${c.specValue}</strong>
+              <em>${c.specSource}</em>
+            </div>
+            <div class="conflict-side side-art">
+              <small>ARTWORK PRINT</small>
+              <strong>${c.artworkValue}</strong>
+              <em>${c.artworkSource}</em>
+            </div>
+          </div>
+          ${actionsHtml}
+        </article>
+      `;
+    }).join("");
+
+    // Attach resolve handlers
+    conflictsEl.querySelectorAll(".btn-resolve-opt").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const conflictId = btn.dataset.conflictId;
+        const chosenValue = btn.dataset.val;
+        const chosenSource = btn.dataset.src;
+        await resolveConflict(conflictId, chosenValue, chosenSource);
+      });
+    });
+  }
+
+  // 4. Render Questions Stack
+  const questionsEl = document.querySelector("#questions-stack-container");
+  if (questionsEl) {
+    questionsEl.innerHTML = deskSession.questions.map(q => {
+      const isAnswered = q.status === "ANSWERED";
+      const priorityClass = `priority-${q.priority.toLowerCase()}`;
+
+      let optionsHtml = "";
+      if (isAnswered) {
+        optionsHtml = `
+          <div class="question-answered-banner">
+            <span>✓</span>
+            <strong>Answered:</strong> ${q.answer?.answerValue || "Completed"}
+          </div>
+        `;
+      } else {
+        const optBtns = (q.options || []).map(opt => `
+          <button class="q-opt-btn" data-question-id="${q.id}" data-opt-id="${opt.id}">
+            ${opt.label}
+          </button>
+        `).join("");
+        optionsHtml = `<div class="question-options-list">${optBtns}</div>`;
+      }
+
+      return `
+        <article class="question-card ${isAnswered ? 'answered' : ''}">
+          <div class="question-header">
+            <span class="question-rank-pill">#${q.rank} RANK</span>
+            <span class="priority-badge ${priorityClass}">${q.priority}</span>
+          </div>
+          <h4 class="question-text">${q.question}</h4>
+          <div class="question-reason"><strong>AI Rationale:</strong> ${q.reason}</div>
+          ${optionsHtml}
+        </article>
+      `;
+    }).join("");
+
+    // Attach question answer handlers
+    questionsEl.querySelectorAll(".q-opt-btn").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const questionId = btn.dataset.questionId;
+        const answerId = btn.dataset.optId;
+        await answerQuestion(questionId, answerId);
+      });
+    });
+  }
+
+  // 5. Render Creative Brief Feed
+  renderBriefFeed();
+
+  // 6. Render Fact Sheet
+  renderFactSheet();
+}
+
+function renderBriefFeed() {
+  if (!deskSession?.briefFeed) return;
+  const feed = deskSession.briefFeed;
+  const renderList = (elId, items) => {
+    const el = document.querySelector(elId);
+    if (!el) return;
+    if (!items?.length) {
+      el.innerHTML = '<li style="opacity:0.5;">None recorded</li>';
+      return;
+    }
+    el.innerHTML = items.map(item => `<li>${item}</li>`).join("");
+  };
+  renderList("#brief-matrix-keep", feed.keep);
+  renderList("#brief-matrix-change", feed.change);
+  renderList("#brief-matrix-add", feed.add);
+  renderList("#brief-matrix-remove", feed.remove);
+}
+
+function renderFactSheet() {
+  if (!deskSession) return;
+  const listEl = document.querySelector("#fact-sheet-list");
+  if (!listEl) return;
+  let filtered = deskSession.facts;
+
+  if (activeFactFilter === "proven") {
+    filtered = filtered.filter(f => f.state === "PROVEN");
+  } else if (activeFactFilter === "ai") {
+    filtered = filtered.filter(f => f.state === "AI_SUGGESTED");
+  } else if (activeFactFilter === "conflict") {
+    filtered = filtered.filter(f => f.state === "CONFLICT");
+  }
+
+  if (factSearchQuery) {
+    const q = factSearchQuery.toLowerCase();
+    filtered = filtered.filter(f =>
+      (f.label && f.label.toLowerCase().includes(q)) ||
+      (f.value && String(f.value).toLowerCase().includes(q)) ||
+      (f.category && f.category.toLowerCase().includes(q))
+    );
+  }
+
+  if (!filtered.length) {
+    listEl.innerHTML = `<div class="finding-empty">No facts match filter: "${activeFactFilter}".</div>`;
+    return;
+  }
+
+  listEl.innerHTML = filtered.map(fact => {
+    const stateClass = fact.state === "PROVEN" ? "pill-proven" : (fact.state === "CONFLICT" ? "pill-conflict" : "pill-ai");
+    const stateLabel = fact.state === "PROVEN" ? "PROVEN" : (fact.state === "CONFLICT" ? "CONFLICT" : "AI-SUGGESTED");
+    const cardClass = fact.state === "PROVEN" ? "fact-proven" : (fact.state === "CONFLICT" ? "fact-conflict" : "fact-ai");
+
+    const chipsHtml = (fact.sources || []).map(src => {
+      let icon = "📄";
+      if (src.type === "excel") icon = "📊";
+      if (src.type === "docx") icon = "📝";
+      if (src.type === "plain_pdf") icon = "📋";
+      if (src.type === "note") icon = "📌";
+      if (src.type === "image") icon = "🖼️";
+
+      const locText = src.location || src.cell || src.panel || src.paragraph || src.line || "Source";
+      const shortFile = src.file.length > 25 ? src.file.slice(0, 22) + "..." : src.file;
+
+      return `
+        <button class="source-chip"
+          data-file="${src.file}"
+          data-location="${locText}"
+          data-quote="${encodeURIComponent(src.quote || fact.value)}"
+          data-type="${src.type || ''}"
+          title="Open ${src.file} at ${locText}">
+          <span class="chip-icon">${icon}</span>
+          <span>${shortFile} [${locText}]</span>
+        </button>
+      `;
+    }).join("");
+
+    let conflictBanner = "";
+    if (fact.state === "CONFLICT" && fact.conflictReason) {
+      conflictBanner = `<div style="font-size:8px; color:#ba4837; margin-bottom:5px; line-height:1.4;"><strong>Conflict:</strong> ${fact.conflictReason}</div>`;
+    }
+
+    return `
+      <article class="fact-card ${cardClass}" id="fact-${fact.id}">
+        <div class="fact-row-top">
+          <span class="fact-category-tag">${fact.category}</span>
+          <span class="fact-state-pill ${stateClass}">${stateLabel}</span>
+        </div>
+        <div class="fact-field-label">${fact.label}</div>
+        <div class="fact-field-value">${fact.value}</div>
+        ${conflictBanner}
+        <div class="source-chips-row">${chipsHtml}</div>
+      </article>
+    `;
+  }).join("");
+
+  // Attach chip click handlers to open file spot modal
+  listEl.querySelectorAll(".source-chip").forEach(chip => {
+    chip.addEventListener("click", () => {
+      const file = chip.dataset.file;
+      const location = chip.dataset.location;
+      const quote = decodeURIComponent(chip.dataset.quote || "");
+      const type = chip.dataset.type;
+      openFileSpotModal(file, location, quote, type);
+    });
+  });
+}
+
+async function resolveConflict(conflictId, chosenValue, chosenSource) {
+  try {
+    showToast(`Resolving conflict: accepting ${chosenValue}...`);
+    const res = await fetch("/api/desk/resolve-conflict", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        conflictId,
+        chosenValue,
+        chosenSource,
+        note: `Reviewer approved ${chosenValue} from ${chosenSource}`
+      })
+    });
+    const data = await res.json();
+    if (data.status === "SUCCESS") {
+      deskSession = data.session;
+      showToast(`Conflict resolved! Fact Sheet updated to ${chosenValue}.`);
+      renderDesk();
+    } else {
+      showToast(data.error || "Failed to resolve conflict");
+    }
+  } catch (err) {
+    showToast("Network error resolving conflict");
+    console.error(err);
+  }
+}
+
+async function answerQuestion(questionId, answerId) {
+  try {
+    showToast("Saving decision...");
+    const res = await fetch("/api/desk/answer-question", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        questionId,
+        answerId
+      })
+    });
+    const data = await res.json();
+    if (data.status === "SUCCESS") {
+      deskSession = data.session;
+      showToast("Question answered! Fact Sheet and Brief Matrix updated.");
+      renderDesk();
+    } else {
+      showToast(data.error || "Failed to answer question");
+    }
+  } catch (err) {
+    showToast("Network error answering question");
+    console.error(err);
+  }
+}
+
+async function openFileSpotModal(file, location, quote, type) {
+  const dialog = document.querySelector("#file-spot-dialog");
+  if (!dialog) return;
+  document.querySelector("#spot-file-title").textContent = file;
+  document.querySelector("#spot-location-badge").textContent = location;
+  document.querySelector("#spot-type-badge").textContent = (type || "SOURCE").toUpperCase();
+  document.querySelector("#spot-quote-text").textContent = `"${quote}"`;
+
+  try {
+    const spotRes = await fetch(`/api/file-spot?file=${encodeURIComponent(file)}&location=${encodeURIComponent(location)}&quote=${encodeURIComponent(quote)}`);
+    const spotData = await spotRes.json();
+    document.querySelector("#spot-context-snippet").textContent = spotData.snippet || `File: ${file}\nPosition: ${location}\nExtract: "${quote}"`;
+  } catch {
+    document.querySelector("#spot-context-snippet").textContent = `File: ${file}\nPosition: ${location}\nVerbatim extract: "${quote}"`;
+  }
+
+  dialog.showModal();
+}
+
+// Dialog listeners for Phase 4
+const closeFileSpot = document.querySelector("#close-file-spot");
+if (closeFileSpot) closeFileSpot.addEventListener("click", () => document.querySelector("#file-spot-dialog")?.close());
+const spotCloseBtn = document.querySelector("#spot-close-btn");
+if (spotCloseBtn) spotCloseBtn.addEventListener("click", () => document.querySelector("#file-spot-dialog")?.close());
+
+const deskLoadSamples = document.querySelector("#desk-load-samples");
+if (deskLoadSamples) {
+  deskLoadSamples.addEventListener("click", async () => {
+    showToast("Reloading Esko samples + extra inputs...");
+    const res = await fetch("/api/desk/reset", { method: "POST" });
+    const data = await res.json();
+    if (data.status === "SUCCESS") {
+      deskSession = data.session;
+      showToast("Esko samples and all inputs loaded fresh!");
+      renderDesk();
+    }
+  });
+}
+
+const deskReset = document.querySelector("#desk-reset");
+if (deskReset) {
+  deskReset.addEventListener("click", async () => {
+    showToast("Resetting Evidence Desk...");
+    const res = await fetch("/api/desk/reset", { method: "POST" });
+    const data = await res.json();
+    if (data.status === "SUCCESS") {
+      deskSession = data.session;
+      showToast("Evidence Desk reset to baseline.");
+      renderDesk();
+    }
+  });
+}
+
+// Facts Search & Filter Tabs
+const searchInput = document.querySelector("#facts-search-input");
+if (searchInput) {
+  searchInput.addEventListener("input", e => {
+    factSearchQuery = e.target.value.trim();
+    renderFactSheet();
+  });
+}
+
+document.querySelectorAll(".fact-tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    activeFactFilter = tab.dataset.factFilter;
+    document.querySelectorAll(".fact-tab").forEach(t => t.classList.toggle("active", t === tab));
+    renderFactSheet();
+  });
+});
+
+// Upload Modal
+const uploadDialog = document.querySelector("#upload-dialog");
+const openUploadBtn = document.querySelector("#desk-open-upload");
+const quickUploadBtn = document.querySelector("#btn-quick-upload");
+const closeUploadBtn = document.querySelector("#close-upload-dialog");
+const cancelUploadBtn = document.querySelector("#cancel-upload-btn");
+
+if (openUploadBtn) openUploadBtn.addEventListener("click", () => uploadDialog?.showModal());
+if (quickUploadBtn) quickUploadBtn.addEventListener("click", () => uploadDialog?.showModal());
+if (closeUploadBtn) closeUploadBtn.addEventListener("click", () => uploadDialog?.close());
+if (cancelUploadBtn) cancelUploadBtn.addEventListener("click", () => uploadDialog?.close());
+
+const tabBtnFile = document.querySelector("#tab-btn-file");
+const tabBtnPaste = document.querySelector("#tab-btn-paste");
+const uploadFilePane = document.querySelector("#upload-file-pane");
+const uploadPastePane = document.querySelector("#upload-paste-pane");
+
+if (tabBtnFile && tabBtnPaste) {
+  tabBtnFile.addEventListener("click", () => {
+    tabBtnFile.classList.add("active");
+    tabBtnPaste.classList.remove("active");
+    uploadFilePane.classList.remove("hidden");
+    uploadPastePane.classList.add("hidden");
+  });
+  tabBtnPaste.addEventListener("click", () => {
+    tabBtnPaste.classList.add("active");
+    tabBtnFile.classList.remove("active");
+    uploadPastePane.classList.remove("hidden");
+    uploadFilePane.classList.add("hidden");
+  });
+}
+
+// Dropzones
+const mainDropzone = document.querySelector("#desk-dropzone");
+const mainFileInput = document.querySelector("#desk-file-input");
+if (mainDropzone && mainFileInput) {
+  mainDropzone.addEventListener("click", () => mainFileInput.click());
+  mainFileInput.addEventListener("change", async e => {
+    const file = e.target.files[0];
+    if (file) {
+      showToast(`Ingesting ${file.name}...`);
+      const reader = new FileReader();
+      reader.onload = async () => {
+        const content = reader.result;
+        await fetch("/api/desk/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ fileName: file.name, content: typeof content === 'string' ? content : '', fileType: file.name.split('.').pop() })
+        });
+        await fetchDeskState();
+        renderDesk();
+        showToast(`${file.name} parsed into Evidence Desk!`);
+      };
+      if (file.name.endsWith('.txt') || file.name.endsWith('.md')) {
+        reader.readAsText(file);
+      } else {
+        reader.readAsDataURL(file);
+      }
+    }
+  });
+}
+
+const submitUploadBtn = document.querySelector("#submit-upload-btn");
+if (submitUploadBtn) {
+  submitUploadBtn.addEventListener("click", async () => {
+    const isPaste = tabBtnPaste?.classList.contains("active");
+    if (isPaste) {
+      const title = document.querySelector("#paste-note-title")?.value || "QA_Pasted_Notes.txt";
+      const text = document.querySelector("#paste-note-content")?.value || "";
+      if (!text.trim()) {
+        showToast("Please enter notes content.");
+        return;
+      }
+      showToast("Ingesting pasted notes...");
+      await fetch("/api/desk/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fileName: title, content: text, fileType: "txt" })
+      });
+      uploadDialog?.close();
+      await fetchDeskState();
+      renderDesk();
+      showToast("Notes parsed with line numbers as source!");
+    } else {
+      uploadDialog?.close();
+      showToast("File selected for intake.");
+    }
+  });
+}
+
+// Fetch desk state on boot and render
+fetchDeskState().then(() => {
+  if (activePage === "desk") renderDesk();
+});
+
+async function renderBrief() {
+  const container = document.querySelector("#brief-page");
+  if (!container) return;
+  try {
+    const mod = await import('/creative-brief.js');
+    mod.mountCreativeBrief(container);
+  } catch (err) {
+    console.error('Failed to mount Creative Brief:', err);
+  }
+}
+
+async function renderLenses() {
+  const container = document.querySelector("#lenses-page");
+  if (!container) return;
+  try {
+    const mod = await import('/reviewer-lenses.js');
+    mod.mountReviewerLenses(container);
+  } catch (err) {
+    console.error('Failed to mount Reviewer Lenses:', err);
+  }
+}
+
+async function renderCanvas() {
+  const container = document.querySelector("#canvas-page");
+  if (!container) return;
+  try {
+    const mod = await import('/pack-canvas.js');
+    mod.mountPackCanvas(container);
+  } catch (err) {
+    console.error('Failed to mount Pack Canvas:', err);
+  }
+}
 
 initializeReview();
+
+

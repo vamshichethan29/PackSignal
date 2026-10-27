@@ -1,0 +1,146 @@
+{
+  "document_id": "FD-RULE-012",
+  "version": "1.2",
+  "synthetic": true,
+  "title": "Northstar fictional beverage artwork checklist",
+  "scope": "Company review checklist invented for this exercise. Not a regulatory standard. Applies only to SKU FD-OAT-1042 and supplied fictional sources.",
+  "normalization_policy": "Ignore capitalization and whitespace for exact copy; preserve substantive wording, ingredient order and numbers. Convert mL and L for quantity. Do not silently repair OCR guesses.",
+  "absence_policy": "Only return a definite missing-content issue when all supplied artwork panels are readable and extraction coverage is complete. Otherwise use unable_to_verify or needs_human_review.",
+  "rules": [
+    {
+      "id": "R01",
+      "title": "Brand and product identity",
+      "panel": "front",
+      "field": "identity",
+      "comparison": "all_phrases",
+      "rule_text": "The front panel must display Fieldday and Oat Drink.",
+      "literal_expected": [
+        "Fieldday",
+        "Oat Drink"
+      ],
+      "source_section": "Section 1",
+      "severity_if_issue": "minor"
+    },
+    {
+      "id": "R02",
+      "title": "Variant",
+      "panel": "front",
+      "field": "variant",
+      "comparison": "exact_phrase",
+      "rule_text": "The front panel must display the approved variant Original.",
+      "literal_expected": "Original",
+      "source_section": "Section 2",
+      "severity_if_issue": "minor"
+    },
+    {
+      "id": "R03",
+      "title": "Net quantity",
+      "panel": "all",
+      "field": "net_quantity",
+      "comparison": "quantity_equivalence",
+      "rule_text": "Every displayed net quantity must equal the approved specification value. Convert L and mL before comparing.",
+      "literal_expected": null,
+      "source_section": "Section 3",
+      "severity_if_issue": "major"
+    },
+    {
+      "id": "R04",
+      "title": "Ingredients",
+      "panel": "back",
+      "field": "ingredients",
+      "comparison": "exact_copy",
+      "rule_text": "The ingredient declaration must match the approved specification, including order and percentages.",
+      "literal_expected": null,
+      "source_section": "Section 4",
+      "severity_if_issue": "major"
+    },
+    {
+      "id": "R05",
+      "title": "Allergen wording",
+      "panel": "back",
+      "field": "allergen_statement",
+      "comparison": "exact_copy",
+      "rule_text": "The artwork must carry the supplied allergen wording from the approved specification.",
+      "literal_expected": null,
+      "source_section": "Section 5",
+      "severity_if_issue": "major"
+    },
+    {
+      "id": "R06",
+      "title": "Energy and basis",
+      "panel": "back",
+      "field": "nutrition.energy",
+      "comparison": "numeric_pair_and_basis",
+      "rule_text": "The nutrition panel must show the approved kJ and kcal energy values on the approved per-100-mL basis.",
+      "literal_expected": null,
+      "source_section": "Section 6",
+      "severity_if_issue": "minor"
+    },
+    {
+      "id": "R07",
+      "title": "Fat and basis",
+      "panel": "back",
+      "field": "nutrition.fat_g",
+      "comparison": "numeric_and_basis",
+      "rule_text": "The fat value and its per-100-mL basis must match the approved nutrition specification.",
+      "literal_expected": null,
+      "source_section": "Section 7",
+      "severity_if_issue": "minor"
+    },
+    {
+      "id": "R08",
+      "title": "Protein and basis",
+      "panel": "back",
+      "field": "nutrition.protein_g",
+      "comparison": "numeric_and_basis",
+      "rule_text": "The protein value and its per-100-mL basis must match the approved nutrition specification.",
+      "literal_expected": null,
+      "source_section": "Section 8",
+      "severity_if_issue": "minor"
+    },
+    {
+      "id": "R09",
+      "title": "Manufacturer and contact",
+      "panel": "back",
+      "field": "business_details",
+      "comparison": "all_approved_fields",
+      "rule_text": "The artwork must include the approved manufacturer name and customer-care email.",
+      "literal_expected": null,
+      "source_section": "Section 9",
+      "severity_if_issue": "minor"
+    },
+    {
+      "id": "R10",
+      "title": "Recycling qualifier",
+      "panel": "back",
+      "field": "recycling_copy",
+      "comparison": "exact_copy",
+      "rule_text": "Retain the full supplied recycling phrase, including where facilities exist.",
+      "literal_expected": null,
+      "source_section": "Section 10",
+      "severity_if_issue": "minor"
+    },
+    {
+      "id": "R11",
+      "title": "After-opening storage",
+      "panel": "back",
+      "field": "storage_statement",
+      "comparison": "exact_copy",
+      "rule_text": "Include the approved after-opening storage statement on the retail package.",
+      "literal_expected": null,
+      "source_section": "Section 11",
+      "severity_if_issue": "major"
+    },
+    {
+      "id": "R12",
+      "title": "Claim approval evidence",
+      "panel": "all",
+      "field": "claims",
+      "comparison": "register_lookup",
+      "rule_text": "Each promotional claim must have applicable approval evidence in the supplied claims register. An absent entry or insufficient evidence requires human review and does not establish that the claim is false or illegal.",
+      "literal_expected": null,
+      "source_section": "Section 12",
+      "severity_if_issue": "minor"
+    }
+  ]
+}

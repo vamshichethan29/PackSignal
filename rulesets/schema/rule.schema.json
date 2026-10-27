@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PackSignal Rule Record Schema",
+  "type": "object",
+  "required": [
+    "id",
+    "version",
+    "market",
+    "regulator",
+    "productScope",
+    "sourceCitation",
+    "checkType",
+    "parameters"
+  ],
+  "properties": {
+    "id": { "type": "string" },
+    "version": { "type": "string" },
+    "market": { "type": "string" },
+    "regulator": { "type": "string" },
+    "productScope": { "type": "string" },
+    "sourceCitation": { "type": "string" },
+    "sourceUrl": { "type": "string" },
+    "sourceQuote": { "type": "string" },
+    "quoteVerificationStatus": { "type": "string", "enum": ["VERIFIED_QUOTATION", "QUOTATION_NOT_VERIFIED", "UNVERIFIED"] },
+    "legalStatus": { "type": "string", "enum": ["IN_FORCE", "PROPOSED", "SUPERSEDED"] },
+    "effectiveDate": { "type": "string" },
+    "checkType": {
+      "type": "string",
+      "enum": [
+        "REQUIRED_TEXT",
+        "FORBIDDEN_TEXT",
+        "EXACT_COPY",
+        "QUANTITY_EQUIVALENCE",
+        "NUMERIC_MINIMUM",
+        "NUMERIC_MAXIMUM",
+        "REQUIRED_FIELD",
+        "NUTRIENT_DV",
+        "FONT_SIZE_SCREEN",
+        "PANEL_PLACEMENT",
+        "CLAIM_REGISTER_LOOKUP",
+        "MANUAL_REVIEW"
+      ]
+    },
+    "parameters": { "type": "object" },
+    "requiredFacts": { "type": "array", "items": { "type": "string" } },
+    "applicability": { "type": "object" },
+    "exceptions": { "type": "array", "items": { "type": "string" } },
+    "reviewStatus": { "type": "string", "enum": ["APPROVED", "PROPOSED", "REJECTED"] }
+  },
+  "additionalProperties": false
+}

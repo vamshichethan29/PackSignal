@@ -1,0 +1,58 @@
+{
+  "packId": "IN-FSSAI-LEGAL-METROLOGY-2026.1",
+  "market": "IN",
+  "name": "India Food Labelling & Legal Metrology Pack",
+  "regulators": [
+    "Food Safety and Standards Authority of India (FSSAI)",
+    "Department of Consumer Affairs (Legal Metrology)"
+  ],
+  "regulator": "Food Safety and Standards Authority of India (FSSAI) & Legal Metrology",
+  "version": "2026.1",
+  "publishedAt": "2020-11-17",
+  "effectiveFrom": "2021-01-01",
+  "effectiveUntil": null,
+  "productScope": [
+    "granola",
+    "cereal",
+    "dry_bakery_and_grain",
+    "conventional_food",
+    "food"
+  ],
+  "sources": [
+    {
+      "title": "Food Safety and Standards (Labelling and Display) Regulations, 2020",
+      "citation": "F. No. 1-94/FSSAI/SP(Labelling)/2014(Pt-2)",
+      "url": "https://fssai.gov.in/upload/notifications/2020/12/5fd87c6a0f6adGazette_Notification_Labelling_Display_14_12_2020.pdf"
+    },
+    {
+      "title": "FSSAI Labelling and Display Amendment Notification (24 March 2026)",
+      "citation": "Notification dt 24.03.2026",
+      "url": "https://www.fssai.gov.in/upload/notifications/2026/04/69cca2b3f3ce9Notification%20dt%2024.03.2026_NRC.pdf"
+    },
+    {
+      "title": "Legal Metrology (Packaged Commodities) Rules, 2011 & Amendments",
+      "citation": "G.S.R. 202(E) and subsequent amendments",
+      "url": "https://consumeraffairs.gov.in/pages/legal-metrology-act"
+    },
+    {
+      "title": "Food Safety and Standards (Vegan Foods) Regulations, 2022",
+      "citation": "F. No. Std/R&P/Vegan Foods/2021",
+      "url": "https://fssai.gov.in/upload/notifications/2022/06/62ac3f9dba33cGazette_Notification_Vegan_Food_17_06_2022.pdf"
+    },
+    {
+      "title": "Food Safety and Standards (Advertising and Claims) Regulations, 2018",
+      "citation": "F. No. 1-94/FSSAI/SP(Claims)/2015",
+      "url": "https://www.fssai.gov.in/food-law/regulations/advertising-and-claims"
+    }
+  ],
+  "components": {
+    "foodLabelling": "food-labelling.json",
+    "legalMetrology": "legal-metrology.json",
+    "requiredItems": "required-items.json",
+    "nutritionReferences": "nutrition-references.json",
+    "claims": "claims.json",
+    "symbols": "symbols.json",
+    "amendments": "amendments.json",
+    "questionTemplates": "question-templates.json"
+  }
+}

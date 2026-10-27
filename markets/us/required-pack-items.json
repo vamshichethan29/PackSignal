@@ -1,0 +1,43 @@
+{
+  "jurisdiction": "US",
+  "category": "food_granola",
+  "authority": "US FDA / FTC FPLA",
+  "mandatoryPackagingElements": [
+    {
+      "element": "statement_of_identity",
+      "panel": "Principal Display Panel (PDP)",
+      "citation": "21 CFR 101.3",
+      "description": "Common or usual name of food (e.g. Granola) parallel to base."
+    },
+    {
+      "element": "net_quantity_dual_declaration",
+      "panel": "Principal Display Panel (PDP)",
+      "citation": "21 CFR 101.7",
+      "description": "Net weight declared in both US customary (ounces/pounds) and metric (grams)."
+    },
+    {
+      "element": "ingredient_list",
+      "panel": "Information Panel or PDP",
+      "citation": "21 CFR 101.4",
+      "description": "Ingredients in descending order of predominance by weight."
+    },
+    {
+      "element": "nutrition_facts_panel",
+      "panel": "Information Panel or PDP",
+      "citation": "21 CFR 101.9",
+      "description": "Standard US vertical nutrition facts panel including DVs and 2,000 calorie footnote."
+    },
+    {
+      "element": "responsible_business_name_and_address",
+      "panel": "Information Panel or PDP",
+      "citation": "21 CFR 101.5",
+      "description": "Name and complete address of manufacturer, packer, or distributor."
+    },
+    {
+      "element": "allergen_declaration",
+      "panel": "Immediately contiguous to ingredient list",
+      "citation": "21 U.S.C. 343(w)",
+      "description": "FALCPA major food allergens declared in plain common names."
+    }
+  ]
+}

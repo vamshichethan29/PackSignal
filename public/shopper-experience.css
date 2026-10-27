@@ -1,0 +1,401 @@
+/* PackSignal — Phase 6A: Shopper Experience Lab Stylesheet */
+
+.shopper-lab-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-primary, #0F172A);
+  color: var(--text-primary, #F8FAFC);
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+  overflow: hidden;
+}
+
+/* Lab Header & Persona Selector */
+.shopper-lab-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: rgba(30, 41, 59, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.shopper-lens-select-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.shopper-lens-dropdown {
+  background: #1E293B;
+  color: #F8FAFC;
+  border: 1px solid #3B82F6;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.shopper-lens-dropdown:hover {
+  background: #2563EB;
+}
+
+/* Sub-Mode Tabs */
+.shopper-mode-tabs {
+  display: flex;
+  gap: 6px;
+  background: rgba(15, 23, 42, 0.6);
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.shopper-tab-btn {
+  background: transparent;
+  color: #94A3B8;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.shopper-tab-btn:hover {
+  color: #F8FAFC;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.shopper-tab-btn.active {
+  background: #3B82F6;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+/* Main Body Layout */
+.shopper-lab-main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Artwork Viewing Viewport */
+.shopper-viewport {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #020617;
+  padding: 20px;
+}
+
+.shopper-artwork-stage {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.shopper-artwork-img {
+  display: block;
+  max-width: 100%;
+  max-height: 70vh;
+  border-radius: 8px;
+  user-select: none;
+}
+
+/* Saliency Heatmap Canvas */
+.saliency-canvas-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  border-radius: 8px;
+}
+
+/* Before / After Split Wipe */
+.before-after-container {
+  position: relative;
+  overflow: hidden;
+  max-width: 100%;
+  max-height: 70vh;
+  border-radius: 8px;
+  user-select: none;
+}
+
+.before-after-after-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.wipe-divider-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #3B82F6;
+  cursor: ew-resize;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.8);
+  z-index: 10;
+}
+
+.wipe-handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 32px;
+  background: #3B82F6;
+  color: #FFFFFF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  border: 2px solid #FFFFFF;
+}
+
+.wipe-badge {
+  position: absolute;
+  top: 12px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  z-index: 5;
+}
+
+.wipe-badge.before {
+  left: 12px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #E2E8F0;
+}
+
+.wipe-badge.after {
+  right: 12px;
+  background: rgba(16, 185, 129, 0.85);
+  color: #FFFFFF;
+}
+
+/* Side Drawer: Shopper Perspective & Controls */
+.shopper-drawer {
+  width: 420px;
+  background: #1E293B;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 20px;
+  gap: 18px;
+}
+
+/* Verdict Card */
+.shopper-verdict-card {
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid #3B82F6;
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.verdict-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.verdict-tag {
+  background: rgba(59, 130, 246, 0.2);
+  color: #60A5FA;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.verdict-statement {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: #F8FAFC;
+  margin-bottom: 12px;
+}
+
+.verdict-evidence-list {
+  font-size: 12px;
+  color: #94A3B8;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-left: 0;
+  list-style: none;
+}
+
+.verdict-evidence-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.verdict-evidence-item span {
+  color: #10B981;
+}
+
+/* Action Buttons */
+.shopper-actions-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.shopper-action-btn {
+  background: #334155;
+  color: #F8FAFC;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.shopper-action-btn:hover {
+  background: #475569;
+  border-color: #3B82F6;
+}
+
+/* Shelf Simulator Controls */
+.shelf-controls-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.distance-slider-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.distance-slider-wrap input[type="range"] {
+  width: 100%;
+  accent-color: #3B82F6;
+}
+
+.preset-btns-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.preset-btn {
+  background: #0F172A;
+  color: #94A3B8;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.preset-btn:hover {
+  color: #FFFFFF;
+  background: #3B82F6;
+}
+
+/* First Crossing Card */
+.first-crossing-card {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid #EF4444;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.first-crossing-card .card-header {
+  color: #F87171;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.crossing-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #FEE2E2;
+  margin-bottom: 6px;
+}
+
+.crossing-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: #FCA5A5;
+}
+
+.crossing-disclaimer {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #94A3B8;
+}
+
+/* Confidence Glow Boxes */
+.confidence-glow-box {
+  position: absolute;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+  z-index: 4;
+}
+
+.confidence-glow-box:hover {
+  transform: scale(1.02);
+  z-index: 10;
+}
+
+.confidence-tag {
+  position: absolute;
+  top: -16px;
+  left: 0;
+  color: #FFFFFF;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+/* Disclaimer Footer */
+.shopper-disclaimer-banner {
+  background: rgba(15, 23, 42, 0.95);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 8px 16px;
+  font-size: 11px;
+  color: #64748B;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

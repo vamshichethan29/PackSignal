@@ -1,0 +1,539 @@
+/* PackSignal — Keyboard Quick Triage Stylesheet */
+/* Superhuman-style High-Speed Packaging Review */
+
+.quick-triage-toolbar {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: #f8fafc;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25), 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: sticky;
+  top: 8px;
+  z-index: 40;
+}
+
+.triage-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.triage-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.triage-badge {
+  background: #0284c7;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+.triage-counter {
+  font-size: 13px;
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+.triage-stats-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid #334155;
+  padding: 3px 10px;
+  border-radius: 12px;
+  color: #94a3b8;
+}
+
+.triage-stats-pill b {
+  color: #f1f5f9;
+}
+
+.triage-stats-pill .stat-flag b {
+  color: #f87171;
+}
+
+.triage-stats-pill .stat-evidence b {
+  color: #fbbf24;
+}
+
+.triage-stats-pill .stat-ack b {
+  color: #4ade80;
+}
+
+.triage-stats-pill .stat-skip b {
+  color: #94a3b8;
+}
+
+.triage-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.triage-nav-group,
+.triage-decision-group,
+.triage-help-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.triage-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 9px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s ease-in-out;
+  user-select: none;
+}
+
+.triage-btn:focus-visible {
+  outline: 2px solid #38bdf8;
+  outline-offset: 1px;
+}
+
+.triage-btn kbd {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  color: #f8fafc;
+}
+
+.triage-nav {
+  background: #1e293b;
+  color: #f1f5f9;
+  border-color: #475569;
+}
+
+.triage-nav:hover {
+  background: #334155;
+  border-color: #64748b;
+}
+
+.triage-accept {
+  background: #064e3b;
+  color: #a7f3d0;
+  border-color: #059669;
+}
+
+.triage-accept:hover:not(:disabled) {
+  background: #047857;
+  color: #ffffff;
+}
+
+.triage-flag {
+  background: #7f1d1d;
+  color: #fecaca;
+  border-color: #dc2626;
+}
+
+.triage-flag:hover:not(:disabled) {
+  background: #b91c1c;
+  color: #ffffff;
+}
+
+.triage-evidence {
+  background: #78350f;
+  color: #fde68a;
+  border-color: #d97706;
+}
+
+.triage-evidence:hover:not(:disabled) {
+  background: #b45309;
+  color: #ffffff;
+}
+
+.triage-skip {
+  background: #1e293b;
+  color: #cbd5e1;
+  border-color: #475569;
+}
+
+.triage-skip:hover {
+  background: #334155;
+  color: #f8fafc;
+}
+
+.triage-help-trigger {
+  background: transparent;
+  color: #94a3b8;
+  border-color: #334155;
+  margin-left: auto;
+}
+
+.triage-help-trigger:hover {
+  background: #1e293b;
+  color: #f1f5f9;
+}
+
+.triage-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.5);
+}
+
+.triage-read-only-banner {
+  font-size: 11px;
+  background: rgba(180, 83, 9, 0.2);
+  border: 1px solid #d97706;
+  border-radius: 4px;
+  color: #fde68a;
+  padding: 4px 8px;
+}
+
+/* Modal Backdrops & Overlays */
+.triage-composer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: triageFadeIn 0.15s ease-out;
+}
+
+@keyframes triageFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.triage-composer {
+  background: #ffffff;
+  color: #0f172a;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  border: 1px solid #cbd5e1;
+  overflow: hidden;
+  animation: triageScaleIn 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes triageScaleIn {
+  from { transform: scale(0.96); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.triage-composer-header {
+  padding: 14px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.triage-composer-header.remedy {
+  background: #fef2f2;
+  border-bottom-color: #fecaca;
+}
+
+.triage-composer-header.evidence {
+  background: #fffbeb;
+  border-bottom-color: #fde68a;
+}
+
+.triage-composer-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.triage-composer-header h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.triage-composer-finding-title {
+  margin: 3px 0 0 0;
+  font-size: 12px;
+  color: #475569;
+}
+
+.triage-composer-close {
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  color: #64748b;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.triage-composer-close:hover {
+  background: rgba(0, 0, 0, 0.08);
+  color: #0f172a;
+}
+
+.triage-composer-body {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.triage-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.triage-field label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.triage-field textarea,
+.triage-field select {
+  font-family: inherit;
+  font-size: 13px;
+  border: 1px solid #94a3b8;
+  border-radius: 6px;
+  padding: 8px 10px;
+  color: #0f172a;
+  background: #ffffff;
+}
+
+.triage-field textarea:focus,
+.triage-field select:focus {
+  outline: 2px solid #0284c7;
+  border-color: #0284c7;
+}
+
+.triage-error {
+  font-size: 12px;
+  color: #dc2626;
+  background: #fef2f2;
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #fecaca;
+  margin: 0;
+}
+
+.triage-composer-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 6px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.triage-shortcut-hint {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.triage-shortcut-hint kbd {
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 3px;
+  font-size: 10px;
+  padding: 1px 4px;
+}
+
+.triage-composer-buttons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.triage-primary-btn {
+  background: #0284c7;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.triage-primary-btn:hover:not(:disabled) {
+  background: #0369a1;
+}
+
+.triage-secondary-btn {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.triage-secondary-btn:hover {
+  background: #e2e8f0;
+}
+
+/* Help Modal */
+.triage-help-modal {
+  background: #ffffff;
+  color: #0f172a;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 580px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+  border: 1px solid #cbd5e1;
+  overflow: hidden;
+}
+
+.triage-help-header {
+  padding: 16px 20px;
+  background: #0f172a;
+  color: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.triage-help-header h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.triage-help-header .triage-composer-close {
+  color: #94a3b8;
+}
+
+.triage-help-header .triage-composer-close:hover {
+  color: #ffffff;
+}
+
+.triage-help-body {
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.triage-shortcut-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.triage-shortcut-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 8px 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+}
+
+.triage-kbd {
+  background: #0f172a;
+  color: #ffffff;
+  border: 1px solid #334155;
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 12px;
+  font-weight: 800;
+  min-width: 26px;
+  text-align: center;
+  box-shadow: 0 2px 0 #1e293b;
+  flex-shrink: 0;
+}
+
+.triage-shortcut-desc {
+  font-size: 12px;
+  color: #334155;
+}
+
+.triage-shortcut-desc b {
+  font-size: 13px;
+  color: #0f172a;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.triage-shortcut-desc p {
+  margin: 0;
+  line-height: 1.4;
+  color: #475569;
+}
+
+.triage-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px;
+  background: #e2e8f0;
+  padding: 1px 4px;
+  border-radius: 3px;
+  color: #0f172a;
+}
+
+.triage-help-disclaimer {
+  font-size: 11px;
+  line-height: 1.4;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-left: 4px solid #16a34a;
+  border-radius: 6px;
+  padding: 10px 12px;
+  color: #166534;
+}
+
+.triage-help-footer {
+  padding: 12px 20px;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .triage-composer-backdrop,
+  .triage-composer,
+  .quick-triage-toolbar,
+  .triage-btn {
+    animation: none !important;
+    transition: none !important;
+  }
+}

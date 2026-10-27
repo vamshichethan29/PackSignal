@@ -1,0 +1,25 @@
+{
+  "jurisdiction": "US",
+  "authority": "US FDA",
+  "citation": "21 CFR 101.9(c)(9)",
+  "targetPopulation": "Adults and children 4 years of age and older (2,000 calorie reference diet)",
+  "referenceDailyValues": {
+    "total_fat": { "amount": 78, "unit": "g", "label": "Total Fat" },
+    "saturated_fat": { "amount": 20, "unit": "g", "label": "Saturated Fat" },
+    "cholesterol": { "amount": 300, "unit": "mg", "label": "Cholesterol" },
+    "sodium": { "amount": 2300, "unit": "mg", "label": "Sodium" },
+    "total_carbohydrate": { "amount": 275, "unit": "g", "label": "Total Carbohydrate" },
+    "dietary_fiber": { "amount": 28, "unit": "g", "label": "Dietary Fiber" },
+    "added_sugars": { "amount": 50, "unit": "g", "label": "Added Sugars" },
+    "protein": { "amount": 50, "unit": "g", "label": "Protein" },
+    "vitamin_d": { "amount": 20, "unit": "mcg", "label": "Vitamin D" },
+    "calcium": { "amount": 1300, "unit": "mg", "label": "Calcium" },
+    "iron": { "amount": 18, "unit": "mg", "label": "Iron" },
+    "potassium": { "amount": 4700, "unit": "mg", "label": "Potassium" }
+  },
+  "atwaterFactors": {
+    "fat": 9,
+    "carbohydrate": 4,
+    "protein": 4
+  }
+}

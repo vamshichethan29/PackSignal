@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PackSignalRule",
+  "description": "Generic declarative regulatory rule record schema",
+  "type": "object",
+  "required": [
+    "ruleId",
+    "title",
+    "market",
+    "sourceLaw",
+    "legalProvision",
+    "officialSourceUrl",
+    "sourceQuote",
+    "rulePackVersion",
+    "effectiveFrom",
+    "appliesIf",
+    "evaluatorType",
+    "severity",
+    "responsibleDepartment"
+  ],
+  "properties": {
+    "ruleId": { "type": "string" },
+    "title": { "type": "string" },
+    "market": { "type": "string" },
+    "jurisdiction": { "type": "string" },
+    "sourceLaw": { "type": "string" },
+    "legalProvision": { "type": "string" },
+    "officialSourceUrl": { "type": "string", "format": "uri" },
+    "sourceQuote": { "type": "string" },
+    "rulePackVersion": { "type": "string" },
+    "publishedAt": { "type": "string" },
+    "effectiveFrom": { "type": "string" },
+    "effectiveUntil": { "type": ["string", "null"] },
+    "appliesIf": { "type": "object" },
+    "requiredInputs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "evaluatorType": {
+      "type": "string",
+      "enum": [
+        "STATEMENT_EXISTS",
+        "DUAL_QUANTITY",
+        "SERVING_NET_MATH",
+        "CALORIE_MATH",
+        "NUTRIENT_DV",
+        "MANDATORY_MICRONUTRIENTS",
+        "ADDED_SUGAR_CLAIM",
+        "MAJOR_ALLERGEN_DISCLOSURE",
+        "TREE_NUT_SPECIES_IDENTIFICATION",
+        "PRECAUTIONARY_ADVISORY_REVIEW",
+        "BARCODE_CHECK_DIGIT",
+        "RESPONSIBLE_PARTY",
+        "INGREDIENT_PREDOMINANCE",
+        "FOOTNOTE_EXISTS"
+      ]
+    },
+    "parameters": { "type": "object" },
+    "exceptions": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW", "ADVISORY"]
+    },
+    "questionPriority": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100
+    },
+    "responsibleDepartment": {
+      "type": "string",
+      "enum": ["Regulatory & Legal", "R&D / Formulations", "Prepress & Packaging", "Brand & Marketing", "Quality Assurance"]
+    },
+    "evidenceRequirements": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "verificationLimitations": {
+      "type": "string"
+    }
+  }
+}

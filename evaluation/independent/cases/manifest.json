@@ -1,0 +1,83 @@
+{
+  "schema": "packsignal-independent-cases-manifest/v1",
+  "generatedAt": "2026-10-24T06:32:00Z",
+  "description": "Three unseen packaging artwork and product specification sets for independent blind evaluation.",
+  "provenanceNotice": "These three cases were constructed independently of the Dancing Fish organizer files and Fieldday demonstration sets. Blind reviewers inspect these files without access to model predictions or expected outcome notes.",
+  "cases": [
+    {
+      "caseId": "CASE-01",
+      "blindId": "PACKAGE-01",
+      "productName": "SunRidge Mountain Trail Mix",
+      "packagingFormat": "stand-up pouch",
+      "market": "United States (FDA 21 CFR Part 101)",
+      "intendedCaseType": "mismatch",
+      "description": "Artwork contains genuine supported discrepancies against approved specification (Net Quantity, Sodium, and Calories).",
+      "files": {
+        "artwork": {
+          "relativePath": "CASE-01/SunRidge_Mountain_Trail_Mix_Artwork.pdf",
+          "sha256": "d1fa18f8c8489ceade5ebd38a3e3e4c0b2526a7053475b540eff314e6fc2813f",
+          "bytes": 5828,
+          "role": "artwork",
+          "pages": 1
+        },
+        "spec": {
+          "relativePath": "CASE-01/SunRidge_Mountain_Trail_Mix_Approved_Spec.xlsx",
+          "sha256": "12cb2a506eaa0d24249976ba900fc5d4a76fbc339e08ed76d5d39e8526922ffe",
+          "bytes": 5490,
+          "role": "spec",
+          "sheetCount": 1
+        }
+      }
+    },
+    {
+      "caseId": "CASE-02",
+      "blindId": "PACKAGE-02",
+      "productName": "Verdant Grove Cold-Pressed Orange Juice",
+      "packagingFormat": "bottle wrap label",
+      "market": "United States (FDA 21 CFR Part 101)",
+      "intendedCaseType": "clean",
+      "description": "Artwork is consistent with approved reference specification across all supported evaluable checks.",
+      "files": {
+        "artwork": {
+          "relativePath": "CASE-02/Verdant_Grove_Orange_Juice_Artwork.pdf",
+          "sha256": "936fa7b38a346e5e2fb37d5279a24db375d5e3ad2ab6acdeac072752cd413610",
+          "bytes": 5370,
+          "role": "artwork",
+          "pages": 1
+        },
+        "spec": {
+          "relativePath": "CASE-02/Verdant_Grove_Orange_Juice_Approved_Spec.xlsx",
+          "sha256": "a5bb5f69ba20925b4019a5b345368ff3ac9e4a0d222e5cec2df0b9a8c8f63462",
+          "bytes": 5471,
+          "role": "spec",
+          "sheetCount": 1
+        }
+      }
+    },
+    {
+      "caseId": "CASE-03",
+      "blindId": "PACKAGE-03",
+      "productName": "Harvest Hearth Rolled Oats",
+      "packagingFormat": "folding carton",
+      "market": "United States (FDA 21 CFR Part 101)",
+      "intendedCaseType": "ambiguous",
+      "description": "Product specification contains two conflicting nutrition bases (40g dry vs 100g prepared) with unconfirmed draft approval status.",
+      "files": {
+        "artwork": {
+          "relativePath": "CASE-03/Harvest_Hearth_Rolled_Oats_Artwork.pdf",
+          "sha256": "0cbf14c114ad63fe874950962f11fa3bbe75eab587ac7863d4cf40043ccc6215",
+          "bytes": 5357,
+          "role": "artwork",
+          "pages": 1
+        },
+        "spec": {
+          "relativePath": "CASE-03/Harvest_Hearth_Rolled_Oats_Draft_Spec.xlsx",
+          "sha256": "aadd3c02dd43ab645158bba312c00a0de0391f4471b689be77e92383f21d3a97",
+          "bytes": 5500,
+          "role": "spec",
+          "sheetCount": 1
+        }
+      }
+    }
+  ]
+}

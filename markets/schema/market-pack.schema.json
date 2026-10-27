@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PackSignalMarketPack",
+  "description": "Canonical schema for date-aware regulatory market rule packs",
+  "type": "object",
+  "required": [
+    "packId",
+    "market",
+    "regulator",
+    "version",
+    "publishedAt",
+    "effectiveFrom",
+    "rules"
+  ],
+  "properties": {
+    "packId": { "type": "string" },
+    "market": { "type": "string" },
+    "regulator": { "type": "string" },
+    "version": { "type": "string" },
+    "publishedAt": { "type": "string", "format": "date" },
+    "effectiveFrom": { "type": "string", "format": "date" },
+    "effectiveUntil": { "type": ["string", "null"], "format": "date" },
+    "productScope": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "url"],
+        "properties": {
+          "title": { "type": "string" },
+          "citation": { "type": "string" },
+          "url": { "type": "string", "format": "uri" }
+        }
+      }
+    },
+    "rules": {
+      "type": "array",
+      "items": { "$ref": "rule.schema.json" }
+    },
+    "nutrientReferences": {
+      "type": "object"
+    },
+    "questionTemplates": {
+      "type": "array"
+    }
+  }
+}

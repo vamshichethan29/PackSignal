@@ -1,0 +1,79 @@
+{
+  "id": "5e530a88-58e5-43c2-b1c2-6bd57d7b6393",
+  "name": "Dancing Fish · Berry Crunch",
+  "market": "United States",
+  "createdAt": "2026-10-26T23:29:19.243Z",
+  "status": "failed",
+  "progress": "Review could not complete",
+  "mode": "ai",
+  "options": {
+    "completeArtwork": false,
+    "sourceConfirmed": false,
+    "marketPreset": "none",
+    "panelZones": {},
+    "confirmationFingerprints": {},
+    "staleConfirmations": {}
+  },
+  "files": [
+    {
+      "id": "3f8e4cc9-4171-4a8f-b942-d9ebb16b709b",
+      "name": "DancingFish_Granola_Berry_US_Carton.pdf",
+      "role": "artwork",
+      "disk": "3f8e4cc9-4171-4a8f-b942-d9ebb16b709b.pdf"
+    },
+    {
+      "id": "e9e859b6-1ac4-401c-8b9b-efffda0c33f4",
+      "name": "DancingFish_Granola_BerryCrunch_US_Content_Sheet.xlsx",
+      "role": "spec",
+      "disk": "e9e859b6-1ac4-401c-8b9b-efffda0c33f4.xlsx"
+    }
+  ],
+  "documents": [],
+  "decisions": {},
+  "audit": [
+    {
+      "eventId": "4ef9e59c-91d3-4be7-8839-7b20dbaa03d8",
+      "reviewId": "5e530a88-58e5-43c2-b1c2-6bd57d7b6393",
+      "sequence": 1,
+      "timestampUTC": "2026-10-26T23:29:19.292Z",
+      "at": "2026-10-26T23:29:19.292Z",
+      "action": "review_created",
+      "detail": "Files supplied for review.",
+      "actorId": "local-user",
+      "actorName": "Local reviewer",
+      "actorType": "authenticated_user",
+      "targetType": "review",
+      "targetId": "5e530a88-58e5-43c2-b1c2-6bd57d7b6393",
+      "safeDetails": "Files supplied for review.",
+      "previousEventHash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "eventHash": "4c1e87a8ff3c1453a88dd54233f904297a8097e39d948af88bdfe42f395289ee"
+    },
+    {
+      "eventId": "e5383255-2cd0-4024-bf9d-6d214ce0ff09",
+      "reviewId": "5e530a88-58e5-43c2-b1c2-6bd57d7b6393",
+      "sequence": 2,
+      "timestampUTC": "2026-10-26T23:30:49.318Z",
+      "at": "2026-10-26T23:30:49.318Z",
+      "action": "analysis_failed",
+      "detail": "Document processing timed out. Use a smaller file.",
+      "actorId": "system",
+      "actorName": "PackSignal System",
+      "actorType": "system",
+      "targetType": "review",
+      "targetId": "5e530a88-58e5-43c2-b1c2-6bd57d7b6393",
+      "safeDetails": "Document processing timed out. Use a smaller file.",
+      "previousEventHash": "4c1e87a8ff3c1453a88dd54233f904297a8097e39d948af88bdfe42f395289ee",
+      "eventHash": "ed21eeb618a69f276c9043009d91b064b27469fa0f4d3e476ec5ba1c51f823c0"
+    }
+  ],
+  "team": {
+    "createdBy": "local-user",
+    "createdByName": "Local reviewer",
+    "assignments": {},
+    "comments": [],
+    "approvals": [],
+    "assignmentHistory": []
+  },
+  "sample": "organizer",
+  "error": "Document processing timed out. Use a smaller file."
+}

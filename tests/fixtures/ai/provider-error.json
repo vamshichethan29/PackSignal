@@ -1,0 +1,11 @@
+{
+  "taskName": "provider_error",
+  "promptVersion": "1.0",
+  "schemaVersion": "1.0",
+  "modelIdentifier": "gemini-2.5-flash",
+  "status": "error",
+  "output": {
+    "httpCode": 503,
+    "errorMessage": "Simulated Google Gemini provider unavailable (503 Service Unavailable)"
+  }
+}
