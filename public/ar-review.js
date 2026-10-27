@@ -164,11 +164,10 @@ export class ArReviewController {
     // Hotspot tap on SVG overlay
     if (this.overlayLayer) {
       this.overlayLayer.addEventListener('click', (e) => {
-        const hotspot = e.target.closest('g.ar-hotspot-item');
-        if (hotspot && hotspot.dataset.findingId) {
+        const hotspot = e.target.closest('[data-finding-id]');
+        if (hotspot?.dataset.findingId) {
           this.openFindingDrawer(hotspot.dataset.findingId);
-        }
-        if (e.target.closest('[data-open-current]')) {
+        } else if (e.target.closest('[data-open-current]')) {
           this.openFirstFindingForCurrentPanel();
         }
       });
@@ -355,17 +354,13 @@ export class ArReviewController {
     }
 
     document.body.dataset.arFace = face;
+    if (this.simFeedEl) this.simFeedEl.src = this.panelImageUrl(face);
 
     this.updateTrackingState('TRACKED');
     this.showToast(`Dancing Fish ${face.toUpperCase()} review layer active (140 × 210 mm)`);
 
-    try {
-      const res = await fetch(`/api/campus/ar-overlay/${face}?market=${this.currentMarket}`);
-      if (this.overlayLayer) {
-        this.overlayLayer.innerHTML = this.isMarked ? this.renderSpatialOverlay(face) : '';
-      }
-    } catch {
-      if (this.overlayLayer) this.overlayLayer.innerHTML = '';
+    if (this.overlayLayer) {
+      this.overlayLayer.innerHTML = this.isMarked ? this.renderSpatialOverlay(face) : '';
     }
   }
 
@@ -381,30 +376,22 @@ export class ArReviewController {
   }
 
   renderSpatialOverlay(face) {
-    const overlays = {
-      front: [
-        ['green', 'Claim verified', 'Dancing Fish brand mark is present and legible.'],
-        ['violet', 'High grain claim', 'Needs source evidence before approval.'],
-        ['red', 'Net quantity missing', 'Add the PDP declaration required by 21 CFR §101.7.'],
-      ],
-      right: [
-        ['red', 'Nutrition Facts', 'Serving declaration needs reviewer confirmation.'],
-        ['green', 'Panel aligned', 'Nutrition panel bounds are mapped to the carton.'],
-      ],
-      back: [
-        ['violet', 'Vegan claim conflict', 'Compare “100% Vegan” with the ingredient declaration.'],
-        ['amber', 'Ingredient evidence', 'Honey appears in the ingredient list.'],
-      ],
-      left: [
-        ['green', 'Manufacturer panel', 'Business identity captured for review.'],
-        ['amber', 'Typography check', 'Statutory type measures below 1.6 mm.'],
-      ],
-    };
-    return (overlays[face] || []).map(([tone, title, detail]) => `
-      <button type="button" class="ar-finding-card ${tone}" data-open-current>
-        <b>${title}</b><span>${detail}</span>
-      </button>
-    `).join('');
+    const panel = (this.manifest?.panels || []).find((item) => item.panelId === face);
+    const hotspots = panel?.hotspots || [];
+    return hotspots.map((hotspot) => {
+      const [x, y, width, height] = hotspot.boxNorm || hotspot.rect || [0.1, 0.1, 0.8, 0.2];
+      const tone = hotspot.status === 'MATCH'
+        ? 'green'
+        : hotspot.status === 'NEEDS_REVIEW'
+          ? 'violet'
+          : 'red';
+      const ghost = hotspot.isMissingDeclarationGhost ? ' ghost' : '';
+      return `<button type="button" class="ar-hotspot-box ${tone}${ghost}" data-finding-id="${hotspot.findingId}"
+        aria-label="View finding: ${hotspot.title}"
+        style="left:${x * 100}%;top:${y * 100}%;width:${width * 100}%;height:${height * 100}%;">
+        <span class="ar-hotspot-tag">${hotspot.title}</span>
+      </button>`;
+    }).join('');
   }
 
   toggleManualAlign() {
