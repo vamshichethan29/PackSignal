@@ -604,9 +604,15 @@ export class MobileScanner {
       const sessionStatus = await this.session.getStatus();
       let reviewId = sessionStatus.session?.reviewId || this.session.reviewId;
       if (!/^[a-f0-9-]{36}$/i.test(reviewId || '')) {
+        const statusResponse = await fetch('/api/status');
+        if (!statusResponse.ok) throw new Error('Could not prepare the review handoff.');
+        const { csrf } = await statusResponse.json();
         const response = await fetch('/api/reviews', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'x-packproof-token': csrf,
+          },
           body: JSON.stringify({ sample: 'organizer', mode: 'local', options: { completeArtwork: false, marketPreset: 'us' } }),
         });
         if (!response.ok) throw new Error('Could not prepare the Dancing Fish review.');
