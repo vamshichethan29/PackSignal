@@ -282,6 +282,7 @@ export class ArReviewController {
     const isVisible = this.simFeedEl.style.display === 'block';
     this.simFeedEl.src = `/samples/campus/${this.currentFace}.png`;
     this.simFeedEl.style.display = isVisible ? 'none' : 'block';
+    this.simFeedEl.style.opacity = '1.0';
     this.showToast(isVisible ? 'Live Camera Feed' : 'Calibrated Carton Artwork Feed');
   }
 

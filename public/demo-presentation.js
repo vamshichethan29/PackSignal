@@ -13,6 +13,17 @@
  * - Presenter keyboard controls (Space, R, N, F, Esc)
  */
 
+const TOUR_STEPS = [
+  { step: 1, title: 'Adjudicated Scoreboard', icon: '🏆', short: '1. Scoreboard' },
+  { step: 2, title: 'Tripartite Proof Chain', icon: '🔍', short: '2. Proof Chain' },
+  { step: 3, title: 'Shopper Persona Lenses', icon: '👥', short: '3. Personas' },
+  { step: 4, title: 'Decision Ripple Simulator', icon: '⚡', short: '4. Ripple' },
+  { step: 5, title: 'Native Vector Prepress', icon: '🔬', short: '5. Prepress' },
+  { step: 6, title: '3D Package & Mobile Live AR', icon: '📦', short: '6. 3D & AR' },
+  { step: 7, title: '31-Mutation Benchmark', icon: '🛡️', short: '7. Trust' },
+  { step: 8, title: 'Cryptographic Audit Seal', icon: '📜', short: '8. Audit Seal' }
+];
+
 function esc(s) {
   if (s == null) return '';
   return String(s)
@@ -140,6 +151,8 @@ export class DemoPresentationModal {
     this.review = options.review || null;
     this.mode = 'CHALLENGE'; // 'CHALLENGE' | 'REVEAL_CHOICE' | 'ANALYZING' | 'REVEALED'
     this.sourceMode = 'cached'; // 'fresh' | 'cached' | 'offline'
+    this.activeFeatureStep = 1; // 1 to 8: Guided Feature Tour
+    this.activePersona = 'all'; // 'all' | 'nut-allergy' | 'vegan' | 'sugar-watcher'
     this.findingsRevealed = 0; // 0 before reveal, then increments or 3 initially
     this.activeFindingId = null;
     this.activeAudienceZone = null;
@@ -300,7 +313,7 @@ export class DemoPresentationModal {
     if (this.review?.artworkDoc?.pages?.[0]?.image) {
       return `/api/reviews/${encodeURIComponent(this.review.id)}/images/${encodeURIComponent(this.review.artworkDoc.pages[0].image)}`;
     }
-    return '/icon.svg';
+    return '/samples/dancing-fish-carton.png';
   }
 
   _renderChallengeView() {
@@ -398,115 +411,60 @@ export class DemoPresentationModal {
     const summary = this._getAdjudicatedSummary();
     const timing = this._getTimingDisplay();
     const findings = this._getSelectedFindings();
+    const currentStep = TOUR_STEPS.find(s => s.step === this.activeFeatureStep) || TOUR_STEPS[0];
 
     return `
       <div class="demo-score-card">
+        <!-- Guided Feature Tour Header -->
         <div class="demo-score-header">
           <div>
             <div style="font-size: 11px; font-weight: 800; color: #38bdf8; letter-spacing: 0.1em; text-transform: uppercase;">
-              PACKSIGNAL DETERMINISTIC ENGINE
+              PACKSIGNAL FEATURE TOUR · STEP ${this.activeFeatureStep} OF ${TOUR_STEPS.length}
             </div>
-            <h3>VERIFICATION RESULTS</h3>
+            <h3 style="display:flex;align-items:center;gap:8px;margin:2px 0 0;">
+              <span>${currentStep.icon}</span>
+              <span>${currentStep.title}</span>
+            </h3>
           </div>
           <div style="display:flex;gap:8px;align-items:center;">
             <span class="demo-badge ${this.sourceMode === 'fresh' ? 'demo-badge-live' : 'demo-badge-cached'}">
-              ${this.sourceMode === 'fresh' ? 'Live Fresh Scan' : 'Previously Verified'}
+              ${this.sourceMode === 'fresh' ? 'Live Fresh Scan' : 'Verified Previous Run'}
             </span>
             <button type="button" class="demo-btn demo-btn-accent" id="demo-btn-open-checks" title="Jump to full Checks tab">Open Checks Tab (F)</button>
           </div>
         </div>
 
-        <!-- Metric Grid -->
-        <div class="demo-metrics-grid">
-          <div class="demo-metric-box issues">
-            <span class="demo-metric-label">Confirmed Issues</span>
-            <span class="demo-metric-val" id="demo-count-issues">${summary.issues}</span>
-          </div>
-          <div class="demo-metric-box reviews">
-            <span class="demo-metric-label">Needs Human Review</span>
-            <span class="demo-metric-val" id="demo-count-reviews">${summary.reviews}</span>
-          </div>
-          <div class="demo-metric-box matches">
-            <span class="demo-metric-label">Verified Matches</span>
-            <span class="demo-metric-val" id="demo-count-matches">${summary.matches}</span>
-          </div>
-          <div class="demo-metric-box controls">
-            <span class="demo-metric-label">Positive Control (UPC)</span>
-            <span class="demo-metric-val" id="demo-count-control">Passed (1/1)</span>
-          </div>
+        <!-- 8-Step Navigation Tabs -->
+        <div class="demo-tour-nav" role="tablist">
+          ${TOUR_STEPS.map(s => `
+            <button type="button" class="demo-tour-pill ${s.step === this.activeFeatureStep ? 'active' : ''}" data-tour-step="${s.step}" title="${s.title}">
+              <span>${s.icon}</span>
+              <span>${s.short}</span>
+            </button>
+          `).join('')}
         </div>
 
-        <!-- Honest Timing Strip -->
-        <div class="demo-timing-strip">
-          <div class="demo-timing-row">
-            <span><strong>Targeted Checks Evaluated:</strong></span>
-            <span style="color: #f8fafc; font-weight: 700;">16 / 16 Candidate Checks</span>
-          </div>
-          <div class="demo-timing-row">
-            <span><strong>Source Document Status:</strong></span>
-            <span style="color: #fcd34d; font-weight: 700;">Draft / In Review</span>
-          </div>
-          <div class="demo-timing-row" style="margin-top: 4px; padding-top: 4px; border-top: 1px dashed rgba(255,255,255,0.1);">
-            <span><strong>Measured Processing Time:</strong></span>
-            <span style="color: #38bdf8; font-weight: 700;">${timing.total}</span>
-          </div>
-          ${timing.engine ? `
-            <div class="demo-timing-row">
-              <span style="color: #94a3b8;">Deterministic Engine Time:</span>
-              <span style="color: #cbd5e1;">${timing.engine}</span>
-            </div>
-          ` : ''}
-          <div style="font-size: 10px; color: #64748b; margin-top: 2px;">
-            ${timing.note}
-          </div>
+        <!-- Active Feature Content Panel -->
+        <div class="demo-tour-body">
+          ${this._renderActiveFeatureBody(summary, timing, findings)}
         </div>
 
-        <!-- Dynamic Findings Showcase -->
-        <div class="demo-findings-section">
-          <div class="demo-findings-header">
-            <h4>Featured Evidence Findings (${Math.min(this.findingsRevealed || 3, findings.length)} of ${findings.length})</h4>
-            <div style="display: flex; gap: 6px;">
-              <button type="button" class="demo-btn" id="demo-btn-next-finding" title="Reveal next finding (N)">Next Finding (N)</button>
-              <button type="button" class="demo-btn" id="demo-btn-show-all-findings">Show All</button>
-            </div>
+        <!-- Tour Footer Stepper Controls -->
+        <div class="demo-tour-footer">
+          <button type="button" class="demo-tour-btn" id="demo-tour-prev" ${this.activeFeatureStep <= 1 ? 'disabled' : ''}>
+            ← Previous Feature
+          </button>
+          <div class="demo-tour-indicator">
+            Step ${this.activeFeatureStep} of 8
           </div>
-
-          <div class="demo-findings-list" id="demo-findings-list">
-            ${findings.slice(0, this.findingsRevealed || 3).map((f, idx) => `
-              <article class="demo-finding-item ${f.status} ${f.canonicalId === this.activeFindingId ? 'active' : ''}" style="--stagger: ${idx};" data-finding-id="${f.canonicalId || f.id}">
-                <div class="demo-finding-head">
-                  <div class="demo-finding-title">
-                    <span style="color: #38bdf8; font-family: monospace; margin-right: 4px;">${f.canonicalId || `CHK-${idx + 1}`}:</span>
-                    ${esc(f.checkName || f.title)}
-                  </div>
-                  <span class="demo-finding-badge ${f.status}">
-                    ${f.status === 'issue' ? 'Issue' : f.status === 'review' ? 'Needs Review' : 'Match'}
-                  </span>
-                </div>
-
-                <div class="demo-finding-evidence-grid">
-                  <div class="demo-evidence-cell">
-                    <small>Carton Copy (Observed)</small>
-                    <b>${esc(f.artworkQuote || f.observed || 'Visible text')}</b>
-                  </div>
-                  <div class="demo-evidence-cell">
-                    <small>Source Sheet (Expected)</small>
-                    <b>${esc(f.sourceQuote || f.expected || 'Draft specification')}</b>
-                  </div>
-                </div>
-
-                <div class="demo-finding-proof">
-                  <strong>Proof:</strong> ${esc(f.calculationProof || f.explanation || 'Verified difference')}
-                  ${f.ruleSource ? `<br><small style="color:#64748b;">Statutory Rule: ${esc(f.ruleSource)}</small>` : ''}
-                </div>
-              </article>
-            `).join('')}
-          </div>
+          <button type="button" class="demo-tour-btn primary" id="demo-tour-next">
+            ${this.activeFeatureStep === 8 ? 'Finish Tour & Open Checks Tab (F) →' : 'Next Feature →'}
+          </button>
         </div>
 
-        <!-- Quick Jump Transitions -->
-        <div class="demo-transitions-bar">
-          <h5>Presenter Drill-Down Transitions</h5>
+        <!-- Quick Jump Transitions (Preserved for Instant Deep-Link) -->
+        <div class="demo-transitions-bar" style="margin-top:14px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.08);">
+          <div style="font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Quick Feature Jump:</div>
           <div class="demo-transition-btns">
             <button type="button" class="demo-btn" id="demo-tr-personas">👥 Persona Lens</button>
             <button type="button" class="demo-btn" id="demo-tr-ripple">⚡ Honey vs Vegan Ripple</button>
@@ -516,10 +474,343 @@ export class DemoPresentationModal {
           </div>
         </div>
 
-        <div class="demo-kbd-hint">
+        <div class="demo-kbd-hint" style="margin-top:10px;">
+          <span><kbd>←</kbd> <kbd>→</kbd> Navigate Features</span>
           <span><kbd>N</kbd> Next Finding</span>
           <span><kbd>F</kbd> Full Checks Tab</span>
           <span><kbd>Esc</kbd> Exit</span>
+        </div>
+      </div>
+    `;
+  }
+
+  _renderActiveFeatureBody(summary, timing, findings) {
+    switch (this.activeFeatureStep) {
+      case 1:
+        return `
+          <!-- Feature 1: Adjudicated Scoreboard -->
+          <div class="demo-metrics-grid">
+            <div class="demo-metric-box issues">
+              <span class="demo-metric-label">Confirmed Issues</span>
+              <span class="demo-metric-val" id="demo-count-issues">${summary.issues}</span>
+            </div>
+            <div class="demo-metric-box reviews">
+              <span class="demo-metric-label">Needs Human Review</span>
+              <span class="demo-metric-val" id="demo-count-reviews">${summary.reviews}</span>
+            </div>
+            <div class="demo-metric-box matches">
+              <span class="demo-metric-label">Verified Matches</span>
+              <span class="demo-metric-val" id="demo-count-matches">${summary.matches}</span>
+            </div>
+            <div class="demo-metric-box controls">
+              <span class="demo-metric-label">Positive Control (UPC)</span>
+              <span class="demo-metric-val" id="demo-count-control">Passed (1/1)</span>
+            </div>
+          </div>
+
+          <div class="demo-timing-strip">
+            <div class="demo-timing-row">
+              <span><strong>Targeted Checks Evaluated:</strong></span>
+              <span style="color: #f8fafc; font-weight: 700;">16 / 16 Candidate Checks</span>
+            </div>
+            <div class="demo-timing-row">
+              <span><strong>Source Specification Status:</strong></span>
+              <span style="color: #fcd34d; font-weight: 700;">Draft / In Review</span>
+            </div>
+            <div class="demo-timing-row" style="margin-top: 4px; padding-top: 4px; border-top: 1px dashed rgba(255,255,255,0.1);">
+              <span><strong>Measured Pipeline Time:</strong></span>
+              <span style="color: #38bdf8; font-weight: 700;">${timing.total}</span>
+            </div>
+            ${timing.engine ? `
+              <div class="demo-timing-row">
+                <span style="color: #94a3b8;">Deterministic Engine Execution:</span>
+                <span style="color: #cbd5e1;">${timing.engine}</span>
+              </div>
+            ` : ''}
+            <div style="font-size: 10px; color: #64748b; margin-top: 2px;">
+              ${timing.note}
+            </div>
+          </div>
+
+          <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 8px; padding: 12px; margin-top: 12px; font-size: 12px; line-height: 1.5; color: #cbd5e1;">
+            <b style="color: #38bdf8; display: block; margin-bottom: 4px;">💡 Honesty Over AI Inflation:</b>
+            PackSignal evaluates 16 candidate checks, finding exactly 10 confirmed violations, 5 draft authority items needing reviewer sign-off, and 1 passing positive control (UPC-A barcode check digit). We never inflate positive controls into fake defects.
+          </div>
+        `;
+
+      case 2:
+        return `
+          <!-- Feature 2: Tripartite Proof Chain Drill-Down -->
+          <div class="demo-findings-section">
+            <div class="demo-findings-header">
+              <h4>Proof Chain Drill-Down (${Math.min(this.findingsRevealed || 3, findings.length)} of ${findings.length})</h4>
+              <div style="display: flex; gap: 6px;">
+                <button type="button" class="demo-btn" id="demo-btn-next-finding" title="Reveal next finding (N)">Next Finding (N)</button>
+                <button type="button" class="demo-btn" id="demo-btn-show-all-findings">Show All</button>
+              </div>
+            </div>
+
+            <div class="demo-findings-list" id="demo-findings-list">
+              ${findings.slice(0, this.findingsRevealed || 3).map((f, idx) => `
+                <article class="demo-finding-item ${f.status} ${f.canonicalId === this.activeFindingId ? 'active' : ''}" style="--stagger: ${idx};" data-finding-id="${f.canonicalId || f.id}">
+                  <div class="demo-finding-head">
+                    <div class="demo-finding-title">
+                      <span style="color: #38bdf8; font-family: monospace; margin-right: 4px;">${f.canonicalId || `CHK-${idx + 1}`}:</span>
+                      ${esc(f.checkName || f.title)}
+                    </div>
+                    <span class="demo-finding-badge ${f.status}">
+                      ${f.status === 'issue' ? 'Issue' : f.status === 'review' ? 'Needs Review' : 'Match'}
+                    </span>
+                  </div>
+
+                  <div class="demo-finding-evidence-grid">
+                    <div class="demo-evidence-cell">
+                      <small>Carton Copy (Observed)</small>
+                      <b>${esc(f.artworkQuote || f.observed || 'Visible text')}</b>
+                    </div>
+                    <div class="demo-evidence-cell">
+                      <small>Source Sheet (Expected)</small>
+                      <b>${esc(f.sourceQuote || f.expected || 'Draft specification')}</b>
+                    </div>
+                  </div>
+
+                  <div class="demo-finding-proof">
+                    <strong>Proof:</strong> ${esc(f.calculationProof || f.explanation || 'Verified difference')}
+                    ${f.ruleSource ? `<br><small style="color:#64748b;">Statutory Rule: ${esc(f.ruleSource)}</small>` : ''}
+                  </div>
+                </article>
+              `).join('')}
+            </div>
+            <div style="font-size:11px;color:#94a3b8;margin-top:8px;text-align:center;">
+              👆 Tap any finding card to spotlight and pan to its exact coordinates on the packaging carton.
+            </div>
+          </div>
+        `;
+
+      case 3:
+        return `
+          <!-- Feature 3: Shopper Persona Lenses -->
+          <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 14px;">
+            <div style="font-size: 13px; font-weight: 700; color: #f8fafc; margin-bottom: 6px;">
+              Consumer Impact Lenses
+            </div>
+            <p style="font-size: 12px; color: #94a3b8; margin: 0 0 12px; line-height: 1.4;">
+              Switch consumer perspectives to see how different shopper segments experience this packaging:
+            </p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px;">
+              <button type="button" class="demo-persona-btn ${this.activePersona === 'all' ? 'active' : ''}" data-persona="all">
+                <span>👥 All Perspectives</span>
+                <small>16 total checks</small>
+              </button>
+              <button type="button" class="demo-persona-btn ${this.activePersona === 'nut-allergy' ? 'active' : ''}" data-persona="nut-allergy">
+                <span>🥜 Nut Allergy Shopper</span>
+                <small>DF-03 Tree Nuts statement</small>
+              </button>
+              <button type="button" class="demo-persona-btn ${this.activePersona === 'vegan' ? 'active' : ''}" data-persona="vegan">
+                <span>🌱 Vegan Shopper</span>
+                <small>DF-05 Honey vs Vegan claim</small>
+              </button>
+              <button type="button" class="demo-persona-btn ${this.activePersona === 'sugar-watcher' ? 'active' : ''}" data-persona="sugar-watcher">
+                <span>🍯 Sugar Watcher</span>
+                <small>DF-04 No Added Sugar violation</small>
+              </button>
+            </div>
+
+            <div style="background:#0f172a;border-radius:8px;padding:12px;border:1px solid rgba(255,255,255,0.08);font-size:12px;line-height:1.5;">
+              <b style="color:#38bdf8;">Current Active Persona: ${this.activePersona.toUpperCase().replace('-', ' ')}</b>
+              <div style="color:#cbd5e1;margin-top:4px;">
+                ${this.activePersona === 'nut-allergy' ? 'Spotlighting DF-03 allergen advisory: Box prints generic "Tree Nuts" but facility uses Almonds & Pecans. Under FALCPA 21 U.S.C. 343(w), specific nut varieties must be disclosed.' :
+                  this.activePersona === 'vegan' ? 'Spotlighting DF-05: Carton claims "Certified Vegan" while prominently declaring 9% Honey. Honey is chemically animal-derived, invalidating vegan certifications.' :
+                  this.activePersona === 'sugar-watcher' ? 'Spotlighting DF-04 & DF-10: Front claims "NO ADDED SUGAR", but Honey is chemically a mono/disaccharide. Under 21 CFR §101.60(c)(2), this claim is legally non-compliant.' :
+                  'Showing all 16 evaluated checks across regulatory, formulation, allergen, and prepress dimensions.'}
+              </div>
+            </div>
+          </div>
+        `;
+
+      case 4:
+        return `
+          <!-- Feature 4: Decision Ripple & What-If Simulator -->
+          <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 14px;">
+            <div style="font-size: 13px; font-weight: 700; color: #f8fafc; margin-bottom: 4px;">
+              ⚡ Decision Ripple & What-If Simulation
+            </div>
+            <p style="font-size: 12px; color: #94a3b8; margin: 0 0 12px; line-height: 1.4;">
+              Packaging changes ripple across panels. Compare the downstream consequences of resolving the Honey vs Vegan contradiction:
+            </p>
+
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px;">
+              <div style="background:#0f172a;border:1px solid #38bdf8;border-radius:8px;padding:12px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                  <b style="color:#38bdf8;font-size:12px;">OPTION A: KEEP HONEY, DROP VEGAN CLAIM</b>
+                  <span style="font-size:10px;background:#1e293b;padding:2px 6px;border-radius:4px;color:#cbd5e1;">Taste Preserved</span>
+                </div>
+                <div style="font-size:11px;color:#cbd5e1;line-height:1.4;">
+                  ✓ Resolves DF-05 claim contradiction under 21 CFR §101.22.<br>
+                  ✓ Original formulation & recipe taste profile completely preserved.<br>
+                  ⚠️ Consequence: Brand loses Certified Vegan trust mark badge on front panel.
+                </div>
+              </div>
+
+              <div style="background:#0f172a;border:1px solid #10b981;border-radius:8px;padding:12px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                  <b style="color:#10b981;font-size:12px;">OPTION B: REMOVE HONEY, SUBSTITUTE AGAVE</b>
+                  <span style="font-size:10px;background:#1e293b;padding:2px 6px;border-radius:4px;color:#cbd5e1;">Vegan Retained</span>
+                </div>
+                <div style="font-size:11px;color:#cbd5e1;line-height:1.4;">
+                  ✓ Retains Certified Vegan market seal for plant-based consumers.<br>
+                  ⚠️ Requires formulation change: Agave syrup alters sugar profile.<br>
+                  ⚠️ Triggers automated recalculation of DF-10 Nutrition Facts & Atwater calories.
+                </div>
+              </div>
+            </div>
+
+            <button type="button" class="demo-btn demo-btn-primary" id="demo-btn-launch-ripple-modal" style="width:100%;justify-content:center;">
+              ⚡ Launch Full Interactive Ripple Simulator
+            </button>
+          </div>
+        `;
+
+      case 5:
+        return `
+          <!-- Feature 5: Native Vector Prepress & Hidden Layers -->
+          <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 14px;">
+            <div style="font-size: 13px; font-weight: 700; color: #f8fafc; margin-bottom: 4px;">
+              🔬 Prepress Native PDF Stream Inspection
+            </div>
+            <p style="font-size: 12px; color: #94a3b8; margin: 0 0 12px; line-height: 1.4;">
+              Why 2D raster OCR fails: PackSignal parses actual vector paths, font glyphs, and structural PDF stream layers:
+            </p>
+
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
+              <div style="background:#0f172a;border-radius:8px;padding:10px;border-left:3px solid #ef4444;">
+                <div style="font-size:12px;font-weight:700;color:#f8fafc;">👻 Hidden EU Nutrition Table Detected</div>
+                <div style="font-size:11px;color:#94a3b8;margin-top:2px;">
+                  An entire legacy European nutrition table is buried under US dieline layers in the native PDF stream. Invisible to flat OCR; caught instantly by PackSignal.
+                </div>
+              </div>
+
+              <div style="background:#0f172a;border-radius:8px;padding:10px;border-left:3px solid #38bdf8;">
+                <div style="font-size:12px;font-weight:700;color:#f8fafc;">📏 Font Point Size & Glyph Height (DF-14)</div>
+                <div style="font-size:11px;color:#94a3b8;margin-top:2px;">
+                  Under FDA 21 CFR §101.2, Net Quantity statement requires minimum 4.5 pt (1/16") lowercase "o" height based on PDP surface area (140 × 210 mm).
+                </div>
+              </div>
+
+              <div style="background:#0f172a;border-radius:8px;padding:10px;border-left:3px solid #10b981;">
+                <div style="font-size:12px;font-weight:700;color:#f8fafc;">🖨️ Total Area Coverage (TAC) Ink Density</div>
+                <div style="font-size:11px;color:#94a3b8;margin-top:2px;">
+                  Evaluates CMYK 4-color ink build density to prevent press smearing, offset marking, and drying failures on carton substrate.
+                </div>
+              </div>
+            </div>
+
+            <button type="button" class="demo-btn" id="demo-btn-goto-prepress" style="width:100%;justify-content:center;">
+              🔍 Inspect Prepress Vectors in Checks Tab (DF-13)
+            </button>
+          </div>
+        `;
+
+      case 6:
+        return `
+          <!-- Feature 6: 3D Packaging Fold & Mobile Live AR -->
+          <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 14px; text-align: center;">
+            <div style="font-size: 13px; font-weight: 700; color: #f8fafc; margin-bottom: 4px;">
+              📦 Real-Scale 3D Fold & Mobile Live AR
+            </div>
+            <p style="font-size: 12px; color: #94a3b8; margin: 0 0 12px; line-height: 1.4;">
+              Transform flat dielines into interactive 3D folding cartons and track red-pen annotations directly on real physical boxes:
+            </p>
+
+            <div style="background:#0f172a;border-radius:10px;padding:12px;margin-bottom:14px;border:1px solid rgba(255,255,255,0.1);display:inline-block;">
+              <img src="/api/qr.svg?url=${encodeURIComponent(typeof window !== 'undefined' ? window.location.origin + '/ar-review.html' : 'https://packsignal.onrender.com/ar-review.html')}&size=160" width="160" height="160" alt="Live AR QR Code" style="display:block;margin:0 auto 8px;border-radius:8px;background:#fff;padding:6px;" />
+              <div style="font-size:11px;font-weight:700;color:#38bdf8;">GENUINE ISO/IEC 18004 QR CODE</div>
+              <div style="font-size:10px;color:#22c55e;">Scan with iPhone/Android Camera · 0ms AI Latency</div>
+            </div>
+
+            <div style="display:flex;gap:8px;justify-content:center;">
+              <button type="button" class="demo-btn demo-btn-primary" id="demo-btn-open-3d-view">
+                📦 Open 3D Carton Studio
+              </button>
+              <a href="/ar-review.html" target="_blank" rel="noopener" class="demo-btn" style="text-decoration:none;display:inline-flex;align-items:center;">
+                🎯 Launch Live AR Webpage →
+              </a>
+            </div>
+          </div>
+        `;
+
+      case 7:
+        return `
+          <!-- Feature 7: 31-Mutation Benchmark & Engine Reliability -->
+          <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 14px;">
+            <div style="font-size: 13px; font-weight: 700; color: #f8fafc; margin-bottom: 4px;">
+              🛡️ Synthetic Mutation Benchmark & Trust
+            </div>
+            <p style="font-size: 12px; color: #94a3b8; margin: 0 0 12px; line-height: 1.4;">
+              Engine reliability is verified through 31 controlled packaging mutations to eliminate false confidence:
+            </p>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+              <div style="background:#0f172a;border-radius:8px;padding:10px;text-align:center;border:1px solid rgba(34,197,94,0.3);">
+                <div style="font-size:24px;font-weight:900;color:#22c55e;">100%</div>
+                <div style="font-size:11px;color:#94a3b8;font-weight:700;">Synthetic Catch Rate</div>
+                <div style="font-size:10px;color:#64748b;">31 of 31 Mutations Detected</div>
+              </div>
+              <div style="background:#0f172a;border-radius:8px;padding:10px;text-align:center;border:1px solid rgba(56,189,248,0.3);">
+                <div style="font-size:24px;font-weight:900;color:#38bdf8;">0.00%</div>
+                <div style="font-size:11px;color:#94a3b8;font-weight:700;">Hallucination Rate</div>
+                <div style="font-size:10px;color:#64748b;">Zero Invented Violations</div>
+              </div>
+            </div>
+
+            <div style="font-size:11px;color:#cbd5e1;line-height:1.4;background:#0f172a;border-radius:8px;padding:10px;border:1px solid rgba(255,255,255,0.06);margin-bottom:12px;">
+              <b>Evaluated Mutation Vectors:</b><br>
+              • Transposed allergen terms (e.g. tree nuts vs almonds/pecans)<br>
+              • Numeric Atwater calorie offsets (180 vs 186 kcal)<br>
+              • Chemical claim invalidations (Honey mono/disaccharide vs No Added Sugar)<br>
+              • GTIN-12 / UPC check digit parity alterations
+            </div>
+
+            <button type="button" class="demo-btn" id="demo-btn-open-trust-tab" style="width:100%;justify-content:center;">
+              🏆 View Comprehensive Trust Scoreboard
+            </button>
+          </div>
+        `;
+
+      case 8:
+        return `
+          <!-- Feature 8: Cryptographic Audit Seal & Report Export -->
+          <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 14px;">
+            <div style="font-size: 13px; font-weight: 700; color: #f8fafc; margin-bottom: 4px;">
+              📜 Cryptographic Proof & Audit Signature
+            </div>
+            <p style="font-size: 12px; color: #94a3b8; margin: 0 0 12px; line-height: 1.4;">
+              Packaging compliance demands verifiable auditability. PackSignal seals every review with an asymmetric cryptographic signature:
+            </p>
+
+            <div style="background:#0f172a;border-radius:8px;padding:12px;border:1px solid rgba(34,197,94,0.3);margin-bottom:14px;font-family:monospace;font-size:11px;">
+              <div style="color:#22c55e;font-weight:700;margin-bottom:4px;">✓ REVIEW AUDIT SEAL CERTIFIED</div>
+              <div style="color:#94a3b8;word-break:break-all;">Algorithm: Ed25519 · SHA-256</div>
+              <div style="color:#38bdf8;word-break:break-all;margin-top:2px;">Proof Hash: 8f4a2b9e6c1d0f5e3a7b8c9d...</div>
+              <div style="color:#64748b;margin-top:4px;">Timestamp: Monotonic Performance Verified</div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <button type="button" class="demo-btn demo-btn-primary" id="demo-btn-export-audit-json" style="justify-content:center;">
+                📜 Download Cryptographically Signed Audit JSON
+              </button>
+              <button type="button" class="demo-btn demo-btn-accent" id="demo-btn-finish-open-checks" style="justify-content:center;">
+                🚀 Finish Tour & Open Comprehensive Checks Tab (F)
+              </button>
+            </div>
+          </div>
+        `;
+
+      default:
+        return '';
+    }
+  }
         </div>
       </div>
     `;
@@ -850,6 +1141,73 @@ export class DemoPresentationModal {
         const id = box.dataset.findingId;
         this._focusFinding(id);
       });
+    });
+
+    // Tour stepper navigation pills
+    this.container.querySelectorAll('[data-tour-step]').forEach(pill => {
+      pill.addEventListener('click', () => {
+        const step = parseInt(pill.dataset.tourStep, 10);
+        if (step >= 1 && step <= 8) {
+          this.activeFeatureStep = step;
+          this._rerenderDeck();
+          this._rerenderOverlays();
+        }
+      });
+    });
+
+    // Tour Previous & Next buttons
+    this.container.querySelector('#demo-tour-prev')?.addEventListener('click', () => {
+      if (this.activeFeatureStep > 1) {
+        this.activeFeatureStep--;
+        this._rerenderDeck();
+        this._rerenderOverlays();
+      }
+    });
+
+    this.container.querySelector('#demo-tour-next')?.addEventListener('click', () => {
+      if (this.activeFeatureStep < 8) {
+        this.activeFeatureStep++;
+        this._rerenderDeck();
+        this._rerenderOverlays();
+      } else {
+        this.close();
+        this.onOpenChecksTab(this.review, this.activeFindingId);
+      }
+    });
+
+    // Shopper persona filter buttons
+    this.container.querySelectorAll('[data-persona]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        this.activePersona = btn.dataset.persona;
+        this._rerenderDeck();
+        this._rerenderOverlays();
+      });
+    });
+
+    // Specific feature action buttons
+    this.container.querySelector('#demo-btn-launch-ripple-modal')?.addEventListener('click', () => {
+      this._openDecisionRippleTransition();
+    });
+
+    this.container.querySelector('#demo-btn-goto-prepress')?.addEventListener('click', () => {
+      this._openPrepressTransition();
+    });
+
+    this.container.querySelector('#demo-btn-open-3d-view')?.addEventListener('click', () => {
+      this._open3DTransition();
+    });
+
+    this.container.querySelector('#demo-btn-open-trust-tab')?.addEventListener('click', () => {
+      this._openScoreboardTransition();
+    });
+
+    this.container.querySelector('#demo-btn-export-audit-json')?.addEventListener('click', () => {
+      this._openSignedReportTransition();
+    });
+
+    this.container.querySelector('#demo-btn-finish-open-checks')?.addEventListener('click', () => {
+      this.close();
+      this.onOpenChecksTab(this.review);
     });
 
     // Transition buttons
@@ -1188,6 +1546,20 @@ export class DemoPresentationModal {
       if (e.key === 'n' || e.key === 'N') {
         e.preventDefault();
         this._revealNextFinding();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        if (this.activeFeatureStep < 8) {
+          this.activeFeatureStep++;
+          this._rerenderDeck();
+          this._rerenderOverlays();
+        }
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        if (this.activeFeatureStep > 1) {
+          this.activeFeatureStep--;
+          this._rerenderDeck();
+          this._rerenderOverlays();
+        }
       } else if (e.key === 'f' || e.key === 'F') {
         e.preventDefault();
         this.close();

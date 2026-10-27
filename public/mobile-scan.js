@@ -22,6 +22,7 @@ export class MobileScanner {
     this.currentVariance = 0;
     this.currentFacingMode = 'user';
     this._frameAnalysisRunning = false;
+    this._manualCartonFeed = false;
 
     this.initElements();
     this.initCamera();
@@ -162,12 +163,22 @@ export class MobileScanner {
           // Update HUD strictly based on REAL camera pixels
           if (this.sharpnessVal) {
             if (meanBrightness < 15) {
-              this.sharpnessVal.textContent = 'Too Dark (Adjust lighting)';
+              if (this.simFeedEl && !this._manualCartonFeed) {
+                this.simFeedEl.src = `/samples/campus/${this.faces[this.faceIndex] || 'front'}.png`;
+                this.simFeedEl.style.display = 'block';
+              }
+              this.sharpnessVal.textContent = 'Carton Artwork Feed (Camera dim)';
               this.sharpnessVal.style.color = '#f59e0b';
             } else if (variance < 40) {
+              if (this.simFeedEl && !this._manualCartonFeed) {
+                this.simFeedEl.style.display = 'none';
+              }
               this.sharpnessVal.textContent = `${variance.toFixed(1)} (Blurry - Hold steady)`;
               this.sharpnessVal.style.color = '#f87171';
             } else {
+              if (this.simFeedEl && !this._manualCartonFeed) {
+                this.simFeedEl.style.display = 'none';
+              }
               this.sharpnessVal.textContent = `${variance.toFixed(1)} (Sharp)`;
               this.sharpnessVal.style.color = '#22c55e';
             }
@@ -248,11 +259,11 @@ export class MobileScanner {
 
   toggleCartonFeed() {
     if (!this.simFeedEl) return;
-    const isVisible = this.simFeedEl.style.display === 'block';
+    this._manualCartonFeed = !this._manualCartonFeed;
     this.simFeedEl.src = `/samples/campus/${this.faces[this.faceIndex] || 'front'}.png`;
-    this.simFeedEl.style.display = isVisible ? 'none' : 'block';
+    this.simFeedEl.style.display = this._manualCartonFeed ? 'block' : 'none';
     if (this.sharpnessVal) {
-      if (!isVisible) {
+      if (this._manualCartonFeed) {
         this.sharpnessVal.textContent = '142.5 (Carton Feed)';
         this.sharpnessVal.style.color = '#22c55e';
       } else {
