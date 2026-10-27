@@ -382,26 +382,26 @@ export function workbenchArtwork(review,finding,{mode='2d',pageNumber=1,activeEv
         return `<button type="button" class="workbench-region ${finding.status} ${pfColorClass} ${index===activeEvidenceIndex?'selected':''}" data-action="select-evidence" data-index="${index}" style="left:${item.box[0]*100}%;top:${item.box[1]*100}%;width:${(item.box[2]-item.box[0])*100}%;height:${(item.box[3]-item.box[1])*100}%" aria-label="Inspect ${esc(item.quote||finding.title)}"><span>${index===activeEvidenceIndex?'Selected':'Evidence'}</span></button>`;
       }).join('')}
       <!-- Dashed Ghost Boxes: Highlighting missing Net Qty & Address on the PDP (21 CFR §101.7 & 21 CFR §101.5) -->
-      <!-- GHOST: MISSING NET QTY (16.9 oz) | GHOST: MISSING MFR ADDRESS -->
+      <!-- GHOST: MISSING NET QTY (16.9 oz) | GHOST: MISSING MFR ADDRESS (Only shown when user toggles Ghost/X-Ray) -->
       ${renderGhostOverlayLayer(review, page.number, {
-        isXRay: true,
+        isXRay: review.options?.showGhostBoxes === true || review.options?.isXRay === true,
         customPlacements: review.options?.customPlacements || {}
       })}
-      <!-- Native PDF Hidden Text X-Ray Layer -->
+      <!-- Native PDF Hidden Text X-Ray Layer (Only shown when user toggles) -->
       ${renderHiddenTextOverlayLayer(review, page.number, {
-        enabled: review.options?.showHiddenText !== false
+        enabled: review.options?.showHiddenText === true
       })}
       ${renderReconstructedTextOverlayLayer(review, page.number, {
-        enabled: review.options?.showReconstructedText !== false
+        enabled: review.options?.showReconstructedText === true
       })}
       ${renderBleedSafetyLayer(review, page.number, {
-        enabled: review.options?.showBleedSafety !== false
+        enabled: review.options?.showBleedSafety === true
       })}
       ${renderTacHeatmapLayer(review, page.number, {
         enabled: review.options?.showTacHeatmap === true
       })}
       ${renderTypographyOverlayLayer(review, page.number, {
-        enabled: review.options?.showTypographyOverlay !== false
+        enabled: review.options?.showTypographyOverlay === true
       })}
       ${renderArtworkStickyNoteMarkers(review.team?.stickyNotes || [], finding?.id, page.number)}
       ${typeof renderArtworkMarkupOverlay==='function'?renderArtworkMarkupOverlay(review, page.number):''}
@@ -414,12 +414,12 @@ export function workbenchArtwork(review,finding,{mode='2d',pageNumber=1,activeEv
     <div class="prepress-hud">
       <label class="hud-layer"><input type="checkbox" data-layer-boxes ${showBoxes?'checked':''}> Evidence boxes</label>
       <label class="hud-layer" title="Toggle TAC Heatmap: Visualizing CMYK ink coverage"><input type="checkbox" data-layer-tac-heatmap id="toggle-tac-heatmap" ${review.options?.showTacHeatmap ? 'checked' : ''}> [Show TAC Heatmap]</label>
-      <label class="hud-layer" title="Toggle Bleed & Safety Zones: Cut line (Red), Crease line (Blue dashed), Safe zone (Green), Inward safety (Amber), Bleed band (Cyan)"><input type="checkbox" data-layer-bleed-safety id="toggle-bleed-safety" ${review.options?.showBleedSafety !== false ? 'checked' : ''}> [Show Bleed &amp; Safety Zones]</label>
-      <label class="hud-layer" title="Toggle Typography Measurements: Font point size and measured letter height in mm"><input type="checkbox" data-layer-typography id="toggle-typography-measurements" ${review.options?.showTypographyOverlay !== false ? 'checked' : ''}> [Show Typography Measurements]</label>
-      <label class="hud-layer" title="Statutory missing items"><input type="checkbox" data-layer-ghosts checked> Ghost boxes</label>
-      <label class="hud-layer" title="Confirmed hidden native text in PDF content stream"><input type="checkbox" data-layer-hidden-text checked> Show Hidden PDF Objects</label>
-      <label class="hud-layer" title="Reconstructed letter-spaced and curved arc typography"><input type="checkbox" data-layer-reconstructed-text checked> Show Reconstructed Text</label>
-      <button type="button" class="carton-3d-btn compact active" data-action="toggle-xray-2d" title="Toggle X-Ray Mode: Visualizing missing statutory placement regions">⚡ X-Ray Mode</button>
+      <label class="hud-layer" title="Toggle Bleed & Safety Zones: Cut line (Red), Crease line (Blue dashed), Safe zone (Green), Inward safety (Amber), Bleed band (Cyan)"><input type="checkbox" data-layer-bleed-safety id="toggle-bleed-safety" ${review.options?.showBleedSafety === true ? 'checked' : ''}> [Show Bleed &amp; Safety Zones]</label>
+      <label class="hud-layer" title="Toggle Typography Measurements: Font point size and measured letter height in mm"><input type="checkbox" data-layer-typography id="toggle-typography-measurements" ${review.options?.showTypographyOverlay === true ? 'checked' : ''}> [Show Typography Measurements]</label>
+      <label class="hud-layer" title="Statutory missing items"><input type="checkbox" data-layer-ghosts ${review.options?.showGhostBoxes === true ? 'checked' : ''}> Ghost boxes</label>
+      <label class="hud-layer" title="Confirmed hidden native text in PDF content stream"><input type="checkbox" data-layer-hidden-text ${review.options?.showHiddenText === true ? 'checked' : ''}> Show Hidden PDF Objects</label>
+      <label class="hud-layer" title="Reconstructed letter-spaced and curved arc typography"><input type="checkbox" data-layer-reconstructed-text ${review.options?.showReconstructedText === true ? 'checked' : ''}> Show Reconstructed Text</label>
+      <button type="button" class="carton-3d-btn compact ${review.options?.isXRay ? 'active' : ''}" data-action="toggle-xray-2d" title="Toggle X-Ray Mode: Visualizing missing statutory placement regions">⚡ X-Ray Mode</button>
       <label class="hud-layer" title="Reviewer-drawn regions"><input type="checkbox" data-layer-zones ${showZones?'checked':''}> Panel zones</label>
       <!-- Prepress Print HUD: Exposing TAC ink density & bleed status (Sprint 2) -->
       <span class="hud-tac-bleed" style="display:inline-flex;gap:8px;align-items:center;padding:2px 8px;background:rgba(255,255,255,0.08);border-radius:4px;border:1px solid rgba(255,255,255,0.12);font-size:11px;font-weight:700;">
@@ -697,6 +697,12 @@ export function mountArtworkControls(container,{review,onRotation,viewport,onVie
     controls.querySelector('[data-layer-bleed-safety]')?.addEventListener('change', event => {
       const isVisible = event.target.checked;
       frame.querySelectorAll('.bleed-safety-overlay-layer').forEach(el => {
+        el.style.display = isVisible ? '' : 'none';
+      });
+    });
+    controls.querySelector('[data-layer-typography]')?.addEventListener('change', event => {
+      const isVisible = event.target.checked;
+      frame.querySelectorAll('.typography-overlay-layer, .workbench-typography-overlay').forEach(el => {
         el.style.display = isVisible ? '' : 'none';
       });
     });
@@ -1147,6 +1153,16 @@ function mountThreeViewer(container, review, onSelectFinding, onViewIn2D) {
         const pct = Math.round(prog * 100);
         if (slider && document.activeElement !== slider) slider.value = String(pct);
         if (output) output.textContent = `${pct}%`;
+      },
+      onPlayStateChange: (isPlaying) => {
+        const playBtn = container.querySelector('[data-carton-fold-play]');
+        if (playBtn) {
+          const icon = playBtn.querySelector('[data-fold-play-icon]');
+          const label = playBtn.querySelector('[data-fold-play-label]');
+          if (icon) icon.textContent = isPlaying ? 'Ⅱ' : '▶';
+          if (label) label.textContent = isPlaying ? 'Pause' : 'Animate Fold';
+          playBtn.classList.toggle('active', isPlaying);
+        }
       },
     });
 

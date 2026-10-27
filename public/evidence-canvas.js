@@ -8,7 +8,7 @@ const symbols = {issue:'!', review:'?', match:'✓', unable:'—'};
 const imageURL = (review, page) => `/api/reviews/${encodeURIComponent(review.id)}/images/${encodeURIComponent(page.image)}`;
 
 export function mountEvidenceCanvas(root, options = {}) {
-  const { review, viewport, selectedId, evidenceIndex = 0, pageNumber = 1, initialFilter = 'all', onSelect, onPage, shopperPersona = 'all', onPersonaChange } = options;
+  const { review, viewport, selectedId, evidenceIndex = 0, pageNumber = 1, initialFilter = 'all', onSelect, onPage, shopperPersona = 'all', onPersonaChange, overlayMode: initialOverlayMode = 'all' } = options;
   const frame = root?.querySelector('[data-workbench-frame]');
   if (!frame || !viewport || frame.dataset.evidenceMounted) return;
   frame.dataset.evidenceMounted = 'true';
@@ -24,12 +24,19 @@ export function mountEvidenceCanvas(root, options = {}) {
   const views = new Map(), cleanups = [];
   let currentPage = pages.find(p => p.page.number === pageNumber) || pages[0];
   let selected = review.findings.find(f => f.id === selectedId) || review.findings[0];
-  let activeIndex = evidenceIndex, filter = initialFilter, query = '', overlayMode = 'all', labelsVisible = true;
+  let activeIndex = evidenceIndex, filter = initialFilter, query = '', overlayMode = initialOverlayMode, labelsVisible = true;
   let activeDept = 'all', includeCollab = true;
   let activePersona = shopperPersona || 'all';
   let disposed = false, densityMode = null, pendingFocus = null;
   const on = (node, event, callback, options) => { node.addEventListener(event,callback,options); cleanups.push(() => node.removeEventListener(event,callback,options)); };
-  const currentMarkers = () => markers.filter(m => m.document.id === currentPage.document.id && m.page.number === currentPage.page.number && (overlayMode !== 'issues' || m.finding.status === 'issue'));
+  const currentMarkers = () => {
+    if (overlayMode === 'none') return [];
+    if (overlayMode === 'selected') {
+      const occ = selectedOccurrence();
+      return (occ && occ.document.id === currentPage.document.id && occ.page.number === currentPage.page.number) ? [occ] : [];
+    }
+    return markers.filter(m => m.document.id === currentPage.document.id && m.page.number === currentPage.page.number && (overlayMode !== 'issues' || m.finding.status === 'issue'));
+  };
   const selectedOccurrence = () => markers.find(m => m.finding.id === selected?.id && m.index === activeIndex);
   content.querySelectorAll('.workbench-region,.workbench-diff-card').forEach(node => node.remove());
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -50,7 +57,7 @@ export function mountEvidenceCanvas(root, options = {}) {
   const notice = document.createElement('p'); notice.className = 'canvas-notice'; notice.setAttribute('role','status');
   frame.after(notice);
   const tools = document.createElement('div'); tools.className = 'evidence-tools';
-  tools.innerHTML = '<div class="tools-page-group"><button type="button" data-canvas-prev aria-label="Previous page">← Page</button><button type="button" data-canvas-next aria-label="Next page">Page →</button></div><div class="tools-zoom-group"><button type="button" data-canvas-zoomout aria-label="Zoom out" title="Zoom out">−</button><button type="button" data-canvas-fit aria-label="Fit to page">Fit</button><button type="button" data-canvas-actual aria-label="Actual pixels 100%">1:1</button><button type="button" data-canvas-zoomin aria-label="Zoom in" title="Zoom in">+</button><button type="button" data-canvas-focus aria-label="Focus selected finding">Focus</button><button type="button" data-canvas-reset aria-label="Reset view">Full page</button></div><button type="button" data-canvas-loupe aria-pressed="false" title="Toggle interactive magnifier lens (M)">🔍 Loupe</button><label>Overlays <select data-overlay-mode><option value="all">All located findings</option><option value="issues">Issues only</option></select></label><label><input type="checkbox" data-overlay-labels checked> Labels</label><button type="button" data-inspector-toggle aria-expanded="true">Evidence inspector</button>';
+  tools.innerHTML = `<div class="tools-page-group"><button type="button" data-canvas-prev aria-label="Previous page">← Page</button><button type="button" data-canvas-next aria-label="Next page">Page →</button></div><div class="tools-zoom-group"><button type="button" data-canvas-zoomout aria-label="Zoom out" title="Zoom out">−</button><button type="button" data-canvas-fit aria-label="Fit to page">Fit</button><button type="button" data-canvas-actual aria-label="Actual pixels 100%">1:1</button><button type="button" data-canvas-zoomin aria-label="Zoom in" title="Zoom in">+</button><button type="button" data-canvas-focus aria-label="Focus selected finding">Focus</button><button type="button" data-canvas-reset aria-label="Reset view">Full page</button></div><button type="button" data-canvas-loupe aria-pressed="false" title="Toggle interactive magnifier lens (M)">🔍 Loupe</button><label>Overlays <select data-overlay-mode><option value="selected" ${overlayMode==='selected'?'selected':''}>Focused finding boundary</option><option value="issues" ${overlayMode==='issues'?'selected':''}>All issue boundaries</option><option value="all" ${overlayMode==='all'?'selected':''}>All check boundaries</option><option value="none" ${overlayMode==='none'?'selected':''}>Clean carton (no boundaries)</option></select></label><label><input type="checkbox" data-overlay-labels checked> Labels</label><button type="button" data-inspector-toggle aria-expanded="true">Evidence inspector</button>`;
   controls.querySelector('.artwork-navigation')?.after(tools);
   const thumbnails = document.createElement('nav'); thumbnails.className = 'evidence-pages'; thumbnails.setAttribute('aria-label','Artwork pages');
   controls.append(thumbnails);
@@ -158,7 +165,26 @@ export function mountEvidenceCanvas(root, options = {}) {
   }
   function markerMarkup(m) {
     const [x0,y0,x1,y1]=m.box, active=m.finding.id===selected?.id&&m.index===activeIndex;
-    return `<g role="button" tabindex="0" data-marker="${esc(m.key)}" aria-label="${esc(labels[m.finding.status])}: ${esc(m.finding.title)}, page ${m.page.number}, ${esc(m.evidence.quote)}" aria-pressed="${active}" class="evidence-marker ${esc(m.finding.status)} ${active?'selected':''}"><rect x="${x0*1000}" y="${y0*1000}" width="${(x1-x0)*1000}" height="${(y1-y0)*1000}" vector-effect="non-scaling-stroke"/><text x="${x0*1000}" y="${Math.max(13,y0*1000-5)}">${esc(symbols[m.finding.status])} ${review.findings.indexOf(m.finding)+1} · ${esc(labels[m.finding.status])}${active?' · Selected':''}</text><title>${esc(m.evidence.quote)}</title></g>`;
+    const isIssue = m.finding.status === 'issue';
+    const color = isIssue ? '#ef4444' : m.finding.status === 'review' ? '#f59e0b' : '#10b981';
+    const findingIdx = review.findings.indexOf(m.finding)+1;
+    const badgeLabel = `${symbols[m.finding.status] || '!'} CHK-${findingIdx} · ${labels[m.finding.status] || 'Finding'}${active ? ' (Focused)' : ''}`;
+    const badgeWidth = Math.min(280, (badgeLabel.length * 7.2) + 16);
+    
+    return `
+      <g role="button" tabindex="0" data-marker="${esc(m.key)}" aria-label="${esc(labels[m.finding.status])}: ${esc(m.finding.title)}, page ${m.page.number}, ${esc(m.evidence.quote)}" aria-pressed="${active}" class="evidence-marker ${esc(m.finding.status)} ${active?'selected':''}">
+        <!-- Outer Contrast Halo -->
+        <rect x="${x0*1000 - 3}" y="${y0*1000 - 3}" width="${(x1-x0)*1000 + 6}" height="${(y1-y0)*1000 + 6}" rx="4" fill="none" stroke="#000000" stroke-width="4" stroke-opacity="0.5" vector-effect="non-scaling-stroke"/>
+        <!-- Active Finding Bounding Box -->
+        <rect x="${x0*1000}" y="${y0*1000}" width="${(x1-x0)*1000}" height="${(y1-y0)*1000}" rx="3" fill="${color}20" stroke="${color}" stroke-width="${active ? '3.5' : '2'}" vector-effect="non-scaling-stroke"/>
+        <!-- Finding Badge Pin -->
+        <g transform="translate(${x0*1000}, ${Math.max(22, y0*1000 - 6)})">
+          <rect x="0" y="-18" width="${badgeWidth}" height="20" rx="4" fill="#0f172a" stroke="${color}" stroke-width="1.5" vector-effect="non-scaling-stroke"/>
+          <text x="8" y="-4" fill="#ffffff" font-size="11" font-weight="700" font-family="-apple-system, sans-serif">${esc(badgeLabel)}</text>
+        </g>
+        <title>${esc(m.evidence.quote || m.finding.title)}</title>
+      </g>
+    `;
   }
   function updateInspector() {
     onSelect?.(selected.id, activeIndex, currentPage.page.number);
@@ -220,7 +246,14 @@ export function mountEvidenceCanvas(root, options = {}) {
     if(occurrence) showPage(pages.find(p=>p.document.id===occurrence.document.id&&p.page.number===occurrence.page.number));
     pendingFocus=null;
     updateInspector(); drawQueue(); drawMarkers(); updateFocus();
-    if(occurrence&&focus) { pendingFocus=occurrence.box; imageReady(); }
+    if(occurrence&&focus) {
+      if (occurrence.box) {
+        pendingFocus=occurrence.box;
+        imageReady();
+      } else {
+        viewport.fit?.({animate:true});
+      }
+    }
     if(scroll) {
       // Keep a marker-selected finding visible even when the current queue filter excludes it.
       if(!filterFindings(review,filter,query).some(f=>f.id===id)) {

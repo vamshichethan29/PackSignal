@@ -37,6 +37,8 @@ export class PackagingViewerController {
     onSelectFinding = null,
     onViewIn2D = null,
     onFoldChange = null,
+    onPlayStateChange = null,
+    autoFold = true,
   } = {}) {
     this.container = container;
     this.review = review;
@@ -44,11 +46,13 @@ export class PackagingViewerController {
     this.onSelectFinding = onSelectFinding;
     this.onViewIn2D = onViewIn2D;
     this.onFoldChange = onFoldChange;
+    this.onPlayStateChange = onPlayStateChange;
+    this.autoFold = autoFold;
 
     this.packageType = 'carton'; // 'carton' | 'can' | 'bottle' | 'pouch'
-    this.progress = 1.0; // Default folded at 100%
+    this.progress = this.autoFold ? 0.0 : 1.0; // Default flat 0% if auto-folding to 3D on open
     this.playing = false;
-    this.playDirection = -1; // folds or unfolds
+    this.playDirection = 1; // fold up to 3D
     this.disposed = false;
     this.frameId = null;
     this.lastTime = null;
@@ -146,8 +150,21 @@ export class PackagingViewerController {
       this.setupRaycasting();
 
       // 9. Start fold progress
-      this.setFoldProgress(1.0);
-      this.cameraController.resetCamera(dimensions);
+      const shouldAutoFold = this.autoFold !== false && (this.packageType === 'carton' || this.packageType === 'folding_carton');
+      if (shouldAutoFold) {
+        this.progress = 0.0;
+        this.setFoldProgress(0.0);
+        this.cameraController.resetCamera(dimensions);
+        this.playDirection = 1;
+        setTimeout(() => {
+          if (!this.disposed && !this.playing) {
+            this.playFoldAnimation();
+          }
+        }, 150);
+      } else {
+        this.setFoldProgress(1.0);
+        this.cameraController.resetCamera(dimensions);
+      }
 
       // If a finding is already selected, fly to it
       if (this.selectedFindingId) {
@@ -761,11 +778,13 @@ export class PackagingViewerController {
   playFoldAnimation() {
     this.playing = true;
     this.lastTime = performance.now();
+    this.onPlayStateChange?.(true);
   }
 
   pauseFoldAnimation() {
     this.playing = false;
     this.lastTime = null;
+    this.onPlayStateChange?.(false);
   }
 
   toggleFoldPlayback() {
@@ -1133,9 +1152,11 @@ export class PackagingViewerController {
         if (nextProgress >= 1.0) {
           nextProgress = 1.0;
           this.playing = false;
+          this.onPlayStateChange?.(false);
         } else if (nextProgress <= 0.0) {
           nextProgress = 0.0;
           this.playing = false;
+          this.onPlayStateChange?.(false);
         }
 
         this.setFoldProgress(nextProgress);

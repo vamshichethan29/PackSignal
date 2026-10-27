@@ -319,7 +319,7 @@ export function renderArtworkMarkupOverlay(review, pageNumber = 1) {
 
   return `
     <div id="markup-studio-overlay" class="artwork-markup-studio-overlay markup-studio-overlay ${activeViewMode === 'marked' ? 'visible mode-marked' : 'mode-clean'}" 
-      style="display:block;">
+      style="display:${activeViewMode === 'marked' ? 'block' : 'none'};">
       <svg class="red-pen-markup-canvas markup-vector-svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">
         ${svgPaths}
       </svg>
