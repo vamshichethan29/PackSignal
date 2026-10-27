@@ -2234,19 +2234,26 @@ document.addEventListener("click", async (event) => {
           body: { sessionId: `scan-${Date.now()}`, reviewId }
         });
         const scanUrl = `${window.location.origin}${tokenRes.qrUrl}`;
-        const qrCodeSvg = generateQrSvg(scanUrl, 180);
+        const qrCodeSvg = generateQrSvg(scanUrl, 210);
         dialog(
-          "📱 Scan Packaging with Phone or Webcam",
+          "📱 Scan Packaging with Phone Camera",
           `<div style="text-align:center;padding:8px 12px;">
             <div style="background:#ffffff;border-radius:12px;padding:12px;display:inline-block;box-shadow:0 4px 20px rgba(0,0,0,0.3);margin-bottom:12px;">
               ${qrCodeSvg}
             </div>
-            <div style="font-size:13px;font-weight:700;color:#f8fafc;margin-bottom:4px;">
-              Scan QR Code with iPhone or Android Camera
+            <div style="margin-bottom:10px;">
+              <div id="phone-pairing-status" style="display:inline-flex;align-items:center;gap:8px;padding:5px 14px;border-radius:16px;background:rgba(245,158,11,0.15);border:1px solid #f59e0b;color:#f59e0b;font-size:12px;font-weight:700;">
+                <span style="width:8px;height:8px;border-radius:50%;background:#f59e0b;display:inline-block;"></span>
+                <span id="pairing-status-text">Point phone camera at QR code</span>
+              </div>
             </div>
             <p style="font-size:12px;color:#94a3b8;margin-bottom:14px;max-width:380px;margin-left:auto;margin-right:auto;">
-              Point your phone camera at this QR code to scan real physical carton faces directly into this review.
+              Open your iPhone Camera or Google Lens and scan this code to intake physical package faces directly into PackSignal.
             </p>
+            <div id="phone-received-panels" style="display:none;background:#0f172a;border-radius:8px;padding:10px;margin-bottom:12px;border:1px solid rgba(255,255,255,0.1);text-align:left;">
+              <div style="font-size:11px;font-weight:700;color:#38bdf8;margin-bottom:6px;">RECEIVED FROM PHONE:</div>
+              <div id="phone-panel-list" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+            </div>
             <div style="display:flex;flex-direction:column;gap:8px;max-width:360px;margin:0 auto 12px;">
               <a href="${esc(tokenRes.qrUrl)}" target="_blank" rel="noopener" class="primary" style="background:#15803d;color:#ffffff;font-weight:700;padding:10px 16px;border-radius:6px;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;">
                 <span>💻 Open Camera Scanner on this Device →</span>
@@ -2261,6 +2268,42 @@ document.addEventListener("click", async (event) => {
           </div>`,
           `<button class="secondary" data-action="close">Done</button>`
         );
+
+        const pollTimer = setInterval(async () => {
+          try {
+            const statusRes = await fetch(`/api/campus/scan-session?sessionId=${encodeURIComponent(tokenRes.sessionId)}`);
+            if (!statusRes.ok) return;
+            const data = await statusRes.json();
+            const session = data?.session;
+            const statusEl = document.getElementById('phone-pairing-status');
+            const statusText = document.getElementById('pairing-status-text');
+            const panelsBox = document.getElementById('phone-received-panels');
+            const panelList = document.getElementById('phone-panel-list');
+
+            if (session?.connected && statusEl && statusText) {
+              statusEl.style.background = 'rgba(34,197,94,0.15)';
+              statusEl.style.borderColor = '#22c55e';
+              statusEl.style.color = '#22c55e';
+              statusText.textContent = `🟢 Phone Connected (${session.deviceInfo || 'Mobile Device'})`;
+            }
+
+            if (session?.panels && Object.keys(session.panels).length > 0 && panelsBox && panelList) {
+              panelsBox.style.display = 'block';
+              panelList.innerHTML = Object.entries(session.panels).map(([face, p]) => `
+                <div style="background:#1e293b;border-radius:6px;padding:4px 8px;font-size:11px;color:#f8fafc;display:flex;align-items:center;gap:4px;border:1px solid #22c55e;">
+                  <span>✓</span>
+                  <b>${esc(face.toUpperCase())}</b>
+                  <span style="color:#94a3b8;">(${Math.round(p.variance || 140)} sharp)</span>
+                </div>
+              `).join('');
+            }
+          } catch (e) {}
+        }, 1500);
+
+        const dialogEl = document.getElementById('dialog');
+        if (dialogEl) {
+          dialogEl.addEventListener('close', () => clearInterval(pollTimer), { once: true });
+        }
       } catch (err) {
         toast(`Could not generate mobile scan token: ${err.message}`);
       }

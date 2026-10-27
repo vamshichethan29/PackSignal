@@ -719,8 +719,8 @@ export function mountCampusExtras(container) {
   async function renderLiveArQrAndOverlay(panel = 'front') {
     const qrContainer = root.querySelector('[data-live-ar-qr]');
     if (qrContainer && !qrContainer.hasChildNodes()) {
-      const arUrl = `${window.location.origin}/api/campus/ar-overlay/front`;
-      qrContainer.innerHTML = generateQrSvg(arUrl, 160);
+      const arUrl = `${window.location.origin}/ar-review.html`;
+      qrContainer.innerHTML = generateQrSvg(arUrl, 180);
     }
 
     const svgContent = root.querySelector('[data-ar-svg-content]');

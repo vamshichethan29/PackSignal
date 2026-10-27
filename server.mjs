@@ -4,6 +4,7 @@ import { readFile,writeFile,mkdir,readdir,rename,rm,stat } from 'node:fs/promise
 import { join,extname,basename,resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { randomUUID,randomBytes,createHash } from 'node:crypto';
+import QRCode from 'qrcode';
 import { spawn } from 'node:child_process';
 import { performance } from 'node:perf_hooks';
 import { analyze,compareRevisions,tokenSequencePresent } from './lib/engine.mjs';
@@ -62,6 +63,7 @@ import {
   resetScanSession,
   createMobileSessionToken,
   validateMobileSessionToken,
+  connectMobileSession,
   retakePanel,
   generateBriefFromScanSession,
 } from './lib/campus/scan-to-brief.mjs';
@@ -1256,12 +1258,55 @@ const server=createServer(async(req,res)=>{
         session,
       });
     }
+    if((path==='/api/qr.svg'||path==='/api/qr-svg')&&['GET','HEAD'].includes(method)){
+      const u = new URL(req.url, 'http://localhost');
+      const targetUrl = u.searchParams.get('url') || u.searchParams.get('text') || 'https://packsignal.onrender.com';
+      const size = Math.min(1024, Math.max(80, parseInt(u.searchParams.get('size') || '240', 10)));
+      const margin = Math.min(10, Math.max(0, parseInt(u.searchParams.get('margin') || '2', 10)));
+      try {
+        const qrSvg = await QRCode.toString(targetUrl, {
+          type: 'svg',
+          margin,
+          width: size,
+          errorCorrectionLevel: 'H'
+        });
+        res.writeHead(200, {
+          'Content-Type': 'image/svg+xml; charset=utf-8',
+          'Cache-Control': 'public, max-age=86400, stale-while-revalidate=604800',
+        });
+        if (method === 'HEAD') return res.end();
+        return res.end(qrSvg);
+      } catch (err) {
+        return json(res, 400, { error: err.message });
+      }
+    }
     if(path==='/api/campus/mobile-session-token'&&method==='POST'){
       const b = await body(req).catch(() => ({}));
       const sessionId = b?.sessionId || `scan-${Date.now()}`;
       const reviewId = b?.reviewId || 'rev-campus';
       const tokenData = createMobileSessionToken(sessionId, reviewId);
       return json(res, 200, { success: true, ...tokenData });
+    }
+    if(path==='/api/campus/mobile-session-connect'&&method==='POST'){
+      const b = await body(req).catch(() => ({}));
+      const sessionId = b?.sessionId || 'default';
+      const token = b?.token;
+      if (token) {
+        const val = validateMobileSessionToken(sessionId, token);
+        if (!val.valid) {
+          return json(res, 403, { success: false, error: val.error });
+        }
+      }
+      const session = connectMobileSession(sessionId, {
+        deviceInfo: b?.deviceInfo || req.headers['user-agent'] || 'Smartphone'
+      });
+      return json(res, 200, {
+        success: true,
+        sessionId,
+        connected: true,
+        connectedAt: session.connectedAt,
+        session
+      });
     }
     if(path==='/api/campus/scan-corners'&&method==='POST'){
       const b = await body(req).catch(() => ({}));

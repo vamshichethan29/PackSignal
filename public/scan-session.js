@@ -16,6 +16,28 @@ export class ScanSession {
     this.isAuthorized = Boolean(this.token);
     this.storageKey = `packsignal_scan_${this.sessionId}`;
     this.loadLocalCache();
+    this.connect();
+  }
+
+  async connect() {
+    try {
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      const deviceInfo = isMobile
+        ? (navigator.userAgent.includes('iPhone') ? 'iPhone' : (navigator.userAgent.includes('Android') ? 'Android' : 'Mobile Browser'))
+        : 'Web Viewfinder';
+      const res = await fetch('/api/campus/mobile-session-connect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: this.sessionId,
+          token: this.token,
+          deviceInfo: `${deviceInfo} · ${navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome') ? 'Safari' : 'Chrome/Brave'}`
+        })
+      });
+      return await res.json();
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
   }
 
   loadLocalCache() {

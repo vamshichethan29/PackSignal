@@ -4,87 +4,44 @@
  * iOS Quick Look (.usdz), and Android Scene Viewer / WebXR (.glb) links.
  */
 
+import QRCode from './qrcode.esm.js';
+
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 /**
- * Generates an SVG QR Code matrix for the AR link.
- * Implements a standard 25x25 QR matrix with valid finder patterns,
- * alignment markers, and deterministic timing bars.
+ * Generates an ISO/IEC 18004 compliant SVG QR Code matrix for AR and scanner links.
+ * Produces genuine Reed-Solomon error correction codewords with Level-H recovery,
+ * ensuring seamless scanning by real smartphone cameras (iOS Camera, Google Lens).
  */
 export function generateQrSvg(url, size = 180) {
-  const modules = 25;
-  const grid = Array.from({ length: modules }, () => Array(modules).fill(false));
+  const qr = QRCode.create(url, { errorCorrectionLevel: 'H' });
+  const count = qr.modules.size;
+  const margin = 2;
+  const total = count + margin * 2;
+  const cellSize = size / total;
 
-  function setFinder(r0, c0) {
-    for (let r = 0; r < 7; r++) {
-      for (let c = 0; c < 7; c++) {
-        if (r === 0 || r === 6 || c === 0 || c === 6 || (r >= 2 && r <= 4 && c >= 2 && c <= 4)) {
-          grid[r0 + r][c0 + c] = true;
-        }
-      }
-    }
-  }
-
-  // Finders: Top-Left, Top-Right, Bottom-Left
-  setFinder(0, 0);
-  setFinder(0, modules - 7);
-  setFinder(modules - 7, 0);
-
-  // Timing patterns
-  for (let i = 8; i < modules - 8; i++) {
-    grid[6][i] = i % 2 === 0;
-    grid[i][6] = i % 2 === 0;
-  }
-
-  // Alignment pattern
-  const ar = 16, ac = 16;
-  for (let r = -2; r <= 2; r++) {
-    for (let c = -2; c <= 2; c++) {
-      if (Math.abs(r) === 2 || Math.abs(c) === 2 || (r === 0 && c === 0)) {
-        grid[ar + r][ac + c] = true;
-      }
-    }
-  }
-
-  // Deterministic data encoding based on url hash
-  let hash = 0x811c9dc5;
-  for (let i = 0; i < url.length; i++) {
-    hash ^= url.charCodeAt(i);
-    hash = Math.imul(hash, 0x01000193);
-  }
-
-  let bitIndex = 0;
-  for (let r = 0; r < modules; r++) {
-    for (let c = 0; c < modules; c++) {
-      const isReserved =
-        (r < 8 && (c < 8 || c >= modules - 8)) ||
-        (r >= modules - 8 && c < 8) ||
-        r === 6 || c === 6 ||
-        (Math.abs(r - ar) <= 2 && Math.abs(c - ac) <= 2);
-      if (!isReserved) {
-        const bit = ((hash >> (bitIndex % 31)) ^ (r * 7 + c * 13)) & 1;
-        grid[r][c] = bit === 1;
-        bitIndex++;
-      }
-    }
-  }
-
-  const cellSize = size / modules;
   let paths = '';
-  for (let r = 0; r < modules; r++) {
-    for (let c = 0; c < modules; c++) {
-      if (grid[r][c]) {
-        paths += `M${(c * cellSize).toFixed(1)},${(r * cellSize).toFixed(1)}h${cellSize.toFixed(1)}v${cellSize.toFixed(1)}h-${cellSize.toFixed(1)}z `;
+  for (let r = 0; r < count; r++) {
+    for (let c = 0; c < count; c++) {
+      if (qr.modules.get(r, c)) {
+        const x = (c + margin) * cellSize;
+        const y = (r + margin) * cellSize;
+        paths += `M${x.toFixed(2)},${y.toFixed(2)}h${cellSize.toFixed(2)}v${cellSize.toFixed(2)}h-${cellSize.toFixed(2)}z `;
       }
     }
   }
+
+  const badgeSize = size * 0.16;
+  const badgePos = (size - badgeSize) / 2;
+  const badgeRadius = 4;
 
   return `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" class="ar-qr-code" style="background:#ffffff;padding:12px;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.12);display:block;margin:0 auto;">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="${size}" height="${size}" class="ar-qr-code" style="background:#ffffff;padding:10px;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.12);display:block;margin:0 auto;" shape-rendering="crispEdges">
+      <rect width="${size}" height="${size}" fill="#ffffff"/>
       <path d="${paths}" fill="#0f172a" />
       <!-- Center PackSignal Badge -->
-      <rect x="${size * 0.38}" y="${size * 0.38}" width="${size * 0.24}" height="${size * 0.24}" rx="6" fill="#15803d" />
-      <text x="${size * 0.5}" y="${size * 0.54}" font-family="-apple-system,sans-serif" font-size="${size * 0.1}" font-weight="900" fill="#ffffff" text-anchor="middle">📦</text>
+      <rect x="${badgePos.toFixed(1)}" y="${badgePos.toFixed(1)}" width="${badgeSize.toFixed(1)}" height="${badgeSize.toFixed(1)}" rx="${badgeRadius}" fill="#15803d" />
+      <text x="${(size / 2).toFixed(1)}" y="${(size / 2 + badgeSize * 0.28).toFixed(1)}" font-family="-apple-system,sans-serif" font-size="${(badgeSize * 0.65).toFixed(1)}" font-weight="900" fill="#ffffff" text-anchor="middle">📦</text>
     </svg>
   `;
 }
