@@ -10,6 +10,25 @@
  * - 4-corner manual alignment fallback & 2D review fallback.
  */
 
+const DANCING_FISH_FINDINGS = [
+  ['issue', 'Honey prominence claim', 'Front PDP claim needs formulation evidence.'],
+  ['issue', 'Net quantity placement', 'Required declaration needs a compliant PDP placement.'],
+  ['issue', 'Nutrition daily value math', 'Nutrition values need correction before release.'],
+  ['issue', 'Vegan claim conflict', 'Honey in ingredients conflicts with the vegan claim.'],
+  ['issue', 'Storage copy conflict', 'Artwork and product specification disagree on storage.'],
+  ['match', 'Brand identification', 'Dancing Fish identity is present and legible.'],
+  ['match', 'Nutrition panel captured', 'Nutrition Facts panel is present in the artwork.'],
+  ['match', 'Allergen statement', 'Contains statement is visible for almonds and wheat.'],
+  ['match', 'Barcode panel captured', 'Barcode panel has been captured for inspection.'],
+  ['match', 'Manufacturer panel', 'Business identity panel is present.'],
+  ['review', 'Statutory type height', 'Human reviewer must confirm the measured type size.'],
+  ['review', 'Claim substantiation', 'Human reviewer must approve evidence for marketing claims.'],
+  ['review', 'Ingredients copy', 'Human reviewer must confirm final ingredients wording.'],
+  ['review', 'Barcode quiet zone', 'Human reviewer must inspect print clearance.'],
+  ['review', 'Organic certification', 'Human reviewer must verify approved certification usage.'],
+  ['review', 'Panel sequence', 'Human reviewer must confirm the final carton panel order.'],
+];
+
 export class ArReviewController {
   constructor() {
     this.currentFace = 'front';
@@ -87,6 +106,9 @@ export class ArReviewController {
     this.competitorModal = document.getElementById('competitor-modal');
     this.closeCompetitorModalBtn = document.getElementById('close-competitor-modal-btn');
     this.competitorModalContent = document.getElementById('competitor-modal-content');
+    this.findingsSummary = document.getElementById('ar-findings-summary');
+    this.findingsList = document.getElementById('ar-findings-list');
+    this.closeFindingsSummaryBtn = document.getElementById('close-findings-summary-btn');
   }
 
   bindEvents() {
@@ -121,14 +143,16 @@ export class ArReviewController {
 
     // Open Findings Button
     if (this.openFindingsBtn) {
-      this.openFindingsBtn.addEventListener('click', () => this.openFirstFindingForCurrentPanel());
+      this.openFindingsBtn.addEventListener('click', () => this.openFindingsSummary());
     }
 
     // 2D Fallback
     if (this.fallback2dBtn) {
-      this.fallback2dBtn.addEventListener('click', () => {
-        window.location.href = '/';
-      });
+      this.fallback2dBtn.addEventListener('click', () => this.openFindingsSummary());
+    }
+
+    if (this.closeFindingsSummaryBtn) {
+      this.closeFindingsSummaryBtn.addEventListener('click', () => this.closeFindingsSummary());
     }
 
     // Market Toggle (US / India)
@@ -162,17 +186,6 @@ export class ArReviewController {
     }
 
     // Hotspot tap on SVG overlay
-    if (this.overlayLayer) {
-      this.overlayLayer.addEventListener('click', (e) => {
-        const hotspot = e.target.closest('[data-finding-id]');
-        if (hotspot?.dataset.findingId) {
-          this.openFindingDrawer(hotspot.dataset.findingId);
-        } else if (e.target.closest('[data-open-current]')) {
-          this.openFirstFindingForCurrentPanel();
-        }
-      });
-    }
-
     // Cleanup camera when leaving
     window.addEventListener('beforeunload', () => this.teardown());
   }
@@ -359,9 +372,7 @@ export class ArReviewController {
     this.updateTrackingState('TRACKED');
     this.showToast(`Dancing Fish ${face.toUpperCase()} review layer active (140 × 210 mm)`);
 
-    if (this.overlayLayer) {
-      this.overlayLayer.innerHTML = this.isMarked ? this.renderSpatialOverlay(face) : '';
-    }
+    if (this.overlayLayer) this.overlayLayer.innerHTML = '';
   }
 
   toggleRedPen() {
@@ -376,22 +387,22 @@ export class ArReviewController {
   }
 
   renderSpatialOverlay(face) {
-    const panel = (this.manifest?.panels || []).find((item) => item.panelId === face);
-    const hotspots = panel?.hotspots || [];
-    return hotspots.map((hotspot) => {
-      const [x, y, width, height] = hotspot.boxNorm || hotspot.rect || [0.1, 0.1, 0.8, 0.2];
-      const tone = hotspot.status === 'MATCH'
-        ? 'green'
-        : hotspot.status === 'NEEDS_REVIEW'
-          ? 'violet'
-          : 'red';
-      const ghost = hotspot.isMissingDeclarationGhost ? ' ghost' : '';
-      return `<button type="button" class="ar-hotspot-box ${tone}${ghost}" data-finding-id="${hotspot.findingId}"
-        aria-label="View finding: ${hotspot.title}"
-        style="left:${x * 100}%;top:${y * 100}%;width:${width * 100}%;height:${height * 100}%;">
-        <span class="ar-hotspot-tag">${hotspot.title}</span>
-      </button>`;
-    }).join('');
+    return '';
+  }
+
+  openFindingsSummary() {
+    if (!this.findingsSummary || !this.findingsList) return;
+    this.findingsList.innerHTML = DANCING_FISH_FINDINGS.map(([type, title, detail], index) => `
+      <article class="ar-summary-row ${type}"><span>${String(index + 1).padStart(2, '0')}</span><div><b>${title}</b><p>${detail}</p></div><em>${type === 'issue' ? 'Issue' : type === 'match' ? 'Match' : 'Human review'}</em></article>
+    `).join('');
+    this.findingsSummary.classList.add('open');
+    this.findingsSummary.setAttribute('aria-hidden', 'false');
+  }
+
+  closeFindingsSummary() {
+    if (!this.findingsSummary) return;
+    this.findingsSummary.classList.remove('open');
+    this.findingsSummary.setAttribute('aria-hidden', 'true');
   }
 
   toggleManualAlign() {
