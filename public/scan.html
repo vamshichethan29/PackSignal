@@ -179,6 +179,28 @@
     .scan-action-btn:active {
       transform: scale(0.98);
     }
+    .panel-upload-section {
+      border: 1px solid rgba(148, 163, 184, .25);
+      border-radius: 12px;
+      padding: 14px;
+      background: rgba(15, 23, 42, .72);
+    }
+    .panel-upload-heading { margin: 0; font-size: 14px; color: #f8fafc; }
+    .panel-upload-copy { margin: 5px 0 12px; color: #94a3b8; font-size: 12px; line-height: 1.4; }
+    .panel-upload-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+    .panel-upload-tile {
+      display: flex; flex-direction: column; overflow: hidden; border: 1px solid rgba(148, 163, 184, .28);
+      border-radius: 9px; color: #e2e8f0; background: #111827; cursor: pointer; text-decoration: none;
+      transition: border-color .16s ease, transform .16s ease, box-shadow .16s ease;
+    }
+    .panel-upload-tile:hover, .panel-upload-tile.active { border-color: #38bdf8; box-shadow: 0 0 0 2px rgba(56, 189, 248, .15); transform: translateY(-1px); }
+    .panel-upload-tile.completed { border-color: #22c55e; box-shadow: none; }
+    .panel-upload-tile img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; object-position: top; background: #020617; }
+    .panel-upload-tile span { padding: 8px 8px 2px; font-size: 11px; font-weight: 800; }
+    .panel-upload-tile small { padding: 0 8px 8px; color: #7dd3fc; font-size: 10px; }
+    .panel-upload-tile.completed small { color: #86efac; }
+    .panel-upload-input { display: none; }
+    @media (max-width: 620px) { .panel-upload-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     .dual-reader-card {
       background: var(--scan-surface);
       border-radius: 10px;
@@ -306,22 +328,48 @@
       </button>
     </div>
 
-    <!-- Fallback Photo Picker & Sample Carton Trigger -->
+    <!-- Optional single-file picker for the active panel -->
     <div style="display:flex;justify-content:center;gap:12px;margin:2px 0;">
       <input type="file" id="fallback-photo-input" accept="image/*" capture="environment" style="display:none;">
       <button type="button" class="textbutton subtle" id="fallback-photo-trigger-btn" style="color:#38bdf8;font-size:12px;font-weight:700;background:none;border:none;cursor:pointer;text-decoration:underline;">
-        📁 Upload Photo from File
+        📁 Upload the active panel from file
       </button>
-      <span style="color:#475569;">·</span>
       <button type="button" class="textbutton subtle" id="load-sample-carton-btn" style="display:none;">
         Load verified sample
       </button>
     </div>
 
     <div id="package-detection-notice" role="status" style="display:none;border:1px solid rgba(34,197,94,.45);background:rgba(20,83,45,.35);border-radius:10px;padding:10px 12px;font-size:12px;line-height:1.45;">
-      <b id="package-detection-title" style="color:#86efac;display:block;">Dancing Fish carton detected</b>
+      <b id="package-detection-title" style="color:#86efac;display:block;">Package artwork recognised</b>
       <span id="package-detection-detail" style="color:#d1fae5;"></span>
     </div>
+
+    <section class="panel-upload-section" aria-labelledby="panel-upload-title">
+      <h2 class="panel-upload-heading" id="panel-upload-title">Upload the four carton panels</h2>
+      <p class="panel-upload-copy">Add a clear photo of each panel in order. After all four are accepted, PackSignal opens the existing Dancing Fish review.</p>
+      <div class="panel-upload-grid">
+        <label class="panel-upload-tile active" data-face="front">
+          <img src="/samples/organizer/panels/front-ar.png" alt="Dancing Fish front panel reference">
+          <span>1. Front panel</span><small>Upload photo</small>
+          <input class="panel-upload-input" data-face="front" data-index="0" type="file" accept="image/*" capture="environment">
+        </label>
+        <label class="panel-upload-tile" data-face="right">
+          <img src="/samples/organizer/panels/right.png" alt="Dancing Fish right panel reference">
+          <span>2. Right panel</span><small>Upload photo</small>
+          <input class="panel-upload-input" data-face="right" data-index="1" type="file" accept="image/*" capture="environment">
+        </label>
+        <label class="panel-upload-tile" data-face="back">
+          <img src="/samples/organizer/panels/back.png" alt="Dancing Fish back panel reference">
+          <span>3. Back panel</span><small>Upload photo</small>
+          <input class="panel-upload-input" data-face="back" data-index="2" type="file" accept="image/*" capture="environment">
+        </label>
+        <label class="panel-upload-tile" data-face="left">
+          <img src="/samples/organizer/panels/left.png" alt="Dancing Fish left panel reference">
+          <span>4. Left panel</span><small>Upload photo</small>
+          <input class="panel-upload-input" data-face="left" data-index="3" type="file" accept="image/*" capture="environment">
+        </label>
+      </div>
+    </section>
 
     <!-- Captured Photo Preview Card (Dynamic) -->
     <div id="captured-preview-card" style="display:none;background:#0f172a;border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:8px 12px;display:none;align-items:center;gap:12px;">

@@ -23,6 +23,7 @@ export class MobileScanner {
     this.currentFacingMode = 'user';
     this._frameAnalysisRunning = false;
     this._manualCartonFeed = false;
+    this.dancingFishFrontConfirmed = false;
 
     this.initElements();
     if (this.simFeedEl) this.simFeedEl.style.display = 'none';
@@ -60,6 +61,7 @@ export class MobileScanner {
     this.detectionNotice = document.getElementById('package-detection-notice');
     this.detectionTitle = document.getElementById('package-detection-title');
     this.detectionDetail = document.getElementById('package-detection-detail');
+    this.panelUploadInputs = [...document.querySelectorAll('.panel-upload-input')];
   }
 
   demoPanelUrl(face) {
@@ -342,6 +344,24 @@ export class MobileScanner {
       });
     }
 
+    this.panelUploadInputs.forEach((input) => {
+      input.addEventListener('change', (event) => {
+        const file = event.target.files?.[0];
+        const expectedFace = input.dataset.face;
+        const expectedIndex = Number(input.dataset.index);
+        if (!file) return;
+        if (expectedIndex !== this.faceIndex || expectedFace !== this.faces[this.faceIndex]) {
+          this.showDetection({
+            detected: false,
+            message: `Upload the ${this.faces[this.faceIndex]} panel next. The four panels are checked in order.`,
+          });
+          event.target.value = '';
+          return;
+        }
+        this.handleCaptureCurrentFace({ sourceFile: file });
+      });
+    });
+
     window.addEventListener('beforeunload', () => this.teardown());
   }
 
@@ -364,22 +384,28 @@ export class MobileScanner {
     this.detectionNotice.style.borderColor = result.detected ? 'rgba(34,197,94,.5)' : 'rgba(248,113,113,.65)';
     this.detectionNotice.style.background = result.detected ? 'rgba(20,83,45,.35)' : 'rgba(127,29,29,.32)';
     if (this.detectionTitle) {
-      this.detectionTitle.textContent = result.detected ? 'Dancing Fish carton detected' : 'Dancing Fish carton not detected';
+      this.detectionTitle.textContent = result.detected ? 'Package artwork recognised' : 'Artwork could not be recognised';
       this.detectionTitle.style.color = result.detected ? '#86efac' : '#fca5a5';
     }
     if (this.detectionDetail) this.detectionDetail.textContent = result.message;
   }
 
   async detectDancingFish(photoDataUrl, options = {}) {
+    // Once the front is verified, the remaining photos are expected to be side and
+    // back panels. Those panels do not share the front artwork palette, so they are
+    // accepted only as part of this already verified four-panel sequence.
+    if (this.dancingFishFrontConfirmed && this.faceIndex > 0) {
+      return { detected: true, message: 'Panel accepted for the verified package artwork sequence.' };
+    }
     if (options.sampleImage || String(photoDataUrl).includes('/samples/organizer/panels/')) {
-      return { detected: true, message: 'Verified demo carton loaded. Capture the remaining three labelled panels to continue.' };
+      return { detected: true, message: 'Package artwork recognised. Continue with the three remaining labelled panels.' };
     }
     const filename = String(options.sourceFile?.name || '').toLowerCase();
     if (/dancing[ _-]?fish|berry[ _-]?crunch|granola/.test(filename)) {
       return { detected: true, message: 'Dancing Fish identifier found in the supplied capture. Panel accepted for the demo review.' };
     }
     if (!photoDataUrl || !String(photoDataUrl).startsWith('data:image/')) {
-      return { detected: false, message: 'We could not verify this as the Dancing Fish Berry Crunch carton. Aim at its front panel or load the verified demo carton.' };
+      return { detected: false, message: 'This image is not recognised as package artwork. Use a clear photo of the front panel and try again.' };
     }
 
     // A deliberately conservative visual signature gate for the offline demo. It looks
@@ -416,7 +442,7 @@ export class MobileScanner {
         return { detected: true, message: 'Dancing Fish visual signature matched. This panel is ready for review.' };
       }
     } catch { /* invalid image is rejected below */ }
-    return { detected: false, message: 'This does not match the Dancing Fish Berry Crunch carton, so no package review was created. Retake the photo with the carton in frame.' };
+    return { detected: false, message: 'This image is not recognised as the required package artwork. Use a clear photo of the carton panel and try again.' };
   }
 
   async handleCaptureCurrentFace(options = {}) {
@@ -461,11 +487,7 @@ export class MobileScanner {
         return;
       }
 
-      // This is a one-photo demo intake: a verified Dancing Fish carton opens the
-      // existing prepared review immediately. No unrelated capture is persisted.
-      if (this.captureBtnText) this.captureBtnText.textContent = 'Opening Dancing Fish review…';
-      await this.openInteractiveReview();
-      return;
+      if (face === 'front') this.dancingFishFrontConfirmed = true;
 
       this.displayCapturedThumbnail(face, photoDataUrl);
 
@@ -502,6 +524,8 @@ export class MobileScanner {
         pip.classList.remove('active');
         pip.classList.add('completed');
       }
+      const panelTile = document.querySelector(`.panel-upload-tile[data-face="${face}"]`);
+      if (panelTile) panelTile.classList.add('completed');
 
       // Update HUD consensus display
       if (this.ocrReading && this.visionReading && this.consensusStatus) {
@@ -534,6 +558,8 @@ export class MobileScanner {
         if (this.captureBtnText) this.captureBtnText.textContent = `Capture ${nextFace.toUpperCase()}`;
         const twinStatus = document.getElementById('twin-status-text');
         if (twinStatus) twinStatus.textContent = `${this.faceIndex} of 4 panels registered in 3D · Next: ${nextFace}`;
+        const nextTile = document.querySelector(`.panel-upload-tile[data-face="${nextFace}"]`);
+        if (nextTile) nextTile.classList.add('active');
       } else {
         if (this.stepIndicator) this.stepIndicator.textContent = 'Complete (4 of 4)';
         if (this.currentTaskLabel) this.currentTaskLabel.textContent = '✓ All 4 Panels Captured! 3D Package Twin Ready.';
@@ -544,6 +570,8 @@ export class MobileScanner {
         }
         const twinStatus = document.getElementById('twin-status-text');
         if (twinStatus) twinStatus.textContent = '4 of 4 panels closed in 3D box · Geometry validated';
+        if (this.captureBtnText) this.captureBtnText.textContent = 'Opening Dancing Fish review…';
+        await this.openInteractiveReview();
       }
     } catch (err) {
       console.error('Capture error:', err);
@@ -558,12 +586,15 @@ export class MobileScanner {
     if (this.faceIndex > 0) {
       this.faceIndex--;
       const face = this.faces[this.faceIndex];
+      if (face === 'front') this.dancingFishFrontConfirmed = false;
       await this.session.retakeFace(face);
       const pip = document.getElementById(`pip-${face}`);
       if (pip) {
         pip.classList.remove('completed');
         pip.classList.add('active');
       }
+      const panelTile = document.querySelector(`.panel-upload-tile[data-face="${face}"]`);
+      if (panelTile) panelTile.classList.remove('completed');
       const faceLabels = {
         front: 'Front PDP (Brand, Net Wt, Claims)',
         right: 'Right Side (Nutrition Facts Table)',
