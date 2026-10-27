@@ -1474,6 +1474,15 @@ const server=createServer(async(req,res)=>{
               } catch {}
             }
           } catch {}
+          if (!r) {
+            try {
+              const seedRev = await createReview({ sample: 'organizer', mode: 'ai' }, actor);
+              await processReview(seedRev.id);
+              r = await load(seedRev.id);
+            } catch (seedErr) {
+              console.warn('Fallback demo seed notice:', seedErr.message);
+            }
+          }
         }
         if (!r) throw fail('Review not found or not assigned to this account.', 404);
       }

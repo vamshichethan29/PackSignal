@@ -587,11 +587,11 @@ def parse_pdf_file(pdf_path, check_render=True):
 
         for s in trace:
             raw_chars = s.get('chars', [])
-            txt = ''.join(chr(u) for u, gid, o, b in raw_chars if u > 0).strip()
+            txt = ''.join(chr(u) for u, gid, o, b in raw_chars if u is not None and isinstance(u, int) and u > 0).strip()
             if not txt:
                 continue
 
-            boxes = [b for u, gid, o, b in raw_chars]
+            boxes = [b for u, gid, o, b in raw_chars if b and len(b) >= 4 and all(v is not None for v in b[:4])]
             if not boxes:
                 continue
 

@@ -1016,8 +1016,7 @@ export class DemoPresentationModal {
 
     // Reveal trigger button
     this.container.querySelector('#demo-btn-reveal-trigger')?.addEventListener('click', () => {
-      this.mode = 'REVEAL_CHOICE';
-      this._rerenderDeck();
+      this._executeCachedReveal();
     });
 
     // Mode choice buttons
@@ -1535,8 +1534,7 @@ export class DemoPresentationModal {
         this._renderTimerDisplay(this.timer.remainingMs);
       } else if (e.key === 'r' || e.key === 'R') {
         e.preventDefault();
-        this.mode = 'REVEAL_CHOICE';
-        this._rerenderDeck();
+        this._executeCachedReveal();
       }
     } else if (this.mode === 'REVEALED') {
       if (e.key === 'n' || e.key === 'N') {

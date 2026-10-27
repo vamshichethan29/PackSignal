@@ -12,8 +12,8 @@
   <!-- Fullscreen Live Camera Viewport -->
   <video class="ar-camera-viewport" id="ar-camera-feed" autoplay playsinline muted></video>
 
-  <!-- Fallback Simulated Feed (when camera is denied or headless) -->
-  <img id="ar-simulated-feed" src="/samples/campus/front.png" class="ar-camera-viewport" style="display:none;" alt="Carton Feed">
+  <!-- Realistic Simulated Feed (with AR overlay markers anchored directly to carton) -->
+  <img id="ar-simulated-feed" src="/samples/campus/front.png" class="ar-camera-viewport" style="display:block;" alt="Carton Feed">
 
   <!-- Interactive SVG Annotation Layer (rendered inside div container for standard SVG DOM parsing) -->
   <div class="ar-annotation-layer" id="ar-annotation-layer"></div>

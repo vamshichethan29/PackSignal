@@ -154,11 +154,11 @@ def analyze_page_visibility(page, page_num=1, max_objects=5000):
     if trace:
         for idx, s in enumerate(trace[:max_objects]):
             raw_chars = s.get('chars', [])
-            txt = ''.join(chr(u) for u, gid, o, b in raw_chars if u > 0).strip()
+            txt = ''.join(chr(u) for u, gid, o, b in raw_chars if u is not None and isinstance(u, int) and u > 0).strip()
             if not txt:
                 continue
 
-            boxes = [b for u, gid, o, b in raw_chars if len(b) == 4 and b[2] > b[0] and b[3] > b[1]]
+            boxes = [b for u, gid, o, b in raw_chars if b and len(b) >= 4 and all(v is not None for v in b[:4]) and b[2] > b[0] and b[3] > b[1]]
             if not boxes:
                 continue
 

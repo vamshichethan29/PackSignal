@@ -67,7 +67,7 @@ def analyze_pdf_visibility(pdf_path):
 
         for s in trace:
             raw_chars = s.get('chars', [])
-            txt = ''.join(chr(u) for u, gid, o, b in raw_chars if u > 0).strip()
+            txt = ''.join(chr(u) for u, gid, o, b in raw_chars if u is not None and isinstance(u, int) and u > 0).strip()
             if not txt:
                 continue
 
@@ -78,11 +78,13 @@ def analyze_pdf_visibility(pdf_path):
             rendering_type = s.get('type', 0)  # 3 = invisible text
             opacity = s.get('opacity', 1.0)
 
-            boxes = [b for u, gid, o, b in raw_chars]
+            boxes = [b for u, gid, o, b in raw_chars if b and len(b) >= 4 and all(v is not None for v in b[:4])]
             if not boxes:
                 continue
             x0 = min(b[0] for b in boxes)
             y0 = min(b[1] for b in boxes)
+            x1 = max(b[2] for b in boxes)
+            y1 = max(b[3] for b in boxes)
             x1 = max(b[2] for b in boxes)
             y1 = max(b[3] for b in boxes)
             glyph_h = y1 - y0

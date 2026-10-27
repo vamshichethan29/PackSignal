@@ -286,7 +286,7 @@ def extract(path, role, outdir, artifact_id, name):
                 for ix in range(start,min(end,tp.count_chars())):
                     try:
                         b=tp.get_charbox(ix)
-                        if b[2]>b[0] and b[3]>b[1]: boxes.append(b)
+                        if b and len(b) >= 4 and all(v is not None for v in b[:4]) and b[2]>b[0] and b[3]>b[1]: boxes.append(b)
                     except Exception: pass
                 if not boxes or page.get_rotation()!=0:return None
                 x0=min(b[0] for b in boxes);y0=min(b[1] for b in boxes)
