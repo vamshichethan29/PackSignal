@@ -2871,8 +2871,6 @@ document.addEventListener("click", async (event) => {
     }
     if (action === "select-finding") {
       selectedFindingId = b.dataset.id;
-      artworkZoom = 100;
-      artworkViewport = { scale: 1, x: 0, y: 0 };
       const requestedEvidence = Number(b.dataset.evidenceIndex);
       activeEvidenceIndex = Number.isInteger(requestedEvidence) ? requestedEvidence : 0;
       cartonRotation = null;
@@ -2881,17 +2879,29 @@ document.addEventListener("click", async (event) => {
       const first = finding?.evidence?.find((item) => item.role === "artwork" && item.page);
       artworkPage = first?.page || 1;
       tab = "findings";
+      const artEvidence = finding?.evidence?.filter((item) => item.role === "artwork" && (!item.page || item.page === artworkPage));
+      const activeArtItem = artEvidence?.[activeEvidenceIndex] || artEvidence?.[0];
+      if (activeArtItem?.box && Array.isArray(activeArtItem.box)) {
+        artworkViewport = null;
+      } else {
+        artworkZoom = 100;
+        artworkViewport = { scale: 1, x: 0, y: 0 };
+      }
       renderReview();
     }
     if (action === "select-evidence") {
       activeEvidenceIndex = Number(b.dataset.index);
-      artworkZoom = 100;
-      artworkViewport = { scale: 1, x: 0, y: 0 };
       cartonRotation = null;
       cartonTilt = -7;
       const finding = current.findings.find((item) => item.id === selectedFindingId);
       const evidence = finding?.evidence?.[activeEvidenceIndex];
       if (evidence?.page) artworkPage = evidence.page;
+      if (evidence?.box && Array.isArray(evidence.box)) {
+        artworkViewport = null;
+      } else {
+        artworkZoom = 100;
+        artworkViewport = { scale: 1, x: 0, y: 0 };
+      }
       renderReview();
     }
     if (action === "workbench-mode") {

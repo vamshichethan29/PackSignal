@@ -368,7 +368,7 @@ export function workbenchArtwork(review,finding,{mode='2d',pageNumber=1,activeEv
     const imageUnit=page.unit==='pt'||(!page.unit&&/\.pdf$/i.test(doc.name||''))?'pt':'px';
     const hash=doc.sha256||'';
     visual=`<div class="proof-surface-label"><span><i></i> ORIGINAL ARTWORK</span><span>Page ${page.number} / ${doc.pages.length}</span></div>
-    <div class="workbench-art-frame ${showBoxes?'':'hide-boxes'} ${showZones?'':'hide-zones'}" tabindex="0" role="group" aria-label="Artwork canvas. Drag or use arrow keys to pan when zoomed. Plus and minus zoom. Home fits the page." data-workbench-frame data-page-number="${page.number}" data-zoom="${Math.max(100,Math.min(400,Number(zoom)||100))}" data-unit="${imageUnit}" data-page-width="${Number(page.width)||0}" data-page-height="${Number(page.height)||0}" ${selectedBox?`data-focus-box="${selectedBox.join(',')}"`:''}>
+    <div class="workbench-art-frame ${showBoxes?'':'hide-boxes'} ${showZones?'':'hide-zones'}" tabindex="0" role="group" aria-label="Artwork canvas. Drag or use arrow keys to pan when zoomed. Plus and minus zoom. Home fits the page." data-workbench-frame data-page-number="${page.number}" data-zoom="${Math.max(100,Math.min(400,Number(zoom)||100))}" data-unit="${imageUnit}" data-page-width="${Number(page.width)||0}" data-page-height="${Number(page.height)||0}" ${selectedBox?`data-focus-box="${selectedBox.join(',')}" data-start-focused`:''}>
       <div class="workbench-art-content" data-workbench-image><img src="${image(review,page)}" draggable="false" alt="Original artwork page ${page.number}">
       ${regions.map(({item,index})=>{
         const isPf=finding?.method==='pdf_preflight_screening'||finding?.id?.startsWith('pdf-preflight:');
@@ -383,30 +383,44 @@ export function workbenchArtwork(review,finding,{mode='2d',pageNumber=1,activeEv
       }).join('')}
       <!-- Dashed Ghost Boxes: Highlighting missing Net Qty & Address on the PDP (21 CFR §101.7 & 21 CFR §101.5) -->
       <!-- GHOST: MISSING NET QTY (16.9 oz) | GHOST: MISSING MFR ADDRESS (Only shown when user toggles Ghost/X-Ray) -->
-      ${renderGhostOverlayLayer(review, page.number, {
-        isXRay: review.options?.showGhostBoxes === true || review.options?.isXRay === true,
-        customPlacements: review.options?.customPlacements || {}
-      })}
+      <div class="workbench-layer-wrapper ghost-layer-wrapper" style="position:absolute;inset:0;pointer-events:none;${review.options?.showGhostBoxes === true || review.options?.isXRay === true ? '' : 'display:none;'}">
+        ${renderGhostOverlayLayer(review, page.number, {
+          isXRay: true,
+          customPlacements: review.options?.customPlacements || {}
+        })}
+      </div>
       <!-- Native PDF Hidden Text X-Ray Layer (Only shown when user toggles) -->
-      ${renderHiddenTextOverlayLayer(review, page.number, {
-        enabled: review.options?.showHiddenText === true
-      })}
-      ${renderReconstructedTextOverlayLayer(review, page.number, {
-        enabled: review.options?.showReconstructedText === true
-      })}
-      ${renderBleedSafetyLayer(review, page.number, {
-        enabled: review.options?.showBleedSafety === true
-      })}
-      ${renderTacHeatmapLayer(review, page.number, {
-        enabled: review.options?.showTacHeatmap === true
-      })}
-      ${renderTypographyOverlayLayer(review, page.number, {
-        enabled: review.options?.showTypographyOverlay === true
-      })}
+      <div class="workbench-layer-wrapper hidden-text-layer-wrapper" style="position:absolute;inset:0;pointer-events:none;${review.options?.showHiddenText === true ? '' : 'display:none;'}">
+        ${renderHiddenTextOverlayLayer(review, page.number, {
+          enabled: true
+        })}
+      </div>
+      <div class="workbench-layer-wrapper reconstructed-text-layer-wrapper" style="position:absolute;inset:0;pointer-events:none;${review.options?.showReconstructedText === true ? '' : 'display:none;'}">
+        ${renderReconstructedTextOverlayLayer(review, page.number, {
+          enabled: true
+        })}
+      </div>
+      <div class="workbench-layer-wrapper bleed-safety-layer-wrapper" style="position:absolute;inset:0;pointer-events:none;${review.options?.showBleedSafety === true ? '' : 'display:none;'}">
+        ${renderBleedSafetyLayer(review, page.number, {
+          enabled: true
+        })}
+      </div>
+      <div class="workbench-layer-wrapper tac-heatmap-layer-wrapper" style="position:absolute;inset:0;pointer-events:none;${review.options?.showTacHeatmap === true ? '' : 'display:none;'}">
+        ${renderTacHeatmapLayer(review, page.number, {
+          enabled: true
+        })}
+      </div>
+      <div class="workbench-layer-wrapper typography-layer-wrapper" style="position:absolute;inset:0;pointer-events:none;${review.options?.showTypographyOverlay === true ? '' : 'display:none;'}">
+        ${renderTypographyOverlayLayer(review, page.number, {
+          enabled: true
+        })}
+      </div>
       ${renderArtworkStickyNoteMarkers(review.team?.stickyNotes || [], finding?.id, page.number)}
       ${typeof renderArtworkMarkupOverlay==='function'?renderArtworkMarkupOverlay(review, page.number):''}
       ${typeof renderShopperHighlightsOverlay==='function'?renderShopperHighlightsOverlay(review,page.number,shopperPersona):(typeof window!=='undefined'&&window.shopperPersonas?.renderShopperHighlightsOverlay?window.shopperPersonas.renderShopperHighlightsOverlay(review,page.number,shopperPersona):'')}
-      ${typeof renderShelfReadabilityOverlayLayer==='function'?renderShelfReadabilityOverlayLayer(review,page.number,(typeof window!=='undefined'?window.shelfReadabilityState:null)):(typeof window!=='undefined'&&window.shelfReadability?.renderOverlay?window.shelfReadability.renderOverlay(review,page.number,window.shelfReadabilityState):'')}
+      <div class="workbench-layer-wrapper shelf-readability-layer-wrapper" style="position:absolute;inset:0;pointer-events:none;${review.options?.showShelfReadabilityOverlay === true ? '' : 'display:none;'}">
+        ${typeof renderShelfReadabilityOverlayLayer==='function'?renderShelfReadabilityOverlayLayer(review,page.number,{enabled:true,showHeatmap:true,...(typeof window!=='undefined'?window.shelfReadabilityState:null)}):(typeof window!=='undefined'&&window.shelfReadability?.renderOverlay?window.shelfReadability.renderOverlay(review,page.number,{enabled:true,showHeatmap:true,...window.shelfReadabilityState}):'')}
+      </div>
       ${issue&&selectedBox?`<div class="workbench-diff-card" style="left:${diffLeft}%;top:${Math.min(68,selectedBox[1]*100)}%"><div class="workbench-diff-actual"><small>ARTWORK SAYS</small><b title="${esc(selected.item.quote||finding.observed||'Not detected')}">${esc(compactText(selected.item.quote||finding.observed||'Not detected'))}</b></div><span class="workbench-diff-arrow">→</span><div class="workbench-diff-reference"><small>SUPPLIED SOURCE</small><b title="${esc(finding.expected||'Not specified')}">${esc(compactText(finding.expected||'Not specified'))}</b></div></div>`:''}
       </div><span class="artwork-gesture-hint">Drag to pan · pinch to zoom · double-click to fit</span>
     </div>
@@ -671,41 +685,61 @@ export function mountArtworkControls(container,{review,onRotation,viewport,onVie
     controls.querySelector('[data-layer-zones]')?.addEventListener('change',event=>frame.classList.toggle('hide-zones',!event.target.checked));
     controls.querySelector('[data-layer-ghosts]')?.addEventListener('change',event=>{
       const isVisible = event.target.checked;
-      frame.querySelectorAll('.workbench-ghost-box, .workbench-legal-region').forEach(el=>{
+      if (!review.options) review.options = {};
+      review.options.showGhostBoxes = isVisible;
+      frame.querySelectorAll('.ghost-layer-wrapper, .workbench-ghost-box, .workbench-legal-region, .workbench-ghost-overlay-layer').forEach(el=>{
         el.style.display=isVisible?'':'none';
       });
       controls.querySelector('[data-action="toggle-xray-2d"]')?.classList.toggle('active', isVisible);
     });
     controls.querySelector('[data-layer-hidden-text]')?.addEventListener('change', event => {
       const isVisible = event.target.checked;
-      frame.querySelectorAll('.workbench-hidden-text-layer').forEach(el => {
+      if (!review.options) review.options = {};
+      review.options.showHiddenText = isVisible;
+      frame.querySelectorAll('.hidden-text-layer-wrapper, .workbench-hidden-text-layer').forEach(el => {
         el.style.display = isVisible ? '' : 'none';
       });
     });
     controls.querySelector('[data-layer-reconstructed-text]')?.addEventListener('change', event => {
       const isVisible = event.target.checked;
-      frame.querySelectorAll('.workbench-reconstructed-text-layer').forEach(el => {
+      if (!review.options) review.options = {};
+      review.options.showReconstructedText = isVisible;
+      frame.querySelectorAll('.reconstructed-text-layer-wrapper, .workbench-reconstructed-text-layer').forEach(el => {
         el.style.display = isVisible ? '' : 'none';
       });
     });
     controls.querySelector('[data-layer-tac-heatmap]')?.addEventListener('change', event => {
       const isVisible = event.target.checked;
-      frame.querySelectorAll('.tac-heatmap-overlay-layer').forEach(el => {
+      if (!review.options) review.options = {};
+      review.options.showTacHeatmap = isVisible;
+      frame.querySelectorAll('.tac-heatmap-layer-wrapper, .tac-heatmap-overlay-layer').forEach(el => {
         el.style.display = isVisible ? '' : 'none';
       });
     });
     controls.querySelector('[data-layer-bleed-safety]')?.addEventListener('change', event => {
       const isVisible = event.target.checked;
-      frame.querySelectorAll('.bleed-safety-overlay-layer').forEach(el => {
+      if (!review.options) review.options = {};
+      review.options.showBleedSafety = isVisible;
+      frame.querySelectorAll('.bleed-safety-layer-wrapper, .bleed-safety-overlay-layer').forEach(el => {
         el.style.display = isVisible ? '' : 'none';
       });
     });
     controls.querySelector('[data-layer-typography]')?.addEventListener('change', event => {
       const isVisible = event.target.checked;
-      frame.querySelectorAll('.typography-overlay-layer, .workbench-typography-overlay').forEach(el => {
+      if (!review.options) review.options = {};
+      review.options.showTypographyOverlay = isVisible;
+      frame.querySelectorAll('.typography-layer-wrapper, .typography-overlay-layer, .workbench-typography-overlay').forEach(el => {
         el.style.display = isVisible ? '' : 'none';
       });
     });
+    if (frame.dataset.focusBox && viewportController?.focusOnBox) {
+      setTimeout(() => {
+        try {
+          const b = frame.dataset.focusBox.split(',').map(Number);
+          viewportController.focusOnBox(b, { animate: true });
+        } catch (e) {}
+      }, 60);
+    }
     frame.querySelectorAll('.tac-hotspot-marker').forEach(btn => {
       btn.addEventListener('click', e => {
         e.stopPropagation();

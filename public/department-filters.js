@@ -159,41 +159,48 @@ export function renderDepartmentFilterBar(review, activeDept = 'all', includeCol
   const { counts } = calculateDepartmentCounts(findings, includeCollaborators);
 
   const depts = ['all', 'legal', 'rd', 'brand', 'prepress', 'unassigned'];
+  const activeLabel = activeDept !== 'all' ? (DEPT_CONFIGS[activeDept]?.label || activeDept) : `All (${counts.all || findings.length})`;
 
   return `
-    <div class="department-filter-container" data-dept-filter-bar role="region" aria-label="Filter findings by department">
-      <div class="dept-filter-header">
-        <span class="dept-filter-title">
+    <details class="department-filter-container dept-filter-details" data-dept-filter-bar role="region" aria-label="Filter findings by department" ${activeDept !== 'all' ? 'open' : ''}>
+      <summary class="dept-filter-summary">
+        <div class="dept-summary-title">
           <span class="dept-filter-icon" aria-hidden="true">🏢</span>
-          FINDINGS BY TEAM
-        </span>
-        <label class="dept-collab-toggle" title="Include findings where department is a collaborator">
-          <input type="checkbox" data-action="toggle-collab-dept" ${includeCollaborators ? 'checked' : ''}>
-          <span>Include Collaborating Teams</span>
-        </label>
-      </div>
+          <span>FINDINGS BY TEAM: <strong>${esc(activeLabel)}</strong></span>
+        </div>
+        <span class="dept-summary-caret">▾</span>
+      </summary>
 
-      <div class="dept-filter-buttons" role="group" aria-label="Department filters">
-        ${depts.map(id => {
-          const cfg = DEPT_CONFIGS[id];
-          const count = counts[id] || 0;
-          const isActive = activeDept === id;
-          return `
-            <button type="button"
-                    class="dept-filter-btn ${id} ${isActive ? 'active' : ''}"
-                    data-action="filter-department"
-                    data-department="${id}"
-                    data-dept="${id}"
-                    aria-pressed="${isActive ? 'true' : 'false'}"
-                    style="--dept-color: ${cfg.color}">
-              <span class="dept-btn-icon" aria-hidden="true">${cfg.icon}</span>
-              <span class="dept-btn-label">${esc(cfg.shortLabel)}</span>
-              <span class="dept-btn-count">${count}</span>
-            </button>
-          `;
-        }).join('')}
+      <div class="dept-filter-body">
+        <div class="dept-filter-header">
+          <label class="dept-collab-toggle" title="Include findings where department is a collaborator">
+            <input type="checkbox" data-action="toggle-collab-dept" ${includeCollaborators ? 'checked' : ''}>
+            <span>Include Collaborating Teams</span>
+          </label>
+        </div>
+
+        <div class="dept-filter-buttons" role="group" aria-label="Department filters">
+          ${depts.map(id => {
+            const cfg = DEPT_CONFIGS[id];
+            const count = counts[id] || 0;
+            const isActive = activeDept === id;
+            return `
+              <button type="button"
+                      class="dept-filter-btn ${id} ${isActive ? 'active' : ''}"
+                      data-action="filter-department"
+                      data-department="${id}"
+                      data-dept="${id}"
+                      aria-pressed="${isActive ? 'true' : 'false'}"
+                      style="--dept-color: ${cfg.color}">
+                <span class="dept-btn-icon" aria-hidden="true">${cfg.icon}</span>
+                <span class="dept-btn-label">${esc(cfg.shortLabel)}</span>
+                <span class="dept-btn-count">${count}</span>
+              </button>
+            `;
+          }).join('')}
+        </div>
       </div>
-    </div>
+    </details>
   `;
 }
 

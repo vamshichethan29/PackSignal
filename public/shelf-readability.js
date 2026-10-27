@@ -297,7 +297,7 @@ export function renderShelfReadabilityPanel(review, options = {}) {
  */
 export function renderShelfReadabilityOverlayLayer(review, pageNum = 1, options = {}) {
   const opts = options || {};
-  if (opts.showHeatmap === false || !review) return '';
+  if (opts.showHeatmap === false || opts.enabled === false || !review) return '';
   const currentDistance = Number(opts.distanceCm || DISTANCE_BOUNDS.DEFAULT);
   const currentProfile = opts.profileId || 'STANDARD_20_20';
 
