@@ -119,11 +119,12 @@ export const REGISTERED_PROFILES = [
 /**
  * Main entry point: Renders the Print Readiness Radar dashboard into container.
  */
-export function renderPrintReadinessRadar(review, container, { onSelectFinding = null, onOpenAskPrepress = null } = {}) {
+export function renderPrintReadinessRadar(review, container, { onSelectFinding = null, onOpenAskPrepress = null, onViewPrepressFindings = null } = {}) {
   if (!container) return;
 
   const preflight = review?.preflight || {};
   const findings = review?.findings || [];
+  const measured = value => typeof value === 'number' && Number.isFinite(value) ? value : null;
 
   const currentProfileId = preflight.pressProfile || review.pressProfile || 'ISO-OFFSET-COATED-300';
   const profile = REGISTERED_PROFILES.find(p => p.id === currentProfileId) || REGISTERED_PROFILES[0];
@@ -131,35 +132,35 @@ export function renderPrintReadinessRadar(review, container, { onSelectFinding =
   // 1. TAC ink coverage
   const fTac = findings.find(f => f.check === 'prepress:tac_excess' || f.id === 'prepress:tac_excess' || f.key === 'prepress:tac_excess' || f.id?.includes('tac'));
   const isRgbOnly = preflight.colorSpace === 'DeviceRGB' || preflight.tac?.authority === 'UNSUPPORTED_COLOR_SPACE';
-  const tacStatus = isRgbOnly ? 'unable' : (fTac?.status || preflight.tac?.status || 'match');
-  const tacPeak = isRgbOnly ? null : (fTac?.measuredValue ?? preflight.tac?.peakTac ?? 288);
+  const tacStatus = isRgbOnly ? 'unable' : (fTac?.status || preflight.tac?.status || 'unable');
+  const tacPeak = isRgbOnly ? null : measured(fTac?.measuredValue ?? preflight.tac?.peakTac);
   const tacLimit = fTac?.requiredValue ?? profile.tac;
-  const overLimitAreaPct = tacStatus === 'issue' ? '2.4%' : '0.0%';
+  const overLimitAreaPct = measured(preflight.tac?.overLimitAreaPct);
 
   // 2. Bleed extension
   const fBleed = findings.find(f => f.check === 'prepress:bleed_extension' || f.id === 'prepress:bleed_extension' || f.key === 'prepress:bleed_extension');
-  const bleedStatus = fBleed?.status || preflight.bleed?.status || 'match';
-  const bleedMeasured = fBleed?.measuredValue ?? preflight.bleed?.measuredMm ?? 3.2;
+  const bleedStatus = fBleed?.status || preflight.bleed?.status || 'unable';
+  const bleedMeasured = ['match', 'issue'].includes(bleedStatus) ? measured(fBleed?.measuredValue ?? preflight.bleed?.measuredMm) : null;
   const bleedRequired = fBleed?.requiredValue ?? profile.bleed;
 
   // 3. Trim safety
   const fTrim = findings.find(f => f.check === 'prepress:trim_safety' || f.id === 'prepress:trim_safety' || f.key === 'prepress:trim_safety');
-  const trimStatus = fTrim?.status || preflight.trimSafety?.status || 'match';
-  const trimMeasured = fTrim?.measuredValue ?? preflight.trimSafety?.measuredMm ?? 3.1;
+  const trimStatus = fTrim?.status || preflight.trimSafety?.status || 'unable';
+  const trimMeasured = ['match', 'issue'].includes(trimStatus) ? measured(fTrim?.measuredValue ?? preflight.trimSafety?.measuredMm) : null;
   const trimRequired = fTrim?.requiredValue ?? profile.inset;
 
   // 4. Crease clearance
   const fCrease = findings.find(f => f.check === 'prepress:crease_clearance' || f.id === 'prepress:crease_clearance' || f.key === 'prepress:crease_clearance');
-  const creaseStatus = profile.crease === 0 ? 'not_applicable' : (fCrease?.status || preflight.creaseClearance?.status || 'match');
-  const creaseMeasured = profile.crease === 0 ? 'N/A' : (fCrease?.measuredValue ?? preflight.creaseClearance?.measuredMm ?? 1.8);
+  const creaseStatus = profile.crease === 0 ? 'not_applicable' : (fCrease?.status || preflight.creaseClearance?.status || 'unable');
+  const creaseMeasured = ['match', 'issue'].includes(creaseStatus) ? measured(fCrease?.measuredValue ?? preflight.creaseClearance?.measuredMm) : null;
   const creaseRequired = profile.crease === 0 ? 'N/A' : `${profile.crease} mm`;
 
   // 5. Native Typography
   const fTypo = findings.find(f => f.category === 'typography' || f.check === 'statutory_type_size' || f.key?.includes('typography') || f.id?.includes('typo'));
-  const typoStatus = fTypo?.status || 'issue';
-  const typoMeasured = fTypo?.measuredGlyphHeightMm ?? fTypo?.measuredValue ?? 1.25;
-  const typoRequired = fTypo?.requiredHeightMm ?? fTypo?.requiredValue ?? 1.588;
-  const typoNominalPt = fTypo?.nominalFontSizePt ?? 6.0;
+  const typoStatus = fTypo?.status || preflight.typography?.status || 'unable';
+  const typoMeasured = measured(fTypo?.measuredGlyphHeightMm ?? fTypo?.measuredValue ?? preflight.typography?.minGlyphHeightMm);
+  const typoRequired = measured(fTypo?.requiredHeightMm ?? fTypo?.requiredValue);
+  const typoNominalPt = measured(fTypo?.nominalFontSizePt);
 
   // 6. CMYK Separations / Barcode / Spots
   const fRichBlack = findings.find(f => f.id === 'preflight-rich-black-text' || f.verdict === 'RICH_BLACK_SMALL_TEXT_DEFECT');
@@ -167,9 +168,9 @@ export function renderPrintReadinessRadar(review, container, { onSelectFinding =
   const spotCount = Array.isArray(spots) ? spots.length : 0;
 
   // Inspection Coverage calculation
-  const checkStatuses = [tacStatus, bleedStatus, trimStatus, creaseStatus, typoStatus];
-  const executedChecks = checkStatuses.filter(st => st !== 'unable').length;
-  const totalChecks = checkStatuses.length;
+  const measuredChecks = [tacPeak, bleedMeasured, trimMeasured, creaseMeasured, typoMeasured];
+  const executedChecks = measuredChecks.filter(value => value !== null).length;
+  const totalChecks = measuredChecks.length;
 
   container.innerHTML = `
     <div class="print-readiness-radar-panel" id="print-readiness-radar">
@@ -249,9 +250,9 @@ export function renderPrintReadinessRadar(review, container, { onSelectFinding =
               ${tacPeak !== null ? `${tacPeak}%` : 'UNABLE'}
             </div>
             <div class="radar-card-metrics">
-              Max measured TAC: <strong>${tacPeak !== null ? `${tacPeak}%` : 'Unmeasured (RGB)'}</strong><br>
+              Max measured TAC: <strong>${tacPeak !== null ? `${tacPeak}%` : 'Not measured'}</strong><br>
               Approved limit: <strong>${tacLimit}%</strong><br>
-              Over-limit sampled area: <strong>${overLimitAreaPct}</strong>
+              Over-limit sampled area: <strong>${overLimitAreaPct !== null ? `${overLimitAreaPct}%` : 'Not measured'}</strong>
             </div>
           </div>
           <div style="display:flex;gap:6px;margin-top:8px;">
@@ -277,7 +278,7 @@ export function renderPrintReadinessRadar(review, container, { onSelectFinding =
             <div class="radar-card-metrics">
               Required outward: <strong>${bleedRequired} mm</strong><br>
               Minimum measured: <strong>${bleedMeasured !== null ? `${bleedMeasured} mm` : 'Unspecified'}</strong><br>
-              Shortfall: <strong>${bleedStatus === 'issue' ? `${Math.max(0, Math.round((bleedRequired - bleedMeasured) * 10) / 10)} mm` : '0 mm'}</strong>
+              Shortfall: <strong>${bleedMeasured === null ? 'Not measured' : `${Math.max(0, Math.round((bleedRequired - bleedMeasured) * 10) / 10)} mm`}</strong>
             </div>
           </div>
           <button type="button" class="radar-btn" id="btn-card-bleed-overlay" style="width:100%;justify-content:center;margin-top:8px;">
@@ -298,7 +299,7 @@ export function renderPrintReadinessRadar(review, container, { onSelectFinding =
             <div class="radar-card-metrics">
               Required inward: <strong>${trimRequired} mm</strong><br>
               Minimum observed: <strong>${trimMeasured !== null ? `${trimMeasured} mm` : 'Unspecified'}</strong><br>
-              Text/logo risk: <strong>${trimStatus === 'issue' ? 'Violation detected' : 'Cleared'}</strong>
+              Text/logo risk: <strong>${trimStatus === 'issue' ? 'Violation detected' : trimStatus === 'match' ? 'Cleared' : 'Needs verification'}</strong>
             </div>
           </div>
           <button type="button" class="radar-btn" id="btn-card-trim-inspect" style="width:100%;justify-content:center;margin-top:8px;">
@@ -317,7 +318,7 @@ export function renderPrintReadinessRadar(review, container, { onSelectFinding =
               ${profile.crease === 0 ? 'N/A' : (creaseMeasured !== null ? `${creaseMeasured} mm` : 'UNABLE')}
             </div>
             <div class="radar-card-metrics">
-              Status: <strong>${creaseStatus === 'not_applicable' ? 'Cylindrical (No Folds)' : (creaseStatus === 'match' ? 'Cleared' : 'Score Hazard')}</strong><br>
+              Status: <strong>${creaseStatus === 'not_applicable' ? 'Cylindrical (No Folds)' : creaseStatus === 'match' ? 'Cleared' : creaseStatus === 'issue' ? 'Score hazard' : 'Needs verification'}</strong><br>
               Required clearance: <strong>${creaseRequired}</strong><br>
               Observed distance: <strong>${creaseMeasured !== null ? (profile.crease === 0 ? 'N/A' : `${creaseMeasured} mm`) : 'Unspecified'}</strong>
             </div>
@@ -335,11 +336,11 @@ export function renderPrintReadinessRadar(review, container, { onSelectFinding =
               <span class="radar-status-badge ${typoStatus}">${typoStatus.toUpperCase()}</span>
             </div>
             <div class="radar-metric-hero ${typoStatus === 'issue' ? 'exceeded' : 'compliant'}">
-              ${typoMeasured !== null ? `${typoMeasured} mm` : '6.0 pt'}
+              ${typoMeasured !== null ? `${typoMeasured} mm` : 'Not measured'}
             </div>
             <div class="radar-card-metrics">
-              Nominal size: <strong>${typoNominalPt !== null ? `${typoNominalPt} pt` : '6.0 pt'}</strong><br>
-              Required minimum: <strong>${typoRequired !== null ? `${typoRequired} mm` : '1.588 mm (1/16 in)'}</strong><br>
+              Nominal size: <strong>${typoNominalPt !== null ? `${typoNominalPt} pt` : 'Not measured'}</strong><br>
+              Required minimum: <strong>${typoRequired !== null ? `${typoRequired} mm` : 'Not supplied'}</strong><br>
               Statute: <strong>21 CFR 101.105(h) / 101.2(c)</strong>
             </div>
           </div>
@@ -382,7 +383,7 @@ export function renderPrintReadinessRadar(review, container, { onSelectFinding =
   `;
 
   // Attach Event Listeners
-  _attachRadarListeners(container, review, profile, { onSelectFinding, onOpenAskPrepress });
+  _attachRadarListeners(container, review, profile, { onSelectFinding, onOpenAskPrepress, onViewPrepressFindings });
 }
 
 let _activeRadarDetail = null;
@@ -390,7 +391,7 @@ let _activeRadarDetail = null;
 /**
  * Event handling and UI interactions
  */
-function _attachRadarListeners(container, review, profile, { onSelectFinding, onOpenAskPrepress }) {
+function _attachRadarListeners(container, review, profile, { onSelectFinding, onOpenAskPrepress, onViewPrepressFindings }) {
   // Profile selector change
   const select = container.querySelector('#radar-press-profile-select');
   select?.addEventListener('change', (e) => {
@@ -399,7 +400,7 @@ function _attachRadarListeners(container, review, profile, { onSelectFinding, on
       review.pressProfile = selectedId;
       if (review.preflight) review.preflight.pressProfile = selectedId;
     }
-    renderPrintReadinessRadar(review, container, { onSelectFinding, onOpenAskPrepress });
+    renderPrintReadinessRadar(review, container, { onSelectFinding, onOpenAskPrepress, onViewPrepressFindings });
   });
 
   // Toggle TAC Heatmap
@@ -407,7 +408,12 @@ function _attachRadarListeners(container, review, profile, { onSelectFinding, on
   const cardTacBtn = container.querySelector('#btn-card-tac-heatmap');
   const onToggleHeatmap = () => {
     toggleTacBtn?.classList.toggle('active');
-    window.dispatchEvent(new CustomEvent('packsignal:toggle-tac-heatmap', { detail: { profileId: profile.id } }));
+    const control = document.querySelector('[data-layer-tac-heatmap]');
+    if (control) { control.checked = !control.checked; control.dispatchEvent(new Event('change', { bubbles: true })); }
+    const finding = (review?.findings || []).find(f => f.id === 'prepress:tac_excess' || f.check === 'prepress:tac_excess');
+    const peak = finding?.measuredValue ?? review?.preflight?.tac?.peakTac;
+    const overlayCount = document.querySelectorAll('.tac-heatmap-overlay-layer').length;
+    _showRadarDetail(container, 'TAC heatmap and measurement', `<strong>Measured peak:</strong> ${typeof peak === 'number' ? `${esc(peak)}%` : 'Not measured'}<br><strong>Approved profile limit:</strong> ${esc(profile.tac)}%<br><strong>Review finding:</strong> ${esc(finding?.observed || 'No TAC finding is attached to this review.')}<br><strong>Artwork heatmap:</strong> ${overlayCount ? (control?.checked ? 'Visible on the 2D proof' : 'Hidden on the 2D proof') : 'No pixel-level hotspot map is available for this source; the measured finding remains inspectable.'}`);
   };
   toggleTacBtn?.addEventListener('click', onToggleHeatmap);
   cardTacBtn?.addEventListener('click', onToggleHeatmap);
@@ -416,13 +422,14 @@ function _attachRadarListeners(container, review, profile, { onSelectFinding, on
   const inspectCmykBtn = container.querySelector('#btn-inspect-cmyk-radar');
   const cardCmykBtn = container.querySelector('#btn-card-tac-inspect');
   const onOpenDensitometer = () => {
-    inspectCmykBtn?.classList.toggle('active');
     const tacData = review?.preflight?.tac;
-    const sample = tacData?.peakChannels
-      ? { ...tacData.peakChannels, sourceObject: 'Peak CMYK Density Region', authority: tacData.authority }
-      : { c: 80, m: 70, y: 70, k: 100, sourceObject: 'Heading Vector Fill' };
-    openPrintDensitometerModal(sample, profile);
-    window.dispatchEvent(new CustomEvent('packsignal:toggle-densitometer', { detail: { profileId: profile.id } }));
+    const channels = tacData?.peakChannels;
+    if (channels && ['c', 'm', 'y', 'k'].every(key => Number.isFinite(channels[key]))) {
+      openPrintDensitometerModal({ ...channels, sourceObject: tacData.sourceObject || 'Measured peak CMYK region', authority: tacData.authority }, profile);
+      return;
+    }
+    const finding = (review?.findings || []).find(f => f.id === 'prepress:tac_excess' || f.check === 'prepress:tac_excess');
+    _showRadarDetail(container, 'CMYK densitometer', `<strong>Total ink coverage:</strong> ${typeof finding?.measuredValue === 'number' ? `${esc(finding.measuredValue)}%` : 'Not measured'}<br><strong>Individual C/M/Y/K channels:</strong> Not available from this review's source data.<br><strong>Source finding:</strong> ${esc(finding?.observed || 'No source-backed TAC reading is attached.')}<br>A channel breakdown requires native CMYK separations; it cannot be inferred from a TAC total.`);
   };
   inspectCmykBtn?.addEventListener('click', onOpenDensitometer);
   cardCmykBtn?.addEventListener('click', onOpenDensitometer);
@@ -432,14 +439,20 @@ function _attachRadarListeners(container, review, profile, { onSelectFinding, on
   const cardBleedBtn = container.querySelector('#btn-card-bleed-overlay');
   const onToggleDieline = () => {
     toggleBleedBtn?.classList.toggle('active');
-    window.dispatchEvent(new CustomEvent('packsignal:toggle-dieline-safety', { detail: { profileId: profile.id } }));
+    const control = document.querySelector('[data-layer-bleed-safety]');
+    if (control) { control.checked = !control.checked; control.dispatchEvent(new Event('change', { bubbles: true })); }
+    const checks = ['prepress:bleed_extension', 'prepress:trim_safety', 'prepress:crease_clearance'];
+    const rows = checks.map(id => (review?.findings || []).find(f => f.id === id || f.check === id)).filter(Boolean);
+    const overlayCount = document.querySelectorAll('.bleed-safety-overlay-layer').length;
+    _showRadarDetail(container, 'Dieline, bleed and safety', `${rows.map(f => `<strong>${esc(f.title || f.check)}:</strong> ${esc(f.observed || f.status)}<br>`).join('') || 'No source-backed dieline measurements are attached to this review.<br>'}<strong>Artwork overlay:</strong> ${overlayCount ? (control?.checked ? 'Visible on the 2D proof' : 'Hidden on the 2D proof') : 'No mapped cut and crease geometry is available for an overlay.'}`);
   };
   toggleBleedBtn?.addEventListener('click', onToggleDieline);
   cardBleedBtn?.addEventListener('click', onToggleDieline);
 
   // View Prepress Findings button
   container.querySelector('#btn-view-prepress-findings-radar')?.addEventListener('click', () => {
-    window.dispatchEvent(new CustomEvent('packsignal:filter-department', { detail: { department: 'prepress' } }));
+    if (onViewPrepressFindings) onViewPrepressFindings();
+    else _showRadarDetail(container, 'Prepress findings', (review?.findings || []).filter(f => f.primaryDepartment === 'prepress' || String(f.id).startsWith('prepress:')).map(f => `<p><strong>${esc(f.status.toUpperCase())} · ${esc(f.title)}</strong><br>${esc(f.observed || '')}</p>`).join('') || 'No prepress findings are attached to this review.');
   });
 
   // Card click triggers
@@ -474,22 +487,14 @@ function _attachRadarListeners(container, review, profile, { onSelectFinding, on
 
   // Native Typography Inspector
   const handleOpenTypo = () => {
+    const fTypo = (review?.findings || []).find(f => (f.category === 'typography' || f.check === 'statutory_type_size' || f.key?.includes('typography') || f.id?.includes('typo')) && Number.isFinite(f.measuredGlyphHeightMm ?? f.measuredValue));
+    if (!fTypo) {
+      const related = (review?.findings || []).filter(f => f.category === 'typography' || f.id?.includes('typo') || f.id?.includes('font'));
+      _showRadarDetail(container, 'Native typography inspection', `${related.length} typography-related findings in this review. ${related.length ? related.map(f => `<p><strong>${esc(f.status.toUpperCase())} · ${esc(f.title)}</strong><br>${esc(f.observed || 'A measured glyph height is not attached to this finding.')}</p>`).join('') : 'No native glyph measurements are attached to this review.'}`);
+      return;
+    }
     import('./font-inspector.js').then(m => {
-      const fTypo = (review?.findings || []).find(f => f.category === 'typography' || f.check === 'statutory_type_size' || f.key?.includes('typography') || f.id?.includes('typo'));
-      m.openTypographyInspector(fTypo || {
-        id: 'typo-statutory-net-qty',
-        title: 'Net quantity letter height below statutory minimum',
-        status: 'issue',
-        nominalFontSizePt: 6.0,
-        measuredGlyphHeightMm: 1.25,
-        requiredHeightMm: 1.588,
-        fontName: 'Helvetica-Bold',
-        fontSubtype: 'TrueType',
-        pdpAreaSqIn: 20.0,
-        ruleCitation: '21 CFR 101.105(h)',
-        observed: 'Net Wt 12 oz (340g)',
-        measurementMethod: 'ORIGINAL_NATIVE_GLYPH_OUTLINE'
-      }, {
+      m.openTypographyInspector(fTypo, {
         onFocusArtwork: (f) => onSelectFinding?.(f),
         onOpenAskPrepress: (f) => onOpenAskPrepress?.(f)
       });

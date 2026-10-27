@@ -48,7 +48,8 @@ test.describe('Master 12-Feature Competitive Integration (PackSignal Upgrade #51
     await page.waitForLoadState('domcontentloaded');
 
     // Launch Judge Presentation Mode from hero or topbar
-    const startDemoBtn = page.locator('#btn-start-judge-demo, #hero-start-judge-demo').first();
+    await page.locator('#hero-review-options > summary').click();
+    const startDemoBtn = page.locator('#hero-start-judge-demo');
     await expect(startDemoBtn).toBeVisible({ timeout: 15000 });
     await startDemoBtn.click();
 

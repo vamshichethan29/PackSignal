@@ -32,6 +32,7 @@ test.describe('Phase 10B — Live AR on Real Box E2E Sequence', () => {
     const liveArBtn = page.locator('#hero-live-ar');
     const arQrBtn = page.locator('#hero-ar-qr-btn');
 
+    await page.locator('#hero-review-options > summary').click();
     await expect(liveArBtn).toBeVisible({ timeout: 10000 });
     await expect(arQrBtn).toBeVisible();
 

@@ -14,9 +14,23 @@ test.describe('E2E: Home Page & Navigation', () => {
     await expect(page.locator('h1')).toContainText('Review packaging artwork');
 
     // 3. Verify key navigation actions exist
-    await expect(page.locator('button[data-action="upload"]')).toBeVisible();
-    await expect(page.locator('button[data-sample="organizer"]').first()).toBeVisible();
+    await expect(page.locator('#hero-upload-sources')).toHaveText('+ New review');
+    await expect(page.locator('#hero-review-options > summary')).toBeVisible();
+    await expect(page.locator('#hero-review-options-menu')).not.toBeVisible();
+    await page.locator('#hero-review-options > summary').click();
+    await expect(page.locator('#hero-scan-physical')).toBeVisible();
+    await expect(page.locator('#hero-scan-with-phone')).toBeVisible();
+    await expect(page.locator('#hero-live-ar')).toBeVisible();
+    await expect(page.locator('#hero-ar-qr-btn')).toBeVisible();
+    await expect(page.locator('#hero-review-options-menu button[data-action="sample"]')).toBeVisible();
+    await expect(page.locator('#hero-start-judge-demo')).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(page.locator('#hero-review-options-menu')).not.toBeVisible();
+    await expect(page.locator('.sample-card button[data-sample="organizer"]')).toBeVisible();
     await expect(page.locator('button[data-sample="fieldday"]').first()).toBeVisible();
+    await page.locator('#hero-upload-sources').click();
+    await expect(page.locator('dialog[open]')).toContainText('New artwork review');
+    await page.getByRole('button', { name: 'Cancel' }).click();
 
     // 4. Verify samples section and recent reviews table
     await expect(page.locator('.cards')).toBeVisible();

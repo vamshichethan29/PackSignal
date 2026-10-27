@@ -19,7 +19,8 @@ test.describe('E2E: "Spot the Mistakes" Interactive Judge Presentation (Upgrade 
     await page.waitForLoadState('domcontentloaded');
 
     // 2. Click Start Judge Demo from topbar or hero
-    const startDemoBtn = page.locator('#btn-start-judge-demo, #hero-start-judge-demo').first();
+    await page.locator('#hero-review-options > summary').click();
+    const startDemoBtn = page.locator('#hero-start-judge-demo');
     await expect(startDemoBtn).toBeVisible({ timeout: 15000 });
     await startDemoBtn.click();
 

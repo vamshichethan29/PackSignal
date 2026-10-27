@@ -18,8 +18,9 @@ test.describe('Phase 10A — Scan to Brief E2E Sequence', () => {
     const uploadSourcesBtn = page.locator('#hero-upload-sources');
     const scanPhoneBtn = page.locator('#hero-scan-with-phone');
 
-    await expect(scanPhysicalBtn).toBeVisible({ timeout: 10000 });
     await expect(uploadSourcesBtn).toBeVisible();
+    await page.locator('#hero-review-options > summary').click();
+    await expect(scanPhysicalBtn).toBeVisible({ timeout: 10000 });
     await expect(scanPhoneBtn).toBeVisible();
 
     // 2. Click [SCAN WITH PHONE] on desktop and verify pairing token modal

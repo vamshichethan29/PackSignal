@@ -43,14 +43,12 @@ import { renderConflictCard, mountConflictCardHandlers } from "./conflict-card.j
 import { renderGuidedQuestionsQueue } from "./review-questions.js";
 import { renderRuleMap } from "./rule-map.js";
 import { evidenceDeskView, mountEvidenceDesk } from "./evidence-desk.js";
-import { mountCreativeBrief } from "./creative-brief.js";
-import { mountAskAboutThis } from "./ask-about-this.js";
-import { mountReviewerLenses } from "./reviewer-lenses.js";
 import { mountPackCanvas } from "./pack-canvas.js";
 import { mountShopperLenses } from "./shopper-lenses.js";
 import { mountMarketRadarMap } from "./market-radar-map.js";
 import { mountRegulatoryTimeMachine } from "./regulatory-time-machine.js";
 import { renderDepartmentFilterBar, renderDepartmentSummaryCard, renderDepartmentBadge, filterFindingsByDepartment } from "./department-filters.js";
+import { renderReviewFactSheet, renderReviewLenses, renderReviewCreativeBrief, downloadReviewCreativeBrief } from "./review-output-panels.js";
 import { renderFindingStickyNotes } from "./sticky-notes.js";
 import { mountQuickTriage } from "./quick-triage.js";
 import { renderAtwaterProofCard, isAtwaterFinding } from "./atwater-proof-card.js";
@@ -159,7 +157,7 @@ try {
   theme =
     localStorage.getItem("packproof-theme") ||
     (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-} catch {}
+} catch { }
 document.documentElement.dataset.theme = theme;
 const date = (s) =>
   new Date(s).toLocaleString(undefined, {
@@ -246,7 +244,7 @@ function aiStatusLabel(showStatus = false) {
 function shell(content) {
   evidenceCanvas?.dispose(); evidenceCanvas = null;
   $("#app").innerHTML =
-    `<div class="shell"><aside class="sidebar"><button class="brand" data-action="home" aria-label="PackSignal home"><img src="/icon.svg" alt="">PackSignal</button><div class="workspace-label">WORKSPACE</div><nav><button class="nav-item ${view === "dashboard" ? "active" : ""}" data-action="home"><span class="nav-icon">▦</span> Home</button><button class="nav-item ${view === "review" ? "active" : ""}" data-action="history"><span class="nav-icon">▤</span> Reviews</button><button class="nav-item" data-action="guide"><span class="nav-icon">◇</span> Guide</button></nav><div class="sidebar-bottom"><div class="side-note"><strong>Every finding has a source.</strong>See the product detail, artwork evidence, and reviewer decision together.</div><button class="connection" data-action="settings" title="Open AI status and settings"><span class="dot"></span><span class="connection-label">${esc(aiStatusLabel())}</span></button><div class="avatar"><b>AIForge workspace</b>${esc(workspaceDataLocation.workspaceLabel)} · ${esc(workspaceDataLocation.storageLabel)}</div></div></aside><main class="main"><header class="topbar"><div class="breadcrumb">Workspace <span>/</span><b>${view === "review" ? "Artwork review" : "Home"}</b></div><div class="actions">${view === "review" ? `<div class="topbar-market-selector" style="display:inline-flex;align-items:center;gap:6px;margin-right:10px;background:rgba(255,255,255,0.06);padding:3px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);"><span style="font-size:11px;font-weight:700;color:#94a3b8;letter-spacing:0.5px;">MARKET:</span><select id="topbar-market-picker" data-action="topbar-market-switch" aria-label="Regulatory Target Market" style="background:#0f172a;color:#f8fafc;font-size:11.5px;font-weight:600;border:1px solid #334155;border-radius:4px;padding:3px 6px;cursor:pointer;"><option value="us" ${(activeRegulatoryMarket||'us').toLowerCase()==='us'?'selected':''}>🇺🇸 United States (FDA)</option><option value="in" ${(activeRegulatoryMarket||'us').toLowerCase()==='in'||(activeRegulatoryMarket||'us').toLowerCase()==='india'?'selected':''}>🇮🇳 India (FSSAI &amp; Metrology)</option><option value="eu" ${(activeRegulatoryMarket||'us').toLowerCase()==='eu'?'selected':''}>🇪🇺 European Union (1169/2011)</option></select></div>` : ''}<button class="primary" style="background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%);color:#ffffff;font-weight:700;font-size:12px;padding:5px 12px;border-radius:6px;border:1px solid #38bdf8;cursor:pointer;" data-action="start-judge-demo" id="btn-start-judge-demo">🎯 Start Judge Demo</button><span class="badge">ESKO AIFORGE 2026</span><button class="ghost theme-toggle" data-action="theme" aria-label="${theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}" aria-pressed="${theme === "dark"}">${theme === "dark" ? "☀" : "☾"}</button><button class="ghost" data-action="settings" aria-label="Settings">⚙</button></div></header><div class="content">${content}</div></main></div>`;
+    `<div class="shell"><aside class="sidebar"><button class="brand" data-action="home" aria-label="PackSignal home"><img src="/icon.svg" alt="">PackSignal</button><div class="workspace-label">WORKSPACE</div><nav><button class="nav-item ${view === "dashboard" ? "active" : ""}" data-action="home"><span class="nav-icon">▦</span> Home</button><button class="nav-item ${view === "review" ? "active" : ""}" data-action="history"><span class="nav-icon">▤</span> Reviews</button><button class="nav-item" data-action="guide"><span class="nav-icon">◇</span> Guide</button></nav><div class="sidebar-bottom"><div class="side-note"><strong>Every finding has a source.</strong>See the product detail, artwork evidence, and reviewer decision together.</div><button class="connection" data-action="settings" title="Open AI status and settings"><span class="dot"></span><span class="connection-label">${esc(aiStatusLabel())}</span></button><div class="avatar"><b>AIForge workspace</b>${esc(workspaceDataLocation.workspaceLabel)} · ${esc(workspaceDataLocation.storageLabel)}</div></div></aside><main class="main"><header class="topbar"><div class="breadcrumb">Workspace <span>/</span><b>${view === "review" ? "Artwork review" : "Home"}</b></div><div class="actions">${view === "review" ? `<div class="topbar-market-selector" style="display:inline-flex;align-items:center;gap:6px;margin-right:10px;background:rgba(255,255,255,0.06);padding:3px 8px;border-radius:6px;border:1px solid rgba(255,255,255,0.15);"><span style="font-size:11px;font-weight:700;color:#94a3b8;letter-spacing:0.5px;">MARKET:</span><select id="topbar-market-picker" data-action="topbar-market-switch" aria-label="Regulatory Target Market" style="background:#0f172a;color:#f8fafc;font-size:11.5px;font-weight:600;border:1px solid #334155;border-radius:4px;padding:3px 6px;cursor:pointer;"><option value="us" ${(activeRegulatoryMarket || 'us').toLowerCase() === 'us' ? 'selected' : ''}>🇺🇸 United States (FDA)</option><option value="in" ${(activeRegulatoryMarket || 'us').toLowerCase() === 'in' || (activeRegulatoryMarket || 'us').toLowerCase() === 'india' ? 'selected' : ''}>🇮🇳 India (FSSAI &amp; Metrology)</option><option value="eu" ${(activeRegulatoryMarket || 'us').toLowerCase() === 'eu' ? 'selected' : ''}>🇪🇺 European Union (1169/2011)</option></select></div>` : ''}<span class="badge">ESKO AIFORGE 2026</span><button class="ghost theme-toggle" data-action="theme" aria-label="${theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}" aria-pressed="${theme === "dark"}">${theme === "dark" ? "☀" : "☾"}</button><button class="ghost" data-action="settings" aria-label="Settings">⚙</button></div></header><div class="content">${content}</div></main></div>`;
 }
 function dashboard() {
   routeVersion++;
@@ -255,7 +253,7 @@ function dashboard() {
   clearTimeout(timer);
   history.replaceState(null, "", "#");
   shell(
-    `<section class="hero"><div><div class="eyebrow">PACKSIGNAL · PACKAGING REVIEW</div><h1>Review packaging artwork.</h1><p>Compare artwork with product details. Two entry routes: upload digital design files, or point your phone camera at a physical printed carton.</p><div class="actions"><a href="/scan.html" class="primary" style="background:#15803d;color:#ffffff;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,0.2);" id="hero-scan-physical">📷 SCAN A PHYSICAL PACKAGE</a><a href="/ar-review.html" class="primary" style="background:#dc2626;color:#ffffff;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:6px;box-shadow:0 2px 6px rgba(0,0,0,0.2);" id="hero-live-ar">👓 LIVE AR ON REAL BOX</a><button class="primary" data-action="upload" id="hero-upload-sources">📁 UPLOAD ARTWORK + SOURCES</button><button class="secondary" data-action="scan-with-phone" id="hero-scan-with-phone">📱 SCAN WITH PHONE</button><button class="secondary" data-action="show-ar-qr" id="hero-ar-qr-btn">📲 AR QR CODE</button><button class="secondary" data-action="sample" data-sample="organizer">Try an example ↗</button><button class="primary" style="background:linear-gradient(135deg, #0284c7 0%, #0f766e 100%);color:#ffffff;font-weight:700;" data-action="start-judge-demo" id="hero-start-judge-demo">🎯 Start Judge Demo</button></div></div><div class="hero-art" aria-hidden="true"><div class="package">proof.<small>EVERY DETAIL COUNTS</small></div><div class="proof-tag"><span>✓</span> Evidence connected</div></div></section><div class="section-head"><div><h2>Try a sample</h2><p>Explore two prepared reviews.</p></div></div><section class="cards"><article class="sample-card"><div class="tag">OFFICIAL CHALLENGE FILES</div><h3>Dancing Fish · Berry Crunch</h3><p>Explore source ambiguity, nutrition details, and claims that need human review.</p><div class="file-chips"><span class="file-chip">Artwork + content spreadsheet</span><span class="file-chip">United States</span></div><button class="secondary" data-action="sample" data-sample="organizer">Open sample <span>→</span></button></article><article class="sample-card"><div class="tag">FICTIONAL EXAMPLE</div><h3>Fieldday · Original Oat Drink</h3><p>Find a quantity mismatch, then compare a corrected artwork revision.</p><div class="file-chips"><span class="file-chip">Product spec + checks</span><span class="file-chip">V1 → V2</span></div><button class="secondary" data-action="sample" data-sample="fieldday">Open sample <span>→</span></button></article></section><details class="dashboard-extras"><summary>Workspace stats and how PackSignal works</summary>${analyticsView()}<section class="workflow" aria-label="Review process"><div><span class="step-num">01</span><b>Read sources</b><p>Keep facts linked to documents.</p></div><div><span class="step-num">02</span><b>Resolve questions</b><p>Confirm conflicting values.</p></div><div><span class="step-num">03</span><b>Inspect artwork</b><p>Review each finding’s evidence.</p></div><div><span class="step-num">04</span><b>Check revisions</b><p>Catch changes and regressions.</p></div></section></details><section id="history"><div class="section-head"><div><h2>Recent reviews</h2><p>${esc(workspaceDataLocation.historyNotice)}</p></div><button class="textbutton subtle" data-action="refresh">Refresh</button></div>${historyTable()}</section><p class="footer-note">PackSignal checks supplied sources and supports a human release decision. It does not certify legal compliance or authorize printing.</p>`,
+    `<section class="hero"><div><div class="eyebrow">PACKSIGNAL · PACKAGING REVIEW</div><h1>Review packaging artwork.</h1><p>Compare artwork with product details. See what matches, what differs, and what needs your judgment.</p><div class="actions hero-actions"><button class="primary" data-action="upload" id="hero-upload-sources">+ New review</button><details class="hero-options" id="hero-review-options"><summary class="secondary">Explore review tools</summary><div class="hero-options-menu" id="hero-review-options-menu"><div class="menu-label">Capture a package</div><a href="/scan.html" id="hero-scan-physical">📷 Scan a physical package</a><button data-action="scan-with-phone" id="hero-scan-with-phone">📱 Scan with phone</button><a href="/ar-review.html" id="hero-live-ar">👓 Live AR on real box</a><button data-action="show-ar-qr" id="hero-ar-qr-btn">📲 Show AR QR code</button><div class="menu-divider"></div><div class="menu-label">Explore and present</div><button data-action="sample" data-sample="organizer">↗ Try an example</button><button data-action="start-judge-demo" id="hero-start-judge-demo">🎯 Start Judge Demo</button></div></details></div></div><div class="hero-art" aria-hidden="true"><div class="package">proof.<small>EVERY DETAIL COUNTS</small></div><div class="proof-tag"><span>✓</span> Evidence connected</div></div></section><div class="section-head"><div><h2>Try a sample</h2><p>Explore two prepared reviews.</p></div></div><section class="cards"><article class="sample-card"><div class="tag">OFFICIAL CHALLENGE FILES</div><h3>Dancing Fish · Berry Crunch</h3><p>Explore source ambiguity, nutrition details, and claims that need human review.</p><div class="file-chips"><span class="file-chip">Artwork + content spreadsheet</span><span class="file-chip">United States</span></div><button class="secondary" data-action="sample" data-sample="organizer">Open sample <span>→</span></button></article><article class="sample-card"><div class="tag">FICTIONAL EXAMPLE</div><h3>Fieldday · Original Oat Drink</h3><p>Find a quantity mismatch, then compare a corrected artwork revision.</p><div class="file-chips"><span class="file-chip">Product spec + checks</span><span class="file-chip">V1 → V2</span></div><button class="secondary" data-action="sample" data-sample="fieldday">Open sample <span>→</span></button></article></section><details class="dashboard-extras"><summary>Workspace stats and how PackSignal works</summary>${analyticsView()}<section class="workflow" aria-label="Review process"><div><span class="step-num">01</span><b>Read sources</b><p>Keep facts linked to documents.</p></div><div><span class="step-num">02</span><b>Resolve questions</b><p>Confirm conflicting values.</p></div><div><span class="step-num">03</span><b>Inspect artwork</b><p>Review each finding’s evidence.</p></div><div><span class="step-num">04</span><b>Check revisions</b><p>Catch changes and regressions.</p></div></section></details><section id="history"><div class="section-head"><div><h2>Recent reviews</h2><p>${esc(workspaceDataLocation.historyNotice)}</p></div><button class="textbutton subtle" data-action="refresh">Refresh</button></div>${historyTable()}</section><p class="footer-note">PackSignal checks supplied sources and supports a human release decision. It does not certify legal compliance or authorize printing.</p>`,
   );
 }
 function rememberReviewSummary(review) {
@@ -283,7 +281,7 @@ function refreshReviews() {
 }
 function showDashboard({ scrollToHistory = false } = {}) {
   if (location.hash && location.hash !== "#" && location.hash !== "#dashboard") {
-    try { history.replaceState(null, "", window.location.pathname + window.location.search); } catch {}
+    try { history.replaceState(null, "", window.location.pathname + window.location.search); } catch { }
   }
   view = "dashboard";
   dashboard();
@@ -421,7 +419,7 @@ function renderReviewLoadError(id, error) {
   const message = error?.message || "The server did not return this review.";
   $("#app").innerHTML =
     `<main class="boot" role="alert"><div class="eyebrow">REVIEW UNAVAILABLE</div><h1>Couldn’t open this review.</h1><p>${esc(message)}</p><p>This review may have expired or was run on another machine. Open the workspace to launch a fresh review or run the official demo.</p><div class="actions"><button class="primary" data-action="home">Open workspace →</button><button class="secondary" data-action="run-sample" data-sample="organizer">Launch Dancing Fish Demo</button></div></main>`;
-  try { history.replaceState(null, "", window.location.pathname + window.location.search); } catch {}
+  try { history.replaceState(null, "", window.location.pathname + window.location.search); } catch { }
 }
 async function openReview(id, initialReview = null, compareV1Id = null) {
   const requestVersion = ++routeVersion;
@@ -466,7 +464,7 @@ async function openReview(id, initialReview = null, compareV1Id = null) {
               if (compRes?.comparison) {
                 current.revision = compRes.comparison;
               }
-            } catch (e) {}
+            } catch (e) { }
           }
           if (tab === "revisions") renderReview();
         } catch {
@@ -498,10 +496,10 @@ function renderReview() {
     selectedFindingId = r.findings.find((item) => item.status === "issue" || item.status === "review")?.id || r.findings[0].id;
     activeEvidenceIndex = 0;
   }
-  const groupedImageFindings=(r.findings||[]).filter(item=>item.method==='artwork_readability'&&Array.isArray(item.blockedChecks));
-  const blockedArtworkChecks=groupedImageFindings.reduce((total,item)=>total+item.blockedChecks.length,0);
-  const coverageNotice=coverage.completeArtwork!==true?`<div class="notice info"><b>Artwork coverage</b><p>Confirm that all supplied panels are represented in Sources. Unconfirmed text stays marked “Unable to verify,” not as a mismatch.</p><button class="textbutton" data-action="tab" data-tab="sources">Check sources →</button></div>`:'';
-  const needInput=Math.max(0,r.counts?.unable||0)-groupedImageFindings.length+blockedArtworkChecks;
+  const groupedImageFindings = (r.findings || []).filter(item => item.method === 'artwork_readability' && Array.isArray(item.blockedChecks));
+  const blockedArtworkChecks = groupedImageFindings.reduce((total, item) => total + item.blockedChecks.length, 0);
+  const coverageNotice = coverage.completeArtwork !== true ? `<div class="notice info"><b>Artwork coverage</b><p>Confirm that all supplied panels are represented in Sources. Unconfirmed text stays marked “Unable to verify,” not as a mismatch.</p><button class="textbutton" data-action="tab" data-tab="sources">Check sources →</button></div>` : '';
+  const needInput = Math.max(0, r.counts?.unable || 0) - groupedImageFindings.length + blockedArtworkChecks;
   const statusCounts = tab === "findings" || !r.counts ? "" : `<div class="counts">${["issue", "review", "unable", "match"].map((s) => `<button class="count ${s}" data-action="filter" data-filter="${s}"><b>${r.counts[s]}</b><span>${names[s]}</span></button>`).join("")}</div>`;
   const ambQuestions = r.ambiguityQuestions || [];
   const ambOpenCount = ambQuestions.filter(q => q.status === 'OPEN').length;
@@ -585,13 +583,10 @@ function renderReview() {
   }
   window.__currentReview = r;
   shell(
-    `<div class="review-heading"><div><div class="eyebrow">${r.revisionKind === "sources" ? "SOURCE UPDATE" : r.parentId ? "ARTWORK REVISION" : "EVIDENCE-LED REVIEW"}</div><h1>${esc(r.name)}</h1><div class="subtle">${esc(r.market)} · ${esc(r.engine)} · ${date(r.createdAt)}</div></div><div class="actions"><button class="primary" style="background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%);color:#ffffff;font-weight:700;font-size:12px;padding:6px 14px;border-radius:6px;border:1px solid #38bdf8;cursor:pointer;" data-action="start-judge-demo" id="review-start-judge-demo">🎯 Start Judge Demo</button><button class="primary" style="background:#15803d;color:#ffffff;font-weight:700;font-size:12px;padding:6px 14px;border-radius:6px;border:1px solid #22c55e;cursor:pointer;" data-action="scan-with-phone" id="review-scan-phone">📱 Mobile AR & Scan</button><button class="primary" style="background:#175b48;font-weight:700;color:#fff;font-size:12px;padding:6px 14px;border-radius:6px;border:1px solid #14b8a6;cursor:pointer;" data-action="export-inspection-certificate" data-review-id="${r.id}">📜 Export Certificate</button><details class="tools-more-dropdown" style="display:inline-block;position:relative;"><summary class="secondary" style="cursor:pointer;padding:6px 12px;border-radius:6px;font-weight:600;font-size:12px;background:#f8fafc;border:1px solid #cbd5e1;list-style:none;">🛠️ Review Tools & Lenses ▾</summary><div class="tools-dropdown-menu" style="position:absolute;right:0;top:100%;margin-top:6px;background:#ffffff;border:1px solid #cbd5e1;border-radius:8px;box-shadow:0 12px 30px rgba(0,0,0,0.18);padding:10px;z-index:9999;display:grid;grid-template-columns:repeat(2, 220px);gap:6px;"><button class="secondary" data-action="view-requirements" id="review-view-requirements" style="font-size:11px;text-align:left;padding:6px 10px;">⚖️ Requirements (Phase 3)</button><button class="secondary" data-action="view-fact-sheet" id="review-view-fact-sheet" style="font-size:11px;text-align:left;padding:6px 10px;">📋 Fact Sheet (Phase 2)</button><button class="secondary" data-action="view-source-pieces" id="review-view-source-pieces" style="font-size:11px;text-align:left;padding:6px 10px;">🧩 Extracted Pieces</button><button class="secondary" data-action="toggle-print-radar" id="review-toggle-print-radar" style="font-size:11px;text-align:left;padding:6px 10px;">📐 Print Readiness Radar</button><button class="secondary" data-action="tab" data-tab="regulatory-time-machine" style="font-size:11px;text-align:left;padding:6px 10px;">⏱ Time Machine (2026–2028)</button><button class="secondary" data-action="tab" data-tab="market-radar-map" style="font-size:11px;text-align:left;padding:6px 10px;">🌐 India & Radar (Phase 7)</button><button class="secondary" data-action="tab" data-tab="shopper-lenses" style="font-size:11px;text-align:left;padding:6px 10px;">🛒 Shopper Lenses (Phase 6A)</button><button class="secondary" data-action="tab" data-tab="pack-canvas" style="font-size:11px;text-align:left;padding:6px 10px;">📐 Pack Canvas (Phase 6)</button><button class="secondary" data-action="tab" data-tab="reviewer-lenses" style="font-size:11px;text-align:left;padding:6px 10px;">✍️ Reviewer Lenses (Phase 5A)</button><button class="secondary" data-action="tab" data-tab="creative-brief" style="font-size:11px;text-align:left;padding:6px 10px;">📋 Creative Brief (Phase 5)</button><button class="secondary" data-action="tab" data-tab="evidence-desk" style="font-size:11px;text-align:left;padding:6px 10px;">⚡ Evidence Desk (Phase 4)</button><button class="secondary" data-action="tab" data-tab="trust-console" style="font-size:11px;text-align:left;padding:6px 10px;">🏆 Trust Console</button><button class="secondary" data-action="tab" data-tab="campus-extras" style="font-size:11px;text-align:left;padding:6px 10px;">🎓 Campus Extras</button><button class="secondary" data-action="run-pdf-preflight" data-review-id="${r.id}" style="font-size:11px;text-align:left;padding:6px 10px;">🔍 PDF Preflight</button><button class="secondary" data-action="run-us-preflight" data-review-id="${r.id}" style="font-size:11px;text-align:left;padding:6px 10px;">⚡ US FDA Preflight</button><button class="secondary" data-action="tab" data-tab="independent-eval" style="font-size:11px;text-align:left;padding:6px 10px;">🧪 Independent Eval</button><a class="secondary" href="/api/reviews/${r.id}/certificate.pdf" target="_blank" rel="noopener" style="font-size:11px;text-align:left;padding:6px 10px;">Certificate PDF ↓</a><a class="secondary" href="/api/reviews/${r.id}/report.json" style="font-size:11px;text-align:left;padding:6px 10px;">Signed JSON ↓</a><button class="secondary" data-action="verify-seal" style="font-size:11px;text-align:left;padding:6px 10px;">Verify Seal</button><button class="secondary" data-action="open-revision-picker" style="font-size:11px;text-align:left;padding:6px 10px;">🔀 Compare Revisions</button><button class="secondary" data-action="revision" style="font-size:11px;text-align:left;padding:6px 10px;">↻ Review revision</button></div></details></div></div><details class="review-workflow"><summary>Review steps <span>Sources → checks → artwork → export</span></summary>${reviewPipeline(r,tab)}</details>${stagesRibbon}${statusCounts}${r.aiStatus === "running" ? '<div class="notice info">Local checks are ready. AI is reading artwork and visual evidence.</div>' : ""}${groupedImageFindings.map(item=>`<div class="notice info"><b>${esc(item.title)}</b><p>${esc(item.explanation)}</p><details><summary>View ${item.blockedChecks.length} waiting source checks</summary><ul>${item.blockedChecks.map(check=>`<li>${esc(check)}</li>`).join('')}</ul></details><button class="textbutton" data-action="workbench-mode" data-mode="2d">Inspect 2D artwork →</button></div>`).join('')}${r.ai?.transport?.cacheHit ? '<div class="notice info">Reused verified intelligence cache for identical artwork and sources.</div>' : ""}${r.signature ? `<div class="notice info">Export seal · ${esc(r.signature.algorithm)} · ${esc(r.signature.payloadHash.slice(0, 16))}…</div>` : ""}${ambiguityWidget}${coverageNotice}${tabsMarkup}<div class="review-body">${tab === "requirements" ? '<div id="requirements-workspace-mount" style="min-height:500px;"></div>' : tab === "fact-sheet" ? '<div id="fact-sheet-mount" style="min-height:500px;"></div>' : tab === "source-pieces" ? '<div id="source-pieces-dedicated-mount" style="padding:40px;text-align:center;"><button type="button" class="primary" style="padding:14px 28px;font-size:15px;background:#0d9488;border-radius:8px;font-weight:700;" data-action="view-source-pieces">🧩 Open Extracted Source Pieces Inspector</button></div>' : tab === "regulatory-time-machine" ? '<div id="rtm-dedicated-view"></div>' : tab === "market-radar-map" ? '<div id="market-radar-map-container"></div>' : tab === "shopper-lenses" ? '<div id="shopper-lenses-container"></div>' : tab === "pack-canvas" ? '<div id="pack-canvas-container"></div>' : tab === "reviewer-lenses" ? '<div id="reviewer-lenses-container"></div>' : tab === "creative-brief" ? '<div id="creative-brief-container"></div>' : tab === "evidence-desk" ? evidenceDeskView(r) : tab === "campus-extras" ? campusExtrasMarkup() : tab === "trust-console" ? trustConsoleView() : tab === "geometry" ? packagingGeometryView(r) : tab === "nutrition" ? nutritionStudioView(r) : tab === "ambiguity" ? sourceAmbiguityDashboardView(r) : tab === "independent-eval" ? independentEvaluationView() : tab === "findings" ? findingView() : tab === "what-we-read" ? whatWeReadView(r) : tab === "rulebook" ? rulebookTrustView(r) : tab === "deep-verification" ? deepVerificationDashboardView(r) : tab === "questions" ? guidedQuestionsView(r) : tab === "artwork" ? artworkMap(r) : tab === "revisions" ? revisionView() : tab === "reports" ? reportsView(r) : tab === "coverage" ? coverageLedgerView(r) : tab === "preflight" ? preflightDashboardView(r) : tab === "sources" ? sourceView() : tab === "rules" ? ruleView() : activityView()}</div><p class="footer-note">${coverage.limits.map(esc).join(" ")}</p>`,
+    `<div class="review-heading"><div><div class="eyebrow">${r.revisionKind === "sources" ? "SOURCE UPDATE" : r.parentId ? "ARTWORK REVISION" : "EVIDENCE-LED REVIEW"}</div><h1>${esc(r.name)}</h1><div class="subtle">${esc(r.market)} · ${esc(r.engine)} · ${date(r.createdAt)}</div></div><div class="actions"><button class="primary" style="background:linear-gradient(135deg, #0284c7 0%, #0369a1 100%);color:#ffffff;font-weight:700;font-size:12px;padding:6px 14px;border-radius:6px;border:1px solid #38bdf8;cursor:pointer;" data-action="start-judge-demo" id="review-start-judge-demo">🎯 Start Judge Demo</button><button class="primary" style="background:#15803d;color:#ffffff;font-weight:700;font-size:12px;padding:6px 14px;border-radius:6px;border:1px solid #22c55e;cursor:pointer;" data-action="scan-with-phone" id="review-scan-phone">📱 Mobile AR & Scan</button><button class="primary" style="background:#175b48;font-weight:700;color:#fff;font-size:12px;padding:6px 14px;border-radius:6px;border:1px solid #14b8a6;cursor:pointer;" data-action="export-inspection-certificate" data-review-id="${r.id}">📜 Export Certificate</button><details class="tools-more-dropdown" style="display:inline-block;position:relative;"><summary class="secondary" style="cursor:pointer;padding:6px 12px;border-radius:6px;font-weight:600;font-size:12px;background:#f8fafc;border:1px solid #cbd5e1;list-style:none;">🛠️ Review Tools & Lenses ▾</summary><div class="tools-dropdown-menu" style="position:absolute;right:0;top:100%;margin-top:6px;background:#ffffff;border:1px solid #cbd5e1;border-radius:8px;box-shadow:0 12px 30px rgba(0,0,0,0.18);padding:10px;z-index:9999;display:grid;grid-template-columns:repeat(2, 220px);gap:6px;"><button class="secondary" data-action="view-requirements" id="review-view-requirements" style="font-size:11px;text-align:left;padding:6px 10px;">⚖️ Requirements (Phase 3)</button><button class="secondary" data-action="view-fact-sheet" id="review-view-fact-sheet" style="font-size:11px;text-align:left;padding:6px 10px;">📋 Fact Sheet (Phase 2)</button><button class="secondary" data-action="view-source-pieces" id="review-view-source-pieces" style="font-size:11px;text-align:left;padding:6px 10px;">🧩 Extracted Pieces</button><button class="secondary" data-action="toggle-print-radar" id="review-toggle-print-radar" style="font-size:11px;text-align:left;padding:6px 10px;">📐 Print Readiness Radar</button><button class="secondary" data-action="tab" data-tab="regulatory-time-machine" style="font-size:11px;text-align:left;padding:6px 10px;">⏱ Time Machine (2026–2028)</button><button class="secondary" data-action="tab" data-tab="market-radar-map" style="font-size:11px;text-align:left;padding:6px 10px;">🌐 India & Radar (Phase 7)</button><button class="secondary" data-action="tab" data-tab="shopper-lenses" style="font-size:11px;text-align:left;padding:6px 10px;">🛒 Shopper Lenses (Phase 6A)</button><button class="secondary" data-action="tab" data-tab="pack-canvas" style="font-size:11px;text-align:left;padding:6px 10px;">📐 Pack Canvas (Phase 6)</button><button class="secondary" data-action="tab" data-tab="reviewer-lenses" style="font-size:11px;text-align:left;padding:6px 10px;">✍️ Reviewer Lenses (Phase 5A)</button><button class="secondary" data-action="tab" data-tab="creative-brief" style="font-size:11px;text-align:left;padding:6px 10px;">📋 Creative Brief (Phase 5)</button><button class="secondary" data-action="tab" data-tab="evidence-desk" style="font-size:11px;text-align:left;padding:6px 10px;">⚡ Evidence Desk (Phase 4)</button><button class="secondary" data-action="tab" data-tab="trust-console" style="font-size:11px;text-align:left;padding:6px 10px;">🏆 Trust Console</button><button class="secondary" data-action="tab" data-tab="campus-extras" style="font-size:11px;text-align:left;padding:6px 10px;">🎓 Campus Extras</button><button class="secondary" data-action="run-pdf-preflight" data-review-id="${r.id}" style="font-size:11px;text-align:left;padding:6px 10px;">🔍 PDF Preflight</button><button class="secondary" data-action="run-us-preflight" data-review-id="${r.id}" style="font-size:11px;text-align:left;padding:6px 10px;">⚡ US FDA Preflight</button><button class="secondary" data-action="tab" data-tab="independent-eval" style="font-size:11px;text-align:left;padding:6px 10px;">🧪 Independent Eval</button><a class="secondary" href="/api/reviews/${r.id}/certificate.pdf" target="_blank" rel="noopener" style="font-size:11px;text-align:left;padding:6px 10px;">Certificate PDF ↓</a><a class="secondary" href="/api/reviews/${r.id}/report.json" style="font-size:11px;text-align:left;padding:6px 10px;">Signed JSON ↓</a><button class="secondary" data-action="verify-seal" style="font-size:11px;text-align:left;padding:6px 10px;">Verify Seal</button><button class="secondary" data-action="open-revision-picker" style="font-size:11px;text-align:left;padding:6px 10px;">🔀 Compare Revisions</button><button class="secondary" data-action="revision" style="font-size:11px;text-align:left;padding:6px 10px;">↻ Review revision</button></div></details></div></div><details class="review-workflow"><summary>Review steps <span>Sources → checks → artwork → export</span></summary>${reviewPipeline(r, tab)}</details>${stagesRibbon}${statusCounts}${r.aiStatus === "running" ? '<div class="notice info">Local checks are ready. AI is reading artwork and visual evidence.</div>' : ""}${groupedImageFindings.map(item => `<div class="notice info"><b>${esc(item.title)}</b><p>${esc(item.explanation)}</p><details><summary>View ${item.blockedChecks.length} waiting source checks</summary><ul>${item.blockedChecks.map(check => `<li>${esc(check)}</li>`).join('')}</ul></details><button class="textbutton" data-action="workbench-mode" data-mode="2d">Inspect 2D artwork →</button></div>`).join('')}${r.ai?.transport?.cacheHit ? '<div class="notice info">Reused verified intelligence cache for identical artwork and sources.</div>' : ""}${r.signature ? `<div class="notice info">Export seal · ${esc(r.signature.algorithm)} · ${esc(r.signature.payloadHash.slice(0, 16))}…</div>` : ""}${ambiguityWidget}${coverageNotice}${tabsMarkup}<div class="review-body">${tab === "requirements" ? '<div id="requirements-workspace-mount" style="min-height:500px;"></div>' : tab === "fact-sheet" ? renderReviewFactSheet(r) : tab === "source-pieces" ? '<div id="source-pieces-dedicated-mount" style="padding:40px;text-align:center;"><button type="button" class="primary" style="padding:14px 28px;font-size:15px;background:#0d9488;border-radius:8px;font-weight:700;" data-action="view-source-pieces">🧩 Open Extracted Source Pieces Inspector</button></div>' : tab === "regulatory-time-machine" ? '<div id="rtm-dedicated-view"></div>' : tab === "market-radar-map" ? '<div id="market-radar-map-container"></div>' : tab === "shopper-lenses" ? '<div id="shopper-lenses-container"></div>' : tab === "pack-canvas" ? '<div id="pack-canvas-container"></div>' : tab === "reviewer-lenses" ? renderReviewLenses(r) : tab === "creative-brief" ? renderReviewCreativeBrief(r) : tab === "evidence-desk" ? evidenceDeskView(r) : tab === "campus-extras" ? campusExtrasMarkup() : tab === "trust-console" ? trustConsoleView() : tab === "geometry" ? packagingGeometryView(r) : tab === "nutrition" ? nutritionStudioView(r) : tab === "ambiguity" ? sourceAmbiguityDashboardView(r) : tab === "independent-eval" ? independentEvaluationView() : tab === "findings" ? findingView() : tab === "what-we-read" ? whatWeReadView(r) : tab === "rulebook" ? rulebookTrustView(r) : tab === "deep-verification" ? deepVerificationDashboardView(r) : tab === "questions" ? guidedQuestionsView(r) : tab === "artwork" ? artworkMap(r) : tab === "revisions" ? revisionView() : tab === "reports" ? reportsView(r) : tab === "coverage" ? coverageLedgerView(r) : tab === "preflight" ? preflightDashboardView(r) : tab === "sources" ? sourceView() : tab === "rules" ? ruleView() : activityView()}</div><p class="footer-note">${coverage.limits.map(esc).join(" ")}</p>`,
   );
   if (tab === "requirements") {
     import("./requirements.js").then(m => m.initRequirementsWorkspace("#requirements-workspace-mount"));
-  }
-  if (tab === "fact-sheet") {
-    import("./fact-sheet.js").then(m => m.initFactSheet("#fact-sheet-mount"));
   }
   const rtmMount = document.querySelector("#rtm-inline-mount") || document.querySelector("#rtm-topbar-mount") || document.querySelector("#rtm-dedicated-view");
   if (rtmMount) {
@@ -644,13 +639,6 @@ function renderReview() {
   }
   if (tab === "pack-canvas") {
     mountPackCanvas(document.querySelector("#pack-canvas-container"));
-  }
-  if (tab === "reviewer-lenses") {
-    mountReviewerLenses(document.querySelector("#reviewer-lenses-container"));
-  }
-  if (tab === "creative-brief") {
-    mountCreativeBrief(document.querySelector("#creative-brief-container"));
-    mountAskAboutThis(document.body, r.id || 'default');
   }
   if (tab === "evidence-desk") {
     mountEvidenceDesk(r);
@@ -727,6 +715,7 @@ function renderReview() {
     evidenceCanvas = mountEvidenceCanvas($('.review-body'), {
       review: r, viewport: viewportController, selectedId: selectedFindingId,
       evidenceIndex: activeEvidenceIndex, pageNumber: artworkPage, initialFilter: filter,
+      overlayMode: 'selected',
       shopperPersona: activeShopperPersona,
       onPersonaChange: (p) => {
         shopperPersonaFilter = p;
@@ -918,9 +907,9 @@ function renderReview() {
           };
           return deptFiltered.filter((item) =>
             (filter === "all" ||
-            (filter === "attention" && item.status !== "match") ||
-            (filter === "match" && item.status === "match") ||
-            (!['all', 'attention', 'match'].includes(filter) && item.status === filter)) &&
+              (filter === "attention" && item.status !== "match") ||
+              (filter === "match" && item.status === "match") ||
+              (!['all', 'attention', 'match'].includes(filter) && item.status === filter)) &&
             filterShopper(item, activeShopperPersona)
           );
         },
@@ -988,7 +977,14 @@ function renderReview() {
             selectedFindingId = finding.id;
             renderReview();
           }
-        }
+        },
+        onViewPrepressFindings: () => {
+          activeDepartmentFilter = "prepress";
+          filter = "all";
+          tab = "findings";
+          renderReview();
+          document.getElementById("workbench-checks-panel")?.scrollIntoView({ behavior: "smooth", block: "start" });
+        },
       });
     }
   } else {
@@ -1044,9 +1040,9 @@ function findingView() {
   const deptFiltered = typeof filterFindingsByDepartment === 'function' ? filterFindingsByDepartment(r.findings, typeof activeDepartmentFilter !== 'undefined' ? activeDepartmentFilter : 'all', typeof includeCollaboratingDepartments !== 'undefined' ? includeCollaboratingDepartments : true) : (r.findings || []);
   const rows = deptFiltered.filter((item) =>
     (filter === "all" ||
-    (filter === "attention" && item.status !== "match") ||
-    (filter === "match" && item.status === "match") ||
-    (!['all', 'attention', 'match'].includes(filter) && item.status === filter)) &&
+      (filter === "attention" && item.status !== "match") ||
+      (filter === "match" && item.status === "match") ||
+      (!['all', 'attention', 'match'].includes(filter) && item.status === filter)) &&
     matchesShopperPersona(item, activeShopperPersona),
   );
   const filterIsActive = value => value === "attention"
@@ -1061,9 +1057,9 @@ function findingView() {
   const evidenceCopy = findingEvidenceCopy(selected);
   const activePage = r.documents.find(document => document.id === activeArtwork?.documentId)?.pages?.find(page => page.number === activeArtwork?.page);
   const imageReading = ["ai_transcription", "ocr_transcription", "vision_needed"].includes(activePage?.method) || activePage?.unit === "px";
-  const groupedImageFindings=(r.findings||[]).filter(item=>item.method==='artwork_readability'&&Array.isArray(item.blockedChecks));
-  const blockedArtworkChecks=groupedImageFindings.reduce((total,item)=>total+item.blockedChecks.length,0);
-  const needInput=Math.max(0,r.counts.unable||0)-groupedImageFindings.length+blockedArtworkChecks;
+  const groupedImageFindings = (r.findings || []).filter(item => item.method === 'artwork_readability' && Array.isArray(item.blockedChecks));
+  const blockedArtworkChecks = groupedImageFindings.reduce((total, item) => total + item.blockedChecks.length, 0);
+  const needInput = Math.max(0, r.counts.unable || 0) - groupedImageFindings.length + blockedArtworkChecks;
   const attention = r.counts.issue + r.counts.review + needInput;
   const question = nextBestQuestion(r);
   const occurrenceLabel = selected.rule?.field === "net_quantity" && artworkItems.length > 1 ? `<div class="occurrence-note">${artworkItems.length} package quantity declarations found · every located occurrence is checked</div>` : "";
@@ -1134,7 +1130,7 @@ function findingView() {
         </div>
       </div>
       <section class="workbench-canvas hero-canvas">
-        ${workbenchArtwork(r, selected, { mode: artworkMode, pageNumber: artworkPage, activeEvidenceIndex, cartonRotation, cartonTilt, zoom:artworkZoom, showBoxes:showEvidenceBoxes, showZones:showPanelZones, shopperPersona: activeShopperPersona })}
+        ${workbenchArtwork(r, selected, { mode: artworkMode, pageNumber: artworkPage, activeEvidenceIndex, cartonRotation, cartonTilt, zoom: artworkZoom, showBoxes: showEvidenceBoxes, showZones: showPanelZones, shopperPersona: activeShopperPersona })}
         <div class="workbench-occurrences">${occurrenceLabel}${artworkItems.map(({ item, index }, n) => `<button class="occurrence-button ${index === activeEvidenceIndex ? "active" : ""}" data-action="select-evidence" data-index="${index}"><span>${String(n + 1).padStart(2, "0")}</span><b>${esc(item.quote || `Artwork evidence · page ${item.page}`)}</b><small>Page ${item.page} · ${esc(item.location || "text region")}</small></button>`).join("")}</div>
       </section>
     </div>
@@ -1195,8 +1191,8 @@ function findingView() {
       <aside class="workbench-queue">
         <div class="queue-head"><div><div class="eyebrow">CHECKS</div><b>${rows.length} visible (${r.findings.length} total)</b></div></div>
         ${typeof renderDepartmentFilterBar === 'function' ? renderDepartmentFilterBar(r, typeof activeDepartmentFilter !== 'undefined' ? activeDepartmentFilter : 'all', typeof includeCollaboratingDepartments !== 'undefined' ? includeCollaboratingDepartments : true) : ''}
-        <div class="queue-filters">${[["all", "All"], ["attention", "Needs review"], ["match", "Matches"]].map(([value, label]) => `<button class="filter ${filterIsActive(value) ? "active" : ""}" data-action="filter" data-filter="${value}">${label}</button>`).join("")}<label class="shopper-persona-filter-label" style="display:inline-flex;align-items:center;gap:4px;margin-left:auto;font-size:11px;font-weight:700;color:#0f172a;"><span>👥 Shopper Lens:</span><select data-action="filter-queue-persona" style="padding:2px 6px;border-radius:4px;border:1px solid #cbd5e1;font-size:11px;background:#fff;font-weight:600;cursor:pointer;"><option value="all" ${activeShopperPersona==='all'?'selected':''}>All Shoppers</option><option value="nut-allergy" ${activeShopperPersona==='nut-allergy'?'selected':''}>🥜 Nut Allergy</option><option value="vegan" ${activeShopperPersona==='vegan'?'selected':''}>🌱 Vegan</option><option value="sugar-watcher" ${activeShopperPersona==='sugar-watcher'?'selected':''}>🩺 Sugar Watcher</option></select></label></div>
-        <div class="queue-list">${rows.map((item, index) => `<button class="queue-finding ${item.status} ${item.id === selected.id ? "selected" : ""}" data-action="select-finding" data-id="${item.id}" aria-current="${item.id === selected.id ? "true" : "false"}"><span class="queue-index">${String(index + 1).padStart(2, "0")}</span><span class="queue-copy"><b>${esc(item.title)}</b>${typeof renderDepartmentBadge === 'function' ? renderDepartmentBadge(item) : ''}<small>${names[item.status]}${r.decisions[item.id]?.stale ? " · decision needs reconfirmation" : ""}${Array.isArray(item.blockedChecks)?` · ${item.blockedChecks.length} checks waiting`:''}</small></span><span class="queue-status">${symbols[item.status]}</span></button>`).join("") || '<div class="queue-empty">No findings in this filter.</div>'}</div>
+        <div class="queue-filters">${[["all", "All"], ["attention", "Needs review"], ["match", "Matches"]].map(([value, label]) => `<button class="filter ${filterIsActive(value) ? "active" : ""}" data-action="filter" data-filter="${value}">${label}</button>`).join("")}<label class="shopper-persona-filter-label" style="display:inline-flex;align-items:center;gap:4px;margin-left:auto;font-size:11px;font-weight:700;color:#0f172a;"><span>👥 Shopper Lens:</span><select data-action="filter-queue-persona" style="padding:2px 6px;border-radius:4px;border:1px solid #cbd5e1;font-size:11px;background:#fff;font-weight:600;cursor:pointer;"><option value="all" ${activeShopperPersona === 'all' ? 'selected' : ''}>All Shoppers</option><option value="nut-allergy" ${activeShopperPersona === 'nut-allergy' ? 'selected' : ''}>🥜 Nut Allergy</option><option value="vegan" ${activeShopperPersona === 'vegan' ? 'selected' : ''}>🌱 Vegan</option><option value="sugar-watcher" ${activeShopperPersona === 'sugar-watcher' ? 'selected' : ''}>🩺 Sugar Watcher</option></select></label></div>
+        <div class="queue-list">${rows.map((item, index) => `<button class="queue-finding ${item.status} ${item.id === selected.id ? "selected" : ""}" data-action="select-finding" data-id="${item.id}" aria-current="${item.id === selected.id ? "true" : "false"}"><span class="queue-index">${String(index + 1).padStart(2, "0")}</span><span class="queue-copy"><b>${esc(item.title)}</b>${typeof renderDepartmentBadge === 'function' ? renderDepartmentBadge(item) : ''}<small>${names[item.status]}${r.decisions[item.id]?.stale ? " · decision needs reconfirmation" : ""}${Array.isArray(item.blockedChecks) ? ` · ${item.blockedChecks.length} checks waiting` : ''}</small></span><span class="queue-status">${symbols[item.status]}</span></button>`).join("") || '<div class="queue-empty">No findings in this filter.</div>'}</div>
       </aside>
       <aside class="workbench-evidence" style="grid-column: span 2;">
         <div class="detail-status ${selected.status}">${symbols[selected.status]} ${names[selected.status].toUpperCase()}${selected.method === "visibility_review" ? " · IMAGE CROSS-CHECK" : ""}</div>
@@ -1212,7 +1208,7 @@ function findingView() {
         ${typeof renderAtwaterProofCard === 'function' ? renderAtwaterProofCard(selected, r) : ''}
         ${typeof renderPackQuantityCard === 'function' ? renderPackQuantityCard(selected, r) : ''}
         ${selected.status === 'match' ? `<div class="cleared-proof-box" style="background:#f0fdf4;border:1px solid #bbf7d0;border-left:4px solid #16a34a;border-radius:6px;padding:12px;margin:12px 0;"><div style="display:flex;align-items:center;gap:6px;font-weight:700;font-size:12px;color:#15803d;margin-bottom:6px;"><span>✓</span> CLEARED / VERIFIED CHECK ("NOT FLAGGED, AND WHY")</div><div style="font-size:12px;color:#166534;line-height:1.4;"><b>Proof of Evaluation:</b> Verified character sequence and unit math match between source bytes and artwork coordinates.</div><div style="margin-top:8px;padding-top:8px;border-top:1px dashed #bbf7d0;font-size:11px;color:#334155;"><div><b>Ignored Production Content:</b> Technical cut guides, crease lines, and glue margins verified as non-printing.</div><div><b>Excluded PDF Content:</b> Non-rendering streams and hidden EU nutrition layers excluded from US consumer copy checks.</div></div></div>` : ''}
-        ${Array.isArray(selected.blockedChecks)?`<div class="notice info"><b>${selected.blockedChecks.length} source comparisons are paused</b><p>They need readable package copy. Check the photo pages or retry image reading; no values were assumed.</p><details><summary>Show checks waiting</summary><ul>${selected.blockedChecks.map(check=>`<li>${esc(check)}</li>`).join('')}</ul></details></div>`:''}
+        ${Array.isArray(selected.blockedChecks) ? `<div class="notice info"><b>${selected.blockedChecks.length} source comparisons are paused</b><p>They need readable package copy. Check the photo pages or retry image reading; no values were assumed.</p><details><summary>Show checks waiting</summary><ul>${selected.blockedChecks.map(check => `<li>${esc(check)}</li>`).join('')}</ul></details></div>` : ''}
         ${artworkItems.length > 1 ? `<p class="subtle">Inspect each of the ${artworkItems.length} located occurrences above. One matching occurrence does not hide another mismatch.</p>` : ""}
         <section class="evidence-stack">
           <div class="muted-title">${evidenceCopy.trace}</div>
@@ -1397,14 +1393,14 @@ function sourceFactsExplorerView(r) {
                 </td>
                 <td style="padding:8px 10px;">
                   ${renderSourceChip({
-                    name: f.evidence?.name || 'Specification',
-                    location: f.evidence?.location,
-                    quote: f.value,
-                    sheet: f.sourceContext?.sheet,
-                    cell: f.sourceContext?.cell,
-                    authority: f.aiProposed ? 'draft' : 'approved',
-                    sourceType: (f.evidence?.name || '').includes('.xls') ? 'spreadsheet' : 'pdf'
-                  })}
+    name: f.evidence?.name || 'Specification',
+    location: f.evidence?.location,
+    quote: f.value,
+    sheet: f.sourceContext?.sheet,
+    cell: f.sourceContext?.cell,
+    authority: f.aiProposed ? 'draft' : 'approved',
+    sourceType: (f.evidence?.name || '').includes('.xls') ? 'spreadsheet' : 'pdf'
+  })}
                 </td>
                 <td style="padding:8px 10px;text-align:right;">
                   <button type="button" class="textbutton" style="font-size:11px;font-weight:600;color:#0f766e;"
@@ -1595,7 +1591,7 @@ function uploadList() {
   $("#upload-list").innerHTML = uploads
     .map(
       (f, i) =>
-        `<div class="upload-row"><span>${esc(f.name)}<small class="subtle"> · ${(f.size / 1024).toFixed(0)} KB${f.cameraMedia ? ` · captured artwork page${f.captureFace && f.captureFace !== 'unassigned' ? ` · ${esc(f.captureFace)} face` : ' · face not assigned'}` : ''}${f.captureQuality && (f.captureQuality.blur || f.captureQuality.glare) ? ' · possible blur/glare' : ''}</small></span>${sourceRevisionUpload ? `<select aria-label="Reference role or replacement for ${esc(f.name)}" data-replace-source="${i}">${[["spec", "Product spec"], ["rules", "Checklist"], ["claims", "Claims register"]].map(([role, label]) => `<option value="add:${role}" ${!f.replaceFileId && f.role === role ? "selected" : ""}>Add ${label}</option>`).join("")}${sourceTargets.map(source => `<option value="${esc(source.id)}" ${f.replaceFileId === source.id ? "selected" : ""}>Replace ${esc({spec:"Product spec",rules:"Checklist",claims:"Claims register"}[source.role])} · ${esc(source.name)}</option>`).join("")}</select>` : `<select aria-label="Role for ${esc(f.name)}" data-upload="${i}" ${revisionUpload || f.cameraMedia ? "disabled" : ""}>${(intakeMode === "camera" && f.role !== "artwork" ? ["dieline", "spec", "rules", "claims"] : ["artwork", "dieline", "spec", "rules", "claims"]).map((role) => `<option value="${role}" ${f.role === role ? "selected" : ""}>${{ artwork: "Artwork", dieline: "Dieline / structural reference", spec: "Product spec", rules: "Rulebook", claims: "Claims register" }[role]}</option>`).join("")}</select>`}<button type="button" data-action="remove-file" data-index="${i}" aria-label="Remove ${esc(f.name)}">×</button></div>`,
+        `<div class="upload-row"><span>${esc(f.name)}<small class="subtle"> · ${(f.size / 1024).toFixed(0)} KB${f.cameraMedia ? ` · captured artwork page${f.captureFace && f.captureFace !== 'unassigned' ? ` · ${esc(f.captureFace)} face` : ' · face not assigned'}` : ''}${f.captureQuality && (f.captureQuality.blur || f.captureQuality.glare) ? ' · possible blur/glare' : ''}</small></span>${sourceRevisionUpload ? `<select aria-label="Reference role or replacement for ${esc(f.name)}" data-replace-source="${i}">${[["spec", "Product spec"], ["rules", "Checklist"], ["claims", "Claims register"]].map(([role, label]) => `<option value="add:${role}" ${!f.replaceFileId && f.role === role ? "selected" : ""}>Add ${label}</option>`).join("")}${sourceTargets.map(source => `<option value="${esc(source.id)}" ${f.replaceFileId === source.id ? "selected" : ""}>Replace ${esc({ spec: "Product spec", rules: "Checklist", claims: "Claims register" }[source.role])} · ${esc(source.name)}</option>`).join("")}</select>` : `<select aria-label="Role for ${esc(f.name)}" data-upload="${i}" ${revisionUpload || f.cameraMedia ? "disabled" : ""}>${(intakeMode === "camera" && f.role !== "artwork" ? ["dieline", "spec", "rules", "claims"] : ["artwork", "dieline", "spec", "rules", "claims"]).map((role) => `<option value="${role}" ${f.role === role ? "selected" : ""}>${{ artwork: "Artwork", dieline: "Dieline / structural reference", spec: "Product spec", rules: "Rulebook", claims: "Claims register" }[role]}</option>`).join("")}</select>`}<button type="button" data-action="remove-file" data-index="${i}" aria-label="Remove ${esc(f.name)}">×</button></div>`,
     )
     .join("");
 }
@@ -1741,6 +1737,10 @@ function guide() {
   );
 }
 document.addEventListener("click", async (event) => {
+  const heroOptions = document.getElementById("hero-review-options");
+  if (heroOptions?.open && (!heroOptions.contains(event.target) || event.target.closest("#hero-review-options-menu button, #hero-review-options-menu a"))) {
+    heroOptions.open = false;
+  }
   const toggleDrawerBtn = event.target.closest("[data-toggle-drawer]");
   if (toggleDrawerBtn) {
     event.preventDefault();
@@ -1777,7 +1777,7 @@ document.addEventListener("click", async (event) => {
     if (action === "df-view-artwork") {
       const page = parseInt(dfActionBtn.dataset.page || '1', 10);
       let box = [];
-      try { box = JSON.parse(dfActionBtn.dataset.box || '[]'); } catch (e) {}
+      try { box = JSON.parse(dfActionBtn.dataset.box || '[]'); } catch (e) { }
       artworkPage = page;
       artworkMode = '2d';
       showEvidenceBoxes = true;
@@ -1904,7 +1904,19 @@ document.addEventListener("click", async (event) => {
         renderReview();
         toast("Conflict resolved using verified source reference.");
       } else if (cAction === "CONFIRM_ARTWORK") {
-        toast("Confirmed intended packaging design change recorded.");
+        const field = cId.replace(/^conflict-/, '');
+        const finding = (current?.findings || []).find(f => f.rule?.field === field || f.id === cId || f.id === field);
+        const findingId = finding?.id || cId;
+        current = await api(`/reviews/${current.id}/decisions`, {
+          method: 'POST',
+          body: {
+            findingId,
+            disposition: 'accepted_exception',
+            note: `Reviewer confirmed this is an intentional artwork change — artwork value accepted as the intended design. Field: ${field}.`
+          }
+        });
+        renderReview();
+        toast("✓ Confirmed: artwork change accepted as intended design.");
       } else if (cAction === "REQUEST_CLARIFICATION") {
         const field = cId.replace(/^conflict-/, '');
         const finding = (current?.findings || []).find(f => f.rule?.field === field || f.id === cId || f.id === field) || { id: cId, title: `Clarification for ${field}` };
@@ -2077,6 +2089,150 @@ document.addEventListener("click", async (event) => {
     }
     return;
   }
+
+  // ── GENERATE SUGGESTED FIX ────────────────────────────────────────────────
+  if (action === "generate-suggested-fix") {
+    const findingId = b.dataset.id;
+    const finding = (current?.findings || []).find(f => f.id === findingId);
+    if (!finding || !current) return;
+    b.disabled = true;
+    const origLabel = b.textContent;
+    b.textContent = '⏳ Generating…';
+    try {
+      // Try server endpoint first; fall through to client-side fallback
+      let suggestedFix = null;
+      try {
+        const res = await api(`/reviews/${current.id}/findings/${findingId}/suggest-fix`, {
+          method: 'POST',
+          body: { findingId }
+        });
+        suggestedFix = res?.suggestedFix || res?.fix || null;
+      } catch (_) { /* no endpoint — use client-side fallback */ }
+
+      const observed = finding.observed || finding.actual || '—';
+      const expected = finding.expected || finding.required || '—';
+      const ruleText = finding.rule?.citation || finding.rule?.text || finding.rule?.id || '';
+      const field = finding.rule?.field || finding.field || finding.key || 'field';
+
+      if (!suggestedFix) {
+        suggestedFix = expected !== '—' ? expected : `Correct ${field} to match specification`;
+      }
+
+      // Slot in workbench actions area
+      const slot = document.getElementById('workbench-remediation-mount') ||
+                   document.getElementById(`remediation-slot-${findingId}`);
+      if (slot) {
+        slot.innerHTML = `<div style="background:#0e1e17;border:1px solid #1e4032;border-radius:8px;padding:14px;margin-top:10px;">
+          <div style="font-size:10px;font-weight:800;color:#38bdf8;letter-spacing:.5px;margin-bottom:10px;">✨ AI SUGGESTED CORRECTION</div>
+          <div style="display:grid;gap:6px;margin-bottom:10px;">
+            <div style="background:#1a0e0e;border:1px solid #4b1c1c;border-radius:5px;padding:8px;">
+              <div style="font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:3px;">ARTWORK HAS</div>
+              <div style="font-size:13px;font-weight:700;color:#fb9386;">${esc(observed)}</div>
+            </div>
+            <div style="background:#0a1f12;border:1px solid #1e4032;border-radius:5px;padding:8px;">
+              <div style="font-size:10px;font-weight:700;color:#94a3b8;margin-bottom:3px;">SHOULD READ</div>
+              <div style="font-size:13px;font-weight:700;color:#86efac;">${esc(suggestedFix)}</div>
+            </div>
+          </div>
+          ${ruleText ? `<div style="font-size:10px;color:#64748b;margin-bottom:10px;">Rule: ${esc(ruleText)}</div>` : ''}
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button type="button" class="secondary" style="font-size:11px;padding:5px 10px;" onclick="navigator.clipboard.writeText(${JSON.stringify(suggestedFix)}).then(()=>{ const t=document.getElementById('toast'); if(t){t.textContent='Correction copied!';t.classList.add('visible');setTimeout(()=>t.classList.remove('visible'),2000);} })">📋 Copy Correction</button>
+            <button type="button" class="secondary" style="font-size:11px;padding:5px 10px;" onclick="this.closest('[style]').remove()">✕ Dismiss</button>
+          </div>
+        </div>`;
+      }
+      const toastElem = document.getElementById('toast');
+      if (toastElem) { toastElem.textContent = '✨ Suggested correction generated.'; toastElem.classList.add('visible'); setTimeout(() => toastElem.classList.remove('visible'), 2500); }
+    } catch (err) {
+      const toastElem = document.getElementById('toast');
+      if (toastElem) { toastElem.textContent = 'Could not generate fix: ' + err.message; toastElem.classList.add('visible'); setTimeout(() => toastElem.classList.remove('visible'), 2500); }
+    } finally {
+      b.disabled = false;
+      b.textContent = origLabel;
+    }
+    return;
+  }
+
+  // ── CREATE CORRECTION TICKET ──────────────────────────────────────────────
+  if (action === "create-correction-ticket") {
+    const findingId = b.dataset.id;
+    const finding = (current?.findings || []).find(f => f.id === findingId);
+    if (!finding || !current) return;
+
+    const ticketId = `PCT-${(findingId || 'FIND').slice(0, 8).toUpperCase()}-${Date.now().toString(36).toUpperCase()}`;
+    const observed = finding.observed || finding.actual || 'Not detected';
+    const expected = finding.expected || finding.required || 'See specification';
+    const rule = finding.rule?.citation || finding.rule?.text || finding.rule?.id || 'Not assigned';
+    const ruleId = finding.rule?.id || 'N/A';
+    const page = finding.evidence?.[0]?.page || 1;
+    const panel = finding.evidence?.[0]?.panel || finding.evidence?.[0]?.location || 'See artwork';
+    const severity = finding.severity || 'major';
+    const method = finding.method || 'exact_comparison';
+    const now = new Date().toISOString();
+
+    const ticket = [
+      `# PACKSIGNAL CORRECTION TICKET`,
+      `**Ticket ID:** ${ticketId}`,
+      `**Review:** ${esc(current.name || current.id)}`,
+      `**Market:** ${esc(current.market || 'United States (FDA)')}`,
+      `**Generated:** ${now}`,
+      ``,
+      `---`,
+      ``,
+      `## FINDING`,
+      `| Field | Value |`,
+      `|-------|-------|`,
+      `| Title | ${finding.title} |`,
+      `| Finding ID | ${finding.id} |`,
+      `| Status | ${(finding.status || 'review').toUpperCase()} |`,
+      `| Severity | ${severity} |`,
+      `| Check Method | ${method} |`,
+      `| Rule ID | ${ruleId} |`,
+      ``,
+      `## DISCREPANCY`,
+      `| | Value |`,
+      `|---|---|`,
+      `| **Artwork Has** | \`${observed}\` |`,
+      `| **Source Requires** | \`${expected}\` |`,
+      ``,
+      `## REGULATION`,
+      `${rule}`,
+      ``,
+      `## ARTWORK LOCATION`,
+      `- Document Page: ${page}`,
+      `- Panel / Region: ${panel}`,
+      ``,
+      `## REQUIRED ACTIONS`,
+      `- [ ] Correct artwork text from \`${observed}\` → \`${expected}\``,
+      `- [ ] Verify correction against approved source specification`,
+      `- [ ] Re-submit corrected artwork file for PackSignal verification`,
+      `- [ ] Update revision history and notify brand owner`,
+      ``,
+      `## REVIEWER DECISION`,
+      `- **Decision:** PENDING`,
+      `- **Reviewer:** _____________________`,
+      `- **Date:** _____________________`,
+      `- **Notes:** _____________________`,
+      ``,
+      `---`,
+      `*Generated by PackSignal · ESKO AIForge 2026 · Does not certify legal compliance.*`
+    ].join('\n');
+
+    const blob = new Blob([ticket], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${ticketId}.md`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+
+    const toastElem = document.getElementById('toast');
+    if (toastElem) { toastElem.textContent = `📋 Correction ticket downloaded: ${ticketId}.md`; toastElem.classList.add('visible'); setTimeout(() => toastElem.classList.remove('visible'), 3000); }
+    return;
+  }
+
   if (
     [
       "home",
@@ -2098,7 +2254,7 @@ document.addEventListener("click", async (event) => {
       document.documentElement.dataset.theme = theme;
       try {
         localStorage.setItem("packproof-theme", theme);
-      } catch {}
+      } catch { }
       b.textContent = theme === "dark" ? "☀" : "☾";
       b.setAttribute("aria-pressed", String(theme === "dark"));
       b.setAttribute(
@@ -2135,7 +2291,7 @@ document.addEventListener("click", async (event) => {
         `- Matching / Approved Elements: ${matches.length}`,
         ``,
         `## 2. REQUIRED ARTWORK CORRECTIONS`,
-        issues.map((f, i) => `${i+1}. [${f.title}]\n   Observed: "${f.observed || '—'}"\n   Expected: "${f.expected || '—'}"\n   Requirement: ${f.rule?.citation || f.rule?.text || f.explanation}\n   Location: Page ${f.evidence?.[0]?.page || 1} (${f.evidence?.[0]?.location || 'Back Panel'})`).join('\n\n') || 'No critical issues.',
+        issues.map((f, i) => `${i + 1}. [${f.title}]\n   Observed: "${f.observed || '—'}"\n   Expected: "${f.expected || '—'}"\n   Requirement: ${f.rule?.citation || f.rule?.text || f.explanation}\n   Location: Page ${f.evidence?.[0]?.page || 1} (${f.evidence?.[0]?.location || 'Back Panel'})`).join('\n\n') || 'No critical issues.',
         ``,
         `## 3. PRESERVE EXISTING APPROVED COPY (DO NOT MODIFY)`,
         matches.slice(0, 10).map(f => `- ${f.title}: Approved per specification`).join('\n') || '- None',
@@ -2202,6 +2358,10 @@ document.addEventListener("click", async (event) => {
           sourceType: (fact.evidence?.name || '').includes('.xls') ? 'spreadsheet' : 'pdf'
         });
       }
+      return;
+    }
+    if (action === "download-review-brief") {
+      if (current) downloadReviewCreativeBrief(current);
       return;
     }
     if (action === "toggle-print-radar") {
@@ -2440,7 +2600,7 @@ document.addEventListener("click", async (event) => {
                 </div>
               `).join('');
             }
-          } catch (e) {}
+          } catch (e) { }
         }, 1500);
 
         const dialogEl = document.getElementById('dialog');
@@ -2495,7 +2655,7 @@ document.addEventListener("click", async (event) => {
               if (org) {
                 target = await api(`/reviews/${org.id}`);
               }
-            } catch (e) {}
+            } catch (e) { }
           }
           if (target && target.id) {
             view = "review";
@@ -2611,7 +2771,7 @@ document.addEventListener("click", async (event) => {
         if (box && box.length === 4 && evidenceCanvas?.viewport?.focusBox) {
           setTimeout(() => evidenceCanvas.viewport.focusBox(box), 80);
         }
-      } catch {}
+      } catch { }
     }
     if (action === "deep-view-formula") {
       const checkId = b.dataset.checkId;
@@ -3026,17 +3186,17 @@ document.addEventListener("change", async (event) => {
                 ? "claims"
                 : "spec"
           : /\.(png|jpe?g|webp)$/i.test(file.name)
-          ? "artwork"
-          : /dieline|cutline|die-line/i.test(file.name)
-          ? "dieline"
-          : !uploads.some((f) => f.role === "artwork") &&
-            /\.(pdf|png|jpe?g|webp)$/i.test(file.name)
-          ? "artwork"
-          : /rule|checklist/i.test(file.name)
-            ? "rules"
-            : /claim/i.test(file.name)
-              ? "claims"
-              : "spec";
+            ? "artwork"
+            : /dieline|cutline|die-line/i.test(file.name)
+              ? "dieline"
+              : !uploads.some((f) => f.role === "artwork") &&
+                /\.(pdf|png|jpe?g|webp)$/i.test(file.name)
+                ? "artwork"
+                : /rule|checklist/i.test(file.name)
+                  ? "rules"
+                  : /claim/i.test(file.name)
+                    ? "claims"
+                    : "spec";
       uploads.push(file);
     }
     uploadList();
@@ -3159,8 +3319,8 @@ document.addEventListener("submit", async (event) => {
           ...(sourceRevisionUpload
             ? { parentId: current.id, sourceRevision: true }
             : revisionUpload
-            ? { parentId: current.id }
-            : { name: $("#review-name").value, market: $("#market").value }),
+              ? { parentId: current.id }
+              : { name: $("#review-name").value, market: $("#market").value }),
           files,
           mode: $("#review-mode").value,
           options: {
@@ -3198,7 +3358,7 @@ document.addEventListener("submit", async (event) => {
         marketPreset: data.get("marketPreset") || "none",
         panelZones: JSON.parse(data.get("panelZones") || "{}"),
         legibilityThresholdMm: data.get("legibilityThresholdMm"),
-          packageType: data.get("packageType") || undefined,
+        packageType: data.get("packageType") || undefined,
       };
       for (const key of [
         "completeArtwork",
@@ -3232,9 +3392,9 @@ try {
   const id = location.hash.match(/^#review\/([a-f0-9-]{36})$/)?.[1];
   const initialReview = id
     ? api("/reviews/" + id, { timeoutMs: 15_000 }).then(
-        (review) => ({ review }),
-        (error) => ({ error }),
-      )
+      (review) => ({ review }),
+      (error) => ({ error }),
+    )
     : null;
   const startupData = await Promise.all([
     api("/status", { timeoutMs: 12_000 }),
@@ -3278,3 +3438,13 @@ try {
     $("#retry-boot")?.addEventListener("click", () => location.reload());
   }
 }
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    const heroOptions = document.getElementById("hero-review-options");
+    if (heroOptions?.open) {
+      heroOptions.open = false;
+      heroOptions.querySelector("summary")?.focus();
+    }
+  }
+});
