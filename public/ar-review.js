@@ -19,11 +19,30 @@ export class ArReviewController {
     this.trackingState = 'INITIALIZING';
     this.manifest = null;
     this.cameraStream = null;
+    this.pairing = new URLSearchParams(window.location.search);
 
     this.initElements();
     this.bindEvents();
     this.initCamera();
+    this.connectPairedSession();
     this.loadManifestAndOverlay();
+  }
+
+  panelImageUrl(face) {
+    return `/samples/organizer/panels/${face}.png`;
+  }
+
+  async connectPairedSession() {
+    const sessionId = this.pairing.get('session');
+    const token = this.pairing.get('token');
+    if (!sessionId || !token) return;
+    try {
+      await fetch('/api/campus/mobile-session-connect', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId, token, deviceInfo: 'Live AR review viewfinder' }),
+      });
+    } catch { /* The sample viewfinder remains usable without session connectivity. */ }
   }
 
   initElements() {
@@ -232,7 +251,7 @@ export class ArReviewController {
         if (meanBrightness < 12) {
           // Camera is dark or asleep; display the sample packaging feed behind AR annotations
           if (this.simFeedEl) {
-            this.simFeedEl.src = `/samples/campus/${this.currentFace}.png`;
+            this.simFeedEl.src = this.panelImageUrl(this.currentFace);
             this.simFeedEl.style.display = 'block';
             this.simFeedEl.style.opacity = '0.92';
           }
@@ -280,7 +299,7 @@ export class ArReviewController {
   toggleSampleFeed() {
     if (!this.simFeedEl) return;
     const isVisible = this.simFeedEl.style.display === 'block';
-    this.simFeedEl.src = `/samples/campus/${this.currentFace}.png`;
+    this.simFeedEl.src = this.panelImageUrl(this.currentFace);
     this.simFeedEl.style.display = isVisible ? 'none' : 'block';
     this.simFeedEl.style.opacity = '1.0';
     this.showToast(isVisible ? 'Live Camera Feed' : 'Calibrated Carton Artwork Feed');
@@ -334,7 +353,7 @@ export class ArReviewController {
     }
 
     if (this.simFeedEl) {
-      this.simFeedEl.src = `/samples/campus/${face}.png`;
+      this.simFeedEl.src = this.panelImageUrl(face);
     }
 
     this.updateTrackingState('TRACKED');

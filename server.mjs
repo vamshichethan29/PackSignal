@@ -1291,19 +1291,23 @@ const server=createServer(async(req,res)=>{
       const b = await body(req).catch(() => ({}));
       const sessionId = b?.sessionId || 'default';
       const token = b?.token;
+      let pairing = null;
       if (token) {
         const val = validateMobileSessionToken(sessionId, token);
         if (!val.valid) {
           return json(res, 403, { success: false, error: val.error });
         }
+        pairing = val;
       }
       const session = connectMobileSession(sessionId, {
-        deviceInfo: b?.deviceInfo || req.headers['user-agent'] || 'Smartphone'
+        deviceInfo: b?.deviceInfo || req.headers['user-agent'] || 'Smartphone',
+        reviewId: pairing?.reviewId,
       });
       return json(res, 200, {
         success: true,
         sessionId,
         connected: true,
+        reviewId: session.reviewId || pairing?.reviewId || null,
         connectedAt: session.connectedAt,
         session
       });

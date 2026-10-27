@@ -58,6 +58,7 @@ import "./shelf-readability.js";
 import { openJudgePresentation } from "./demo-presentation.js";
 import { renderPrintReadinessRadar, openPrintDensitometerModal } from "./print-radar.js";
 import { mountOverlapShield, toggleOverlapDeck, toggleOverlapMode } from "./overlap-shield.js";
+import { mountAskAboutThis } from "./ask-about-this.js";
 
 if (typeof window !== 'undefined') {
   window.openJudgePresentation = openJudgePresentation;
@@ -2605,7 +2606,11 @@ document.addEventListener("click", async (event) => {
       return;
     }
     if (action === "show-ar-qr") {
-      const arUrl = `${window.location.origin}/ar-review.html`;
+      const pairing = await api('/campus/mobile-session-token', {
+        method: 'POST',
+        body: { sessionId: `ar-${Date.now()}`, reviewId: current?.id || 'dancing-fish-demo' }
+      });
+      const arUrl = `${window.location.origin}/ar-review.html?session=${encodeURIComponent(pairing.sessionId)}&token=${encodeURIComponent(pairing.token)}`;
       const qrSvg = generateQrSvg(arUrl, 200);
       dialog(
         "👓 Live AR on Real Box — Scan QR Code",
@@ -2614,7 +2619,7 @@ document.addEventListener("click", async (event) => {
             <div style="margin-bottom:10px;">${qrSvg}</div>
             <div style="font-size:12px;color:#94a3b8;font-weight:700;">LIVE AR ON REAL CARTON</div>
             <div style="font-family:monospace;font-size:14px;color:#38bdf8;font-weight:800;letter-spacing:1px;margin:4px 0;">Dancing Fish Berry Crunch (140 × 210 × 60 mm)</div>
-            <div style="font-size:11px;color:#22c55e;">✓ Offline Compiled .mind Targets · Zero AI Latency</div>
+            <div style="font-size:11px;color:#22c55e;">✓ Paired to this review · Dancing Fish target set</div>
           </div>
           <p style="font-size:13px;color:#cbd5e1;margin-bottom:14px;">
             Scan this link with your phone camera to see reviewer red-pen marks appear anchored directly onto the physical carton.
@@ -2625,7 +2630,7 @@ document.addEventListener("click", async (event) => {
             </a>
           </div>
           <div style="display:flex;gap:8px;justify-content:center;">
-            <a href="/ar-review.html" target="_blank" rel="noopener" class="primary" style="background:#dc2626;color:#ffffff;font-weight:700;padding:10px 20px;border-radius:6px;text-decoration:none;display:inline-block;">
+            <a href="${esc(arUrl)}" target="_blank" rel="noopener" class="primary" style="background:#dc2626;color:#ffffff;font-weight:700;padding:10px 20px;border-radius:6px;text-decoration:none;display:inline-block;">
               Launch Live AR Webpage →
             </a>
           </div>

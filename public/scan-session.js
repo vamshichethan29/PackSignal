@@ -13,6 +13,7 @@ export class ScanSession {
     this.panels = {};
     this.history = [];
     this.scale = null;
+    this.reviewId = null;
     this.isAuthorized = Boolean(this.token);
     this.storageKey = `packsignal_scan_${this.sessionId}`;
     this.loadLocalCache();
@@ -34,7 +35,9 @@ export class ScanSession {
           deviceInfo: `${deviceInfo} · ${navigator.userAgent.includes('Safari') && !navigator.userAgent.includes('Chrome') ? 'Safari' : 'Chrome/Brave'}`
         })
       });
-      return await res.json();
+      const result = await res.json();
+      this.reviewId = result.reviewId || result.session?.reviewId || this.reviewId;
+      return result;
     } catch (e) {
       return { success: false, error: e.message };
     }
@@ -77,6 +80,7 @@ export class ScanSession {
       hasGlare: Boolean(data.hasGlare),
       localOcr: data.localOcr || null,
       visionOcr: data.visionOcr || null,
+      photoDataUrl: data.photoDataUrl || null,
       photoUrl: data.photoUrl || `/samples/campus/${face}.png`,
     };
 
@@ -155,6 +159,14 @@ export class ScanSession {
       }),
     });
     return await res.json();
+  }
+
+  async getStatus() {
+    const res = await fetch(`/api/campus/scan-session?sessionId=${encodeURIComponent(this.sessionId)}`);
+    if (!res.ok) throw new Error('Could not read the paired scan session.');
+    const result = await res.json();
+    this.reviewId = result.session?.reviewId || this.reviewId;
+    return result;
   }
 
   clearSession() {

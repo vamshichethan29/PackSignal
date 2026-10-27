@@ -11,7 +11,7 @@ import { Scan3DTwin } from './scan-3d-twin.js';
 export class MobileScanner {
   constructor(options = {}) {
     this.session = new ScanSession(options);
-    this.faces = ['front', 'right', 'back', 'bottom', 'left', 'top'];
+    this.faces = ['front', 'right', 'back', 'left'];
     this.faceIndex = 0;
     this.videoEl = document.getElementById('scan-video');
     this.canvasEl = document.getElementById('scan-canvas');
@@ -56,6 +56,10 @@ export class MobileScanner {
     this.capturedThumb = document.getElementById('captured-preview-thumb');
     this.capturedTitle = document.getElementById('captured-preview-title');
     this.capturedMeta = document.getElementById('captured-preview-meta');
+  }
+
+  demoPanelUrl(face) {
+    return `/samples/organizer/panels/${face}.png`;
   }
 
   async initCamera() {
@@ -164,7 +168,7 @@ export class MobileScanner {
           if (this._manualCartonFeed) {
             if (this.simFeedEl) {
               this.simFeedEl.style.display = 'block';
-              this.simFeedEl.src = `/samples/campus/${this.faces[this.faceIndex] || 'front'}.png`;
+              this.simFeedEl.src = this.demoPanelUrl(this.faces[this.faceIndex] || 'front');
             }
             if (this.sharpnessVal) {
               this.sharpnessVal.textContent = '154.2 (Sharp · Reference Aligned)';
@@ -174,7 +178,7 @@ export class MobileScanner {
           } else if (this.sharpnessVal) {
             if (meanBrightness < 15) {
               if (this.simFeedEl) {
-                this.simFeedEl.src = `/samples/campus/${this.faces[this.faceIndex] || 'front'}.png`;
+                this.simFeedEl.src = this.demoPanelUrl(this.faces[this.faceIndex] || 'front');
                 this.simFeedEl.style.display = 'block';
               }
               this.sharpnessVal.textContent = 'Carton Artwork Feed (Camera dim)';
@@ -249,7 +253,7 @@ export class MobileScanner {
         const meanBrightness = totalBrightness / (80 * 60);
         if (meanBrightness < 12) {
           if (this.simFeedEl) {
-            this.simFeedEl.src = `/samples/campus/${this.faces[this.faceIndex] || 'front'}.png`;
+            this.simFeedEl.src = this.demoPanelUrl(this.faces[this.faceIndex] || 'front');
             this.simFeedEl.style.display = 'block';
           }
           if (this.sharpnessVal) {
@@ -264,7 +268,7 @@ export class MobileScanner {
   toggleCartonFeed() {
     if (!this.simFeedEl) return;
     this._manualCartonFeed = !this._manualCartonFeed;
-    this.simFeedEl.src = `/samples/campus/${this.faces[this.faceIndex] || 'front'}.png`;
+    this.simFeedEl.src = this.demoPanelUrl(this.faces[this.faceIndex] || 'front');
     this.simFeedEl.style.display = this._manualCartonFeed ? 'block' : 'none';
     if (this.sharpnessVal) {
       if (this._manualCartonFeed) {
@@ -313,7 +317,7 @@ export class MobileScanner {
     if (this.loadSampleBtn) {
       this.loadSampleBtn.addEventListener('click', () => {
         const face = this.faces[this.faceIndex] || 'front';
-        this.handleCaptureCurrentFace({ sampleImage: `/samples/campus/${face}.png` });
+        this.handleCaptureCurrentFace({ sampleImage: this.demoPanelUrl(face) });
       });
     }
 
@@ -360,7 +364,7 @@ export class MobileScanner {
 
   async handleCaptureCurrentFace(options = {}) {
     if (this.faceIndex >= 4) {
-      window.location.href = '/#review/rev-campus';
+      await this.openInteractiveReview();
       return;
     }
     const face = this.faces[this.faceIndex] || 'front';
@@ -389,7 +393,7 @@ export class MobileScanner {
         ctx.drawImage(this.videoEl, 0, 0, capCanvas.width, capCanvas.height);
         photoDataUrl = capCanvas.toDataURL('image/jpeg', 0.85);
       } else {
-        photoDataUrl = `/samples/campus/${face}.png`;
+        photoDataUrl = this.demoPanelUrl(face);
       }
 
       this.displayCapturedThumbnail(face, photoDataUrl);
@@ -442,7 +446,6 @@ export class MobileScanner {
         front: 'Front PDP (Brand, Net Wt, Claims)',
         right: 'Right Side (Nutrition Facts Table)',
         back: 'Back Panel (Ingredients & Allergens)',
-        bottom: 'Bottom Panel (GS1 Barcode & Batch)',
         left: 'Left Side (Manufacturer Info)',
         top: 'Top Panel',
       };
@@ -452,7 +455,7 @@ export class MobileScanner {
         const nextFace = this.faces[this.faceIndex];
         const nextPip = document.getElementById(`pip-${nextFace}`);
         if (nextPip) nextPip.classList.add('active');
-        if (this.simFeedEl) this.simFeedEl.src = `/samples/campus/${nextFace}.png`;
+        if (this.simFeedEl) this.simFeedEl.src = this.demoPanelUrl(nextFace);
 
         if (this.stepIndicator) this.stepIndicator.textContent = `Step ${this.faceIndex + 1} of 4`;
         if (this.currentTaskLabel) this.currentTaskLabel.textContent = `▶ Snap ${faceLabels[nextFace] || nextFace}`;
@@ -498,6 +501,29 @@ export class MobileScanner {
       if (this.stepIndicator) this.stepIndicator.textContent = `Step ${this.faceIndex + 1} of 4`;
       if (this.currentTaskLabel) this.currentTaskLabel.textContent = `▶ Snap ${faceLabels[face] || face}`;
       if (this.captureBtnText) this.captureBtnText.textContent = `Retake ${face.toUpperCase()}`;
+    }
+  }
+
+  async openInteractiveReview() {
+    if (this.captureBtn) this.captureBtn.disabled = true;
+    if (this.captureBtnText) this.captureBtnText.textContent = 'Opening interactive 3D review…';
+    try {
+      const sessionStatus = await this.session.getStatus();
+      let reviewId = sessionStatus.session?.reviewId || this.session.reviewId;
+      if (!/^[a-f0-9-]{36}$/i.test(reviewId || '')) {
+        const response = await fetch('/api/reviews', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sample: 'organizer', mode: 'local', options: { completeArtwork: false, marketPreset: 'us' } }),
+        });
+        if (!response.ok) throw new Error('Could not prepare the Dancing Fish review.');
+        reviewId = (await response.json()).id;
+      }
+      window.location.assign(`/#review/${reviewId}`);
+    } catch (error) {
+      if (this.captureBtnText) this.captureBtnText.textContent = 'Open Interactive 3D Review →';
+      if (this.captureBtn) this.captureBtn.disabled = false;
+      console.error('Review handoff failed:', error);
     }
   }
 
