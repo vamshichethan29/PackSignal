@@ -227,13 +227,18 @@
     <!-- Top HUD Badge -->
     <div class="scan-hud-bar">
       <div class="scan-badge" id="face-badge">
-        <span>🔍 Detected:</span>
+        <span>🔍 Target:</span>
         <b id="detected-face-name" style="color:#38bdf8;">Front PDP</b>
-        <span style="color:#22c55e;" id="detected-face-conf">(96%)</span>
+        <span style="color:#22c55e;" id="detected-face-conf"></span>
       </div>
-      <div class="scan-badge" id="sharpness-badge">
-        <span>Variance:</span>
-        <b id="sharpness-val" style="color:#22c55e;">148.2 (Sharp)</b>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <button type="button" id="switch-camera-btn" style="background:rgba(0,0,0,0.65);border:1px solid rgba(255,255,255,0.2);color:#fff;border-radius:14px;padding:3px 8px;font-size:11px;font-weight:700;cursor:pointer;pointer-events:auto;display:inline-flex;align-items:center;gap:4px;">
+          <span>🔄 Switch Cam</span>
+        </button>
+        <div class="scan-badge" id="sharpness-badge">
+          <span>Variance:</span>
+          <b id="sharpness-val" style="color:#94a3b8;">Calibrating camera...</b>
+        </div>
       </div>
     </div>
 
@@ -274,12 +279,25 @@
       </button>
     </div>
 
-    <!-- Fallback Photo Picker Trigger -->
-    <div style="text-align:center;">
+    <!-- Fallback Photo Picker & Sample Carton Trigger -->
+    <div style="display:flex;justify-content:center;gap:12px;margin:2px 0;">
       <input type="file" id="fallback-photo-input" accept="image/*" capture="environment" style="display:none;">
       <button type="button" class="textbutton subtle" id="fallback-photo-trigger-btn" style="color:#38bdf8;font-size:12px;font-weight:700;background:none;border:none;cursor:pointer;text-decoration:underline;">
-        📁 Upload Photo Instead (Fallback)
+        📁 Upload Photo from File
       </button>
+      <span style="color:#475569;">·</span>
+      <button type="button" class="textbutton subtle" id="load-sample-carton-btn" style="color:#22c55e;font-size:12px;font-weight:700;background:none;border:none;cursor:pointer;text-decoration:underline;">
+        ✨ Load Sample Carton (Dancing Fish)
+      </button>
+    </div>
+
+    <!-- Captured Photo Preview Card (Dynamic) -->
+    <div id="captured-preview-card" style="display:none;background:#0f172a;border:1px solid rgba(255,255,255,0.12);border-radius:8px;padding:8px 12px;display:none;align-items:center;gap:12px;">
+      <img id="captured-preview-thumb" src="" alt="Captured Frame" style="width:54px;height:54px;object-fit:cover;border-radius:4px;border:1px solid rgba(255,255,255,0.2);">
+      <div style="flex:1;font-size:11px;">
+        <div style="font-weight:700;color:#38bdf8;" id="captured-preview-title">Real Frame Captured</div>
+        <div style="color:#94a3b8;font-size:10px;" id="captured-preview-meta">Sharpness calculated from camera pixels</div>
+      </div>
     </div>
 
     <!-- 3D Twin Mount Container -->
@@ -289,7 +307,7 @@
     <div class="twin-preview-box">
       <div style="font-weight:700;color:#38bdf8;margin-bottom:4px;">📦 3D Package Twin Filling In</div>
       <div id="twin-status-text" style="color:#94a3b8;">
-        1 of 4 panels registered · Proportions calibrated from ID-1 card (10.0 px/mm)
+        0 of 4 panels registered · Calibrated from ID-1 card (10.0 px/mm)
       </div>
     </div>
 
@@ -297,12 +315,12 @@
     <div class="dual-reader-card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
         <b style="color:#ffffff;">👥 Dual-Reader Consensus</b>
-        <span style="background:#166534;color:#86efac;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;" id="consensus-status">✓ CONFIRMED</span>
+        <span style="background:#334155;color:#94a3b8;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:700;" id="consensus-status">STANDBY</span>
       </div>
-      <div style="color:#94a3b8;font-size:11px;">Local OCR and Gemini 3.8 Flash evaluate each panel independently.</div>
+      <div style="color:#94a3b8;font-size:11px;">Local OCR and Gemini 3.8 Flash evaluate each panel independently upon capture.</div>
       <div class="dual-reader-row">
-        <div><span style="color:#64748b;">Local OCR:</span> <b id="ocr-reading" style="color:#f8fafc;">"Dancing Fish Granola"</b></div>
-        <div><span style="color:#64748b;">Vision Model:</span> <b id="vision-reading" style="color:#f8fafc;">"Dancing Fish Granola"</b></div>
+        <div><span style="color:#64748b;">Local OCR:</span> <b id="ocr-reading" style="color:#94a3b8;">Awaiting panel capture...</b></div>
+        <div><span style="color:#64748b;">Vision Model:</span> <b id="vision-reading" style="color:#94a3b8;">Awaiting panel capture...</b></div>
       </div>
     </div>
 
