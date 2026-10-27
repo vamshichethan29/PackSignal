@@ -61,7 +61,6 @@ export class MobileScanner {
     this.detectionNotice = document.getElementById('package-detection-notice');
     this.detectionTitle = document.getElementById('package-detection-title');
     this.detectionDetail = document.getElementById('package-detection-detail');
-    this.panelUploadInputs = [...document.querySelectorAll('.panel-upload-input')];
   }
 
   demoPanelUrl(face) {
@@ -317,6 +316,7 @@ export class MobileScanner {
         const face = this.faces[this.faceIndex] || 'front';
         this.handleCaptureCurrentFace({ sampleImage: this.demoPanelUrl(face) });
       });
+      this.updateSampleButton();
     }
 
     if (this.twoRoutesBtn) {
@@ -344,25 +344,18 @@ export class MobileScanner {
       });
     }
 
-    this.panelUploadInputs.forEach((input) => {
-      input.addEventListener('change', (event) => {
-        const file = event.target.files?.[0];
-        const expectedFace = input.dataset.face;
-        const expectedIndex = Number(input.dataset.index);
-        if (!file) return;
-        if (expectedIndex !== this.faceIndex || expectedFace !== this.faces[this.faceIndex]) {
-          this.showDetection({
-            detected: false,
-            message: `Upload the ${this.faces[this.faceIndex]} panel next. The four panels are checked in order.`,
-          });
-          event.target.value = '';
-          return;
-        }
-        this.handleCaptureCurrentFace({ sourceFile: file });
-      });
-    });
-
     window.addEventListener('beforeunload', () => this.teardown());
+  }
+
+  updateSampleButton() {
+    if (!this.loadSampleBtn) return;
+    const face = this.faces[this.faceIndex];
+    if (!face) {
+      this.loadSampleBtn.style.display = 'none';
+      return;
+    }
+    this.loadSampleBtn.style.display = 'inline-block';
+    this.loadSampleBtn.textContent = `✨ Take ${face} sample`;
   }
 
   displayCapturedThumbnail(face, photoUrl) {
@@ -524,8 +517,6 @@ export class MobileScanner {
         pip.classList.remove('active');
         pip.classList.add('completed');
       }
-      const panelTile = document.querySelector(`.panel-upload-tile[data-face="${face}"]`);
-      if (panelTile) panelTile.classList.add('completed');
 
       // Update HUD consensus display
       if (this.ocrReading && this.visionReading && this.consensusStatus) {
@@ -558,8 +549,7 @@ export class MobileScanner {
         if (this.captureBtnText) this.captureBtnText.textContent = `Capture ${nextFace.toUpperCase()}`;
         const twinStatus = document.getElementById('twin-status-text');
         if (twinStatus) twinStatus.textContent = `${this.faceIndex} of 4 panels registered in 3D · Next: ${nextFace}`;
-        const nextTile = document.querySelector(`.panel-upload-tile[data-face="${nextFace}"]`);
-        if (nextTile) nextTile.classList.add('active');
+        this.updateSampleButton();
       } else {
         if (this.stepIndicator) this.stepIndicator.textContent = 'Complete (4 of 4)';
         if (this.currentTaskLabel) this.currentTaskLabel.textContent = '✓ All 4 Panels Captured! 3D Package Twin Ready.';
@@ -571,6 +561,7 @@ export class MobileScanner {
         const twinStatus = document.getElementById('twin-status-text');
         if (twinStatus) twinStatus.textContent = '4 of 4 panels closed in 3D box · Geometry validated';
         if (this.captureBtnText) this.captureBtnText.textContent = 'Opening Dancing Fish review…';
+        this.updateSampleButton();
         await this.openInteractiveReview();
       }
     } catch (err) {
@@ -593,8 +584,6 @@ export class MobileScanner {
         pip.classList.remove('completed');
         pip.classList.add('active');
       }
-      const panelTile = document.querySelector(`.panel-upload-tile[data-face="${face}"]`);
-      if (panelTile) panelTile.classList.remove('completed');
       const faceLabels = {
         front: 'Front PDP (Brand, Net Wt, Claims)',
         right: 'Right Side (Nutrition Facts Table)',
@@ -604,6 +593,7 @@ export class MobileScanner {
       if (this.stepIndicator) this.stepIndicator.textContent = `Step ${this.faceIndex + 1} of 4`;
       if (this.currentTaskLabel) this.currentTaskLabel.textContent = `▶ Snap ${faceLabels[face] || face}`;
       if (this.captureBtnText) this.captureBtnText.textContent = `Retake ${face.toUpperCase()}`;
+      this.updateSampleButton();
     }
   }
 
