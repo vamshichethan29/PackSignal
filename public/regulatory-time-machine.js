@@ -173,6 +173,9 @@ export function mountRegulatoryTimeMachine(container, {
     // Market change
     marketSelect.addEventListener('change', (e) => {
       currentMarket = e.target.value;
+      if (typeof window.switchCanonicalMarket === 'function') {
+        window.switchCanonicalMarket(currentMarket, currentLaunchDate);
+      }
       handleDateChange(currentLaunchDate, true);
     });
 
@@ -230,9 +233,75 @@ export function mountRegulatoryTimeMachine(container, {
     });
   }
 
+  function applyTemporalRulesToReview(rev, dateStr, mkt) {
+    if (!rev || !Array.isArray(rev.findings)) return;
+    const isJuly2027 = dateStr >= '2027-07-01';
+    const isJan2028 = dateStr >= '2028-01-01';
+    const m = String(mkt || rev.market || 'india').toLowerCase();
+
+    rev.findings = rev.findings.filter(f => !f.id?.startsWith('temporal-cutover-'));
+
+    if (isJuly2027) {
+      rev.findings.unshift({
+        id: 'temporal-cutover-2027-bold-rda',
+        title: '01 Jul 2027 Cutover: Mandatory Bold % RDA on Front Panel',
+        status: 'issue',
+        severity: 'major',
+        category: 'regulatory',
+        primaryDepartment: 'legal',
+        observed: 'Energy & Sugar % RDA displayed in regular font weight (2.0 mm)',
+        expected: 'Minimum 3.0 mm Bold font weight for % RDA contribution per serving',
+        explanation: 'Enforceable from 01 Jul 2027: Statutory 1st Amendment mandates bold typeface and elevated prominence for Energy, Added Sugar, and Saturated Fat % RDA on consumer-facing panels. Existing artwork does not comply.',
+        rule: {
+          id: 'FSSAI-LDR-2026-AMEND-BOLD-RDA',
+          citation: m.includes('in') ? 'FSSAI (Labelling & Display) 1st Amendment 2026, Reg 5(3)' : 'FDA 21 CFR 101.9(c) Front-of-Pack Guidance',
+          authority: 'STATUTORY AMENDMENT',
+          effectiveDate: '2027-07-01'
+        },
+        evidence: [
+          { role: 'artwork', page: 1, location: 'Front Panel (PDP)', box: [0.55, 0.48, 0.82, 0.58], quote: 'Nutrition Values in standard type' }
+        ]
+      });
+    }
+
+    if (isJan2028) {
+      rev.findings.unshift({
+        id: 'temporal-cutover-2028-pcr-content',
+        title: '01 Jan 2028 Cutover: Mandatory 30% Post-Consumer Recycled (PCR) Declaration',
+        status: 'issue',
+        severity: 'major',
+        category: 'materials',
+        primaryDepartment: 'prepress',
+        observed: 'Virgin paperboard substrate declared without resin ID or PCR percentage',
+        expected: 'Minimum 30% certified PCR recycled content declaration badge on back panel',
+        explanation: 'Enforceable from 01 Jan 2028: Corporate Packaging Sustainability Mandate requires all folding cartons to declare verified Post-Consumer Recycled (PCR) resin content. Substrate certification required before print release.',
+        rule: {
+          id: 'COMPANY-SUSTAINABLE-PACK-2028',
+          citation: 'Corporate Sustainable Packaging Charter § 4.2',
+          authority: 'SUSTAINABILITY CHARTER',
+          effectiveDate: '2028-01-01'
+        },
+        evidence: [
+          { role: 'artwork', page: 1, location: 'Back Panel', box: [0.38, 0.58, 0.52, 0.72], quote: 'No PCR recycled declaration found' }
+        ]
+      });
+    }
+
+    rev.counts = {
+      issue: rev.findings.filter(f => f.status === 'issue').length,
+      review: rev.findings.filter(f => f.status === 'review').length,
+      unable: rev.findings.filter(f => f.status === 'unable').length,
+      match: rev.findings.filter(f => f.status === 'match').length,
+    };
+  }
+
   function handleDateChange(newDate, forceServer = false) {
     clearTimeout(debounceTimer);
     updateClientPreview(newDate);
+    applyTemporalRulesToReview(review, newDate, currentMarket);
+    if (onDateChanged) {
+      onDateChanged({ launchDate: newDate, review });
+    }
 
     debounceTimer = setTimeout(() => {
       saveLaunchDate(newDate, currentCategory);

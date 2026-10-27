@@ -1,0 +1,32 @@
+{
+  "runId": "run-test-hist-mvr2vgpg",
+  "timestamp": "2026-10-27T19:27:56.500Z",
+  "suiteVersion": "1.0.0-freeze",
+  "modelId": "deterministic-local-engine",
+  "mode": "deterministic",
+  "totalCases": 10,
+  "scoreboard": {
+    "headline": "Caught 8 of 8 Planted Defects",
+    "caughtX": 8,
+    "attemptedY": 8,
+    "detectionRate": 100,
+    "precision": "100.0%",
+    "recall": "100.0%",
+    "f1Score": "100.0%",
+    "avgLatencyMs": 0.8
+  },
+  "outcomes": [
+    {
+      "caseId": "case-01",
+      "name": "Case 01",
+      "pass": true,
+      "actual": "issue"
+    },
+    {
+      "caseId": "case-02",
+      "name": "Case 02",
+      "pass": true,
+      "actual": "match"
+    }
+  ]
+}

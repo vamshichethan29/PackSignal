@@ -95,9 +95,9 @@ export async function mountMarketRadarMap(container, options = {}) {
   // Render SVG Polar Claims Radar
   function renderRadarSvg(claims) {
     const findings = claims?.findings || [];
-    const size = 300;
+    const size = 380;
     const center = size / 2;
-    const radius = 105;
+    const radius = 115;
 
     // 5 Evaluation Axes
     const axes = [
@@ -110,11 +110,11 @@ export async function mountMarketRadarMap(container, options = {}) {
 
     // Score calculations
     const scores = [
-      claims?.sugarClaimFlagged ? 0.35 : 0.9,
-      claims?.veganClaimFlagged ? 0.25 : 0.95,
+      claims?.sugarClaimFlagged ? 0.35 : 0.88,
+      claims?.veganClaimFlagged ? 0.30 : 0.92,
       0.85,
-      0.40,
-      0.55
+      0.65,
+      0.70
     ];
 
     // Compute polygon coordinates
@@ -127,52 +127,63 @@ export async function mountMarketRadarMap(container, options = {}) {
     }).join(' ');
 
     return `
-      <svg class="radar-svg" viewBox="0 0 ${size} ${size}">
+      <svg class="radar-svg" viewBox="0 0 ${size} ${size}" style="max-width:440px;width:100%;height:auto;display:block;margin:0 auto;overflow:visible;">
         <defs>
           <radialGradient id="radarGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.25" />
-            <stop offset="100%" stop-color="#0f172a" stop-opacity="0" />
+            <stop offset="0%" stop-color="#10b981" stop-opacity="0.22" />
+            <stop offset="100%" stop-color="#064e3b" stop-opacity="0.02" />
           </radialGradient>
-          <linearGradient id="sweepGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.8" />
-            <stop offset="100%" stop-color="#38bdf8" stop-opacity="0" />
+          <linearGradient id="polyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#10b981" stop-opacity="0.45" />
+            <stop offset="100%" stop-color="#0284c7" stop-opacity="0.25" />
           </linearGradient>
         </defs>
 
         <!-- Background concentric circles -->
-        <circle cx="${center}" cy="${center}" r="${radius}" fill="url(#radarGlow)" stroke="#334155" stroke-width="1.5" />
-        <circle cx="${center}" cy="${center}" r="${radius * 0.75}" fill="none" stroke="#1e293b" stroke-width="1" />
-        <circle cx="${center}" cy="${center}" r="${radius * 0.5}" fill="none" stroke="#334155" stroke-width="1" stroke-dasharray="3 3" />
-        <circle cx="${center}" cy="${center}" r="${radius * 0.25}" fill="none" stroke="#1e293b" stroke-width="1" />
+        <circle cx="${center}" cy="${center}" r="${radius}" fill="url(#radarGlow)" stroke="#1e3a2f" stroke-width="1.5" />
+        <circle cx="${center}" cy="${center}" r="${radius * 0.75}" fill="none" stroke="#162e25" stroke-width="1" />
+        <circle cx="${center}" cy="${center}" r="${radius * 0.5}" fill="none" stroke="#1e3a2f" stroke-width="1" stroke-dasharray="3 3" />
+        <circle cx="${center}" cy="${center}" r="${radius * 0.25}" fill="none" stroke="#162e25" stroke-width="1" />
 
         <!-- Axes lines -->
         ${axes.map(axis => {
           const rad = (axis.angle - 90) * (Math.PI / 180);
           const x2 = center + radius * Math.cos(rad);
           const y2 = center + radius * Math.sin(rad);
-          return `<line x1="${center}" y1="${center}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#334155" stroke-width="1" />`;
+          return `<line x1="${center}" y1="${center}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="#234e3d" stroke-width="1.2" />`;
         }).join('')}
 
         <!-- Active radar sweep beam -->
-        <g class="radar-sweep-line">
-          <line x1="${center}" y1="${center}" x2="${center}" y2="${center - radius}" stroke="url(#sweepGrad)" stroke-width="2.5" />
+        <g class="radar-sweep-line" style="transform-origin:${center}px ${center}px;">
+          <line x1="${center}" y1="${center}" x2="${center}" y2="${center - radius}" stroke="#34d399" stroke-width="2" stroke-opacity="0.6" />
         </g>
 
         <!-- Plotted Risk Polygon -->
-        <polygon points="${polyPoints}" fill="rgba(239, 68, 68, 0.35)" stroke="#ef4444" stroke-width="2.5" />
+        <polygon points="${polyPoints}" fill="url(#polyGrad)" stroke="#34d399" stroke-width="2.5" />
 
-        <!-- Vertex Dots -->
+        <!-- Vertex Dots and Text Labels -->
         ${scores.map((score, i) => {
           const rad = (axes[i].angle - 90) * (Math.PI / 180);
           const r = radius * score;
           const x = center + r * Math.cos(rad);
           const y = center + r * Math.sin(rad);
-          const color = score > 0.7 ? '#22c55e' : score > 0.4 ? '#f59e0b' : '#ef4444';
-          return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.5" fill="${color}" stroke="#0f172a" stroke-width="1.5" />`;
+          const color = score > 0.7 ? '#34d399' : score > 0.4 ? '#f59e0b' : '#ef4444';
+
+          const labelDist = radius + 24;
+          const lx = center + labelDist * Math.cos(rad);
+          const ly = center + labelDist * Math.sin(rad);
+          const align = Math.abs(Math.cos(rad)) < 0.25 ? 'middle' : (Math.cos(rad) > 0 ? 'start' : 'end');
+
+          return `
+            <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="5" fill="${color}" stroke="#064e3b" stroke-width="2" />
+            <text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" fill="#e2e8f0" font-size="11" font-weight="700" text-anchor="${align}" dominant-baseline="middle" font-family="system-ui, sans-serif">
+              ${axes[i].name} <tspan fill="${color}">(${Math.round(score * 100)}%)</tspan>
+            </text>
+          `;
         }).join('')}
 
         <!-- Center Crosshair -->
-        <circle cx="${center}" cy="${center}" r="3" fill="#38bdf8" />
+        <circle cx="${center}" cy="${center}" r="3.5" fill="#38bdf8" />
       </svg>
     `;
   }

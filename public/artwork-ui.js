@@ -282,7 +282,7 @@ function cadDisplayDimensions(cadModel){
   const scale=Math.min(205/Math.max(width,1),270/Math.max(height,1),88/Math.max(depth,1));
   return {width:Math.round(width*scale),height:Math.round(height*scale),depth:Math.round(depth*scale),measured:true};
 }
-export function workbenchArtwork(review,finding,{mode='2d',pageNumber=1,activeEvidenceIndex=0,cartonRotation=null,cartonTilt=-7,zoom=100,showBoxes=false,showZones=false,shopperPersona='all'}={}){
+export function workbenchArtwork(review,finding,{mode='2d',pageNumber=1,activeEvidenceIndex=0,cartonRotation=null,cartonTilt=-7,zoom=100,showBoxes=false,showZones=false,shopperPersona='all',autoZoom=false}={}){
   const doc=artwork(review);if(!doc?.pages?.length)return '<div class="workbench-empty">No rendered artwork page is available.</div>';
   const artworkEvidence=(finding?.evidence||[]).map((item,index)=>({item,index})).filter(({item})=>item.role==='artwork'&&item.page);
   const selected=artworkEvidence.find(({index})=>index===activeEvidenceIndex)||artworkEvidence[0];
@@ -368,7 +368,7 @@ export function workbenchArtwork(review,finding,{mode='2d',pageNumber=1,activeEv
     const imageUnit=page.unit==='pt'||(!page.unit&&/\.pdf$/i.test(doc.name||''))?'pt':'px';
     const hash=doc.sha256||'';
     visual=`<div class="proof-surface-label"><span><i></i> ORIGINAL ARTWORK</span><span>Page ${page.number} / ${doc.pages.length}</span></div>
-    <div class="workbench-art-frame ${showBoxes?'':'hide-boxes'} ${showZones?'':'hide-zones'}" tabindex="0" role="group" aria-label="Artwork canvas. Drag or use arrow keys to pan when zoomed. Plus and minus zoom. Home fits the page." data-workbench-frame data-page-number="${page.number}" data-zoom="${Math.max(100,Math.min(400,Number(zoom)||100))}" data-unit="${imageUnit}" data-page-width="${Number(page.width)||0}" data-page-height="${Number(page.height)||0}" ${selectedBox?`data-focus-box="${selectedBox.join(',')}" data-start-focused`:''}>
+    <div class="workbench-art-frame ${showBoxes?'':'hide-boxes'} ${showZones?'':'hide-zones'}" tabindex="0" role="group" aria-label="Artwork canvas. Drag or use arrow keys to pan when zoomed. Plus and minus zoom. Home fits the page." data-workbench-frame data-page-number="${page.number}" data-zoom="${Math.max(100,Math.min(400,Number(zoom)||100))}" data-unit="${imageUnit}" data-page-width="${Number(page.width)||0}" data-page-height="${Number(page.height)||0}" ${selectedBox ? `data-focus-box="${selectedBox.join(',')}" ${autoZoom ? 'data-start-focused data-auto-zoom="true"' : ''}` : ''}>
       <div class="workbench-art-content" data-workbench-image><img src="${image(review,page)}" draggable="false" alt="Original artwork page ${page.number}">
       ${regions.map(({item,index})=>{
         const isPf=finding?.method==='pdf_preflight_screening'||finding?.id?.startsWith('pdf-preflight:');
@@ -732,7 +732,7 @@ export function mountArtworkControls(container,{review,onRotation,viewport,onVie
         el.style.display = isVisible ? '' : 'none';
       });
     });
-    if (frame.dataset.focusBox && viewportController?.focusOnBox) {
+    if (frame.dataset.autoZoom === 'true' && frame.dataset.focusBox && viewportController?.focusOnBox) {
       setTimeout(() => {
         try {
           const b = frame.dataset.focusBox.split(',').map(Number);
