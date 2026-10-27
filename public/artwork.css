@@ -1858,6 +1858,36 @@ dialog.ask-someone-dialog::backdrop {
 }
 
 #workbench-checks-panel.review-workbench {
-  grid-template-columns: minmax(280px, 340px) 1fr;
+  grid-template-columns: minmax(205px, 245px) minmax(340px, 1fr) minmax(300px, 365px);
+}
+
+[data-theme="dark"] .workbench-feature-toolbar {
+  background: #10231c;
+  border-color: #2e493c;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .feature-tool-btn {
+  background: #182f26;
+  border-color: #31483b;
+  color: #dfe9df;
+}
+
+[data-theme="dark"] .feature-tool-btn:hover {
+  background: #243d31;
+  border-color: #476654;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .feature-tool-btn.active {
+  background: #274638;
+  border-color: #52705c;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .feature-tool-btn.highlight {
+  background: #3b2a0c;
+  border-color: #92400e;
+  color: #fde68a;
 }
 

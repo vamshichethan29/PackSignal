@@ -134,7 +134,7 @@ let status = {},
   cartonTilt = -7,
   artworkZoom = 100,
   artworkViewport = { scale: 1, x: 0, y: 0 },
-  showEvidenceBoxes = true,
+  showEvidenceBoxes = false,
   showPanelZones = false,
   timer = null,
   routeVersion = 0,
@@ -434,10 +434,11 @@ async function openReview(id, initialReview = null, compareV1Id = null) {
       selectedFindingId = nextReview.findings?.find((item) => item.status === "issue" || item.status === "review")?.id || nextReview.findings?.[0]?.id || null;
       activeEvidenceIndex = 0;
       cartonRotation = null;
-      artworkMode = "3d";
+      artworkMode = "2d";
       artworkPage = 1;
       artworkZoom = 100;
       artworkViewport = { scale: 1, x: 0, y: 0 };
+      showEvidenceBoxes = false;
     }
     const hasChanged = isNew ||
       !current ||
@@ -1113,88 +1114,34 @@ function findingView() {
   ` : '';
 
   return `
-    <!-- Top Hero Stage: 2D / 3D Packaging Animation Section FIRST -->
-    <div class="workbench-hero-stage">
-      <div class="workbench-hero-header">
-        <div class="workbench-hero-title">
-          <span class="eyebrow">PACKAGING ARTWORK &amp; 3D INSPECTION</span>
-          <h2>${artworkMode === '3d' ? '📦 3D Packaging Animation Studio' : '🔍 2D Artwork Proof &amp; Hotspots'}</h2>
-        </div>
-        <div class="workbench-mode-pill-toggle">
-          <button type="button" class="mode-pill ${artworkMode === '3d' ? 'active' : ''}" data-action="workbench-mode" data-mode="3d">
-            <span>📦 3D Package Studio</span>
-          </button>
-          <button type="button" class="mode-pill ${artworkMode === '2d' ? 'active' : ''}" data-action="workbench-mode" data-mode="2d">
-            <span>🔍 2D Artwork Proof</span>
-          </button>
-        </div>
-      </div>
-      <section class="workbench-canvas hero-canvas">
-        ${workbenchArtwork(r, selected, { mode: artworkMode, pageNumber: artworkPage, activeEvidenceIndex, cartonRotation, cartonTilt, zoom: artworkZoom, showBoxes: showEvidenceBoxes, showZones: showPanelZones, shopperPersona: activeShopperPersona })}
-        <div class="workbench-occurrences">${occurrenceLabel}${artworkItems.map(({ item, index }, n) => `<button class="occurrence-button ${index === activeEvidenceIndex ? "active" : ""}" data-action="select-evidence" data-index="${index}"><span>${String(n + 1).padStart(2, "0")}</span><b>${esc(item.quote || `Artwork evidence · page ${item.page}`)}</b><small>Page ${item.page} · ${esc(item.location || "text region")}</small></button>`).join("")}</div>
-      </section>
-    </div>
-
-    <!-- On-Demand Tool Bar: Features open ONLY when pressed -->
-    <div class="workbench-feature-toolbar">
-      <button type="button" class="feature-tool-btn active" data-toggle-drawer="workbench-checks-panel">
-        <span>📋 Inspection Checks (${rows.length} Findings) ▾</span>
-      </button>
-      <button type="button" class="feature-tool-btn" data-toggle-drawer="print-radar-drawer">
-        <span>📐 Print Readiness Radar ▾</span>
-      </button>
-      <button type="button" class="feature-tool-btn" data-toggle-drawer="rtm-inline-drawer">
-        <span>⏱ Regulatory Time Machine ▾</span>
-      </button>
-      <button type="button" class="feature-tool-btn" data-toggle-drawer="shelf-readability-drawer">
-        <span>🛒 Shelf Simulator ▾</span>
-      </button>
-      <button type="button" class="feature-tool-btn" data-toggle-drawer="reg-intelligence-drawer">
-        <span>🌐 Multi-Market Switcher ▾</span>
-      </button>
-      ${question ? `<button type="button" class="feature-tool-btn highlight" data-toggle-drawer="source-question-drawer"><span>❓ Source Question (1 Pending) ▾</span></button>` : ''}
-      <button type="button" class="feature-tool-btn" data-toggle-drawer="dept-summary-drawer">
-        <span>🏢 Department Summary ▾</span>
-      </button>
-    </div>
-
-    <!-- Collapsible Feature Drawers (All closed by default) -->
-    <details class="workbench-drawer-panel" id="dept-summary-drawer">
-      <summary class="drawer-summary"><div class="drawer-summary-left"><div class="drawer-icon-wrap">🏢</div><span><strong>Department Inspection Summary</strong></span></div><div class="drawer-caret-action"><span>Toggle Summary</span> <span class="caret-arrow">▾</span></div></summary>
-      <div class="drawer-content">${typeof renderDepartmentSummaryCard === 'function' ? renderDepartmentSummaryCard(r) : ''}</div>
-    </details>
-
     ${question ? `
-    <details class="workbench-drawer-panel" id="source-question-drawer">
-      <summary class="drawer-summary"><div class="drawer-summary-left"><div class="drawer-icon-wrap" style="background:#fef3c7;color:#b45309;">❓</div><span><strong>Pending Source Ambiguity Question</strong></span></div><div class="drawer-caret-action"><span>Resolve Question</span> <span class="caret-arrow">▾</span></div></summary>
-      <div class="drawer-content"><section class="next-question" style="margin:0;"><div><div class="eyebrow">FIRST, RESOLVE THIS</div><b>${esc(question.question)}</b><p>${esc(question.context)} ${question.impact ? `Answering this can unblock ${question.impact} comparison${question.impact === 1 ? "" : "s"}.` : ""}</p></div><button class="secondary" data-action="tab" data-tab="sources">Review source evidence →</button></section></div>
-    </details>` : ''}
+    <section class="next-question">
+      <div>
+        <div class="eyebrow">FIRST, RESOLVE THIS</div>
+        <b>${esc(question.question)}</b>
+        <p>${esc(question.context)} ${question.impact ? `Answering this can unblock ${question.impact} comparison${question.impact === 1 ? "" : "s"}.` : ""}</p>
+      </div>
+      <button class="secondary" data-action="tab" data-tab="sources">Review source evidence →</button>
+    </section>` : ""}
 
-    <details class="workbench-drawer-panel rtm-drawer" id="rtm-inline-drawer">
-      <summary class="drawer-summary"><div class="drawer-summary-left"><div class="drawer-icon-wrap" style="background:#e0f2fe;color:#0284c7;">⏱️</div><span><strong>Regulatory Horizon &amp; Time Machine</strong> (2026–2028 Cutover Timeline)</span><span class="drawer-badge-tag" style="background:#0284c7;color:#fff;">FSSAI &amp; US Mandates</span></div><div class="drawer-caret-action"><span>Adjust Horizon</span> <span class="caret-arrow">▾</span></div></summary>
-      <div class="drawer-content"><div id="rtm-inline-mount"></div></div>
-    </details>
-
-    ${shelfDrawer}
-
-    <details class="workbench-drawer-panel" id="print-radar-drawer">
-      <summary class="drawer-summary"><div class="drawer-summary-left"><div class="drawer-icon-wrap" style="background:#e6fffa;color:#0d9488;">📐</div><span><strong>Print Readiness Radar</strong> (Ink Coverage, Bleed, Trim &amp; Crease)</span><span class="drawer-badge-tag" style="background:#0d9488;color:#fff;">Prepress Radar</span></div><div class="drawer-caret-action"><span>Inspect Radar</span> <span class="caret-arrow">▾</span></div></summary>
-      <div class="drawer-content"><div id="print-readiness-radar-mount"></div></div>
-    </details>
-
-    ${regDrawer}
-
-    <div id="quick-triage-mount"></div>
-
-    <!-- Main Inspection Checks Workbench -->
+    <!-- 3-Column Review Workbench: Queue | 2D/3D Canvas | Finding Info -->
     <div class="review-workbench" id="workbench-checks-panel">
+      <!-- Column 1: Review Queue -->
       <aside class="workbench-queue">
         <div class="queue-head"><div><div class="eyebrow">CHECKS</div><b>${rows.length} visible (${r.findings.length} total)</b></div></div>
         ${typeof renderDepartmentFilterBar === 'function' ? renderDepartmentFilterBar(r, typeof activeDepartmentFilter !== 'undefined' ? activeDepartmentFilter : 'all', typeof includeCollaboratingDepartments !== 'undefined' ? includeCollaboratingDepartments : true) : ''}
         <div class="queue-filters">${[["all", "All"], ["attention", "Needs review"], ["match", "Matches"]].map(([value, label]) => `<button class="filter ${filterIsActive(value) ? "active" : ""}" data-action="filter" data-filter="${value}">${label}</button>`).join("")}<label class="shopper-persona-filter-label" style="display:inline-flex;align-items:center;gap:4px;margin-left:auto;font-size:11px;font-weight:700;color:#0f172a;"><span>👥 Shopper Lens:</span><select data-action="filter-queue-persona" style="padding:2px 6px;border-radius:4px;border:1px solid #cbd5e1;font-size:11px;background:#fff;font-weight:600;cursor:pointer;"><option value="all" ${activeShopperPersona === 'all' ? 'selected' : ''}>All Shoppers</option><option value="nut-allergy" ${activeShopperPersona === 'nut-allergy' ? 'selected' : ''}>🥜 Nut Allergy</option><option value="vegan" ${activeShopperPersona === 'vegan' ? 'selected' : ''}>🌱 Vegan</option><option value="sugar-watcher" ${activeShopperPersona === 'sugar-watcher' ? 'selected' : ''}>🩺 Sugar Watcher</option></select></label></div>
         <div class="queue-list">${rows.map((item, index) => `<button class="queue-finding ${item.status} ${item.id === selected.id ? "selected" : ""}" data-action="select-finding" data-id="${item.id}" aria-current="${item.id === selected.id ? "true" : "false"}"><span class="queue-index">${String(index + 1).padStart(2, "0")}</span><span class="queue-copy"><b>${esc(item.title)}</b>${typeof renderDepartmentBadge === 'function' ? renderDepartmentBadge(item) : ''}<small>${names[item.status]}${r.decisions[item.id]?.stale ? " · decision needs reconfirmation" : ""}${Array.isArray(item.blockedChecks) ? ` · ${item.blockedChecks.length} checks waiting` : ''}</small></span><span class="queue-status">${symbols[item.status]}</span></button>`).join("") || '<div class="queue-empty">No findings in this filter.</div>'}</div>
       </aside>
-      <aside class="workbench-evidence" style="grid-column: span 2;">
+
+      <!-- Column 2: Packaging Canvas (2D Proof & 3D Animation Studio) -->
+      <section class="workbench-canvas">
+        ${workbenchArtwork(r, selected, { mode: artworkMode, pageNumber: artworkPage, activeEvidenceIndex, cartonRotation, cartonTilt, zoom: artworkZoom, showBoxes: showEvidenceBoxes, showZones: showPanelZones, shopperPersona: activeShopperPersona })}
+        <div class="workbench-occurrences">${occurrenceLabel}${artworkItems.map(({ item, index }, n) => `<button class="occurrence-button ${index === activeEvidenceIndex ? "active" : ""}" data-action="select-evidence" data-index="${index}"><span>${String(n + 1).padStart(2, "0")}</span><b>${esc(item.quote || `Artwork evidence · page ${item.page}`)}</b><small>Page ${item.page} · ${esc(item.location || "text region")}</small></button>`).join("")}</div>
+      </section>
+
+      <!-- Column 3: Finding Details & Resolution Actions -->
+      <aside class="workbench-evidence">
         <div class="detail-status ${selected.status}">${symbols[selected.status]} ${names[selected.status].toUpperCase()}${selected.method === "visibility_review" ? " · IMAGE CROSS-CHECK" : ""}</div>
         ${typeof renderDepartmentBadge === 'function' ? renderDepartmentBadge(selected, { canChange: true }) : ''}
         <div class="eyebrow">${evidenceCopy.eyebrow}</div>
@@ -1232,7 +1179,52 @@ function findingView() {
         ${teamReviewView(r, selected, status)}
       </aside>
     </div>
+
+    <!-- On-Demand Tool Bar & Advanced Features BELOW the Workbench (Keeps All Features Accessible) -->
+    <div class="workbench-feature-toolbar" style="margin-top:20px;">
+      <button type="button" class="feature-tool-btn" data-toggle-drawer="print-radar-drawer">
+        <span>📐 Print Readiness Radar ▾</span>
+      </button>
+      <button type="button" class="feature-tool-btn" data-toggle-drawer="rtm-inline-drawer">
+        <span>⏱ Regulatory Time Machine ▾</span>
+      </button>
+      <button type="button" class="feature-tool-btn" data-toggle-drawer="shelf-readability-drawer">
+        <span>🛒 Shelf Simulator ▾</span>
+      </button>
+      <button type="button" class="feature-tool-btn" data-toggle-drawer="regulatory-switcher-drawer">
+        <span>🌐 Multi-Market Switcher ▾</span>
+      </button>
+      <button type="button" class="feature-tool-btn" data-toggle-drawer="dept-summary-drawer">
+        <span>🏢 Department Summary ▾</span>
+      </button>
+      <button type="button" class="feature-tool-btn" data-toggle-drawer="organizer-benchmarks-drawer">
+        <span>📋 Validation Benchmarks ▾</span>
+      </button>
+    </div>
+
+    <!-- Collapsible Feature Drawers (All below workbench) -->
+    <details class="workbench-drawer-panel" id="dept-summary-drawer">
+      <summary class="drawer-summary"><div class="drawer-summary-left"><div class="drawer-icon-wrap">🏢</div><span><strong>Department Inspection Summary</strong></span></div><div class="drawer-caret-action"><span>Toggle Summary</span> <span class="caret-arrow">▾</span></div></summary>
+      <div class="drawer-content">${typeof renderDepartmentSummaryCard === 'function' ? renderDepartmentSummaryCard(r) : ''}</div>
+    </details>
+
+    <details class="workbench-drawer-panel rtm-drawer" id="rtm-inline-drawer">
+      <summary class="drawer-summary"><div class="drawer-summary-left"><div class="drawer-icon-wrap" style="background:#e0f2fe;color:#0284c7;">⏱️</div><span><strong>Regulatory Horizon &amp; Time Machine</strong> (2026–2028 Cutover Timeline)</span><span class="drawer-badge-tag" style="background:#0284c7;color:#fff;">FSSAI &amp; US Mandates</span></div><div class="drawer-caret-action"><span>Adjust Horizon</span> <span class="caret-arrow">▾</span></div></summary>
+      <div class="drawer-content"><div id="rtm-inline-mount"></div></div>
+    </details>
+
+    ${shelfDrawer}
+
+    <details class="workbench-drawer-panel" id="print-radar-drawer">
+      <summary class="drawer-summary"><div class="drawer-summary-left"><div class="drawer-icon-wrap" style="background:#e6fffa;color:#0d9488;">📐</div><span><strong>Print Readiness Radar</strong> (Ink Coverage, Bleed, Trim &amp; Crease)</span><span class="drawer-badge-tag" style="background:#0d9488;color:#fff;">Prepress Radar</span></div><div class="drawer-caret-action"><span>Inspect Radar</span> <span class="caret-arrow">▾</span></div></summary>
+      <div class="drawer-content"><div id="print-readiness-radar-mount"></div></div>
+    </details>
+
+    ${regDrawer}
+
     ${organizerDrawer}
+
+    <div id="quick-triage-mount"></div>
   `;
 }
 function nextBestQuestion(review) {

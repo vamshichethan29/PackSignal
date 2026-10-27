@@ -282,7 +282,7 @@ function cadDisplayDimensions(cadModel){
   const scale=Math.min(205/Math.max(width,1),270/Math.max(height,1),88/Math.max(depth,1));
   return {width:Math.round(width*scale),height:Math.round(height*scale),depth:Math.round(depth*scale),measured:true};
 }
-export function workbenchArtwork(review,finding,{mode='2d',pageNumber=1,activeEvidenceIndex=0,cartonRotation=null,cartonTilt=-7,zoom=100,showBoxes=true,showZones=false,shopperPersona='all'}={}){
+export function workbenchArtwork(review,finding,{mode='2d',pageNumber=1,activeEvidenceIndex=0,cartonRotation=null,cartonTilt=-7,zoom=100,showBoxes=false,showZones=false,shopperPersona='all'}={}){
   const doc=artwork(review);if(!doc?.pages?.length)return '<div class="workbench-empty">No rendered artwork page is available.</div>';
   const artworkEvidence=(finding?.evidence||[]).map((item,index)=>({item,index})).filter(({item})=>item.role==='artwork'&&item.page);
   const selected=artworkEvidence.find(({index})=>index===activeEvidenceIndex)||artworkEvidence[0];
