@@ -811,10 +811,6 @@ export class DemoPresentationModal {
         return '';
     }
   }
-        </div>
-      </div>
-    `;
-  }
 
   _renderArtworkOverlays() {
     if (this.mode !== 'REVEALED') return '';
