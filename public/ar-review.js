@@ -44,6 +44,8 @@ export class ArReviewController {
     this.fallback2dBtn = document.getElementById('fallback-2d-btn');
     this.marketToggleBtn = document.getElementById('market-toggle-btn');
     this.snapCompetitorBtn = document.getElementById('snap-competitor-btn');
+    this.switchCameraBtn = document.getElementById('switch-camera-btn');
+    this.toggleSampleFeedBtn = document.getElementById('toggle-sample-feed-btn');
 
     // Drawer Elements
     this.findingDrawer = document.getElementById('ar-finding-drawer');
@@ -77,6 +79,16 @@ export class ArReviewController {
         this.switchPanel(btn.dataset.face);
       });
     });
+
+    // Switch Camera Button
+    if (this.switchCameraBtn) {
+      this.switchCameraBtn.addEventListener('click', () => this.switchCamera());
+    }
+
+    // Toggle Sample Feed Button
+    if (this.toggleSampleFeedBtn) {
+      this.toggleSampleFeedBtn.addEventListener('click', () => this.toggleSampleFeed());
+    }
 
     // Toggle Red Pen / Clean View
     if (this.toggleRedpenBtn) {
@@ -147,17 +159,49 @@ export class ArReviewController {
   async initCamera() {
     this.updateTrackingState('SEARCHING');
 
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    this.currentFacingMode = isMobile ? 'environment' : 'user';
+
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
       try {
-        this.cameraStream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: { ideal: 'environment' } },
-        });
-        if (this.videoEl) {
+        let stream = null;
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+              facingMode: { ideal: this.currentFacingMode },
+              width: { ideal: 1280 },
+              height: { ideal: 720 },
+            },
+          });
+        } catch (e1) {
+          console.warn('Initial camera resolution failed, retrying basic stream:', e1);
+          stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        }
+
+        this.cameraStream = stream;
+        if (this.videoEl && this.cameraStream) {
+          this.videoEl.muted = true;
+          this.videoEl.playsInline = true;
+          this.videoEl.setAttribute('playsinline', '');
+          this.videoEl.setAttribute('webkit-playsinline', '');
+          this.videoEl.setAttribute('autoplay', '');
           this.videoEl.srcObject = this.cameraStream;
-          await this.videoEl.play();
+
+          this.videoEl.onloadedmetadata = async () => {
+            try {
+              await this.videoEl.play();
+              this.checkCameraFeedLiveness();
+            } catch (e) {
+              console.warn('AR video play notice:', e);
+            }
+          };
+
+          try {
+            await this.videoEl.play();
+            this.checkCameraFeedLiveness();
+          } catch (e) {}
         }
       } catch (err) {
-        // Fallback to simulated feed on camera error or permission denial
         if (this.simFeedEl) this.simFeedEl.style.display = 'block';
         this.showToast('Camera unavailable · Using calibrated artwork simulation');
       }
@@ -165,10 +209,80 @@ export class ArReviewController {
       if (this.simFeedEl) this.simFeedEl.style.display = 'block';
     }
 
-    // Transition to TRACKED
     setTimeout(() => {
       this.updateTrackingState('TRACKED');
-    }, 300);
+    }, 400);
+  }
+
+  checkCameraFeedLiveness() {
+    setTimeout(() => {
+      if (!this.videoEl || this.videoEl.videoWidth === 0) return;
+      try {
+        const testCanvas = document.createElement('canvas');
+        testCanvas.width = 80;
+        testCanvas.height = 60;
+        const ctx = testCanvas.getContext('2d');
+        ctx.drawImage(this.videoEl, 0, 0, 80, 60);
+        const data = ctx.getImageData(0, 0, 80, 60).data;
+        let totalBrightness = 0;
+        for (let i = 0; i < data.length; i += 4) {
+          totalBrightness += (data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114);
+        }
+        const meanBrightness = totalBrightness / (80 * 60);
+        if (meanBrightness < 12) {
+          // Camera is dark or asleep; display the sample packaging feed behind AR annotations
+          if (this.simFeedEl) {
+            this.simFeedEl.src = `/samples/campus/${this.currentFace}.png`;
+            this.simFeedEl.style.display = 'block';
+            this.simFeedEl.style.opacity = '0.92';
+          }
+          this.showToast('Camera dark/unfocused · Overlaying carton artwork feed');
+        }
+      } catch (e) {}
+    }, 800);
+  }
+
+  async switchCamera() {
+    if (this.cameraStream) {
+      this.cameraStream.getTracks().forEach(track => track.stop());
+      this.cameraStream = null;
+    }
+    this.currentFacingMode = this.currentFacingMode === 'environment' ? 'user' : 'environment';
+    this.showToast(`Switching camera to ${this.currentFacingMode}...`);
+
+    try {
+      this.cameraStream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: this.currentFacingMode },
+          width: { ideal: 1280 },
+          height: { ideal: 720 },
+        },
+      });
+      if (this.videoEl) {
+        this.videoEl.srcObject = this.cameraStream;
+        await this.videoEl.play();
+        if (this.simFeedEl) this.simFeedEl.style.display = 'none';
+      }
+    } catch (e) {
+      try {
+        this.cameraStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        if (this.videoEl) {
+          this.videoEl.srcObject = this.cameraStream;
+          await this.videoEl.play();
+        }
+      } catch (err) {
+        if (this.simFeedEl) this.simFeedEl.style.display = 'block';
+        this.showToast('Camera toggle failed · Using carton artwork');
+      }
+    }
+  }
+
+  toggleSampleFeed() {
+    if (!this.simFeedEl) return;
+    const isVisible = this.simFeedEl.style.display === 'block';
+    this.simFeedEl.src = `/samples/campus/${this.currentFace}.png`;
+    this.simFeedEl.style.display = isVisible ? 'none' : 'block';
+    this.showToast(isVisible ? 'Live Camera Feed' : 'Calibrated Carton Artwork Feed');
   }
 
   updateTrackingState(state) {
@@ -218,7 +332,10 @@ export class ArReviewController {
       this.faceGuideText.textContent = `${face.toUpperCase()} PANEL ANCHOR`;
     }
 
-    // Simulate tracking target acquisition
+    if (this.simFeedEl) {
+      this.simFeedEl.src = `/samples/campus/${face}.png`;
+    }
+
     this.updateTrackingState('TRACKED');
     this.showToast(`MindAR target locked on ${face.toUpperCase()} face (140 × 210 mm)`);
 

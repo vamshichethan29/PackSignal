@@ -15,8 +15,8 @@
   <!-- Fallback Simulated Feed (when camera is denied or headless) -->
   <img id="ar-simulated-feed" src="/samples/campus/front.png" class="ar-camera-viewport" style="display:none;" alt="Carton Feed">
 
-  <!-- Interactive SVG Annotation Layer -->
-  <svg class="ar-annotation-layer" id="ar-annotation-layer" viewBox="0 0 1000 1500" preserveAspectRatio="xMidYMid slice"></svg>
+  <!-- Interactive SVG Annotation Layer (rendered inside div container for standard SVG DOM parsing) -->
+  <div class="ar-annotation-layer" id="ar-annotation-layer"></div>
 
   <!-- Top Bar Telemetry HUD -->
   <header class="ar-hud-header">
@@ -24,8 +24,16 @@
       <div class="ar-status-dot pulsing" id="ar-status-dot"></div>
       <span id="ar-tracking-label">MindAR: TRACKING LOCKED</span>
     </div>
-    <div class="ar-hud-pill" style="color:#f59e0b;" id="ar-perf-pill">
-      <span>60 FPS · 0ms AI Latency</span>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <button type="button" class="ar-hud-btn" id="switch-camera-btn" style="background:rgba(0,0,0,0.65);border:1px solid rgba(255,255,255,0.25);color:#fff;border-radius:14px;padding:3px 9px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
+        <span>🔄 Switch Cam</span>
+      </button>
+      <button type="button" class="ar-hud-btn" id="toggle-sample-feed-btn" style="background:rgba(0,0,0,0.65);border:1px solid rgba(56,189,248,0.4);color:#38bdf8;border-radius:14px;padding:3px 9px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;">
+        <span>✨ Sample Feed</span>
+      </button>
+      <div class="ar-hud-pill" style="color:#f59e0b;" id="ar-perf-pill">
+        <span>60 FPS · 0ms AI Latency</span>
+      </div>
     </div>
   </header>
 
