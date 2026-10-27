@@ -311,7 +311,7 @@ export class ArReviewController {
     this.trackingState = state;
     if (this.trackingLabel) {
       if (state === 'TRACKED') {
-        this.trackingLabel.textContent = `MindAR: TRACKING LOCKED (${this.currentFace.toUpperCase()})`;
+        this.trackingLabel.textContent = `AR: DANCING FISH LAYER ACTIVE (${this.currentFace.toUpperCase()})`;
         if (this.statusDot) {
           this.statusDot.style.background = '#22c55e';
           this.statusDot.classList.add('pulsing');
@@ -321,7 +321,7 @@ export class ArReviewController {
           this.reticleGuide.classList.add('tracking-locked');
         }
       } else if (state === 'TARGET_LOST') {
-        this.trackingLabel.textContent = 'MindAR: TARGET LOST · REACQUIRING';
+        this.trackingLabel.textContent = 'AR: CARTON OUT OF VIEW';
         if (this.statusDot) {
           this.statusDot.style.background = '#f59e0b';
           this.statusDot.classList.remove('pulsing');
@@ -332,7 +332,7 @@ export class ArReviewController {
         }
         this.showToast('Target lost · Move closer to printed artwork to restore tracking');
       } else if (state === 'SEARCHING') {
-        this.trackingLabel.textContent = 'MindAR: SEARCHING FOR ARTWORK';
+        this.trackingLabel.textContent = 'AR: PREPARING REVIEW LAYER';
         if (this.statusDot) this.statusDot.style.background = '#38bdf8';
       }
     }
@@ -357,7 +357,7 @@ export class ArReviewController {
     document.body.dataset.arFace = face;
 
     this.updateTrackingState('TRACKED');
-    this.showToast(`MindAR target locked on ${face.toUpperCase()} face (140 × 210 mm)`);
+    this.showToast(`Dancing Fish ${face.toUpperCase()} review layer active (140 × 210 mm)`);
 
     try {
       const res = await fetch(`/api/campus/ar-overlay/${face}?market=${this.currentMarket}`);
