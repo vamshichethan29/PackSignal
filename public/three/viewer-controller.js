@@ -149,9 +149,17 @@ export class PackagingViewerController {
       this.mouse = new THREE.Vector2();
       this.setupRaycasting();
 
-      // 9. Start fold progress
-      const shouldAutoFold = this.autoFold !== false && (this.packageType === 'carton' || this.packageType === 'folding_carton');
+      // 9. Start fold progress: ONLY auto-fold ONCE per review session when user first opens 3D!
+      if (typeof window !== 'undefined') {
+        window.__hasFoldedReviews = window.__hasFoldedReviews || new Set();
+      }
+      const reviewKey = this.review?.id || 'default';
+      const alreadyFolded = typeof window !== 'undefined' && window.__hasFoldedReviews && window.__hasFoldedReviews.has(reviewKey);
+      const shouldAutoFold = !alreadyFolded && this.autoFold !== false && (this.packageType === 'carton' || this.packageType === 'folding_carton');
       if (shouldAutoFold) {
+        if (typeof window !== 'undefined' && window.__hasFoldedReviews) {
+          window.__hasFoldedReviews.add(reviewKey);
+        }
         this.progress = 0.0;
         this.setFoldProgress(0.0);
         this.cameraController.resetCamera(dimensions);
@@ -162,6 +170,7 @@ export class PackagingViewerController {
           }
         }, 150);
       } else {
+        this.progress = 1.0;
         this.setFoldProgress(1.0);
         this.cameraController.resetCamera(dimensions);
       }
@@ -748,12 +757,22 @@ export class PackagingViewerController {
     this.onSelectFinding?.(findingId, evidenceIndex);
   }
 
-  focusFinding(findingId) {
-    const pin = this.locatedPins.find(p => p.findingId === findingId);
+  focusFinding(findingId, evidenceIndex = 0) {
+    const pin = this.locatedPins.find(p => p.findingId === findingId && p.evidenceIndex === evidenceIndex) ||
+                this.locatedPins.find(p => p.findingId === findingId);
     if (pin) {
       const panelDims = this.tree?.panels?.[pin.faceName] || { width: 60, height: 110 };
       this.cameraController.flyToPin(pin, panelDims);
+      return;
     }
+    const finding = this.review?.findings?.find(f => f.id === findingId);
+    const loc = String(finding?.evidence?.find(e => e.role === 'artwork')?.location || '').toLowerCase();
+    const face = ['back', 'rear'].some(k => loc.includes(k)) ? 'back' :
+                 loc.includes('left') ? 'left' :
+                 loc.includes('right') ? 'right' :
+                 loc.includes('top') ? 'top' :
+                 loc.includes('bottom') ? 'bottom' : 'front';
+    this.focusPanel(face);
   }
 
   focusPanel(faceName) {

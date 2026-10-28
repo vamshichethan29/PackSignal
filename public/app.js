@@ -717,6 +717,25 @@ function renderReview() {
       const finding = r.findings?.find(item => item.id === id);
       const evidence = finding?.evidence?.[activeEvidenceIndex];
       if (evidence?.page) artworkPage = evidence.page;
+
+      if (artworkMode === "3d" && window.__packsignalViewer && document.querySelector('[data-carton-webgl]')) {
+        try {
+          window.__packsignalViewer.selectFinding(selectedFindingId, activeEvidenceIndex);
+          window.__packsignalViewer.focusFinding(selectedFindingId, activeEvidenceIndex);
+        } catch (_) {}
+
+        document.querySelectorAll('.queue-finding').forEach(btn => {
+          const isSelected = btn.dataset.id === selectedFindingId;
+          btn.classList.toggle('selected', isSelected);
+          btn.setAttribute('aria-current', isSelected ? 'true' : 'false');
+        });
+
+        const asideEl = document.querySelector('.workbench-evidence');
+        if (asideEl && finding && typeof renderWorkbenchEvidenceAside === 'function') {
+          asideEl.innerHTML = renderWorkbenchEvidenceAside(current, finding, activeEvidenceIndex);
+        }
+        return;
+      }
       renderReview();
     },
     onViewIn2D: (id, page, index) => {
@@ -1258,6 +1277,102 @@ function findingEvidenceCopy(finding) {
   };
 }
 
+function renderWorkbenchEvidenceAside(r, selected, activeEvidenceIndex = 0) {
+  if (!selected) return '<div class="notice">No finding selected.</div>';
+  const artworkItems = (selected.evidence || []).map((item, index) => ({ item, index })).filter(({ item }) => item.role === "artwork" && item.page);
+  const activeArtwork = artworkItems.find(({ index }) => index === activeEvidenceIndex)?.item || artworkItems[0]?.item;
+  const sourceItems = (selected.evidence || []).filter((item) => item.role !== "artwork");
+  const evidenceCopy = findingEvidenceCopy(selected);
+  const activePage = r.documents?.find(document => document.id === activeArtwork?.documentId)?.pages?.find(page => page.number === activeArtwork?.page);
+  const imageReading = ["ai_transcription", "ocr_transcription", "vision_needed"].includes(activePage?.method) || activePage?.unit === "px";
+  const contextHtml = (context) => context ? `<div class="source-context"><span>Product / SKU</span><b>${esc(context.productVariant || "Not identified")}</b><span>Column · row</span><b>${esc(context.columnHeading || "—")} · ${esc(context.rowLabel || "—")}</b><span>Serving basis</span><b>${esc(context.basis || "Not identified")}</b><span>Cell</span><b>${esc(context.sheet || "")}!${esc(context.cell || "")} · row ${esc(context.row || "")}</b></div>` : "";
+  const nextIndex = (r.findings || []).findIndex((item) => item.id === selected.id);
+  const next = r.findings?.[(nextIndex + 1) % (r.findings?.length || 1)] || selected;
+  const activeShopper = typeof activeShopperPersona !== 'undefined' ? activeShopperPersona : 'all';
+
+  return `
+    <div class="detail-status ${esc(selected?.status || 'review')}">${symbols[selected?.status?.toLowerCase()] || '•'} ${esc((names[selected?.status?.toLowerCase()] || selected?.status || 'FINDING').toUpperCase())}${selected?.method === "visibility_review" ? " · IMAGE CROSS-CHECK" : ""}</div>
+    ${typeof renderDepartmentBadge === 'function' ? renderDepartmentBadge(selected, { canChange: true }) : ''}
+    <div class="eyebrow">${evidenceCopy.eyebrow}</div>
+    <h3>${esc(selected.title)}</h3>
+    <p class="detail-explanation">${esc(selected.explanation)}</p>
+
+    <!-- Prominent Quick Action Toolbar at TOP of finding panel -->
+    <div class="workbench-top-actions" style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;padding:10px;background:#13261f;border:1px solid #2e493b;border-radius:8px;">
+      <button type="button" class="primary btn-top-ai-fix" data-action="generate-suggested-fix" data-id="${selected.id}" style="background:linear-gradient(135deg,#059669 0%,#047857 100%);color:#ffffff;border:none;border-radius:6px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(5,150,105,0.3);">
+        <span>✨</span> AI Auto-Fix
+      </button>
+      <button type="button" class="secondary btn-ask-someone" data-action="ask-someone" data-id="${selected.id}" style="background:#1b382c;color:#a7f3d0;border:1px solid #34d399;border-radius:6px;padding:8px 12px;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+        <span>💬</span> Ask Someone
+      </button>
+      <button type="button" class="secondary" data-action="create-correction-ticket" data-id="${selected.id}" style="background:#1b382c;color:#e2ece0;border:1px solid #2e493b;border-radius:6px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
+        <span>📋</span> Ticket
+      </button>
+      ${artworkMode === '3d' 
+        ? '<button type="button" class="btn-view-2d" data-action="workbench-mode" data-mode="2d" style="background:#1b382c;color:#e2ece0;border:1px solid #2e493b;border-radius:6px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;">🔍 2D Proof</button>' 
+        : '<button type="button" class="btn-view-2d" data-action="workbench-mode" data-mode="3d" style="background:#1b382c;color:#e2ece0;border:1px solid #2e493b;border-radius:6px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;">📦 3D Studio</button>'}
+      ${(selected.id === 'DF-05' || selected.id?.includes('vegan') || selected.id?.includes('honey') || (selected.rule?.field && ['vegan_claim', 'dietary_suitability_vegan', 'claims.vegan', 'honey'].includes(selected.rule.field)) || (selected.title || '').toLowerCase().includes('vegan') || (selected.title || '').toLowerCase().includes('honey')) ? `<button class="secondary btn-decision-ripple" data-action="explore-decision-ripple" data-id="${selected.id}" style="border:1px solid #10b981;background:#183328;color:#a7f3d0;font-weight:700;padding:8px 12px;border-radius:6px;cursor:pointer;font-size:12px;">⚡ Options</button>` : ''}
+      <button type="button" class="secondary" data-action="select-finding" data-id="${next.id}" style="background:transparent;color:#94a3b8;border:1px solid #2e493b;border-radius:6px;padding:8px 10px;font-size:12px;cursor:pointer;margin-left:auto;">Next →</button>
+    </div>
+
+    <!-- Remediation Mount: Opens right here under the top action bar -->
+    <div id="workbench-remediation-mount" style="margin-bottom:12px;"></div>
+
+    <!-- 1-Click Professional Human Review Decision -->
+    <div class="human-review-card" style="background:#13261f;border:1px solid #2e493b;border-radius:8px;padding:12px;margin:12px 0;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+        <span style="font-size:11px;font-weight:700;color:#9ab2a2;letter-spacing:0.5px;">⚖️ HUMAN REVIEW DECISION</span>
+        <span style="font-size:11px;font-weight:700;color:${r.decisions?.[selected.id]?.disposition === 'accepted_exception' || selected.status === 'match' ? '#4ade80' : selected.status === 'review' ? '#fbbf24' : '#f87171'};">
+          ${r.decisions?.[selected.id]?.disposition === 'accepted_exception' ? '✓ Approved by Reviewer' : r.decisions?.[selected.id]?.disposition === 'needs_changes' ? '✗ Issue Flagged by Reviewer' : selected.status === 'match' ? '✓ Verified Match' : selected.status === 'review' ? '? Needs Review' : '! Discrepancy Found'}
+        </span>
+      </div>
+      <p style="font-size:11.5px;color:#cbd5e1;line-height:1.4;margin:0 0 10px 0;">
+        Apply reviewer sign-off to record human authority in the release audit trail.
+      </p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <button type="button" class="btn-human-decision" data-action="record-human-decision" data-id="${selected.id}" data-decision="match" style="background:#15803d;color:#ffffff;border:none;border-radius:6px;padding:8px 10px;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+          <span>✓</span> Approve as Match
+        </button>
+        <button type="button" class="btn-human-decision" data-action="record-human-decision" data-id="${selected.id}" data-decision="issue" style="background:#dc2626;color:#ffffff;border:none;border-radius:6px;padding:8px 10px;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
+          <span>✗</span> Flag as Issue
+        </button>
+      </div>
+    </div>
+
+    ${(selected.status === 'review' || (r.conflicts || []).some(c => c.field === selected.rule?.field)) && typeof renderConflictCard === 'function' ? `<div style="margin:12px 0;">${renderConflictCard({ field: selected.rule?.field || selected.id, title: `Discrepancy: ${selected.title}`, candidateA: { label: 'Source Reference', value: selected.expected || 'Value in specification', quote: sourceItems[0]?.quote || selected.expected, sheet: sourceItems[0]?.context?.sheet || 'US', cell: sourceItems[0]?.context?.cell || 'B26', documentName: sourceItems[0]?.name || 'Specification Sheet', authority: 'Draft / In Review' }, candidateB: { label: 'Artwork Copy', value: selected.observed || 'Value in artwork', quote: activeArtwork?.quote || selected.observed, panel: activeArtwork?.location || 'Back Panel', page: activeArtwork?.page || 1, documentName: activeArtwork?.name || 'Artwork PDF', authority: 'Current Design' }, affectedCount: 2 })}</div>` : ''}
+
+    ${typeof window !== 'undefined' && window.shopperPersonas?.renderConsumerConsequenceCard ? window.shopperPersonas.renderConsumerConsequenceCard(selected, r, activeShopper) : ''}
+    <div class="detail-values">
+      <div class="${evidenceCopy.neutral ? "workbench-source" : "actual"}"><small>${evidenceCopy.observed}</small><b>${esc(compactEvidence(activeArtwork?.quote || selected.observed || "Not detected in extracted content"))}</b>${activeArtwork ? `<small>Page ${activeArtwork.page} · ${esc(activeArtwork.location || "located text")}</small>` : ""}</div>
+      <div class="${evidenceCopy.neutral ? "workbench-source" : "expected"}"><small>${evidenceCopy.expected}</small><b>${esc(compactEvidence(selected.expected || "No approved value available"))}</b></div>
+    </div>
+
+    ${typeof renderAtwaterProofCard === 'function' ? renderAtwaterProofCard(selected, r) : ''}
+    ${typeof renderPackQuantityCard === 'function' ? renderPackQuantityCard(selected, r) : ''}
+    ${selected.status === 'match' ? `<div class="cleared-proof-box" style="background:#13261f;border:1px solid #2e493b;border-left:4px solid #16a34a;border-radius:6px;padding:12px;margin:12px 0;color:#e2ece0;"><div style="display:flex;align-items:center;gap:6px;font-weight:700;font-size:12px;color:#86efac;margin-bottom:6px;"><span>✓</span> CLEARED / VERIFIED CHECK ("NOT FLAGGED, AND WHY")</div><div style="font-size:12px;color:#cbd5e1;line-height:1.4;"><b>Proof of Evaluation:</b> Verified character sequence and unit math match between source bytes and artwork coordinates.</div><div style="margin-top:8px;padding-top:8px;border-top:1px dashed #2e493b;font-size:11px;color:#94a3b8;"><div><b>Ignored Production Content:</b> Technical cut guides, crease lines, and glue margins verified as non-printing.</div><div><b>Excluded PDF Content:</b> Non-rendering streams and hidden EU nutrition layers excluded from US consumer copy checks.</div></div></div>` : ''}
+    ${Array.isArray(selected.blockedChecks) ? `<div class="notice info"><b>${selected.blockedChecks.length} source comparisons are paused</b><p>They need readable package copy. Check the photo pages or retry image reading; no values were assumed.</p><details><summary>Show checks waiting</summary><ul>${selected.blockedChecks.map(check => `<li>${esc(check)}</li>`).join('')}</ul></details></div>` : ''}
+    ${artworkItems.length > 1 ? `<p class="subtle">Inspect each of the ${artworkItems.length} located occurrences above. One matching occurrence does not hide another mismatch.</p>` : ""}
+    <section class="evidence-stack">
+      <div class="muted-title">${evidenceCopy.trace}</div>
+      ${sourceItems.map((item) => `<article class="workbench-source"><small>${esc(item.role)} · ${esc(item.location || "source evidence")}</small><b>${esc(item.name || "Supplied document")}</b><blockquote>${esc(item.quote || "No quoted source text")}</blockquote>${typeof renderSourceChip === 'function' ? `<div style="margin-top:6px;">${renderSourceChip({ name: item.name, location: item.location, quote: item.quote, sheet: item.context?.sheet, cell: item.context?.cell, page: item.page, authority: 'draft', sourceType: (item.name || '').includes('.xls') ? 'spreadsheet' : 'pdf' })}</div>` : ''}${contextHtml(item.context)}</article>`).join("") || `<p class="subtle">${evidenceCopy.noSource}</p>`}
+      ${selected.rule?.citation ? `<article class="workbench-source rule-source"><small>STATUTORY CITATION · ${esc(selected.rule.authority || 'AUTHORITY')}</small><blockquote><b>${esc(selected.rule.citation)}</b>${selected.rule.provision ? `<br><span class="subtle">${esc(selected.rule.provision)}</span>` : ''}${selected.rule.sourceURL ? `<br><a href="${esc(selected.rule.sourceURL)}" target="_blank" rel="noopener">Official Statutory Gazette ↗</a>` : ''}</blockquote></article>` : (selected.rule?.text ? `<article class="workbench-source rule-source"><small>${evidenceCopy.requirement}</small><blockquote>${esc(selected.rule.text)}</blockquote></article>` : '')}
+    </section>
+    ${selected.visibility ? `<div class="visibility-note ${selected.visibility.state}"><b>${selected.visibility.state === "image_text_corroborated" ? "Image text cross-check found the same words" : selected.visibility.state === "needs_human_review" ? "Extracted text needs visual review" : "Rendered visibility was not independently checked"}</b><p>${selected.visibility.state === "image_text_corroborated" ? "The image transcription is a second reading aid, not proof of legibility, contrast, overlap, or print quality." : selected.visibility.state === "needs_human_review" ? "The image transcription did not repeat this text. Inspect the crop; an OCR miss is not proof that the text is invisible." : "Text extraction cannot prove that copy is visibly readable. Inspect the original at full size."}</p></div>` : activeArtwork ? `<div class="visibility-note not_checked"><b>Check the original artwork</b><p>${imageReading ? "Image reading can miss or misread small, blurred, or obscured text. Confirm this reading in the original image before deciding." : "PDF text extraction cannot confirm visible ink, legibility, contrast, or overlap. Inspect this highlighted crop in the original artwork."}</p></div>` : ""}
+    <div class="workbench-actions">
+      ${artworkMode === '3d' ? '<button type="button" class="btn-view-2d" data-action="workbench-mode" data-mode="2d">🔍 View in 2D Artwork Proof</button>' : '<button type="button" class="btn-view-2d" data-action="workbench-mode" data-mode="3d">📦 Inspect in 3D Packaging Studio</button>'}
+      ${["image_observation", "review_input_gap"].includes(selected.method) ? '<button class="secondary" data-action="upload-source-revision">Add product spec / checklist →</button>' : ""}
+      <button class="primary" data-action="generate-suggested-fix" data-id="${selected.id}">✨ AI Auto-Fix</button>
+      <button class="secondary" data-action="create-correction-ticket" data-id="${selected.id}">📋 Create Correction Ticket</button>
+      <button class="secondary btn-ask-someone" data-action="ask-someone" data-id="${selected.id}">💬 Ask Someone</button>
+      ${(selected.id === 'DF-05' || selected.id?.includes('vegan') || selected.id?.includes('honey') || (selected.rule?.field && ['vegan_claim', 'dietary_suitability_vegan', 'claims.vegan', 'honey'].includes(selected.rule.field)) || (selected.title || '').toLowerCase().includes('vegan') || (selected.title || '').toLowerCase().includes('honey')) ? `<button class="secondary btn-decision-ripple" data-action="explore-decision-ripple" data-id="${selected.id}" style="border-color:#10b981;background:#183328;color:#a7f3d0;font-weight:700;">⚡ Explore Resolution Options</button>` : ''}
+      <button class="secondary" data-action="proof" data-id="${selected.id}">Open proof &amp; record decision →</button>
+      <button class="secondary" data-action="select-finding" data-id="${next.id}">Next finding →</button>
+    </div>
+    ${typeof renderFindingStickyNotes === 'function' ? renderFindingStickyNotes(selected, r, status?.team?.currentUser) : ''}
+    ${typeof teamReviewView === 'function' ? teamReviewView(r, selected, status) : ''}
+  `;
+}
+
 function findingView() {
   const r = current;
   if (typeof window !== 'undefined') window.currentPackSignalReview = r;
@@ -1381,85 +1496,7 @@ function findingView() {
 
       <!-- Column 3: Finding Details & Resolution Actions -->
       <aside class="workbench-evidence">
-        <div class="detail-status ${esc(selected?.status || 'review')}">${symbols[selected?.status?.toLowerCase()] || '•'} ${esc((names[selected?.status?.toLowerCase()] || selected?.status || 'FINDING').toUpperCase())}${selected?.method === "visibility_review" ? " · IMAGE CROSS-CHECK" : ""}</div>
-        ${typeof renderDepartmentBadge === 'function' ? renderDepartmentBadge(selected, { canChange: true }) : ''}
-        <div class="eyebrow">${evidenceCopy.eyebrow}</div>
-        <h3>${esc(selected.title)}</h3>
-        <p class="detail-explanation">${esc(selected.explanation)}</p>
-
-        <!-- Prominent Quick Action Toolbar at TOP of finding panel -->
-        <div class="workbench-top-actions" style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0;padding:10px;background:#13261f;border:1px solid #2e493b;border-radius:8px;">
-          <button type="button" class="primary btn-top-ai-fix" data-action="generate-suggested-fix" data-id="${selected.id}" style="background:linear-gradient(135deg,#059669 0%,#047857 100%);color:#ffffff;border:none;border-radius:6px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(5,150,105,0.3);">
-            <span>✨</span> AI Auto-Fix
-          </button>
-          <button type="button" class="secondary btn-ask-someone" data-action="ask-someone" data-id="${selected.id}" style="background:#1b382c;color:#a7f3d0;border:1px solid #34d399;border-radius:6px;padding:8px 12px;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
-            <span>💬</span> Ask Someone
-          </button>
-          <button type="button" class="secondary" data-action="create-correction-ticket" data-id="${selected.id}" style="background:#1b382c;color:#e2ece0;border:1px solid #2e493b;border-radius:6px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">
-            <span>📋</span> Ticket
-          </button>
-          ${artworkMode === '3d' 
-            ? '<button type="button" class="btn-view-2d" data-action="workbench-mode" data-mode="2d" style="background:#1b382c;color:#e2ece0;border:1px solid #2e493b;border-radius:6px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;">🔍 2D Proof</button>' 
-            : '<button type="button" class="btn-view-2d" data-action="workbench-mode" data-mode="3d" style="background:#1b382c;color:#e2ece0;border:1px solid #2e493b;border-radius:6px;padding:8px 12px;font-size:12px;font-weight:600;cursor:pointer;">📦 3D Studio</button>'}
-          ${(selected.id === 'DF-05' || selected.id?.includes('vegan') || selected.id?.includes('honey') || (selected.rule?.field && ['vegan_claim', 'dietary_suitability_vegan', 'claims.vegan', 'honey'].includes(selected.rule.field)) || (selected.title || '').toLowerCase().includes('vegan') || (selected.title || '').toLowerCase().includes('honey')) ? `<button class="secondary btn-decision-ripple" data-action="explore-decision-ripple" data-id="${selected.id}" style="border:1px solid #10b981;background:#183328;color:#a7f3d0;font-weight:700;padding:8px 12px;border-radius:6px;cursor:pointer;font-size:12px;">⚡ Options</button>` : ''}
-          <button type="button" class="secondary" data-action="select-finding" data-id="${next.id}" style="background:transparent;color:#94a3b8;border:1px solid #2e493b;border-radius:6px;padding:8px 10px;font-size:12px;cursor:pointer;margin-left:auto;">Next →</button>
-        </div>
-
-        <!-- Remediation Mount: Opens right here under the top action bar -->
-        <div id="workbench-remediation-mount" style="margin-bottom:12px;"></div>
-
-        <!-- 1-Click Professional Human Review Decision -->
-        <div class="human-review-card" style="background:#13261f;border:1px solid #2e493b;border-radius:8px;padding:12px;margin:12px 0;">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-            <span style="font-size:11px;font-weight:700;color:#9ab2a2;letter-spacing:0.5px;">⚖️ HUMAN REVIEW DECISION</span>
-            <span style="font-size:11px;font-weight:700;color:${r.decisions?.[selected.id]?.disposition === 'accepted_exception' || selected.status === 'match' ? '#4ade80' : selected.status === 'review' ? '#fbbf24' : '#f87171'};">
-              ${r.decisions?.[selected.id]?.disposition === 'accepted_exception' ? '✓ Approved by Reviewer' : r.decisions?.[selected.id]?.disposition === 'needs_changes' ? '✗ Issue Flagged by Reviewer' : selected.status === 'match' ? '✓ Verified Match' : selected.status === 'review' ? '? Needs Review' : '! Discrepancy Found'}
-            </span>
-          </div>
-          <p style="font-size:11.5px;color:#cbd5e1;line-height:1.4;margin:0 0 10px 0;">
-            Apply reviewer sign-off to record human authority in the release audit trail.
-          </p>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-            <button type="button" class="btn-human-decision" data-action="record-human-decision" data-id="${selected.id}" data-decision="match" style="background:#15803d;color:#ffffff;border:none;border-radius:6px;padding:8px 10px;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
-              <span>✓</span> Approve as Match
-            </button>
-            <button type="button" class="btn-human-decision" data-action="record-human-decision" data-id="${selected.id}" data-decision="issue" style="background:#dc2626;color:#ffffff;border:none;border-radius:6px;padding:8px 10px;font-size:11.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;">
-              <span>✗</span> Flag as Issue
-            </button>
-          </div>
-        </div>
-
-        ${(selected.status === 'review' || (r.conflicts || []).some(c => c.field === selected.rule?.field)) && typeof renderConflictCard === 'function' ? `<div style="margin:12px 0;">${renderConflictCard({ field: selected.rule?.field || selected.id, title: `Discrepancy: ${selected.title}`, candidateA: { label: 'Source Reference', value: selected.expected || 'Value in specification', quote: sourceItems[0]?.quote || selected.expected, sheet: sourceItems[0]?.context?.sheet || 'US', cell: sourceItems[0]?.context?.cell || 'B26', documentName: sourceItems[0]?.name || 'Specification Sheet', authority: 'Draft / In Review' }, candidateB: { label: 'Artwork Copy', value: selected.observed || 'Value in artwork', quote: activeArtwork?.quote || selected.observed, panel: activeArtwork?.location || 'Back Panel', page: activeArtwork?.page || 1, documentName: activeArtwork?.name || 'Artwork PDF', authority: 'Current Design' }, affectedCount: 2 })}</div>` : ''}
-
-        ${typeof window !== 'undefined' && window.shopperPersonas?.renderConsumerConsequenceCard ? window.shopperPersonas.renderConsumerConsequenceCard(selected, r, activeShopperPersona) : ''}
-        <div class="detail-values">
-          <div class="${evidenceCopy.neutral ? "workbench-source" : "actual"}"><small>${evidenceCopy.observed}</small><b>${esc(compactEvidence(activeArtwork?.quote || selected.observed || "Not detected in extracted content"))}</b>${activeArtwork ? `<small>Page ${activeArtwork.page} · ${esc(activeArtwork.location || "located text")}</small>` : ""}</div>
-          <div class="${evidenceCopy.neutral ? "workbench-source" : "expected"}"><small>${evidenceCopy.expected}</small><b>${esc(compactEvidence(selected.expected || "No approved value available"))}</b></div>
-        </div>
-
-        ${typeof renderAtwaterProofCard === 'function' ? renderAtwaterProofCard(selected, r) : ''}
-        ${typeof renderPackQuantityCard === 'function' ? renderPackQuantityCard(selected, r) : ''}
-        ${selected.status === 'match' ? `<div class="cleared-proof-box" style="background:#13261f;border:1px solid #2e493b;border-left:4px solid #16a34a;border-radius:6px;padding:12px;margin:12px 0;color:#e2ece0;"><div style="display:flex;align-items:center;gap:6px;font-weight:700;font-size:12px;color:#86efac;margin-bottom:6px;"><span>✓</span> CLEARED / VERIFIED CHECK ("NOT FLAGGED, AND WHY")</div><div style="font-size:12px;color:#cbd5e1;line-height:1.4;"><b>Proof of Evaluation:</b> Verified character sequence and unit math match between source bytes and artwork coordinates.</div><div style="margin-top:8px;padding-top:8px;border-top:1px dashed #2e493b;font-size:11px;color:#94a3b8;"><div><b>Ignored Production Content:</b> Technical cut guides, crease lines, and glue margins verified as non-printing.</div><div><b>Excluded PDF Content:</b> Non-rendering streams and hidden EU nutrition layers excluded from US consumer copy checks.</div></div></div>` : ''}
-        ${Array.isArray(selected.blockedChecks) ? `<div class="notice info"><b>${selected.blockedChecks.length} source comparisons are paused</b><p>They need readable package copy. Check the photo pages or retry image reading; no values were assumed.</p><details><summary>Show checks waiting</summary><ul>${selected.blockedChecks.map(check => `<li>${esc(check)}</li>`).join('')}</ul></details></div>` : ''}
-        ${artworkItems.length > 1 ? `<p class="subtle">Inspect each of the ${artworkItems.length} located occurrences above. One matching occurrence does not hide another mismatch.</p>` : ""}
-        <section class="evidence-stack">
-          <div class="muted-title">${evidenceCopy.trace}</div>
-          ${sourceItems.map((item) => `<article class="workbench-source"><small>${esc(item.role)} · ${esc(item.location || "source evidence")}</small><b>${esc(item.name || "Supplied document")}</b><blockquote>${esc(item.quote || "No quoted source text")}</blockquote>${typeof renderSourceChip === 'function' ? `<div style="margin-top:6px;">${renderSourceChip({ name: item.name, location: item.location, quote: item.quote, sheet: item.context?.sheet, cell: item.context?.cell, page: item.page, authority: 'draft', sourceType: (item.name || '').includes('.xls') ? 'spreadsheet' : 'pdf' })}</div>` : ''}${contextHtml(item.context)}</article>`).join("") || `<p class="subtle">${evidenceCopy.noSource}</p>`}
-          ${selected.rule?.citation ? `<article class="workbench-source rule-source"><small>STATUTORY CITATION · ${esc(selected.rule.authority || 'AUTHORITY')}</small><blockquote><b>${esc(selected.rule.citation)}</b>${selected.rule.provision ? `<br><span class="subtle">${esc(selected.rule.provision)}</span>` : ''}${selected.rule.sourceURL ? `<br><a href="${esc(selected.rule.sourceURL)}" target="_blank" rel="noopener">Official Statutory Gazette ↗</a>` : ''}</blockquote></article>` : (selected.rule?.text ? `<article class="workbench-source rule-source"><small>${evidenceCopy.requirement}</small><blockquote>${esc(selected.rule.text)}</blockquote></article>` : '')}
-        </section>
-        ${selected.visibility ? `<div class="visibility-note ${selected.visibility.state}"><b>${selected.visibility.state === "image_text_corroborated" ? "Image text cross-check found the same words" : selected.visibility.state === "needs_human_review" ? "Extracted text needs visual review" : "Rendered visibility was not independently checked"}</b><p>${selected.visibility.state === "image_text_corroborated" ? "The image transcription is a second reading aid, not proof of legibility, contrast, overlap, or print quality." : selected.visibility.state === "needs_human_review" ? "The image transcription did not repeat this text. Inspect the crop; an OCR miss is not proof that the text is invisible." : "Text extraction cannot prove that copy is visibly readable. Inspect the original at full size."}</p></div>` : activeArtwork ? `<div class="visibility-note not_checked"><b>Check the original artwork</b><p>${imageReading ? "Image reading can miss or misread small, blurred, or obscured text. Confirm this reading in the original image before deciding." : "PDF text extraction cannot confirm visible ink, legibility, contrast, or overlap. Inspect this highlighted crop in the original artwork."}</p></div>` : ""}
-        <div class="workbench-actions">
-          ${artworkMode === '3d' ? '<button type="button" class="btn-view-2d" data-action="workbench-mode" data-mode="2d">🔍 View in 2D Artwork Proof</button>' : '<button type="button" class="btn-view-2d" data-action="workbench-mode" data-mode="3d">📦 Inspect in 3D Packaging Studio</button>'}
-          ${["image_observation", "review_input_gap"].includes(selected.method) ? '<button class="secondary" data-action="upload-source-revision">Add product spec / checklist →</button>' : ""}
-          <button class="primary" data-action="generate-suggested-fix" data-id="${selected.id}">✨ AI Auto-Fix</button>
-          <button class="secondary" data-action="create-correction-ticket" data-id="${selected.id}">📋 Create Correction Ticket</button>
-          <button class="secondary btn-ask-someone" data-action="ask-someone" data-id="${selected.id}">💬 Ask Someone</button>
-          ${(selected.id === 'DF-05' || selected.id?.includes('vegan') || selected.id?.includes('honey') || (selected.rule?.field && ['vegan_claim', 'dietary_suitability_vegan', 'claims.vegan', 'honey'].includes(selected.rule.field)) || (selected.title || '').toLowerCase().includes('vegan') || (selected.title || '').toLowerCase().includes('honey')) ? `<button class="secondary btn-decision-ripple" data-action="explore-decision-ripple" data-id="${selected.id}" style="border-color:#10b981;background:#183328;color:#a7f3d0;font-weight:700;">⚡ Explore Resolution Options</button>` : ''}
-          <button class="secondary" data-action="proof" data-id="${selected.id}">Open proof &amp; record decision →</button>
-          <button class="secondary" data-action="select-finding" data-id="${next.id}">Next finding →</button>
-        </div>
-        ${typeof renderFindingStickyNotes === 'function' ? renderFindingStickyNotes(selected, r, status?.team?.currentUser) : ''}
-        ${teamReviewView(r, selected, status)}
+        ${renderWorkbenchEvidenceAside(r, selected, activeEvidenceIndex)}
       </aside>
     </div>
 
@@ -3213,6 +3250,26 @@ document.addEventListener("click", async (event) => {
       const first = finding?.evidence?.find((item) => item.role === "artwork" && item.page);
       artworkPage = first?.page || 1;
       tab = "findings";
+
+      if (artworkMode === "3d" && window.__packsignalViewer && document.querySelector('[data-carton-webgl]')) {
+        try {
+          window.__packsignalViewer.selectFinding(selectedFindingId, activeEvidenceIndex);
+          window.__packsignalViewer.focusFinding(selectedFindingId, activeEvidenceIndex);
+        } catch (_) {}
+
+        document.querySelectorAll('.queue-finding').forEach(btn => {
+          const isSelected = btn.dataset.id === selectedFindingId;
+          btn.classList.toggle('selected', isSelected);
+          btn.setAttribute('aria-current', isSelected ? 'true' : 'false');
+        });
+
+        const asideEl = document.querySelector('.workbench-evidence');
+        if (asideEl && finding && typeof renderWorkbenchEvidenceAside === 'function') {
+          asideEl.innerHTML = renderWorkbenchEvidenceAside(current, finding, activeEvidenceIndex);
+        }
+        return;
+      }
+
       const artEvidence = finding?.evidence?.filter((item) => item.role === "artwork" && (!item.page || item.page === artworkPage));
       const activeArtItem = artEvidence?.[activeEvidenceIndex] || artEvidence?.[0];
       if (activeArtItem?.box && Array.isArray(activeArtItem.box) && activeArtItem.box.length === 4) {

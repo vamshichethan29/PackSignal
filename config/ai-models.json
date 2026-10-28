@@ -1,7 +1,7 @@
 {
   "defaultModel": "gemini-3.8-flash",
   "displayName": "Gemini 3.8 Flash (Production)",
-  "evaluationTimestamp": "2026-10-28T00:27:57.290Z",
+  "evaluationTimestamp": "2026-10-28T03:02:04.837Z",
   "evaluationSuiteVersion": "1.0.0-freeze",
   "selectionMethod": "Pass mandatory evidence integrity gates (evidence >=95%, FPR <=5%) + optimal latency/cost",
   "fallbackModels": [

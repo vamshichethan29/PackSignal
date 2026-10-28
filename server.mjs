@@ -404,7 +404,11 @@ async function writeInputs(r,files){
   return written;
 }
 async function loadPreExtractedSampleDocuments(sampleName, files, reviewId) {
-  const sampleKey = ['organizer', 'campus-product-2'].includes(sampleName) ? 'organizer' : (['fieldday', 'clean', 'conflict', 'signals'].includes(sampleName) ? 'fieldday' : null);
+  const sampleKey = sampleName === 'campus-product-2' ? 'campus-product-2' : (
+    sampleName === 'organizer' ? 'organizer' : (
+      ['fieldday', 'clean', 'conflict', 'signals'].includes(sampleName) ? 'fieldday' : null
+    )
+  );
   if (!sampleKey) return null;
   const fixturePath = join(root, 'samples', 'pre-extracted', `${sampleKey}-docs.json`);
   const imagePath = join(root, 'samples', 'pre-extracted', `${sampleKey}-p1.png`);
@@ -425,6 +429,63 @@ async function loadPreExtractedSampleDocuments(sampleName, files, reviewId) {
     }
     return cloned;
   });
+}
+
+async function createFallbackExtractedDocument(file, filePath, outdir) {
+  const fileBytes = await readFile(filePath).catch(() => Buffer.from(''));
+  const ext = extname(filePath).toLowerCase();
+  const sha256 = createHash('sha256').update(fileBytes).digest('hex');
+
+  if (file.role === 'artwork') {
+    const imagePath = join(outdir, `${file.id}-p1.png`);
+    if (['.png', '.jpg', '.jpeg', '.webp'].includes(ext)) {
+      await writeFile(imagePath, fileBytes).catch(() => {});
+    } else {
+      const defaultPreview = join(root, 'samples', 'pre-extracted', 'campus-product-2-p1.png');
+      if (existsSync(defaultPreview)) {
+        await copyFile(defaultPreview, imagePath).catch(() => {});
+      } else {
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600"><rect width="800" height="600" fill="#13261f"/><text x="400" y="300" font-family="system-ui" font-size="20" fill="#4ade80" text-anchor="middle">${file.name}</text></svg>`;
+        await writeFile(join(outdir, `${file.id}-p1.svg`), svg).catch(() => {});
+      }
+    }
+  }
+
+  const rawText = fileBytes.toString('utf8').replace(/[^\x20-\x7E\r\n\t]/g, ' ');
+  const lines = rawText.split(/\r?\n/)
+    .map(l => l.trim())
+    .filter(l => l.length >= 2)
+    .slice(0, 100)
+    .map((text, idx) => ({ text, line: idx + 1 }));
+
+  return {
+    id: file.id,
+    name: file.name,
+    role: file.role,
+    sha256,
+    bytes: fileBytes.length,
+    pages: file.role === 'artwork' ? [
+      {
+        number: 1,
+        width: 1200,
+        height: 860,
+        image: `${file.id}-p1.png`,
+        text: lines.map(l => l.text).join('\n'),
+        codes: [],
+        method: 'resilient_fallback_extractor'
+      }
+    ] : [],
+    cells: [],
+    lines,
+    panelLabels: [],
+    structuralEdges: [],
+    sourcePieces: [],
+    ignoredSourcePieces: [],
+    extractionDiagnostics: { method: 'resilient_fallback' },
+    warnings: ['Extracted via resilient document fallback.'],
+    text: lines.map(l => l.text).join('\n'),
+    data: null
+  };
 }
 
 async function extractDocumentWithAi(file, filePath, outdir, apiKey, modelName) {
@@ -576,9 +637,32 @@ async function processReview(id){
               break;
             }
           }
+          let extractedDoc = null;
           if (apiKeys.length > 0) {
-            const aiDoc = await extractDocumentWithAi(file, join(dir(id),'files',file.disk), join(dir(id),'rendered'), apiKeys[keyCursor % apiKeys.length], model);
-            r.documents.push(aiDoc);
+            for (let i = 0; i < apiKeys.length; i++) {
+              const activeKey = apiKeys[(keyCursor + i) % apiKeys.length];
+              try {
+                extractedDoc = await extractDocumentWithAi(file, join(dir(id),'files',file.disk), join(dir(id),'rendered'), activeKey, model);
+                keyCursor = (keyCursor + i) % apiKeys.length;
+                break;
+              } catch (aiErr) {
+                console.warn(`Gemini extraction attempt ${i + 1} failed:`, aiErr.message);
+                if (shouldFailoverCredential(aiErr)) {
+                  continue;
+                }
+                break;
+              }
+            }
+          }
+          if (!extractedDoc) {
+            try {
+              extractedDoc = await createFallbackExtractedDocument(file, join(dir(id),'files',file.disk), join(dir(id),'rendered'));
+            } catch (fbErr) {
+              console.warn('Fallback extractor warning:', fbErr.message);
+            }
+          }
+          if (extractedDoc) {
+            r.documents.push(extractedDoc);
           } else {
             throw workerErr;
           }
