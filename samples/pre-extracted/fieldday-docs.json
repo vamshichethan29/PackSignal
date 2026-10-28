@@ -1,0 +1,1440 @@
+[
+  {
+    "id": "02030024-aea1-449e-9b3c-cfc6a846713b",
+    "name": "fieldday-v1.pdf",
+    "role": "artwork",
+    "sha256": "0b9a121e287e91a80ddb369e2ab12a005fd938acb810f0376b628d6856359cec",
+    "bytes": 3874,
+    "pages": [
+      {
+        "number": 1,
+        "width": 1200,
+        "height": 860,
+        "unit": "pt",
+        "image": "02030024-aea1-449e-9b3c-cfc6a846713b-p1.png",
+        "text": "PACKSIGNAL / ORIGINAL SYNTHETIC ARTWORK ARTWORK V1\r\nFRONT PANEL BACK PANEL\r\nFieldday\r\nOat Drink\r\nOriginal\r\nNo Added Sugar\r\n750 mL\r\nNET QUANTITY\r\nFICTIONAL DEMO - NOT FOR SALE\r\nMade for a slower morning.\r\nOriginal oat drink. Synthetic packaging review sample.\r\nINGREDIENTS\r\nWater, oats (12%), sunflower oil, sea salt.\r\nContains oats.\r\nNUTRITION Per 100 mL\r\nEnergy 196 kJ / 47 kcal\r\nFat 1.5 g\r\nof which saturates 0.2 g\r\nCarbohydrate 7.0 g\r\nof which sugars 3.5 g\r\nFibre 0.7 g\r\nProtein 1.1 g\r\nSalt 0.1 g\r\nNorthstar Foods (Fictional)\r\nhello@fieldday.example\r\nCarton recyclable where facilities exist.\r\nSKU FD-OAT-1042\r\nFICTIONAL DEMO - NOT FOR SALE\r\nIllustrative flat panels only. Not a print dieline. No legal or certification approval is represented.",
+        "codes": [],
+        "method": "pdf_text"
+      }
+    ],
+    "cells": [],
+    "lines": [
+      {
+        "text": "PACKSIGNAL / ORIGINAL SYNTHETIC ARTWORK ARTWORK V1",
+        "page": 1,
+        "box": [
+          0.034124167760213216,
+          0.027367454351380813,
+          0.9649117024739583,
+          0.03855349518531977
+        ]
+      },
+      {
+        "text": "FRONT PANEL BACK PANEL",
+        "page": 1,
+        "box": [
+          0.06234500249226888,
+          0.1081302376680596,
+          0.5348125203450521,
+          0.11758252520893896
+        ]
+      },
+      {
+        "text": "Fieldday",
+        "page": 1,
+        "box": [
+          0.13469917297363282,
+          0.16333951728288518,
+          0.3264374796549479,
+          0.2257232666015625
+        ]
+      },
+      {
+        "text": "Oat Drink",
+        "page": 1,
+        "box": [
+          0.15742291768391928,
+          0.2507069432458212,
+          0.3019829305013021,
+          0.284219786178234
+        ]
+      },
+      {
+        "text": "Original",
+        "page": 1,
+        "box": [
+          0.19846749623616536,
+          0.3127464826716933,
+          0.25946248372395836,
+          0.33674188658248544
+        ]
+      },
+      {
+        "text": "No Added Sugar",
+        "page": 1,
+        "box": [
+          0.15550916035970053,
+          0.6561116418173146,
+          0.3044916534423828,
+          0.6811709381813227
+        ]
+      },
+      {
+        "text": "750 mL",
+        "page": 1,
+        "box": [
+          0.15632334391276043,
+          0.7437348831531614,
+          0.3025300089518229,
+          0.7878744258437046
+        ]
+      },
+      {
+        "text": "NET QUANTITY",
+        "page": 1,
+        "box": [
+          0.19597874959309897,
+          0.8069674469703851,
+          0.2630420939127604,
+          0.8171872161155523
+        ]
+      },
+      {
+        "text": "FICTIONAL DEMO - NOT FOR SALE",
+        "page": 1,
+        "box": [
+          0.14518166859944662,
+          0.8793767441150754,
+          0.3133916727701823,
+          0.8897023223167242
+        ]
+      },
+      {
+        "text": "Made for a slower morning.",
+        "page": 1,
+        "box": [
+          0.47653834025065106,
+          0.1465953738190407,
+          0.7552366129557292,
+          0.17492328022801598
+        ]
+      },
+      {
+        "text": "Original oat drink. Synthetic packaging review sample.",
+        "page": 1,
+        "box": [
+          0.4755999755859375,
+          0.19193604935047237,
+          0.774024912516276,
+          0.20829652298328488
+        ]
+      },
+      {
+        "text": "INGREDIENTS",
+        "page": 1,
+        "box": [
+          0.4756799825032552,
+          0.2456557872683503,
+          0.5428499857584635,
+          0.25598137434138807
+        ]
+      },
+      {
+        "text": "Water, oats (12%), sunflower oil, sea salt.",
+        "page": 1,
+        "box": [
+          0.4751699829101563,
+          0.27165584120639535,
+          0.7351566569010417,
+          0.2901778819949128
+        ]
+      },
+      {
+        "text": "Contains oats.",
+        "page": 1,
+        "box": [
+          0.4756658426920573,
+          0.31002793422965114,
+          0.571630859375,
+          0.3246360601380814
+        ]
+      },
+      {
+        "text": "NUTRITION Per 100 mL",
+        "page": 1,
+        "box": [
+          0.47574000040690106,
+          0.367038389693859,
+          0.9312874348958333,
+          0.37807326205941133
+        ]
+      },
+      {
+        "text": "Energy 196 kJ / 47 kcal",
+        "page": 1,
+        "box": [
+          0.47757914225260417,
+          0.39893025243005087,
+          0.9308041381835938,
+          0.4152732671693314
+        ]
+      },
+      {
+        "text": "Fat 1.5 g",
+        "page": 1,
+        "box": [
+          0.477691650390625,
+          0.42815697248591933,
+          0.9308291625976562,
+          0.44434303461119184
+        ]
+      },
+      {
+        "text": "of which saturates 0.2 g",
+        "page": 1,
+        "box": [
+          0.47707916259765626,
+          0.45706975182821585,
+          0.9308291625976562,
+          0.4734128020530523
+        ]
+      },
+      {
+        "text": "Carbohydrate 7.0 g",
+        "page": 1,
+        "box": [
+          0.47729166666666667,
+          0.4861395192700763,
+          0.9308291625976562,
+          0.5024825694949128
+        ]
+      },
+      {
+        "text": "of which sugars 3.5 g",
+        "page": 1,
+        "box": [
+          0.47707916259765626,
+          0.5152092867119368,
+          0.9308291625976562,
+          0.5315523369367733
+        ]
+      },
+      {
+        "text": "Fibre 0.7 g",
+        "page": 1,
+        "box": [
+          0.477691650390625,
+          0.5444360422533612,
+          0.9308291625976562,
+          0.5606221043786337
+        ]
+      },
+      {
+        "text": "Protein 1.1 g",
+        "page": 1,
+        "box": [
+          0.47762919108072915,
+          0.5735058096952217,
+          0.9308291625976562,
+          0.5896918718204942
+        ]
+      },
+      {
+        "text": "Salt 0.1 g",
+        "page": 1,
+        "box": [
+          0.4772291564941406,
+          0.6024185890375182,
+          0.9308291625976562,
+          0.6187616392623546
+        ]
+      },
+      {
+        "text": "Northstar Foods (Fictional)",
+        "page": 1,
+        "box": [
+          0.47604832967122396,
+          0.712353480139444,
+          0.6560782877604167,
+          0.7308755741562954
+        ]
+      },
+      {
+        "text": "hello@fieldday.example",
+        "page": 1,
+        "box": [
+          0.4758800252278646,
+          0.7434139517850654,
+          0.6161866251627605,
+          0.7608651094658431
+        ]
+      },
+      {
+        "text": "Carton recyclable where facilities exist.",
+        "page": 1,
+        "box": [
+          0.47566665649414064,
+          0.787618610470794,
+          0.7035333251953125,
+          0.8050511559774709
+        ]
+      },
+      {
+        "text": "SKU FD-OAT-1042",
+        "page": 1,
+        "box": [
+          0.4754499816894531,
+          0.82819999872252,
+          0.5605999755859375,
+          0.8385255857955578
+        ]
+      },
+      {
+        "text": "FICTIONAL DEMO - NOT FOR SALE",
+        "page": 1,
+        "box": [
+          0.6210150146484374,
+          0.8805395348127498,
+          0.7892250061035156,
+          0.8908651130143986
+        ]
+      },
+      {
+        "text": "Illustrative flat panels only. Not a print dieline. No legal or certification approval is represented.",
+        "page": 1,
+        "box": [
+          0.034340833028157554,
+          0.9564372084861578,
+          0.4821583557128906,
+          0.9706011616906455
+        ]
+      }
+    ],
+    "panelLabels": [
+      {
+        "text": "FRONT PANEL",
+        "page": 1,
+        "box": [
+          0.06234500249226888,
+          0.1081302376680596,
+          0.12657582600911457,
+          0.11758252520893896
+        ]
+      },
+      {
+        "text": "BACK PANEL",
+        "page": 1,
+        "box": [
+          0.47566914876302085,
+          0.1081302376680596,
+          0.5348125203450521,
+          0.11758252520893896
+        ]
+      }
+    ],
+    "structuralEdges": [],
+    "warnings": [],
+    "text": "PACKSIGNAL / ORIGINAL SYNTHETIC ARTWORK ARTWORK V1\r\nFRONT PANEL BACK PANEL\r\nFieldday\r\nOat Drink\r\nOriginal\r\nNo Added Sugar\r\n750 mL\r\nNET QUANTITY\r\nFICTIONAL DEMO - NOT FOR SALE\r\nMade for a slower morning.\r\nOriginal oat drink. Synthetic packaging review sample.\r\nINGREDIENTS\r\nWater, oats (12%), sunflower oil, sea salt.\r\nContains oats.\r\nNUTRITION Per 100 mL\r\nEnergy 196 kJ / 47 kcal\r\nFat 1.5 g\r\nof which saturates 0.2 g\r\nCarbohydrate 7.0 g\r\nof which sugars 3.5 g\r\nFibre 0.7 g\r\nProtein 1.1 g\r\nSalt 0.1 g\r\nNorthstar Foods (Fictional)\r\nhello@fieldday.example\r\nCarton recyclable where facilities exist.\r\nSKU FD-OAT-1042\r\nFICTIONAL DEMO - NOT FOR SALE\r\nIllustrative flat panels only. Not a print dieline. No legal or certification approval is represented.",
+    "data": null
+  },
+  {
+    "id": "6414fd6a-34e1-4dc2-a4d7-248d41c8ddb5",
+    "name": "product-spec.json",
+    "role": "spec",
+    "sha256": "259c65010ce1a81f7c0929b737b883331dc87a70c884bb1560f7e8a11d10f09f",
+    "bytes": 1572,
+    "pages": [],
+    "cells": [],
+    "lines": [
+      {
+        "text": "{",
+        "line": 1
+      },
+      {
+        "text": "  \"document_id\": \"FD-SPEC-031\",",
+        "line": 2
+      },
+      {
+        "text": "  \"version\": \"3.1\",",
+        "line": 3
+      },
+      {
+        "text": "  \"status\": \"APPROVED_WITHIN_FICTIONAL_SCENARIO\",",
+        "line": 4
+      },
+      {
+        "text": "  \"effective_date\": \"2026-10-14\",",
+        "line": 5
+      },
+      {
+        "text": "  \"synthetic\": true,",
+        "line": 6
+      },
+      {
+        "text": "  \"notice\": \"Original synthetic PackSignal sample. No real product, regulatory approval, certification or commercial claim substantiation is represented.\",",
+        "line": 7
+      },
+      {
+        "text": "  \"product\": {",
+        "line": 8
+      },
+      {
+        "text": "    \"sku\": \"FD-OAT-1042\",",
+        "line": 9
+      },
+      {
+        "text": "    \"brand\": \"Fieldday\",",
+        "line": 10
+      },
+      {
+        "text": "    \"name\": \"Oat Drink\",",
+        "line": 11
+      },
+      {
+        "text": "    \"variant\": \"Original\",",
+        "line": 12
+      },
+      {
+        "text": "    \"net_quantity\": {",
+        "line": 13
+      },
+      {
+        "text": "      \"value\": 1000,",
+        "line": 14
+      },
+      {
+        "text": "      \"unit\": \"mL\",",
+        "line": 15
+      },
+      {
+        "text": "      \"preferred_display\": \"1 L\",",
+        "line": 16
+      },
+      {
+        "text": "      \"equivalent_display\": \"1000 mL\"",
+        "line": 17
+      },
+      {
+        "text": "    },",
+        "line": 18
+      },
+      {
+        "text": "    \"ingredients\": \"Water, oats (12%), sunflower oil, sea salt.\",",
+        "line": 19
+      },
+      {
+        "text": "    \"allergen_statement\": \"Contains oats.\",",
+        "line": 20
+      },
+      {
+        "text": "    \"storage_statement\": \"Refrigerate after opening.\",",
+        "line": 21
+      },
+      {
+        "text": "    \"manufacturer\": \"Northstar Foods (Fictional)\",",
+        "line": 22
+      },
+      {
+        "text": "    \"customer_care\": \"hello@fieldday.example\",",
+        "line": 23
+      },
+      {
+        "text": "    \"recycling_copy\": \"Carton recyclable where facilities exist.\"",
+        "line": 24
+      },
+      {
+        "text": "  },",
+        "line": 25
+      },
+      {
+        "text": "  \"nutrition\": {",
+        "line": 26
+      },
+      {
+        "text": "    \"basis\": {",
+        "line": 27
+      },
+      {
+        "text": "      \"value\": 100,",
+        "line": 28
+      },
+      {
+        "text": "      \"unit\": \"mL\"",
+        "line": 29
+      },
+      {
+        "text": "    },",
+        "line": 30
+      },
+      {
+        "text": "    \"energy_kj\": 196,",
+        "line": 31
+      },
+      {
+        "text": "    \"energy_kcal\": 47,",
+        "line": 32
+      },
+      {
+        "text": "    \"fat_g\": 1.5,",
+        "line": 33
+      },
+      {
+        "text": "    \"saturates_g\": 0.2,",
+        "line": 34
+      },
+      {
+        "text": "    \"carbohydrate_g\": 7.0,",
+        "line": 35
+      },
+      {
+        "text": "    \"sugars_g\": 3.5,",
+        "line": 36
+      },
+      {
+        "text": "    \"fibre_g\": 0.7,",
+        "line": 37
+      },
+      {
+        "text": "    \"protein_g\": 1.1,",
+        "line": 38
+      },
+      {
+        "text": "    \"salt_g\": 0.1",
+        "line": 39
+      },
+      {
+        "text": "  },",
+        "line": 40
+      },
+      {
+        "text": "  \"scope\": {",
+        "line": 41
+      },
+      {
+        "text": "    \"language\": \"English\",",
+        "line": 42
+      },
+      {
+        "text": "    \"market_context\": \"Jurisdiction-neutral fictional company checklist\",",
+        "line": 43
+      },
+      {
+        "text": "    \"package\": \"Flat two-panel carton artwork; illustrative dimensions only\"",
+        "line": 44
+      },
+      {
+        "text": "  },",
+        "line": 45
+      },
+      {
+        "text": "  \"authority_note\": \"Approved means approved only inside this artificial scenario. Conflicting uploaded values must be surfaced; do not silently infer authority from dates or filenames.\"",
+        "line": 46
+      },
+      {
+        "text": "}",
+        "line": 47
+      }
+    ],
+    "panelLabels": [],
+    "structuralEdges": [],
+    "warnings": [],
+    "text": "{\n  \"document_id\": \"FD-SPEC-031\",\n  \"version\": \"3.1\",\n  \"status\": \"APPROVED_WITHIN_FICTIONAL_SCENARIO\",\n  \"effective_date\": \"2026-10-14\",\n  \"synthetic\": true,\n  \"notice\": \"Original synthetic PackSignal sample. No real product, regulatory approval, certification or commercial claim substantiation is represented.\",\n  \"product\": {\n    \"sku\": \"FD-OAT-1042\",\n    \"brand\": \"Fieldday\",\n    \"name\": \"Oat Drink\",\n    \"variant\": \"Original\",\n    \"net_quantity\": {\n      \"value\": 1000,\n      \"unit\": \"mL\",\n      \"preferred_display\": \"1 L\",\n      \"equivalent_display\": \"1000 mL\"\n    },\n    \"ingredients\": \"Water, oats (12%), sunflower oil, sea salt.\",\n    \"allergen_statement\": \"Contains oats.\",\n    \"storage_statement\": \"Refrigerate after opening.\",\n    \"manufacturer\": \"Northstar Foods (Fictional)\",\n    \"customer_care\": \"hello@fieldday.example\",\n    \"recycling_copy\": \"Carton recyclable where facilities exist.\"\n  },\n  \"nutrition\": {\n    \"basis\": {\n      \"value\": 100,\n      \"unit\": \"mL\"\n    },\n    \"energy_kj\": 196,\n    \"energy_kcal\": 47,\n    \"fat_g\": 1.5,\n    \"saturates_g\": 0.2,\n    \"carbohydrate_g\": 7.0,\n    \"sugars_g\": 3.5,\n    \"fibre_g\": 0.7,\n    \"protein_g\": 1.1,\n    \"salt_g\": 0.1\n  },\n  \"scope\": {\n    \"language\": \"English\",\n    \"market_context\": \"Jurisdiction-neutral fictional company checklist\",\n    \"package\": \"Flat two-panel carton artwork; illustrative dimensions only\"\n  },\n  \"authority_note\": \"Approved means approved only inside this artificial scenario. Conflicting uploaded values must be surfaced; do not silently infer authority from dates or filenames.\"\n}\n",
+    "data": {
+      "document_id": "FD-SPEC-031",
+      "version": "3.1",
+      "status": "APPROVED_WITHIN_FICTIONAL_SCENARIO",
+      "effective_date": "2026-10-14",
+      "synthetic": true,
+      "notice": "Original synthetic PackSignal sample. No real product, regulatory approval, certification or commercial claim substantiation is represented.",
+      "product": {
+        "sku": "FD-OAT-1042",
+        "brand": "Fieldday",
+        "name": "Oat Drink",
+        "variant": "Original",
+        "net_quantity": {
+          "value": 1000,
+          "unit": "mL",
+          "preferred_display": "1 L",
+          "equivalent_display": "1000 mL"
+        },
+        "ingredients": "Water, oats (12%), sunflower oil, sea salt.",
+        "allergen_statement": "Contains oats.",
+        "storage_statement": "Refrigerate after opening.",
+        "manufacturer": "Northstar Foods (Fictional)",
+        "customer_care": "hello@fieldday.example",
+        "recycling_copy": "Carton recyclable where facilities exist."
+      },
+      "nutrition": {
+        "basis": {
+          "value": 100,
+          "unit": "mL"
+        },
+        "energy_kj": 196,
+        "energy_kcal": 47,
+        "fat_g": 1.5,
+        "saturates_g": 0.2,
+        "carbohydrate_g": 7,
+        "sugars_g": 3.5,
+        "fibre_g": 0.7,
+        "protein_g": 1.1,
+        "salt_g": 0.1
+      },
+      "scope": {
+        "language": "English",
+        "market_context": "Jurisdiction-neutral fictional company checklist",
+        "package": "Flat two-panel carton artwork; illustrative dimensions only"
+      },
+      "authority_note": "Approved means approved only inside this artificial scenario. Conflicting uploaded values must be surfaced; do not silently infer authority from dates or filenames."
+    }
+  },
+  {
+    "id": "9eab0ead-4c7f-47b7-aa3a-89e7cce05062",
+    "name": "company-rulebook.json",
+    "role": "rules",
+    "sha256": "3247651ed0103a3aa55ea63feff9b792c7830dbb99a7cb1db0687417c9d083a6",
+    "bytes": 5374,
+    "pages": [],
+    "cells": [],
+    "lines": [
+      {
+        "text": "{",
+        "line": 1
+      },
+      {
+        "text": "  \"document_id\": \"FD-RULE-012\",",
+        "line": 2
+      },
+      {
+        "text": "  \"version\": \"1.2\",",
+        "line": 3
+      },
+      {
+        "text": "  \"synthetic\": true,",
+        "line": 4
+      },
+      {
+        "text": "  \"title\": \"Northstar fictional beverage artwork checklist\",",
+        "line": 5
+      },
+      {
+        "text": "  \"scope\": \"Company review checklist invented for this exercise. Not a regulatory standard. Applies only to SKU FD-OAT-1042 and supplied fictional sources.\",",
+        "line": 6
+      },
+      {
+        "text": "  \"normalization_policy\": \"Ignore capitalization and whitespace for exact copy; preserve substantive wording, ingredient order and numbers. Convert mL and L for quantity. Do not silently repair OCR guesses.\",",
+        "line": 7
+      },
+      {
+        "text": "  \"absence_policy\": \"Only return a definite missing-content issue when all supplied artwork panels are readable and extraction coverage is complete. Otherwise use unable_to_verify or needs_human_review.\",",
+        "line": 8
+      },
+      {
+        "text": "  \"rules\": [",
+        "line": 9
+      },
+      {
+        "text": "    {",
+        "line": 10
+      },
+      {
+        "text": "      \"id\": \"R01\",",
+        "line": 11
+      },
+      {
+        "text": "      \"title\": \"Brand and product identity\",",
+        "line": 12
+      },
+      {
+        "text": "      \"panel\": \"front\",",
+        "line": 13
+      },
+      {
+        "text": "      \"field\": \"identity\",",
+        "line": 14
+      },
+      {
+        "text": "      \"comparison\": \"all_phrases\",",
+        "line": 15
+      },
+      {
+        "text": "      \"rule_text\": \"The front panel must display Fieldday and Oat Drink.\",",
+        "line": 16
+      },
+      {
+        "text": "      \"literal_expected\": [",
+        "line": 17
+      },
+      {
+        "text": "        \"Fieldday\",",
+        "line": 18
+      },
+      {
+        "text": "        \"Oat Drink\"",
+        "line": 19
+      },
+      {
+        "text": "      ],",
+        "line": 20
+      },
+      {
+        "text": "      \"source_section\": \"Section 1\",",
+        "line": 21
+      },
+      {
+        "text": "      \"severity_if_issue\": \"minor\"",
+        "line": 22
+      },
+      {
+        "text": "    },",
+        "line": 23
+      },
+      {
+        "text": "    {",
+        "line": 24
+      },
+      {
+        "text": "      \"id\": \"R02\",",
+        "line": 25
+      },
+      {
+        "text": "      \"title\": \"Variant\",",
+        "line": 26
+      },
+      {
+        "text": "      \"panel\": \"front\",",
+        "line": 27
+      },
+      {
+        "text": "      \"field\": \"variant\",",
+        "line": 28
+      },
+      {
+        "text": "      \"comparison\": \"exact_phrase\",",
+        "line": 29
+      },
+      {
+        "text": "      \"rule_text\": \"The front panel must display the approved variant Original.\",",
+        "line": 30
+      },
+      {
+        "text": "      \"literal_expected\": \"Original\",",
+        "line": 31
+      },
+      {
+        "text": "      \"source_section\": \"Section 2\",",
+        "line": 32
+      },
+      {
+        "text": "      \"severity_if_issue\": \"minor\"",
+        "line": 33
+      },
+      {
+        "text": "    },",
+        "line": 34
+      },
+      {
+        "text": "    {",
+        "line": 35
+      },
+      {
+        "text": "      \"id\": \"R03\",",
+        "line": 36
+      },
+      {
+        "text": "      \"title\": \"Net quantity\",",
+        "line": 37
+      },
+      {
+        "text": "      \"panel\": \"all\",",
+        "line": 38
+      },
+      {
+        "text": "      \"field\": \"net_quantity\",",
+        "line": 39
+      },
+      {
+        "text": "      \"comparison\": \"quantity_equivalence\",",
+        "line": 40
+      },
+      {
+        "text": "      \"rule_text\": \"Every displayed net quantity must equal the approved specification value. Convert L and mL before comparing.\",",
+        "line": 41
+      },
+      {
+        "text": "      \"literal_expected\": null,",
+        "line": 42
+      },
+      {
+        "text": "      \"source_section\": \"Section 3\",",
+        "line": 43
+      },
+      {
+        "text": "      \"severity_if_issue\": \"major\"",
+        "line": 44
+      },
+      {
+        "text": "    },",
+        "line": 45
+      },
+      {
+        "text": "    {",
+        "line": 46
+      },
+      {
+        "text": "      \"id\": \"R04\",",
+        "line": 47
+      },
+      {
+        "text": "      \"title\": \"Ingredients\",",
+        "line": 48
+      },
+      {
+        "text": "      \"panel\": \"back\",",
+        "line": 49
+      },
+      {
+        "text": "      \"field\": \"ingredients\",",
+        "line": 50
+      },
+      {
+        "text": "      \"comparison\": \"exact_copy\",",
+        "line": 51
+      },
+      {
+        "text": "      \"rule_text\": \"The ingredient declaration must match the approved specification, including order and percentages.\",",
+        "line": 52
+      },
+      {
+        "text": "      \"literal_expected\": null,",
+        "line": 53
+      },
+      {
+        "text": "      \"source_section\": \"Section 4\",",
+        "line": 54
+      },
+      {
+        "text": "      \"severity_if_issue\": \"major\"",
+        "line": 55
+      },
+      {
+        "text": "    },",
+        "line": 56
+      },
+      {
+        "text": "    {",
+        "line": 57
+      },
+      {
+        "text": "      \"id\": \"R05\",",
+        "line": 58
+      },
+      {
+        "text": "      \"title\": \"Allergen wording\",",
+        "line": 59
+      },
+      {
+        "text": "      \"panel\": \"back\",",
+        "line": 60
+      },
+      {
+        "text": "      \"field\": \"allergen_statement\",",
+        "line": 61
+      },
+      {
+        "text": "      \"comparison\": \"exact_copy\",",
+        "line": 62
+      },
+      {
+        "text": "      \"rule_text\": \"The artwork must carry the supplied allergen wording from the approved specification.\",",
+        "line": 63
+      },
+      {
+        "text": "      \"literal_expected\": null,",
+        "line": 64
+      },
+      {
+        "text": "      \"source_section\": \"Section 5\",",
+        "line": 65
+      },
+      {
+        "text": "      \"severity_if_issue\": \"major\"",
+        "line": 66
+      },
+      {
+        "text": "    },",
+        "line": 67
+      },
+      {
+        "text": "    {",
+        "line": 68
+      },
+      {
+        "text": "      \"id\": \"R06\",",
+        "line": 69
+      },
+      {
+        "text": "      \"title\": \"Energy and basis\",",
+        "line": 70
+      },
+      {
+        "text": "      \"panel\": \"back\",",
+        "line": 71
+      },
+      {
+        "text": "      \"field\": \"nutrition.energy\",",
+        "line": 72
+      },
+      {
+        "text": "      \"comparison\": \"numeric_pair_and_basis\",",
+        "line": 73
+      },
+      {
+        "text": "      \"rule_text\": \"The nutrition panel must show the approved kJ and kcal energy values on the approved per-100-mL basis.\",",
+        "line": 74
+      },
+      {
+        "text": "      \"literal_expected\": null,",
+        "line": 75
+      },
+      {
+        "text": "      \"source_section\": \"Section 6\",",
+        "line": 76
+      },
+      {
+        "text": "      \"severity_if_issue\": \"minor\"",
+        "line": 77
+      },
+      {
+        "text": "    },",
+        "line": 78
+      },
+      {
+        "text": "    {",
+        "line": 79
+      },
+      {
+        "text": "      \"id\": \"R07\",",
+        "line": 80
+      },
+      {
+        "text": "      \"title\": \"Fat and basis\",",
+        "line": 81
+      },
+      {
+        "text": "      \"panel\": \"back\",",
+        "line": 82
+      },
+      {
+        "text": "      \"field\": \"nutrition.fat_g\",",
+        "line": 83
+      },
+      {
+        "text": "      \"comparison\": \"numeric_and_basis\",",
+        "line": 84
+      },
+      {
+        "text": "      \"rule_text\": \"The fat value and its per-100-mL basis must match the approved nutrition specification.\",",
+        "line": 85
+      },
+      {
+        "text": "      \"literal_expected\": null,",
+        "line": 86
+      },
+      {
+        "text": "      \"source_section\": \"Section 7\",",
+        "line": 87
+      },
+      {
+        "text": "      \"severity_if_issue\": \"minor\"",
+        "line": 88
+      },
+      {
+        "text": "    },",
+        "line": 89
+      },
+      {
+        "text": "    {",
+        "line": 90
+      },
+      {
+        "text": "      \"id\": \"R08\",",
+        "line": 91
+      },
+      {
+        "text": "      \"title\": \"Protein and basis\",",
+        "line": 92
+      },
+      {
+        "text": "      \"panel\": \"back\",",
+        "line": 93
+      },
+      {
+        "text": "      \"field\": \"nutrition.protein_g\",",
+        "line": 94
+      },
+      {
+        "text": "      \"comparison\": \"numeric_and_basis\",",
+        "line": 95
+      },
+      {
+        "text": "      \"rule_text\": \"The protein value and its per-100-mL basis must match the approved nutrition specification.\",",
+        "line": 96
+      },
+      {
+        "text": "      \"literal_expected\": null,",
+        "line": 97
+      },
+      {
+        "text": "      \"source_section\": \"Section 8\",",
+        "line": 98
+      },
+      {
+        "text": "      \"severity_if_issue\": \"minor\"",
+        "line": 99
+      },
+      {
+        "text": "    },",
+        "line": 100
+      },
+      {
+        "text": "    {",
+        "line": 101
+      },
+      {
+        "text": "      \"id\": \"R09\",",
+        "line": 102
+      },
+      {
+        "text": "      \"title\": \"Manufacturer and contact\",",
+        "line": 103
+      },
+      {
+        "text": "      \"panel\": \"back\",",
+        "line": 104
+      },
+      {
+        "text": "      \"field\": \"business_details\",",
+        "line": 105
+      },
+      {
+        "text": "      \"comparison\": \"all_approved_fields\",",
+        "line": 106
+      },
+      {
+        "text": "      \"rule_text\": \"The artwork must include the approved manufacturer name and customer-care email.\",",
+        "line": 107
+      },
+      {
+        "text": "      \"literal_expected\": null,",
+        "line": 108
+      },
+      {
+        "text": "      \"source_section\": \"Section 9\",",
+        "line": 109
+      },
+      {
+        "text": "      \"severity_if_issue\": \"minor\"",
+        "line": 110
+      },
+      {
+        "text": "    },",
+        "line": 111
+      },
+      {
+        "text": "    {",
+        "line": 112
+      },
+      {
+        "text": "      \"id\": \"R10\",",
+        "line": 113
+      },
+      {
+        "text": "      \"title\": \"Recycling qualifier\",",
+        "line": 114
+      },
+      {
+        "text": "      \"panel\": \"back\",",
+        "line": 115
+      },
+      {
+        "text": "      \"field\": \"recycling_copy\",",
+        "line": 116
+      },
+      {
+        "text": "      \"comparison\": \"exact_copy\",",
+        "line": 117
+      },
+      {
+        "text": "      \"rule_text\": \"Retain the full supplied recycling phrase, including where facilities exist.\",",
+        "line": 118
+      },
+      {
+        "text": "      \"literal_expected\": null,",
+        "line": 119
+      },
+      {
+        "text": "      \"source_section\": \"Section 10\",",
+        "line": 120
+      },
+      {
+        "text": "      \"severity_if_issue\": \"minor\"",
+        "line": 121
+      },
+      {
+        "text": "    },",
+        "line": 122
+      },
+      {
+        "text": "    {",
+        "line": 123
+      },
+      {
+        "text": "      \"id\": \"R11\",",
+        "line": 124
+      },
+      {
+        "text": "      \"title\": \"After-opening storage\",",
+        "line": 125
+      },
+      {
+        "text": "      \"panel\": \"back\",",
+        "line": 126
+      },
+      {
+        "text": "      \"field\": \"storage_statement\",",
+        "line": 127
+      },
+      {
+        "text": "      \"comparison\": \"exact_copy\",",
+        "line": 128
+      },
+      {
+        "text": "      \"rule_text\": \"Include the approved after-opening storage statement on the retail package.\",",
+        "line": 129
+      },
+      {
+        "text": "      \"literal_expected\": null,",
+        "line": 130
+      },
+      {
+        "text": "      \"source_section\": \"Section 11\",",
+        "line": 131
+      },
+      {
+        "text": "      \"severity_if_issue\": \"major\"",
+        "line": 132
+      },
+      {
+        "text": "    },",
+        "line": 133
+      },
+      {
+        "text": "    {",
+        "line": 134
+      },
+      {
+        "text": "      \"id\": \"R12\",",
+        "line": 135
+      },
+      {
+        "text": "      \"title\": \"Claim approval evidence\",",
+        "line": 136
+      },
+      {
+        "text": "      \"panel\": \"all\",",
+        "line": 137
+      },
+      {
+        "text": "      \"field\": \"claims\",",
+        "line": 138
+      },
+      {
+        "text": "      \"comparison\": \"register_lookup\",",
+        "line": 139
+      },
+      {
+        "text": "      \"rule_text\": \"Each promotional claim must have applicable approval evidence in the supplied claims register. An absent entry or insufficient evidence requires human review and does not establish that the claim is false or illegal.\",",
+        "line": 140
+      },
+      {
+        "text": "      \"literal_expected\": null,",
+        "line": 141
+      },
+      {
+        "text": "      \"source_section\": \"Section 12\",",
+        "line": 142
+      },
+      {
+        "text": "      \"severity_if_issue\": \"minor\"",
+        "line": 143
+      },
+      {
+        "text": "    }",
+        "line": 144
+      },
+      {
+        "text": "  ]",
+        "line": 145
+      },
+      {
+        "text": "}",
+        "line": 146
+      }
+    ],
+    "panelLabels": [],
+    "structuralEdges": [],
+    "warnings": [],
+    "text": "{\n  \"document_id\": \"FD-RULE-012\",\n  \"version\": \"1.2\",\n  \"synthetic\": true,\n  \"title\": \"Northstar fictional beverage artwork checklist\",\n  \"scope\": \"Company review checklist invented for this exercise. Not a regulatory standard. Applies only to SKU FD-OAT-1042 and supplied fictional sources.\",\n  \"normalization_policy\": \"Ignore capitalization and whitespace for exact copy; preserve substantive wording, ingredient order and numbers. Convert mL and L for quantity. Do not silently repair OCR guesses.\",\n  \"absence_policy\": \"Only return a definite missing-content issue when all supplied artwork panels are readable and extraction coverage is complete. Otherwise use unable_to_verify or needs_human_review.\",\n  \"rules\": [\n    {\n      \"id\": \"R01\",\n      \"title\": \"Brand and product identity\",\n      \"panel\": \"front\",\n      \"field\": \"identity\",\n      \"comparison\": \"all_phrases\",\n      \"rule_text\": \"The front panel must display Fieldday and Oat Drink.\",\n      \"literal_expected\": [\n        \"Fieldday\",\n        \"Oat Drink\"\n      ],\n      \"source_section\": \"Section 1\",\n      \"severity_if_issue\": \"minor\"\n    },\n    {\n      \"id\": \"R02\",\n      \"title\": \"Variant\",\n      \"panel\": \"front\",\n      \"field\": \"variant\",\n      \"comparison\": \"exact_phrase\",\n      \"rule_text\": \"The front panel must display the approved variant Original.\",\n      \"literal_expected\": \"Original\",\n      \"source_section\": \"Section 2\",\n      \"severity_if_issue\": \"minor\"\n    },\n    {\n      \"id\": \"R03\",\n      \"title\": \"Net quantity\",\n      \"panel\": \"all\",\n      \"field\": \"net_quantity\",\n      \"comparison\": \"quantity_equivalence\",\n      \"rule_text\": \"Every displayed net quantity must equal the approved specification value. Convert L and mL before comparing.\",\n      \"literal_expected\": null,\n      \"source_section\": \"Section 3\",\n      \"severity_if_issue\": \"major\"\n    },\n    {\n      \"id\": \"R04\",\n      \"title\": \"Ingredients\",\n      \"panel\": \"back\",\n      \"field\": \"ingredients\",\n      \"comparison\": \"exact_copy\",\n      \"rule_text\": \"The ingredient declaration must match the approved specification, including order and percentages.\",\n      \"literal_expected\": null,\n      \"source_section\": \"Section 4\",\n      \"severity_if_issue\": \"major\"\n    },\n    {\n      \"id\": \"R05\",\n      \"title\": \"Allergen wording\",\n      \"panel\": \"back\",\n      \"field\": \"allergen_statement\",\n      \"comparison\": \"exact_copy\",\n      \"rule_text\": \"The artwork must carry the supplied allergen wording from the approved specification.\",\n      \"literal_expected\": null,\n      \"source_section\": \"Section 5\",\n      \"severity_if_issue\": \"major\"\n    },\n    {\n      \"id\": \"R06\",\n      \"title\": \"Energy and basis\",\n      \"panel\": \"back\",\n      \"field\": \"nutrition.energy\",\n      \"comparison\": \"numeric_pair_and_basis\",\n      \"rule_text\": \"The nutrition panel must show the approved kJ and kcal energy values on the approved per-100-mL basis.\",\n      \"literal_expected\": null,\n      \"source_section\": \"Section 6\",\n      \"severity_if_issue\": \"minor\"\n    },\n    {\n      \"id\": \"R07\",\n      \"title\": \"Fat and basis\",\n      \"panel\": \"back\",\n      \"field\": \"nutrition.fat_g\",\n      \"comparison\": \"numeric_and_basis\",\n      \"rule_text\": \"The fat value and its per-100-mL basis must match the approved nutrition specification.\",\n      \"literal_expected\": null,\n      \"source_section\": \"Section 7\",\n      \"severity_if_issue\": \"minor\"\n    },\n    {\n      \"id\": \"R08\",\n      \"title\": \"Protein and basis\",\n      \"panel\": \"back\",\n      \"field\": \"nutrition.protein_g\",\n      \"comparison\": \"numeric_and_basis\",\n      \"rule_text\": \"The protein value and its per-100-mL basis must match the approved nutrition specification.\",\n      \"literal_expected\": null,\n      \"source_section\": \"Section 8\",\n      \"severity_if_issue\": \"minor\"\n    },\n    {\n      \"id\": \"R09\",\n      \"title\": \"Manufacturer and contact\",\n      \"panel\": \"back\",\n      \"field\": \"business_details\",\n      \"comparison\": \"all_approved_fields\",\n      \"rule_text\": \"The artwork must include the approved manufacturer name and customer-care email.\",\n      \"literal_expected\": null,\n      \"source_section\": \"Section 9\",\n      \"severity_if_issue\": \"minor\"\n    },\n    {\n      \"id\": \"R10\",\n      \"title\": \"Recycling qualifier\",\n      \"panel\": \"back\",\n      \"field\": \"recycling_copy\",\n      \"comparison\": \"exact_copy\",\n      \"rule_text\": \"Retain the full supplied recycling phrase, including where facilities exist.\",\n      \"literal_expected\": null,\n      \"source_section\": \"Section 10\",\n      \"severity_if_issue\": \"minor\"\n    },\n    {\n      \"id\": \"R11\",\n      \"title\": \"After-opening storage\",\n      \"panel\": \"back\",\n      \"field\": \"storage_statement\",\n      \"comparison\": \"exact_copy\",\n      \"rule_text\": \"Include the approved after-opening storage statement on the retail package.\",\n      \"literal_expected\": null,\n      \"source_section\": \"Section 11\",\n      \"severity_if_issue\": \"major\"\n    },\n    {\n      \"id\": \"R12\",\n      \"title\": \"Claim approval evidence\",\n      \"panel\": \"all\",\n      \"field\": \"claims\",\n      \"comparison\": \"register_lookup\",\n      \"rule_text\": \"Each promotional claim must have applicable approval evidence in the supplied claims register. An absent entry or insufficient evidence requires human review and does not establish that the claim is false or illegal.\",\n      \"literal_expected\": null,\n      \"source_section\": \"Section 12\",\n      \"severity_if_issue\": \"minor\"\n    }\n  ]\n}\n",
+    "data": {
+      "document_id": "FD-RULE-012",
+      "version": "1.2",
+      "synthetic": true,
+      "title": "Northstar fictional beverage artwork checklist",
+      "scope": "Company review checklist invented for this exercise. Not a regulatory standard. Applies only to SKU FD-OAT-1042 and supplied fictional sources.",
+      "normalization_policy": "Ignore capitalization and whitespace for exact copy; preserve substantive wording, ingredient order and numbers. Convert mL and L for quantity. Do not silently repair OCR guesses.",
+      "absence_policy": "Only return a definite missing-content issue when all supplied artwork panels are readable and extraction coverage is complete. Otherwise use unable_to_verify or needs_human_review.",
+      "rules": [
+        {
+          "id": "R01",
+          "title": "Brand and product identity",
+          "panel": "front",
+          "field": "identity",
+          "comparison": "all_phrases",
+          "rule_text": "The front panel must display Fieldday and Oat Drink.",
+          "literal_expected": [
+            "Fieldday",
+            "Oat Drink"
+          ],
+          "source_section": "Section 1",
+          "severity_if_issue": "minor"
+        },
+        {
+          "id": "R02",
+          "title": "Variant",
+          "panel": "front",
+          "field": "variant",
+          "comparison": "exact_phrase",
+          "rule_text": "The front panel must display the approved variant Original.",
+          "literal_expected": "Original",
+          "source_section": "Section 2",
+          "severity_if_issue": "minor"
+        },
+        {
+          "id": "R03",
+          "title": "Net quantity",
+          "panel": "all",
+          "field": "net_quantity",
+          "comparison": "quantity_equivalence",
+          "rule_text": "Every displayed net quantity must equal the approved specification value. Convert L and mL before comparing.",
+          "literal_expected": null,
+          "source_section": "Section 3",
+          "severity_if_issue": "major"
+        },
+        {
+          "id": "R04",
+          "title": "Ingredients",
+          "panel": "back",
+          "field": "ingredients",
+          "comparison": "exact_copy",
+          "rule_text": "The ingredient declaration must match the approved specification, including order and percentages.",
+          "literal_expected": null,
+          "source_section": "Section 4",
+          "severity_if_issue": "major"
+        },
+        {
+          "id": "R05",
+          "title": "Allergen wording",
+          "panel": "back",
+          "field": "allergen_statement",
+          "comparison": "exact_copy",
+          "rule_text": "The artwork must carry the supplied allergen wording from the approved specification.",
+          "literal_expected": null,
+          "source_section": "Section 5",
+          "severity_if_issue": "major"
+        },
+        {
+          "id": "R06",
+          "title": "Energy and basis",
+          "panel": "back",
+          "field": "nutrition.energy",
+          "comparison": "numeric_pair_and_basis",
+          "rule_text": "The nutrition panel must show the approved kJ and kcal energy values on the approved per-100-mL basis.",
+          "literal_expected": null,
+          "source_section": "Section 6",
+          "severity_if_issue": "minor"
+        },
+        {
+          "id": "R07",
+          "title": "Fat and basis",
+          "panel": "back",
+          "field": "nutrition.fat_g",
+          "comparison": "numeric_and_basis",
+          "rule_text": "The fat value and its per-100-mL basis must match the approved nutrition specification.",
+          "literal_expected": null,
+          "source_section": "Section 7",
+          "severity_if_issue": "minor"
+        },
+        {
+          "id": "R08",
+          "title": "Protein and basis",
+          "panel": "back",
+          "field": "nutrition.protein_g",
+          "comparison": "numeric_and_basis",
+          "rule_text": "The protein value and its per-100-mL basis must match the approved nutrition specification.",
+          "literal_expected": null,
+          "source_section": "Section 8",
+          "severity_if_issue": "minor"
+        },
+        {
+          "id": "R09",
+          "title": "Manufacturer and contact",
+          "panel": "back",
+          "field": "business_details",
+          "comparison": "all_approved_fields",
+          "rule_text": "The artwork must include the approved manufacturer name and customer-care email.",
+          "literal_expected": null,
+          "source_section": "Section 9",
+          "severity_if_issue": "minor"
+        },
+        {
+          "id": "R10",
+          "title": "Recycling qualifier",
+          "panel": "back",
+          "field": "recycling_copy",
+          "comparison": "exact_copy",
+          "rule_text": "Retain the full supplied recycling phrase, including where facilities exist.",
+          "literal_expected": null,
+          "source_section": "Section 10",
+          "severity_if_issue": "minor"
+        },
+        {
+          "id": "R11",
+          "title": "After-opening storage",
+          "panel": "back",
+          "field": "storage_statement",
+          "comparison": "exact_copy",
+          "rule_text": "Include the approved after-opening storage statement on the retail package.",
+          "literal_expected": null,
+          "source_section": "Section 11",
+          "severity_if_issue": "major"
+        },
+        {
+          "id": "R12",
+          "title": "Claim approval evidence",
+          "panel": "all",
+          "field": "claims",
+          "comparison": "register_lookup",
+          "rule_text": "Each promotional claim must have applicable approval evidence in the supplied claims register. An absent entry or insufficient evidence requires human review and does not establish that the claim is false or illegal.",
+          "literal_expected": null,
+          "source_section": "Section 12",
+          "severity_if_issue": "minor"
+        }
+      ]
+    }
+  },
+  {
+    "id": "ce227417-f3c7-4f34-8f90-5f44cb6c7a99",
+    "name": "claims-register.json",
+    "role": "claims",
+    "sha256": "91f5d50c931d7d070d7b06a9e8d3fc798f461a69efd55d3cc18425f4dd0a4355",
+    "bytes": 792,
+    "pages": [],
+    "cells": [],
+    "lines": [
+      {
+        "text": "{",
+        "line": 1
+      },
+      {
+        "text": "  \"document_id\": \"FD-CLAIM-020\",",
+        "line": 2
+      },
+      {
+        "text": "  \"version\": \"2.0\",",
+        "line": 3
+      },
+      {
+        "text": "  \"synthetic\": true,",
+        "line": 4
+      },
+      {
+        "text": "  \"scope\": \"Fictional claim-approval register for FD-OAT-1042 only; no real substantiation implied.\",",
+        "line": 5
+      },
+      {
+        "text": "  \"entries\": [",
+        "line": 6
+      },
+      {
+        "text": "    {",
+        "line": 7
+      },
+      {
+        "text": "      \"claim_id\": \"C001\",",
+        "line": 8
+      },
+      {
+        "text": "      \"text\": \"Smooth & creamy\",",
+        "line": 9
+      },
+      {
+        "text": "      \"sku\": \"FD-OAT-1042\",",
+        "line": 10
+      },
+      {
+        "text": "      \"status\": \"APPROVED_WITHIN_FICTIONAL_SCENARIO\",",
+        "line": 11
+      },
+      {
+        "text": "      \"condition\": \"Exact phrase only; scenario approval covers this fictional SKU.\",",
+        "line": 12
+      },
+      {
+        "text": "      \"evidence_reference\": \"Fictional sensory-copy decision FD-DEMO-01. No real study is asserted.\"",
+        "line": 13
+      },
+      {
+        "text": "    }",
+        "line": 14
+      },
+      {
+        "text": "  ],",
+        "line": 15
+      },
+      {
+        "text": "  \"unlisted_claim_policy\": \"No approval evidence in this supplied register means needs_human_review, not a definitive prohibited/false/legal finding.\",",
+        "line": 16
+      },
+      {
+        "text": "  \"scope_limit\": \"The register contains only the entries above; silence is not proof of rejection.\"",
+        "line": 17
+      },
+      {
+        "text": "}",
+        "line": 18
+      }
+    ],
+    "panelLabels": [],
+    "structuralEdges": [],
+    "warnings": [],
+    "text": "{\n  \"document_id\": \"FD-CLAIM-020\",\n  \"version\": \"2.0\",\n  \"synthetic\": true,\n  \"scope\": \"Fictional claim-approval register for FD-OAT-1042 only; no real substantiation implied.\",\n  \"entries\": [\n    {\n      \"claim_id\": \"C001\",\n      \"text\": \"Smooth & creamy\",\n      \"sku\": \"FD-OAT-1042\",\n      \"status\": \"APPROVED_WITHIN_FICTIONAL_SCENARIO\",\n      \"condition\": \"Exact phrase only; scenario approval covers this fictional SKU.\",\n      \"evidence_reference\": \"Fictional sensory-copy decision FD-DEMO-01. No real study is asserted.\"\n    }\n  ],\n  \"unlisted_claim_policy\": \"No approval evidence in this supplied register means needs_human_review, not a definitive prohibited/false/legal finding.\",\n  \"scope_limit\": \"The register contains only the entries above; silence is not proof of rejection.\"\n}\n",
+    "data": {
+      "document_id": "FD-CLAIM-020",
+      "version": "2.0",
+      "synthetic": true,
+      "scope": "Fictional claim-approval register for FD-OAT-1042 only; no real substantiation implied.",
+      "entries": [
+        {
+          "claim_id": "C001",
+          "text": "Smooth & creamy",
+          "sku": "FD-OAT-1042",
+          "status": "APPROVED_WITHIN_FICTIONAL_SCENARIO",
+          "condition": "Exact phrase only; scenario approval covers this fictional SKU.",
+          "evidence_reference": "Fictional sensory-copy decision FD-DEMO-01. No real study is asserted."
+        }
+      ],
+      "unlisted_claim_policy": "No approval evidence in this supplied register means needs_human_review, not a definitive prohibited/false/legal finding.",
+      "scope_limit": "The register contains only the entries above; silence is not proof of rejection."
+    }
+  }
+]

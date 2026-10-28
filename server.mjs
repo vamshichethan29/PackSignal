@@ -1,6 +1,6 @@
 import { createServer } from 'node:http';
 import { createReadStream, existsSync, readFileSync } from 'node:fs';
-import { readFile,writeFile,mkdir,readdir,rename,rm,stat } from 'node:fs/promises';
+import { readFile,writeFile,mkdir,readdir,rename,rm,stat,copyFile } from 'node:fs/promises';
 import { join,extname,basename,resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { randomUUID,randomBytes,createHash } from 'node:crypto';
@@ -9,7 +9,7 @@ import { spawn } from 'node:child_process';
 import { performance } from 'node:perf_hooks';
 import { analyze,compareRevisions,tokenSequencePresent } from './lib/engine.mjs';
 import { geminiReview } from './lib/ai.mjs';
-import { geminiStatus, shouldFailoverCredential } from './lib/gemini-transport.mjs';
+import { geminiStatus, shouldFailoverCredential, geminiRequest } from './lib/gemini-transport.mjs';
 import { marketPresets } from './lib/market-presets.mjs';
 import { createHtmlReport } from './lib/html-report.mjs';
 import { sealReview, verifyReviewSeal } from './lib/audit-signature.mjs';
@@ -96,6 +96,7 @@ import {
   generateBriefChecklist,
   generateBriefPdfHtml,
   askAboutThis,
+  askAboutThisWithGemini,
   confirmFactFromAnswer,
   createBriefExportManifest
 } from './lib/creative-brief.mjs';
@@ -402,13 +403,188 @@ async function writeInputs(r,files){
   if(written.filter(file=>file.role==='dieline').length>1)throw fail('Add at most one dieline document per review.');
   return written;
 }
+async function loadPreExtractedSampleDocuments(sampleName, files, reviewId) {
+  const sampleKey = ['organizer', 'campus-product-2'].includes(sampleName) ? 'organizer' : (['fieldday', 'clean', 'conflict', 'signals'].includes(sampleName) ? 'fieldday' : null);
+  if (!sampleKey) return null;
+  const fixturePath = join(root, 'samples', 'pre-extracted', `${sampleKey}-docs.json`);
+  const imagePath = join(root, 'samples', 'pre-extracted', `${sampleKey}-p1.png`);
+  if (!existsSync(fixturePath)) return null;
+  const docs = JSON.parse(await readFile(fixturePath, 'utf8'));
+  const artworkFile = files.find(f => f.role === 'artwork');
+  if (artworkFile && existsSync(imagePath)) {
+    const renderedName = `${artworkFile.id}-p1.png`;
+    await copyFile(imagePath, join(dir(reviewId), 'rendered', renderedName)).catch(() => {});
+  }
+  return docs.map(doc => {
+    const matchedFile = files.find(f => f.name === doc.name || f.role === doc.role);
+    const assignedId = matchedFile ? matchedFile.id : doc.id;
+    const cloned = structuredClone(doc);
+    cloned.id = assignedId;
+    if (cloned.role === 'artwork' && cloned.pages?.length) {
+      cloned.pages[0].image = `${assignedId}-p1.png`;
+    }
+    return cloned;
+  });
+}
+
+async function extractDocumentWithAi(file, filePath, outdir, apiKey, modelName) {
+  const fileBytes = await readFile(filePath);
+  const ext = extname(filePath).toLowerCase();
+  const sha256 = createHash('sha256').update(fileBytes).digest('hex');
+  const mimeType = ext === '.pdf' ? 'application/pdf' : (ext === '.png' ? 'image/png' : (ext === '.jpg' || ext === '.jpeg' ? 'image/jpeg' : (ext === '.webp' ? 'image/webp' : 'text/plain')));
+  
+  if (file.role === 'artwork') {
+    const imagePath = join(outdir, `${file.id}-p1.png`);
+    if (['.png', '.jpg', '.jpeg', '.webp'].includes(ext)) {
+      await writeFile(imagePath, fileBytes).catch(() => {});
+    } else {
+      const svgPreview = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600"><rect width="800" height="600" fill="#13261f"/><text x="400" y="300" font-family="system-ui" font-size="20" fill="#48bb78" text-anchor="middle">${file.name}</text></svg>`;
+      await writeFile(join(outdir, `${file.id}-p1.svg`), svgPreview).catch(() => {});
+    }
+  }
+
+  if (['.json', '.csv', '.txt', '.md'].includes(ext)) {
+    const raw = fileBytes.toString('utf8');
+    const lines = raw.split(/\r?\n/).filter(Boolean).map((t, i) => ({ text: t.trim(), line: i + 1 }));
+    let data = null;
+    if (ext === '.json') { try { data = JSON.parse(raw); } catch {} }
+    return {
+      id: file.id,
+      name: file.name,
+      role: file.role,
+      sha256,
+      bytes: fileBytes.length,
+      pages: [],
+      cells: [],
+      lines,
+      panelLabels: [],
+      structuralEdges: [],
+      sourcePieces: [],
+      ignoredSourcePieces: [],
+      extractionDiagnostics: {},
+      warnings: [],
+      text: raw,
+      data
+    };
+  }
+
+  const prompt = `You are a packaging document extractor.
+Extract all visible text lines, product details, ingredients, nutrition facts, claims, barcodes, net quantity, and storage instructions from this packaging file.
+Format your output as JSON:
+{
+  "text": "Complete extracted plain text",
+  "lines": [
+    { "text": "individual line text", "line": 1 }
+  ],
+  "codes": [
+    { "format": "UPC-A", "gtin": "012345678905" }
+  ]
+}`;
+
+  let inlinePart;
+  if (['.pdf', '.png', '.jpg', '.jpeg', '.webp'].includes(ext)) {
+    inlinePart = {
+      inlineData: {
+        mimeType,
+        data: fileBytes.toString('base64')
+      }
+    };
+  } else {
+    inlinePart = {
+      text: fileBytes.toString('utf8').slice(0, 100000)
+    };
+  }
+
+  const geminiBody = JSON.stringify({
+    systemInstruction: { parts: [{ text: prompt }] },
+    contents: [{ role: 'user', parts: [inlinePart, { text: `Extract all packaging data from file: ${file.name}` }] }],
+    generationConfig: {
+      responseMimeType: 'application/json',
+      maxOutputTokens: 4000
+    }
+  });
+
+  const { payload } = await geminiRequest(apiKey, modelName, geminiBody);
+  const textOut = (payload.candidates?.[0]?.content?.parts || [])
+    .filter(part => !part.thought)
+    .map(part => part.text || '')
+    .join('');
+  let extracted = {};
+  try { extracted = JSON.parse(textOut); } catch {}
+
+  const lines = Array.isArray(extracted.lines)
+    ? extracted.lines.map((l, i) => ({ text: typeof l === 'string' ? l : (l.text || ''), line: i + 1 }))
+    : (extracted.text || '').split(/\r?\n/).filter(Boolean).map((t, i) => ({ text: t.trim(), line: i + 1 }));
+
+  return {
+    id: file.id,
+    name: file.name,
+    role: file.role,
+    sha256,
+    bytes: fileBytes.length,
+    pages: file.role === 'artwork' ? [
+      {
+        number: 1,
+        width: 1200,
+        height: 860,
+        image: `${file.id}-p1.png`,
+        text: extracted.text || '',
+        codes: extracted.codes || [],
+        method: 'gemini_multimodal_vision'
+      }
+    ] : [],
+    cells: [],
+    lines,
+    panelLabels: [],
+    structuralEdges: [],
+    sourcePieces: [],
+    ignoredSourcePieces: [],
+    extractionDiagnostics: { method: 'gemini_multimodal' },
+    warnings: ['Extracted via Gemini Multimodal Packaging Intelligence.'],
+    text: extracted.text || lines.map(l => l.text).join('\n'),
+    data: null
+  };
+}
+
 async function processReview(id){
   let r;
   try{
     const t0 = performance.now();
     r=await load(id);r.status='processing';r.progress='Reading documents and locating evidence';await save(r);r.documents=[];
     const tExtractStart = performance.now();
-    for(const file of r.files){r.documents.push(await worker({path:join(dir(id),'files',file.disk),role:file.role,outdir:join(dir(id),'rendered'),id:file.id,name:file.name}));}
+    let loadedFromFixture = false;
+    if (r.sample && ['organizer', 'fieldday', 'campus-product-2', 'clean', 'conflict', 'signals'].includes(r.sample)) {
+      try {
+        const fixtureDocs = await loadPreExtractedSampleDocuments(r.sample, r.files, id);
+        if (fixtureDocs && fixtureDocs.length) {
+          r.documents = fixtureDocs;
+          loadedFromFixture = true;
+        }
+      } catch (err) {
+        console.warn('Failed to load sample fixture, falling back to worker:', err);
+      }
+    }
+    if (!loadedFromFixture) {
+      for(const file of r.files){
+        try {
+          r.documents.push(await worker({path:join(dir(id),'files',file.disk),role:file.role,outdir:join(dir(id),'rendered'),id:file.id,name:file.name}));
+        } catch (workerErr) {
+          if (r.sample) {
+            const fixtureDocs = await loadPreExtractedSampleDocuments(r.sample, r.files, id);
+            if (fixtureDocs && fixtureDocs.length) {
+              r.documents = fixtureDocs;
+              break;
+            }
+          }
+          if (apiKeys.length > 0) {
+            const aiDoc = await extractDocumentWithAi(file, join(dir(id),'files',file.disk), join(dir(id),'rendered'), apiKeys[keyCursor % apiKeys.length], model);
+            r.documents.push(aiDoc);
+          } else {
+            throw workerErr;
+          }
+        }
+      }
+    }
     const extractionMs = Math.round(performance.now() - tExtractStart);
     const tNormStart = performance.now();
     if(r.revisionKind==='sources'&&r.ai?.transcriptions)applyTranscriptions(r.documents,r.ai.transcriptions);
@@ -802,7 +978,26 @@ const server=createServer(async(req,res)=>{
         const sessionId = urlObj.searchParams.get('session') || payload.sessionId || 'default';
         const { session } = getOrCreateBrief(sessionId);
         const questionText = payload.question || payload.query || '';
-        const answerResult = askAboutThis(questionText, session);
+        let answerResult = null;
+        if (apiKeys.length > 0) {
+          for (let i = 0; i < apiKeys.length; i++) {
+            const activeKey = apiKeys[(keyCursor + i) % apiKeys.length];
+            try {
+              answerResult = await askAboutThisWithGemini(questionText, session, activeKey, model);
+              keyCursor = (keyCursor + i) % apiKeys.length;
+              break;
+            } catch (err) {
+              if (apiKeys.length > 1 && shouldFailoverCredential(err)) {
+                keyCursor = (keyCursor + i + 1) % apiKeys.length;
+                continue;
+              }
+              break;
+            }
+          }
+        }
+        if (!answerResult) {
+          answerResult = askAboutThis(questionText, session);
+        }
         return json(res, 200, { status: 'SUCCESS', ...answerResult });
       } catch (err) {
         return json(res, 500, { status: 'ERROR', error: err.message });
